@@ -5,14 +5,15 @@ import {
     ui as ShakaUI,
     util as ShakaUtils,
 } from "shaka-player/dist/shaka-player.ui.debug";
+import shallow from "zustand/shallow";
 import usePlayerStore from "../store";
+// import usePlayerStore from "../store";
 import BufferingLogo from "./BufferingLogo";
 import LiveIcon from "./LiveIcon";
-import PauseIcon from "./PauseIcon";
-import PlayIcon from "./PlayIcon";
 import styles from "./styles";
 import TimeLine from "./TimeLine.";
 import { utils } from "./utils";
+import VideoControl from "./VideoControl";
 
 export default function PlayerOverlay({
     player,
@@ -21,14 +22,18 @@ export default function PlayerOverlay({
     player: ShakaPlayer | null;
     video: HTMLVideoElement | null;
 }) {
-    const [isPlaying, setIsPlaying] = React.useState(false);
     const [trackText, setTrackText] = React.useState("Select Best Track");
     const [currentTime, setCurrentTime] = React.useState("00:00");
 
-    const [buffering, setBuffering] = usePlayerStore((state: any) => [
-        state.isBuffering,
-        state.setIsBuffering,
-    ]);
+    const [isPlaying, setIsPlaying] = usePlayerStore(
+        (state: any) => [state.playing, state.setPlaying],
+        shallow
+    );
+
+    const [buffering, setBuffering] = usePlayerStore(
+        (state: any) => [state.isBuffering, state.setIsBuffering],
+        shallow
+    );
 
     React.useEffect(() => {
         if (video) {
@@ -78,26 +83,7 @@ export default function PlayerOverlay({
     return (
         <div style={styles.playerOverlay}>
             <div style={styles.playerOverlayWrapper}>
-                <div className="player-control">
-                    {
-                        <button
-                            style={styles.playPauseIcon}
-                            onClick={() => {
-                                if (video) {
-                                    if (isPlaying) {
-                                        video.pause();
-                                        setIsPlaying(false);
-                                    } else {
-                                        video.play();
-                                        setIsPlaying(true);
-                                    }
-                                }
-                            }}
-                        >
-                            {isPlaying ? <PauseIcon /> : <PlayIcon />}
-                        </button>
-                    }
-                </div>
+                <VideoControl video={video} />
                 <button
                     disabled={trackText !== "Select Best Track"}
                     onClick={() => {
