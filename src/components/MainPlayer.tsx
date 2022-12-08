@@ -10,37 +10,37 @@ import { ReactShakaPlayer } from "./player";
 import PlayerOverlay from "./PlayerOverlay";
 import styles from "./styles";
 const manifestUri = "https://delta43tatasky.akamaized.net/out/i/1197.mpd";
+const licenseUrl = "";
 
 export default function MainPlayer() {
     const videoRef = React.useRef<HTMLVideoElement>(null);
-    const [player, setPlayer] = React.useState<ShakaPlayer | null>(null);
-    const [buffering, setBuffering] = usePlayerStore(
-        (state: any) => [state.isBuffering, state.setIsBuffering],
-        shallow
-    );
+    const setBuffering = usePlayerStore((state: any) => state.setIsBuffering);
+    const player = usePlayerStore((state: any) => state.player);
+    const setPlayer = usePlayerStore((state: any) => state.setPlayer);
 
     React.useEffect(() => {
         new Promise(async (resolve, reject) => {
             if (videoRef && videoRef.current !== null) {
                 const mainPlayer = new ShakaPlayer(videoRef.current);
+                console.log("Attached New Player");
+                window.player = mainPlayer;
 
-                setBuffering(true);
                 await mainPlayer.load(
                     "https://assetshuluimcom-a.akamaihd.net/prerolls/16x9/ma/R_kp95.mp4"
                 );
 
                 setPlayer(mainPlayer);
-                setBuffering(false);
 
                 videoRef.current.onended = async () => {
-                    setBuffering(true);
-
                     mainPlayer.configure({
                         drm: {
                             clearKeys: {
-                                "79a369ad99ec46539fe1e1d9dcd55a06:":
-                                    "6912a1f2c8c210beb298679008e9256d",
+                                b258fdb6dc054f04bcdb200cee3ef6da:
+                                    "017f465f4d9d82dc1ff632dd4a3c94f2",
                             },
+                            // servers: {
+                            //     "com.widevine.alpha": licenseUrl,
+                            // },
                         },
                         manifest: {
                             dash: {
@@ -50,35 +50,47 @@ export default function MainPlayer() {
                     });
 
                     await mainPlayer.load(manifestUri);
-                    setBuffering(false);
                     videoRef.current.play();
                 };
 
                 videoRef.current?.play();
-                videoRef.current.muted = true;
-                setBuffering(false);
 
                 mainPlayer.addEventListener("buffering", () => {
                     setBuffering(mainPlayer.isBuffering());
                 });
+
+                resolve(mainPlayer);
             }
+
+            return () => {
+                new Promise(async (resolve, reject) => {
+                    if (!!videoRef.current) {
+                        videoRef.current?.pause();
+                        videoRef.current.onended = null;
+                        videoRef.current.remove();
+                    }
+
+                    if (player) {
+                        console.log(
+                            "%c Destroying Player",
+                            "background: black; color: green"
+                        );
+
+                        console.log(player?.detach(), "detach");
+                        console.log(player?.unload(), "unload");
+                        console.log(player?.destroy(), "destroy");
+                        setPlayer(null);
+                    } else {
+                        console.log(
+                            "%c Player is Null",
+                            "background: black; color: red"
+                        );
+                    }
+
+                    resolve(true);
+                });
+            };
         });
-
-        return async () => {
-            if (player) {
-                player.unload();
-                await player.destroy();
-                videoRef.current?.remove();
-            }
-
-            if (videoRef && videoRef.current) {
-                videoRef.current.onended = null;
-            }
-
-            setPlayer(null);
-            setBuffering(false);
-            return;
-        };
     }, [videoRef]);
 
     return (
