@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import usePlayerStore from "../store";
 import {
     Player,
@@ -11,7 +11,7 @@ import styles from "./styles";
 import LiveIcon from "./LiveIcon";
 import shallow from "zustand/shallow";
 
-export default function TimeLine({
+function _TimeLine({
     player,
     video,
 }: {
@@ -23,10 +23,12 @@ export default function TimeLine({
         shallow
     );
 
-    const [liveVideoDelay, setLiveVideoDelay] = usePlayerStore(
-        (state: any) => [state.liveVideoDelay, state.setLiveVideoDelay],
-        shallow
-    );
+    const [liveVideoDelay, setLiveVideoDelay] = usePlayerStore((state: any) => [
+        state.liveVideoDelay,
+        state.setLiveVideoDelay,
+    ]);
+
+    // const [liveVideoDelay, setLiveVideoDelay] = useState(0);
 
     function getTotalTime() {
         const duration = video.duration;
@@ -43,7 +45,7 @@ export default function TimeLine({
                 const behindLive = Math.floor(seekRange.end - displayTime);
                 displayTime = Math.max(0, behindLive);
                 setLiveVideoDelay(displayTime);
-                console.log({ displayTime });
+                // console.log({ displayTime });
             }
         });
 
@@ -78,3 +80,6 @@ export default function TimeLine({
         </>
     );
 }
+
+// memo _TimeLine
+export default memo(_TimeLine);

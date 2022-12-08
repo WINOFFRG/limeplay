@@ -1,5 +1,6 @@
 import create from "zustand";
 import { devtools } from "zustand/middleware";
+import { Player as ShakaPlayer } from "shaka-player/dist/shaka-player.ui.debug";
 
 const usePlayerStore = create(
     devtools((set) => ({
@@ -21,6 +22,10 @@ const usePlayerStore = create(
         playerTimer: null,
         setPlayerTimer: (timer: shaka.util.Timer) =>
             set((state: any) => ({ playerTimer: timer })),
+        playing: false,
+        setPlaying: (playing: boolean) => set((state: any) => ({ playing })),
+        player: null,
+        setPlayer: (player: ShakaPlayer) => set((state: any) => ({ player })),
     }))
 );
 
