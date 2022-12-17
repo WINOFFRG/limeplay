@@ -22,8 +22,15 @@
     "noImplicitAny": true,
     "rootDirs": ["./src"],
     "outDir": "./dist",
-    "preserveConstEnums": true,
+    "preserveConstEnums": true
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+    "docs/**/*",
+    "docs/next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "types/*.d.ts"
+  ],
   "exclude": ["node_modules"]
 }
