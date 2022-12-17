@@ -10,5 +10,10 @@ export default {
         🍀 Limetree is a project in active development, It aims to be a fully fledged Open Source library. Contributors are Welcomed!
       </a>
     ),
-  }
+  },
+    footer: {
+        text: <span>
+        MIT {new Date().getFullYear()} © <a href="https://github.com/winoffrg/limetree" target="_blank">Limetree Player</a>
+        </span>,
+    }
 };
