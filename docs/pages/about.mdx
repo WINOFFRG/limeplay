@@ -1,0 +1,25 @@
+import { Callout } from "nextra-theme-docs";
+
+### 💡 Motivation
+
+HTML5 Video element is the native way to play videos in browser. However, it comes with its own limitation, Open Source video player libraries like [Shaka Player](https://github.com/shaka-project/shaka-player/), [VideoJS](https://github.com/videojs/video.js), [JW Player](https://github.com/jwplayer/jwplayer) are built on top existing HTML5 Video element to bring a completly new experience with support to modern streaming formats like DASH or HLS.
+
+Considering Shaka Player in mind with its competitive features, support and extensibility, I considered it best for my use case. Shaka Player is typically composed of two major components - **UI Library** and **Player Engine**. UI Library acts as a <u>frontend</u> for player for setting up buttons, design, layout, ... and interact with the APIs exposed by the Player Engine which acts as the <u>backend</u> for player.
+
+<Callout type="info" emoji="👉">
+  Checkout the Shaka Player's demo version
+  <a href="https://shaka-player-demo.appspot.com/demo/#audiolang=en;textlang=en;uilang=en;asset=https://storage.googleapis.com/shaka-demo-assets/bbb-dark-truths/dash.mpd;panel=ALL_CONTENT;build=uncompiled" target="_blank"><b>here</b></a>
+</Callout>
+
+Checking upon the documentation for integration with the default UI Library is pretty easy and <b>works best</b> for projects using <u>Vanilla Javascript</u>. However, for advanced projects or the ones built on latest frameworks like React, it could be an overkill. <u>The extensibility would be limited and difficult to maintain.</u>
+
+[React](https://reactjs.org/) on the other hand comes with its own advanced features, optimizations, ease of code, ... which saves the time and effort as compared to working on with Vanilla Javascript. Creating a UI Library on React can become a cherry on the cake for developers who plan to integrate Shaka Player with their React application. 
+
+<Callout type="warning" emoji="ℹ️">
+  Look what Shaka's team has to say for react integration
+  <a href="https://github.com/shaka-project/shaka-player/#framework-integrations" target="_blank"><b>here</b></a>
+</Callout>
+
+### 💁 Solution
+
+[Limetree](https://github.com/WINOFFRG/limetree) - A modern UI Library built on top of Shaka Player aims to solve the above mentioned problem and provide with a bundled solution consisting of pre-built components with modern UI brining, making it easy for developers to Use, Integrate & Customise a Video Player built of top of Shaka Player with the power of React.
