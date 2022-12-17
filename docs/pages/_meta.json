@@ -1,14 +1,19 @@
 {
-  "index": {
-    "title": "Home",
-    "type": "page"
-  },
-  "research": {
-    "title": "Research",
-    "type": "page"
-  },
-  "about": {
-    "title": "About",
-    "type": "page"
-  }
+    "index": "Introduction",
+    "home": {
+        "title": "Home",
+        "type": "page",
+        "href": "/"
+    },
+    "about": {
+      "title": "About",
+      "type": "page",
+      "theme": {
+        "typesetting": "article"
+      }
+    },
+    "api": "API",
+    "components": "Components",
+    "research": "Player Research",
+    "players": "Players"
 }
