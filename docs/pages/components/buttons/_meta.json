@@ -6,5 +6,6 @@
     "pip": "Picture in Picture",
     "airplay": "Airplay",
     "cast": "Cast",
-    "download": "Download"   
+    "download": "Download",
+    "loop": "Loop"
 }
