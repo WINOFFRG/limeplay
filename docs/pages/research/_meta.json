@@ -1,3 +1,7 @@
 {
-  "index": "Introduction"
+    "hulu": "Hulu",
+    "hotstar": "Hotstar",
+    "primevideo": "Prime Video",
+    "hbomax": "HBO Max",
+    "youtube": "Youtube"
 }
