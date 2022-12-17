@@ -63,3 +63,18 @@ Design Analysis, Research, Features
 ![](assets/research/hotstar_player_4.png)
 ![](assets/research/hotstar_player_5.png)
 ![](assets/research/hotstar_player_6.png)
+
+## 3. Prime Video
+
+![](assets/research/primevideo_player_1.png)
+![](assets/research/primevideo_player_2.png)
+![](assets/research/primevideo_player_3.png)
+![](assets/research/primevideo_player_4.png)
+![](assets/research/primevideo_player_5.png)
+
+## 4. HBO Max
+
+![](assets/research/hbomax_player_1.png)
+![](assets/research/hbomax_player_2.png)
+![](assets/research/hbomax_player_3.png)
+![](assets/research/hbomax_player_4.png)
