@@ -15,5 +15,10 @@ export default {
         text: <span>
         MIT {new Date().getFullYear()} © <a href="https://github.com/winoffrg/limetree" target="_blank">Limetree Player</a>
         </span>,
-    }
+    },
+    useNextSeoProps() {
+      return {
+        titleTemplate: '%s – Limetree'
+      }
+    },
 };
