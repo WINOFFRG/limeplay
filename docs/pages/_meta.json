@@ -1,5 +1,9 @@
 {
     "index": "Introduction",
+    "research": "Player Research",
+    "---": {
+        "type": "separator"
+    },
     "home": {
         "title": "Home",
         "type": "page",
@@ -11,9 +15,5 @@
       "theme": {
         "typesetting": "article"
       }
-    },
-    "api": "API",
-    "components": "Components",
-    "research": "Player Research",
-    "players": "Players"
+    }
 }
