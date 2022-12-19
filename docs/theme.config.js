@@ -21,4 +21,5 @@ export default {
         titleTemplate: '%s – Limetree'
       }
     },
+    staticImage: true,
 };
