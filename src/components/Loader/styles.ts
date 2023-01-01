@@ -17,7 +17,6 @@ const useStyles = createStyles((theme) => ({
         right: 0,
         bottom: 0,
         opacity: 0.6,
-        margin: 'auto',
         backgroundImage:
             'radial-gradient(circle closest-side at 50% 50%, rgba(0,0,0,0.2), rgba(0,0,0,0.06) 50%, transparent)',
 
@@ -35,16 +34,6 @@ const useStyles = createStyles((theme) => ({
             borderRightColor: 'transparent',
             borderTopColor: 'transparent',
             animation: `${spin} 800ms linear infinite`,
-        },
-
-        '&:before': {
-            content: '""',
-            display: 'block',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
         },
     },
 }));
