@@ -8,7 +8,7 @@ export default function PlayerLoader() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const handleBuffering = useCallback(() => {
-        setIsLoading(shakaPlayer.isBuffering());
+        if (shakaPlayer) setIsLoading(shakaPlayer.isBuffering());
     }, [shakaPlayer]);
 
     useEffect(() => {
@@ -19,5 +19,5 @@ export default function PlayerLoader() {
         };
     }, [shakaPlayer]);
 
-    return isLoading && <div className={classes.playerLoader}></div>;
+    return isLoading ? <div className={classes.playerLoader} /> : null;
 }
