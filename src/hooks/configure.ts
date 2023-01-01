@@ -1,6 +1,4 @@
 export default function configure(player: shaka.Player) {
-    console.log(import.meta.env.PLAYBACK_URL);
-
     const config: PlayerConfig = {
         playback: {
             url:

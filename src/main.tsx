@@ -12,6 +12,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
             withNormalizeCSS
             theme={{
                 colorScheme: 'dark',
+                defaultRadius: '50%',
 
                 fontSizes: {
                     xs: 12,
