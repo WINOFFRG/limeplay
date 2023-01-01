@@ -1,4 +1,5 @@
 import useStore from '../../store';
+import ControlsOverlay from '../ControlsOverlay';
 import PlayerLoader from '../Loader';
 import useStyles from './styles';
 
@@ -8,6 +9,7 @@ const PlayerOverlay: React.FC = () => {
     return (
         <div className={classes.overlayWrapper}>
             <PlayerLoader />
+            <ControlsOverlay />
         </div>
     );
 };
