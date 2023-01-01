@@ -1,3 +1,4 @@
+import PlaybackButton from '../PlaybackButton';
 import useStyles from './styles';
 
 export function ControlsTopPanel() {
@@ -15,5 +16,9 @@ export function ControlsMiddlePanel() {
 export function ControlsBottomPanel() {
     const { classes } = useStyles();
 
-    return <div className={classes.controlsBottomPanel} role={'none'}></div>;
+    return (
+        <div className={classes.controlsBottomPanel} role={'none'}>
+            <PlaybackButton />
+        </div>
+    );
 }

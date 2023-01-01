@@ -30,6 +30,8 @@ const useStyles = createStyles((theme) => ({
     },
 
     controlsBottomPanel: {
+        position: 'absolute',
+        bottom: 0,
         height: 'auto',
         width: '100%',
         padding: `0 ${theme.spacing.xl}px`,
