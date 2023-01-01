@@ -1,12 +1,28 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import MainPlayer from "./components/MainPlayer";
-import { ReactShakaPlayer } from "./components/player";
-import PlayerOverlay from "./components/PlayerOverlay";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { MantineProvider } from '@mantine/styles';
 
-import "./globals.css";
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+import './globals.css';
+import FullScreenPlayer from './components/FullScreenPlayer';
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
-        <MainPlayer />
+        <MantineProvider
+            withGlobalStyles
+            withNormalizeCSS
+            theme={{
+                colorScheme: 'dark',
+
+                fontSizes: {
+                    xs: 12,
+                    sm: 14,
+                    md: 16,
+                    lg: 18,
+                    xl: 20,
+                },
+            }}
+        >
+            <FullScreenPlayer />
+        </MantineProvider>
     </React.StrictMode>
 );
