@@ -3,6 +3,6 @@ interface Store {
     setVideoElement: (videoElement: HTMLVideoElement | null) => void;
     playerConfig: PlayerConfig | null;
     setPlayerConfig: (playerConfig: PlayerConfig | null) => void;
-    shakaPlayer: shaka.Player | null;
+    shakaPlayer: shaka.Player;
     setShakaPlayer: (shakaPlayer: shaka.Player | null) => void;
 }

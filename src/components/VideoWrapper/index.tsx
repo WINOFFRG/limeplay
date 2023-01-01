@@ -2,7 +2,6 @@ import { useRef, useEffect } from 'react';
 import useStore from '../../store/index';
 import useStyles from './styles';
 import useLimetree from '../../hooks/useLimetree';
-import shallow from 'zustand/shallow';
 
 const VideoWrapper: React.FC = () => {
     const { classes } = useStyles();
