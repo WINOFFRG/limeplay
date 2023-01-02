@@ -8,6 +8,7 @@ import FullscreenButton from '../FullscreenButton';
 import PipButton from '../PipButton';
 import ReverseButton from '../ReverseButton';
 import ForwardButton from '../ForwardButton';
+import SettingsButton from '../SettingsButton';
 
 export function ControlsTopPanel() {
     const { classes } = useStyles();
@@ -29,20 +30,18 @@ export function ControlsMiddlePanel() {
     const shakaPlayer = useStore((state) => state.shakaPlayer);
 
     useEffect(() => {
-        const textCuesContainer = new shaka.text.UITextDisplayer(
-            video,
-            cuesContainer.current
-        );
-
-        if (shakaPlayer) {
-            const textTracks = shakaPlayer.getTextTracks();
-            shakaPlayer.selectTextTrack(textTracks[1]);
-            shakaPlayer.setTextTrackVisibility(true);
-        }
-
-        return () => {
-            textCuesContainer.destroy();
-        };
+        // const textCuesContainer = new shaka.text.UITextDisplayer(
+        //     video,
+        //     cuesContainer.current
+        // );
+        // if (shakaPlayer) {
+        //     const textTracks = shakaPlayer.getTextTracks();
+        //     shakaPlayer.selectTextTrack(textTracks[1]);
+        //     shakaPlayer.setTextTrackVisibility(true);
+        // }
+        // return () => {
+        //     textCuesContainer.destroy();
+        // };
     }, [video, shakaPlayer]);
 
     return (
@@ -59,10 +58,15 @@ export function ControlsBottomPanel() {
 
     return (
         <div className={classes.controlsBottomPanel} role={'none'}>
-            <PlaybackButton />
-            <ReverseButton />
-            <ForwardButton />
-            <VolumeButton />
+            <div>
+                <PlaybackButton />
+                <ReverseButton />
+                <ForwardButton />
+                <VolumeButton />
+            </div>
+            <div>
+                <SettingsButton />
+            </div>
         </div>
     );
 }
