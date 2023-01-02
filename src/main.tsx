@@ -2,8 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { MantineProvider } from '@mantine/styles';
 
-import './globals.css';
 import FullScreenPlayer from './components/FullScreenPlayer';
+import './globals.css';
+import './fonts/Graphik-Medium.woff';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>

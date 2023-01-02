@@ -4,11 +4,22 @@ import PlaybackButton from '../PlaybackButton';
 import useStyles from './styles';
 import shaka from 'shaka-player/dist/shaka-player.ui.debug';
 import VolumeButton from '../VolumeButton';
+import FullscreenButton from '../FullscreenButton';
+import PipButton from '../PipButton';
+import ReverseButton from '../ReverseButton';
+import ForwardButton from '../ForwardButton';
 
 export function ControlsTopPanel() {
     const { classes } = useStyles();
 
-    return <div className={classes.controlsTopPanel} role={'none'}></div>;
+    return (
+        <div className={classes.controlsTopPanel} role={'none'}>
+            <div className={classes.topRightSection}>
+                <PipButton />
+                <FullscreenButton />
+            </div>
+        </div>
+    );
 }
 
 export function ControlsMiddlePanel() {
@@ -49,6 +60,8 @@ export function ControlsBottomPanel() {
     return (
         <div className={classes.controlsBottomPanel} role={'none'}>
             <PlaybackButton />
+            <ReverseButton />
+            <ForwardButton />
             <VolumeButton />
         </div>
     );
