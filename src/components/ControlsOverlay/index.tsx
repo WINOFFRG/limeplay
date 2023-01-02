@@ -1,3 +1,4 @@
+import { useIdle } from '../../hooks/use-idle';
 import {
     ControlsBottomPanel,
     ControlsMiddlePanel,
@@ -7,10 +8,16 @@ import useStyles from './styles';
 
 export default function ControlsOverlay() {
     const { classes } = useStyles();
+    const idle = useIdle(2000);
 
     return (
         <div className={classes.skinControls} role={'none'}>
-            <div className={classes.controlsWrapper}>
+            <div
+                className={classes.controlsWrapper}
+                style={{
+                    opacity: idle ? 0 : 1,
+                }}
+            >
                 <ControlsTopPanel />
                 <ControlsMiddlePanel />
                 <ControlsBottomPanel />
