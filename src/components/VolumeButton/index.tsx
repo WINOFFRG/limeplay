@@ -101,8 +101,8 @@ export default function VolumeButton() {
 
     const toggleMute = () => {
         if (video) {
-            video.muted = !video.muted;
-            setIsMuted(video.muted);
+            if (video.muted) handleVolumeChange(1);
+            else handleVolumeChange(0);
         }
     };
 
@@ -123,7 +123,7 @@ export default function VolumeButton() {
                 });
             }
         };
-    }, [video, shakaPlayer]);
+    }, [video]);
 
     return (
         <div className={classes.volumeControl}>
@@ -140,7 +140,7 @@ export default function VolumeButton() {
                 <div
                     className={classes.volumeSlider__Slider}
                     role={'slider'}
-                    tabIndex={0}
+                    tabIndex={-1}
                 >
                     {/* @ts-ignore */}
                     <div ref={ref} className={classes.volumeSlider__Duration}>

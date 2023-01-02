@@ -14,9 +14,11 @@ export default function ControlsOverlay() {
         <div className={classes.skinControls} role={'none'}>
             <div
                 className={classes.controlsWrapper}
-                style={{
-                    opacity: idle ? 0 : 1,
-                }}
+                style={
+                    {
+                        // opacity: idle ? 0 : 1,
+                    }
+                }
             >
                 <ControlsTopPanel />
                 <ControlsMiddlePanel />
