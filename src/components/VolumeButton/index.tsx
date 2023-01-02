@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import useStore from '../../store';
 import useStyles from './styles';
+import { useMove } from '../../hooks/use-move';
 
 function UnmuteIcon() {
     const { classes } = useStyles();
@@ -51,11 +52,52 @@ function MuteIcon() {
     );
 }
 
+function VolumeHalf() {
+    const { classes } = useStyles();
+
+    return (
+        <svg
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            className={classes.iconStyle}
+        >
+            <g fill="#FFF" fillRule="evenodd">
+                <path
+                    d="M7.176 9.19L7 9.262H3a.75.75 0 00-.75.75v3.977c0 .416.333.75.75.75h4l.176.073 6.589 6.562c.624.622.985.472.985-.42V3.048c0-.888-.361-1.041-.985-.42L7.176 9.19z"
+                    stroke="#FFF"
+                    strokeWidth=".5"
+                />
+                <path
+                    d="M17.486 8.87c1.378.824 2.014 1.838 2.014 3.13 0 1.293-.636 2.307-2.014 3.13a.994.994 0 00-.343 1.368c.284.471.898.624 1.371.341 1.955-1.168 2.986-2.81 2.986-4.838s-1.03-3.67-2.986-4.839a1.002 1.002 0 00-1.371.342.994.994 0 00.343 1.366z"
+                    fillRule="nonzero"
+                />
+            </g>
+        </svg>
+    );
+}
+
 export default function VolumeButton() {
     const { classes } = useStyles();
     const video = useStore((state) => state.video);
     const shakaPlayer = useStore((state) => state.shakaPlayer);
     const [isMuted, setIsMuted] = useState(false);
+    const [volume, setVolume] = useState(0);
+
+    const { ref, active } = useMove(({ x }) => handleVolumeChange(x));
+
+    const handleVolumeChange = useCallback(
+        (x: number) => {
+            if (video) {
+                if (x === 0) video.muted = true;
+                else video.muted = false;
+
+                setIsMuted(video.muted);
+                video.volume = x;
+                setVolume(x);
+            }
+        },
+        [video]
+    );
 
     const toggleMute = () => {
         if (video) {
@@ -65,22 +107,34 @@ export default function VolumeButton() {
     };
 
     useEffect(() => {
-        const handleVolumeChange = () => {
-            setIsMuted(video.muted);
-        };
+        if (video) {
+            video.addEventListener('volumechange', () => {
+                handleVolumeChange(video.volume);
+            });
 
-        if (video) video.addEventListener('volumechange', handleVolumeChange);
+            setIsMuted(video.muted);
+            setVolume(video.volume);
+        }
 
         return () => {
-            if (video)
-                video.removeEventListener('volumechange', handleVolumeChange);
+            if (video) {
+                video.removeEventListener('volumechange', () => {
+                    handleVolumeChange(video.volume);
+                });
+            }
         };
     }, [video, shakaPlayer]);
 
     return (
         <div className={classes.volumeControl}>
             <button className={classes.controlButton} onClick={toggleMute}>
-                {isMuted ? <MuteIcon /> : <UnmuteIcon />}
+                {isMuted ? (
+                    <MuteIcon />
+                ) : volume > 0.5 ? (
+                    <UnmuteIcon />
+                ) : (
+                    <VolumeHalf />
+                )}
             </button>
             <div className={classes.volumeSlider}>
                 <div
@@ -88,8 +142,21 @@ export default function VolumeButton() {
                     role={'slider'}
                     tabIndex={0}
                 >
-                    <div className={classes.volumeSlider__Duration} />
-                    {/* <div className={classes.volumeSlider__Progress} /> */}
+                    {/* @ts-ignore */}
+                    <div ref={ref} className={classes.volumeSlider__Duration}>
+                        <div
+                            className={classes.volumeSlider__Progress}
+                            style={{
+                                width: `${volume * 100}%`,
+                            }}
+                        />
+                        <div
+                            className={classes.volumeSlider__Head}
+                            style={{
+                                left: `${volume * 100}%`,
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

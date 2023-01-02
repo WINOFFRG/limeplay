@@ -38,8 +38,17 @@ const useStyles = createStyles((theme, _params, getRef) => ({
         alignItems: 'center',
         justifyContent: 'center',
 
-        [`& ${getRef('volumeSlider__Slider')}`]: {
+        [`&:hover .${getRef('volumeSlider__Slider')}`]: {
             width: '100px',
+            opacity: 1,
+        },
+
+        [`&:hover .${getRef('volumeSlider__Progress')}`]: {
+            opacity: 1,
+        },
+
+        [`&:hover .${getRef('volumeSlider__Head')}`]: {
+            opacity: 1,
         },
     },
 
@@ -52,15 +61,11 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     },
 
     volumeSlider__Slider: {
+        ref: getRef('volumeSlider__Slider'),
         position: 'relative',
         width: 0,
         marginLeft: '-4px',
         transition: 'width 0.35s ease-in-out',
-
-        // '&:hover': {
-        //     cursor: 'pointer',
-        //     width: '100px',
-        // },
     },
 
     volumeSlider__Duration: {
@@ -72,12 +77,29 @@ const useStyles = createStyles((theme, _params, getRef) => ({
     },
 
     volumeSlider__Progress: {
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        width: '100px',
+        ref: getRef('volumeSlider__Progress'),
+        width: '70%',
         height: '100%',
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        borderRadius: '2px',
+        background: '#fff',
+        cursor: 'pointer',
+        opacity: 0,
+        transition:
+            'opacity .2s cubic-bezier(0.4,0,0.2,1) ,transform .2s cubic-bezier(0.4,0,0.2,1)',
+    },
+
+    volumeSlider__Head: {
+        ref: getRef('volumeSlider__Head'),
+        position: 'absolute',
+        width: '12px',
+        height: '12px',
+        borderRadius: '50%',
+        background: '#fff',
+        transform: 'translate(-50%, -25%)',
+        cursor: 'pointer',
+        opacity: 0,
+        transition:
+            'opacity .2s cubic-bezier(0.4,0,0.2,1) ,transform .2s cubic-bezier(0.4,0,0.2,1)',
     },
 }));
 
