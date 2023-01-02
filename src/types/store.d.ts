@@ -7,4 +7,6 @@ interface Store {
     setShakaPlayer: (shakaPlayer: shaka.Player | null) => void;
     isLoading: boolean;
     setIsLoading: (isLoading: boolean) => void;
+    playerBaseWrapper: HTMLDivElement | null;
+    setPlayerBaseWrapper: (playerBaseWrapper: HTMLDivElement | null) => void;
 }

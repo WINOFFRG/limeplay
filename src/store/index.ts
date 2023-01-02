@@ -20,6 +20,12 @@ const useStore = create<Store>()(
             setIsLoading: (isLoading: boolean) => {
                 set({ isLoading: isLoading });
             },
+            playerBaseWrapper: null,
+            setPlayerBaseWrapper: (
+                playerBaseWrapper: HTMLDivElement | null
+            ) => {
+                set({ playerBaseWrapper: playerBaseWrapper });
+            },
         }),
         {
             name: 'Limetree',

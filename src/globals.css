@@ -3,3 +3,10 @@
   src: local("Graphik-Medium"),
     url("./fonts//Graphik-Medium.woff") format("woff");
 }
+
+video::-webkit-media-controls {
+  display: none !important;
+}
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
