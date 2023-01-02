@@ -42,9 +42,18 @@ function Reverse10() {
 export default function ReverseButton() {
     const { classes } = useStyles();
     const video = useStore((state) => state.video);
-    const shakaPlayer = useStore((state) => state.shakaPlayer);
 
-    useEffect(() => {}, [video]);
+    // TODO: Handle cases for Live Playback, Seek window edge/end
 
-    return <button className={classes.controlButton}>{<Reverse10 />}</button>;
+    const handleReverse = useCallback(() => {
+        if (video) {
+            video.currentTime -= 10;
+        }
+    }, [video]);
+
+    return (
+        <button className={classes.controlButton} onClick={handleReverse}>
+            {<Reverse10 />}
+        </button>
+    );
 }

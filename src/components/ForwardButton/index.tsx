@@ -42,12 +42,17 @@ function Forward10() {
 export default function ForwardButton() {
     const { classes } = useStyles();
     const video = useStore((state) => state.video);
-    const shakaPlayer = useStore((state) => state.shakaPlayer);
 
-    useEffect(() => {}, [video]);
+    // TODO: Handle cases for Live Playback, Seek window edge/end
+
+    const handleForward = useCallback(() => {
+        if (video) {
+            video.currentTime += 10;
+        }
+    }, [video]);
 
     return (
-        <button className={classes.controlButton}>
+        <button className={classes.controlButton} onClick={handleForward}>
             <Forward10 />
         </button>
     );
