@@ -1,5 +1,9 @@
+import { useEffect, useRef } from 'react';
+import useStore from '../../store';
 import PlaybackButton from '../PlaybackButton';
 import useStyles from './styles';
+import shaka from 'shaka-player/dist/shaka-player.ui.debug';
+import VolumeButton from '../VolumeButton';
 
 export function ControlsTopPanel() {
     const { classes } = useStyles();
@@ -9,8 +13,34 @@ export function ControlsTopPanel() {
 
 export function ControlsMiddlePanel() {
     const { classes } = useStyles();
+    const cuesContainer = useRef<HTMLDivElement>(null);
+    const video = useStore((state) => state.video);
+    const shakaPlayer = useStore((state) => state.shakaPlayer);
 
-    return <div className={classes.controlsMiddlePanel} role={'none'}></div>;
+    useEffect(() => {
+        const textCuesContainer = new shaka.text.UITextDisplayer(
+            video,
+            cuesContainer.current
+        );
+
+        if (shakaPlayer) {
+            const textTracks = shakaPlayer.getTextTracks();
+            shakaPlayer.selectTextTrack(textTracks[1]);
+            shakaPlayer.setTextTrackVisibility(true);
+        }
+
+        return () => {
+            textCuesContainer.destroy();
+        };
+    }, [video, shakaPlayer]);
+
+    return (
+        <div
+            ref={cuesContainer}
+            className={classes.controlsMiddlePanel}
+            role={'none'}
+        ></div>
+    );
 }
 
 export function ControlsBottomPanel() {
@@ -19,6 +49,7 @@ export function ControlsBottomPanel() {
     return (
         <div className={classes.controlsBottomPanel} role={'none'}>
             <PlaybackButton />
+            <VolumeButton />
         </div>
     );
 }

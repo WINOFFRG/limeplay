@@ -42,27 +42,44 @@ function PauseIcon() {
 
 export default function PlaybackButton() {
     const { classes } = useStyles();
-    const video: HTMLVideoElement = useStore((state) => state.video);
+    const video = useStore((state) => state.video);
+    const shakaPlayer = useStore((state) => state.shakaPlayer);
+    const isLoading = useStore((state) => state.isLoading);
     const [isPaused, setIsPaused] = useState<boolean>(true);
+    const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
-    const handlePlayback = useCallback(async () => {
+    const handlePlayback = async () => {
         if (video) {
             isPaused ? await video.play() : video.pause();
             setIsPaused(video.paused);
-            console.log('isPaused', isPaused);
         }
-    }, [isPaused, video]);
+    };
 
     useEffect(() => {
         if (video) {
             setIsPaused(video.paused);
-        }
-    }, [video]);
+            setIsDisabled(false);
 
-    if (!video) return null;
+            video.addEventListener('play', () => setIsPaused(false));
+            video.addEventListener('pause', () => setIsPaused(true));
+        } else {
+            setIsDisabled(true);
+        }
+
+        return () => {
+            if (video) {
+                video.removeEventListener('play', () => setIsPaused(false));
+                video.removeEventListener('pause', () => setIsPaused(true));
+            }
+        };
+    }, [video, shakaPlayer]);
 
     return (
-        <button className={classes.controlButton} onClick={handlePlayback}>
+        <button
+            disabled={isDisabled ? true : isLoading}
+            className={classes.controlButton}
+            onClick={handlePlayback}
+        >
             {isPaused ? <PlayIcon /> : <PauseIcon />}
         </button>
     );

@@ -5,7 +5,8 @@ import useStyles from './styles';
 export default function PlayerLoader() {
     const { classes } = useStyles();
     const shakaPlayer = useStore((state) => state.shakaPlayer);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const isLoading = useStore((state) => state.isLoading);
+    const setIsLoading = useStore((state) => state.setIsLoading);
 
     const handleBuffering = useCallback(() => {
         if (shakaPlayer) setIsLoading(shakaPlayer.isBuffering());
