@@ -1,9 +1,10 @@
 export default function configure(player: shaka.Player) {
     const config: PlayerConfig = {
         playback: {
-            url:
-                import.meta.env.VITE_PLAYBACK_URL ||
-                'https://dash.akamaized.net/dash264/TestCasesUHD/2b/11/MultiRate.mpd',
+            // url:
+            //     import.meta.env.VITE_PLAYBACK_URL ||
+            //     'https://dash.akamaized.net/dash264/TestCasesUHD/2b/11/MultiRate.mpd',
+            url: 'https://storage.googleapis.com/shaka-demo-assets/sintel/dash.mpd',
             prerolls: [],
         },
         shaka: player.getConfiguration(),

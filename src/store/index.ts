@@ -16,6 +16,10 @@ const useStore = create<Store>()(
             setShakaPlayer: (shakaPlayer: shaka.Player | null) => {
                 set({ shakaPlayer: shakaPlayer });
             },
+            isLoading: false,
+            setIsLoading: (isLoading: boolean) => {
+                set({ isLoading: isLoading });
+            },
         }),
         {
             name: 'Limetree',

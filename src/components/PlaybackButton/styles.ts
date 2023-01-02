@@ -17,6 +17,12 @@ const useStyles = createStyles((theme) => ({
             cursor: 'pointer',
             transform: 'scale(1.1)',
         },
+
+        '&:disabled': {
+            opacity: 0.3,
+            cursor: 'not-allowed',
+            transform: 'none',
+        },
     },
 
     iconStyle: {

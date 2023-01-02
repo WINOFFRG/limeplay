@@ -5,4 +5,6 @@ interface Store {
     setPlayerConfig: (playerConfig: PlayerConfig | null) => void;
     shakaPlayer: shaka.Player | null;
     setShakaPlayer: (shakaPlayer: shaka.Player | null) => void;
+    isLoading: boolean;
+    setIsLoading: (isLoading: boolean) => void;
 }

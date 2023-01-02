@@ -31,6 +31,7 @@ const useStyles = createStyles((theme) => ({
     },
 
     videoElement: {
+        // opacity: 0.1,
         display: 'block',
         width: '100%',
         height: '100%',
