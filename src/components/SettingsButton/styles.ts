@@ -7,7 +7,7 @@ const useStyles = createStyles((theme) => ({
         width: '44px',
         height: '44px',
         opacity: 0.7,
-        transition: 'all 0.1s ease-in-out',
+        transition: 'opacity 0.1s ease-in-out',
         backgroundColor: 'transparent',
         border: 'none',
         ...theme.fn.focusStyles(),
