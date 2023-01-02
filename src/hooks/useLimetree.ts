@@ -4,7 +4,7 @@ import configure from './configure';
 import shaka from 'shaka-player/dist/shaka-player.ui.debug';
 
 export default function useLimetree() {
-    const video: HTMLVideoElement = useStore((state) => state.video);
+    const video = useStore((state) => state.video);
     const setPlayerConfig = useStore((state) => state.setPlayerConfig);
     const setShakaPlayer = useStore((state) => state.setShakaPlayer);
     const [isDestroyed, setIsDestroyed] = useState(true);
