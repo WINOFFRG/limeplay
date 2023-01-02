@@ -52,16 +52,17 @@ export default function FullscreenButton() {
     const { classes } = useStyles();
     const video = useStore((state) => state.video);
     const shakaPlayer = useStore((state) => state.shakaPlayer);
+    const playerBaseWrapper = useStore((state) => state.playerBaseWrapper);
     const [isSupported, setIsSupported] = useState<boolean>(false);
     const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
     const toggleFullscreen = useCallback(() => {
-        if (video) {
+        if (video && playerBaseWrapper) {
             if (document.fullscreenElement) {
                 document.exitFullscreen();
                 setIsFullscreen(false);
             } else {
-                video.requestFullscreen();
+                playerBaseWrapper.requestFullscreen();
                 setIsFullscreen(true);
             }
         }

@@ -2,6 +2,8 @@ import { createStyles } from '@mantine/styles';
 
 import PlayerOverlay from './PlayerOverlay';
 import VideoWrapper from './VideoWrapper';
+import { useEffect, useRef } from 'react';
+import useStore from '../store';
 
 const useStyles = createStyles((theme) => ({
     playerBase: {
@@ -15,9 +17,19 @@ const useStyles = createStyles((theme) => ({
 
 const FullScreenPlayer: React.FC = () => {
     const { classes } = useStyles();
+    const playerBase = useRef<HTMLDivElement>(null);
+    const setPlayerBaseWrapper = useStore(
+        (state) => state.setPlayerBaseWrapper
+    );
+
+    useEffect(() => {
+        if (playerBase.current) {
+            setPlayerBaseWrapper(playerBase.current);
+        }
+    }, []);
 
     return (
-        <div className={classes.playerBase}>
+        <div className={classes.playerBase} ref={playerBase}>
             <PlayerOverlay />
             <VideoWrapper />
         </div>
