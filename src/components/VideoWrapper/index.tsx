@@ -20,6 +20,7 @@ const VideoWrapper: React.FC = () => {
                 <video
                     autoPlay
                     playsInline
+                    muted
                     ref={videoRef}
                     className={classes.videoElement}
                 />
