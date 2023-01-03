@@ -38,6 +38,8 @@ export function ControlsMiddlePanel() {
         );
 
         if (shakaPlayer) {
+            // @ts-ignore
+            window['player'] = shakaPlayer;
             const textTracks = shakaPlayer.getTextTracks();
             shakaPlayer.selectTextTrack(textTracks[1]);
             shakaPlayer.setTextTrackVisibility(true);
