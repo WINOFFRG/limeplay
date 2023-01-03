@@ -30,18 +30,23 @@ export function ControlsMiddlePanel() {
     const shakaPlayer = useStore((state) => state.shakaPlayer);
 
     useEffect(() => {
-        // const textCuesContainer = new shaka.text.UITextDisplayer(
-        //     video,
-        //     cuesContainer.current
-        // );
-        // if (shakaPlayer) {
-        //     const textTracks = shakaPlayer.getTextTracks();
-        //     shakaPlayer.selectTextTrack(textTracks[1]);
-        //     shakaPlayer.setTextTrackVisibility(true);
-        // }
-        // return () => {
-        //     textCuesContainer.destroy();
-        // };
+        if (!cuesContainer.current) return;
+
+        const textCuesContainer = new shaka.text.UITextDisplayer(
+            video,
+            cuesContainer.current
+        );
+
+        if (shakaPlayer) {
+            const textTracks = shakaPlayer.getTextTracks();
+            shakaPlayer.selectTextTrack(textTracks[1]);
+            shakaPlayer.setTextTrackVisibility(true);
+            console.log(textCuesContainer);
+        }
+
+        return () => {
+            if (textCuesContainer) textCuesContainer.destroy();
+        };
     }, [video, shakaPlayer]);
 
     return (
