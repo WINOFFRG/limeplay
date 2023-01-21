@@ -1,0 +1,11 @@
+{
+  "overrides": [
+    {
+      "files": ["*"],
+      "options": {
+        "tabWidth": 4,
+        "singleQuote": true
+      }
+    }
+  ]
+}
