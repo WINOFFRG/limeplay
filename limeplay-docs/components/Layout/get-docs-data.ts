@@ -1,4 +1,4 @@
-import { allDocuments, type DocumentTypes } from '@/.contentlayer/generated';
+import { allDocuments, type Guide } from '@/.contentlayer/generated';
 import { CATEGORIZED, Category } from '../../settings';
 import { Frontmatter } from '../../types';
 
@@ -8,12 +8,13 @@ interface GroupPages {
     group: string;
 }
 
-function sortPages(pages: DocumentTypes[]) {
+function sortPages(pages: Guide[]) {
     if (!pages) {
         return [];
     }
 
     const clone = [...pages];
+
     clone.sort((a, b) => {
         if ('order' in a && 'order' in b) {
             if (a.order === b.order) {
