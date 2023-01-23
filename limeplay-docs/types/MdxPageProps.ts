@@ -7,8 +7,5 @@ export interface MdxPageProps {
 
     data: DocumentTypes;
 
-    siblings: {
-        next: Frontmatter;
-        prev: Frontmatter;
-    };
+
 }

@@ -1,13 +1,18 @@
 import React from 'react';
 import { SimpleGrid } from '@mantine/core';
-import { MdxPageProps } from '../../../types';
 import { MdxSibling } from './MdxSibling/MdxSibling';
+import { DocumentTypeMap } from '.contentlayer/generated';
+import { getPageSiblings } from '@/utils/get-page-siblings';
 
-interface MdxSiblingsProps {
-    siblings: MdxPageProps['siblings'];
-}
+export function MdxSiblings({
+    type,
+    route,
+}: {
+    type: keyof DocumentTypeMap;
+    route: string;
+}) {
+    const siblings = getPageSiblings(type, route);
 
-export function MdxSiblings({ siblings }: MdxSiblingsProps) {
     return (
         <SimpleGrid
             mt={40}
