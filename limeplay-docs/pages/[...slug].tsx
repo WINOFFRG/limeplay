@@ -8,19 +8,7 @@ import Layout from '@/components/Layout/Layout';
 import { Heading, getTableOfContents } from '@/utils/get-table-of-contents';
 import { MdxErrorPage } from '@/components/MdxPage/MdxErrorPage/MdxErrorPage';
 import useRawPath from '@/hooks/use-raw-path';
-
-function findSiblings(data: ReturnType<typeof getDocsData>, pathname: string) {
-    const pages = data.reduce((acc, group) => {
-        const inner = group.groups.reduce<Frontmatter[]>(
-            (_acc, g) => [..._acc, ...g.pages],
-            []
-        );
-        return [...acc, ...group.uncategorized, ...inner];
-    }, []);
-
-    const index = pages.findIndex((page) => page.slug === pathname);
-    return { next: pages[index + 1] || null, prev: pages[index - 1] || null };
-}
+import { getPageSiblings } from '@/utils/get-page-siblings';
 
 export default function DocPage({
     mdx,
@@ -30,9 +18,7 @@ export default function DocPage({
         headings: Heading[];
     };
 }) {
-    const allMdx = getDocsData();
     const { rawPath } = useRawPath();
-    const siblings = findSiblings(allMdx, rawPath);
 
     if (!mdx) {
         return (
@@ -61,11 +47,7 @@ export default function DocPage({
                 }}
             >
                 <article>
-                    <MdxPage
-                        data={mdx.data}
-                        headings={mdx.headings}
-                        siblings={siblings}
-                    />
+                    <MdxPage data={mdx.data} headings={mdx.headings} />
                 </article>
             </Layout>
         </>
