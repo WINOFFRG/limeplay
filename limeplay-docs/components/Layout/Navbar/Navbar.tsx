@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollArea } from '@mantine/core';
 import NavbarMainLink from './NavbarMainLink/NavbarMainLink';
 import NavbarDocsCategory from './NavbarDocsCategory/NavbarDocsCategory';
-import { getDocsData } from '../get-docs-data';
+import { getDocsData } from '../../../utils/get-docs-data';
 import mainLinks from './main-links';
 import useStyles from './Navbar.styles';
 
