@@ -8,7 +8,6 @@ import { MdxPageBase } from '../MdxPageBase/MdxPageBase';
 import { StylesApi } from './StylesApi/StylesApi';
 import { MdxPageProps } from '../../../types';
 import useStyles from './MdxPageTabs.styles';
-import { useRouter } from 'next/router';
 import { useMDXComponent } from 'next-contentlayer/hooks';
 import PropsTable from './PropsTable/PropsTable';
 import { components } from '../MdxProvider/MdxProvider';
@@ -108,6 +107,7 @@ export function MdxPageTabs({ data: frontmatter }: MdxPageProps) {
                         }}
                     >
                         <div className={classes.main}>
+                            {/* @ts-ignore */}
                             <Component components={components}>
                                 {frontmatter.body.raw}
                             </Component>

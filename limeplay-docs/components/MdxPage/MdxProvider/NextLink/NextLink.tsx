@@ -1,8 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
-import useStyles from './GatsbyLink.styles';
+import useStyles from './NextLink.styles';
 
-export default function GatsbyLink(
+export default function NextLink(
     props: React.ComponentPropsWithoutRef<typeof Link>
 ) {
     const { classes } = useStyles();

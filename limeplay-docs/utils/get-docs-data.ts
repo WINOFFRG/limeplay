@@ -74,7 +74,7 @@ export function groupPages({ categories, order, group }: GroupPages): {
 }
 
 export function getDocsData() {
-    const data = CATEGORIZED.map((data) =>
+    return CATEGORIZED.map((data) =>
         groupPages({
             // @ts-ignore
             categories: data.categories,
@@ -82,6 +82,4 @@ export function getDocsData() {
             group: data.group,
         })
     );
-    console.log(data[0]);
-    return data;
 }

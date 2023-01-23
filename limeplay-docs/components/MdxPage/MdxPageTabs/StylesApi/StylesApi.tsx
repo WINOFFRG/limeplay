@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Group } from '@mantine/core';
 import { IconArrowRight } from '@tabler/icons';
-import GatsbyLink from '../../MdxProvider/GatsbyLink/GatsbyLink';
+import NextLink from '../../MdxProvider/NextLink/NextLink';
 import { StylesApiItem } from './StylesApiItem/StylesApiItem';
 
 interface StylesApiProps {
@@ -22,12 +22,12 @@ export function StylesApi({ components }: StylesApiProps) {
             {/* No Items bcoz Sttyles API need separate data source */}
             {items}
             <Box mt="xl">
-                <GatsbyLink href="/styles/styles-api/">
+                <NextLink href="/styles/styles-api/">
                     <Group spacing={4}>
                         <span>Learn more about Styles API</span>
                         <IconArrowRight size={14} stroke={1.5} />
                     </Group>
-                </GatsbyLink>
+                </NextLink>
             </Box>
         </>
     );
