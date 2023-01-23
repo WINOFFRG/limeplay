@@ -1,6 +1,13 @@
-import { allDocuments, type Guide } from '@/.contentlayer/generated';
-import { CATEGORIZED, Category } from '../../settings';
-import { Frontmatter } from '../../types';
+import { allDocuments, type DocumentTypes } from '@/.contentlayer/generated';
+import { CATEGORIZED } from '../settings';
+import { Frontmatter } from '../types';
+import React from 'react';
+import { Icon2fa } from '@tabler/icons';
+
+export interface Category {
+    title: string;
+    icon: (props: React.ComponentProps<typeof Icon2fa>) => JSX.Element;
+}
 
 interface GroupPages {
     categories: Record<string, Category>;
@@ -8,7 +15,7 @@ interface GroupPages {
     group: string;
 }
 
-function sortPages(pages: Guide[]) {
+function sortPages(pages: DocumentTypes[]) {
     if (!pages) {
         return [];
     }
@@ -33,8 +40,8 @@ function sortPages(pages: Guide[]) {
 }
 
 export function groupPages({ categories, order, group }: GroupPages): {
-    uncategorized: Frontmatter[];
-    groups: { category: Category; pages: Frontmatter[] }[];
+    uncategorized: DocumentTypes[];
+    groups: { category: Category; pages: DocumentTypes[] }[];
     group: string;
 } {
     const pages = allDocuments
@@ -42,9 +49,9 @@ export function groupPages({ categories, order, group }: GroupPages): {
         .filter((page) => !page.hidden)
         .filter((page) => page.group === group);
 
-    const uncategorized = [];
+    const uncategorized: DocumentTypes[] = [];
 
-    const categorized = pages.reduce((acc, page) => {
+    const categorized = pages.reduce((acc: any, page) => {
         if (!(page.category in categories)) {
             uncategorized.push({ ...page, order: page.order || 0 });
             return acc;
@@ -67,5 +74,14 @@ export function groupPages({ categories, order, group }: GroupPages): {
 }
 
 export function getDocsData() {
-    return CATEGORIZED.map((data) => groupPages({ ...data }));
+    const data = CATEGORIZED.map((data) =>
+        groupPages({
+            // @ts-ignore
+            categories: data.categories,
+            order: data.order,
+            group: data.group,
+        })
+    );
+    console.log(data[0]);
+    return data;
 }

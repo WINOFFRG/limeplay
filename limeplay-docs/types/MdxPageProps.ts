@@ -3,9 +3,5 @@ import { Frontmatter } from './Frontmatter';
 import { type DocumentTypes } from 'contentlayer/generated';
 
 export interface MdxPageProps {
-    headings: Heading[];
-
     data: DocumentTypes;
-
-
 }

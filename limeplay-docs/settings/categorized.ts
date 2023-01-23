@@ -1,19 +1,22 @@
-import { MANTINE_CORE_CATEGORIES, MANTINE_CORE_ORDER } from './mantine-core';
-import { MANTINE_HOOKS_ORDER, MANTINE_HOOKS_CATEGORIES } from './mantine-hooks';
+import { Category } from './types';
 
-export const MANTINE_HOOKS_CATEGORIZED = {
-    group: 'mantine-hooks',
-    categories: MANTINE_HOOKS_CATEGORIES,
-    order: MANTINE_HOOKS_ORDER,
+const CORE_ORDER = ['data-display', 'overlay'] as const;
+
+const CORE_CATEGORIZES: Record<typeof CORE_ORDER[number], Category> = {
+    'data-display': {
+        title: 'Data display Scam',
+    },
+
+    overlay: {
+        title: 'Overlays Lol',
+        // icon: IconBoxMultiple,
+    },
 };
 
-export const MANTINE_CORE_CATEGORIZED = {
-    group: 'mantine-core',
-    categories: MANTINE_CORE_CATEGORIES,
-    order: MANTINE_CORE_ORDER,
+export const CORE_CATEGORIZED = {
+    group: 'core',
+    categories: CORE_CATEGORIZES,
+    order: CORE_ORDER,
 };
 
-export const CATEGORIZED = [
-    { group: 'theming', categories: {}, order: [] },
-    MANTINE_CORE_CATEGORIZED,
-];
+export const CATEGORIZED = [CORE_CATEGORIZED];

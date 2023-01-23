@@ -6,26 +6,22 @@ import { Heading, getTableOfContents } from '@/utils/get-table-of-contents';
 import { MdxErrorPage } from '@/components/MdxPage/MdxErrorPage/MdxErrorPage';
 import useRawPath from '@/hooks/use-raw-path';
 import SEO from '@/components/seo';
+import { getDocumentsByType } from '@/utils/get-docs-by-type';
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 
 export default function DocPage({
     mdx,
+    error,
 }: {
-    mdx: {
-        data: DocumentTypes;
-        headings: Heading[];
-    };
+    mdx: DocumentTypes;
+    error?: boolean;
 }) {
-    const { rawPath } = useRawPath();
-
-    if (!mdx) {
+    if (!mdx || error) {
         return (
             <>
-                <Layout
-                    location={{
-                        pathname: rawPath,
-                    }}
-                >
-                    <MdxErrorPage />
+                <Layout>
+                    NOT FOUND
+                    {/* <MdxErrorPage /> */}
                 </Layout>
             </>
         );
@@ -33,27 +29,23 @@ export default function DocPage({
 
     return (
         <>
-            <SEO title={mdx.data.title} description={mdx.data.description} />
-            <Layout
-                location={{
-                    pathname: rawPath,
-                }}
-            >
+            <SEO title={mdx.title} description={mdx.description} />
+            <Layout>
                 <article>
-                    <MdxPage data={mdx.data} headings={mdx.headings} />
+                    <MdxPage mdx={mdx} />
                 </article>
             </Layout>
         </>
     );
 }
 
-export const getStaticProps = ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
     const document = allDocuments.find((post) => {
-        const pathAsked = params.slug.join('/');
-        const pathFound =
-            post._raw.sourceFileDir +
-            '/' +
-            post._raw.sourceFileName.replace(/\.mdx$/, '');
+        const pathAsked =
+            params?.slug && Array.isArray(params.slug)
+                ? '/' + params.slug.join('/')
+                : params?.slug;
+        const pathFound = post.slug;
 
         return pathAsked === pathFound;
     });
@@ -61,9 +53,7 @@ export const getStaticProps = ({ params }) => {
     if (document) {
         return {
             props: {
-                mdx: {
-                    data: document,
-                },
+                mdx: document,
             },
         };
     } else {
@@ -75,16 +65,11 @@ export const getStaticProps = ({ params }) => {
     }
 };
 
-export const getStaticPaths = () => {
+export const getStaticPaths = async () => {
+    const paths = allDocuments.map((doc) => doc.slug);
+
     return {
-        paths: allDocuments.map((post) => ({
-            params: {
-                slug: [
-                    post._raw.sourceFileDir,
-                    post._raw.sourceFileName.replace(/\.mdx$/, ''),
-                ],
-            },
-        })),
+        paths,
         fallback: false,
     };
 };
