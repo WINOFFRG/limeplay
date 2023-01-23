@@ -6,6 +6,7 @@ import { MdxPageProps, Frontmatter } from '../../types';
 import { DocumentTypes } from '@/.contentlayer/generated';
 
 export function MdxPage({ mdx }: { mdx: DocumentTypes }) {
+
     return (
         <>
             <MdxPageHeader frontmatter={mdx} />

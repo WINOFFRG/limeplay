@@ -5,26 +5,33 @@ import { MdxSiblings } from '../MdxSiblings/MdxSiblings';
 import { MdxPageProps } from '../../../types';
 import useStyles from './MdxRawContent.styles';
 import { useMDXComponent } from 'next-contentlayer/hooks';
+import useRawPath from '@/hooks/use-raw-path';
 
 export function MdxRawContent({ data }: MdxPageProps) {
     const { classes } = useStyles({ withToc: !data.hideToc });
     const Component = useMDXComponent(data.body.code);
+    const { rawPath } = useRawPath();
 
-    <MdxPageBase>
-        <div className={classes.wrapper}>
-            <div className={classes.container}>
-                <Component>{data.body}</Component>
-                {/* {!data.hideToc && <MdxSiblings />} */}
-            </div>
-
-            {!data.hideToc && (
-                <div className={classes.tableOfContents}>
-                    <TableOfContents
-                        headings={data.headings}
-                        withTabs={false}
-                    />
+    return (
+        <MdxPageBase>
+            <div className={classes.wrapper}>
+                <div className={classes.container}>
+                    <Component>{data.body}</Component>
+                    {!data.hideToc && (
+                        <MdxSiblings type={'Guide'} route={rawPath} />
+                    )}
                 </div>
-            )}
-        </div>
-    </MdxPageBase>;
+
+                {!data.hideToc && (
+                    <div className={classes.tableOfContents}>
+                        <TableOfContents
+                            headings={data.headings}
+                            withTabs={false}
+                        />
+                    </div>
+                )}
+            </div>
+        </MdxPageBase>
+    );
+
 }
