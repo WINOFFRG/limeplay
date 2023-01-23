@@ -1,5 +1,4 @@
 import React from 'react';
-import { PageHead } from '../components/PageHead/PageHead';
 import { MdxPage } from '../components/MdxPage/MdxPage';
 import { getDocsData } from '../components/Layout/get-docs-data';
 import { MdxPageProps, Frontmatter } from '../types';
@@ -9,6 +8,7 @@ import { Heading, getTableOfContents } from '@/utils/get-table-of-contents';
 import { MdxErrorPage } from '@/components/MdxPage/MdxErrorPage/MdxErrorPage';
 import useRawPath from '@/hooks/use-raw-path';
 import { getPageSiblings } from '@/utils/get-page-siblings';
+import SEO from '@/components/seo';
 
 export default function DocPage({
     mdx,
@@ -23,7 +23,6 @@ export default function DocPage({
     if (!mdx) {
         return (
             <>
-                <PageHead title="Error" />
                 <Layout
                     location={{
                         pathname: rawPath,
@@ -37,10 +36,7 @@ export default function DocPage({
 
     return (
         <>
-            <PageHead
-                title={mdx.data.title}
-                description={mdx.data.description}
-            />
+            <SEO title={mdx.data.title} description={mdx.data.description} />
             <Layout
                 location={{
                     pathname: rawPath,
