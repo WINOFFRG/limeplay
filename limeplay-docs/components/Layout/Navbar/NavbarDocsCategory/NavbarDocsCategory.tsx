@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { IconChevronDown } from '@tabler/icons';
 import { Text } from '@mantine/core';
-import { getDocsData } from '../../get-docs-data';
+import { getDocsData } from '../../../../utils/get-docs-data';
 import useStyles from './NavbarDocsCategory.styles';
 import { HEADER_HEIGHT } from '../../Header/HeaderDesktop.styles';
 import { useRouter } from 'next/router';
@@ -114,9 +114,11 @@ export default function NavbarDocsCategory({
                       key={part.category.title}
                   >
                       <Text className={classes.innerCategoryTitle}>
-                          <part.category.icon
-                              className={classes.innerCategoryIcon}
-                          />
+                          {part.category.icon && (
+                              <part.category.icon
+                                  className={classes.innerCategoryIcon}
+                              />
+                          )}
                           {part.category.title}
                       </Text>
                       {links}

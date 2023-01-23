@@ -9,16 +9,10 @@ import {
     shouldExcludeNavbar,
     shouldExcludeHeader,
 } from '../../settings/exclude-layout';
-import { getDocsData } from './get-docs-data';
+import { getDocsData } from '../../utils/get-docs-data';
 import useStyles from './Layout.styles';
 import { ModalsProvider, ContextModalProps } from '@mantine/modals';
-
-export interface LayoutProps {
-    children: React.ReactNode;
-    location: {
-        pathname: string;
-    };
-}
+import useRawPath from '@/hooks/use-raw-path';
 
 function getActions(data: ReturnType<typeof getDocsData>): SpotlightAction[] {
     return data.reduce<SpotlightAction[]>((acc, part) => {
@@ -56,16 +50,18 @@ function getActions(data: ReturnType<typeof getDocsData>): SpotlightAction[] {
     }, []);
 }
 
-export function LayoutInner({ children, location }: LayoutProps) {
+export function LayoutInner({ children }: { children: React.ReactNode }) {
     const navbarCollapsed = useMediaQuery(
         `(max-width: ${NAVBAR_BREAKPOINT}px)`
     );
-    const shouldRenderHeader = !shouldExcludeHeader(location.pathname);
+
+    const { router } = useRawPath();
+    const data = getDocsData();
+    const shouldRenderHeader = !shouldExcludeHeader(router.pathname);
     const shouldRenderNavbar =
-        !shouldExcludeNavbar(location.pathname) || navbarCollapsed;
+        !shouldExcludeNavbar(router.pathname) || navbarCollapsed;
     const { classes, cx } = useStyles({ shouldRenderHeader });
     const [navbarOpened, setNavbarState] = useState(false);
-    const data = getDocsData();
 
     return (
         <SpotlightProvider
@@ -111,9 +107,7 @@ export function LayoutInner({ children, location }: LayoutProps) {
                         <ModalsProvider
                             labels={{ confirm: 'Confirm', cancel: 'Cancel' }}
                         >
-                            {/* <NotificationsProvider> */}
                             {children}
-                            {/* </NotificationsProvider> */}
                         </ModalsProvider>
                     </div>
                 </main>
