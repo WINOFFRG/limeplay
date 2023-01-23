@@ -5,9 +5,11 @@ import { upperFirst } from '@mantine/hooks';
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons';
 import { Frontmatter } from '../../../../types';
 import useStyles from './MdxSibling.styles';
+import { Document } from 'contentlayer/core';
+import { DocumentTypes } from '.contentlayer/generated';
 
 interface MdxSiblingProps {
-    data: Frontmatter;
+    data: DocumentTypes;
     type: 'next' | 'prev';
     className?: string;
 }

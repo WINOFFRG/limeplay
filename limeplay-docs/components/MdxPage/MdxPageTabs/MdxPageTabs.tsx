@@ -14,11 +14,7 @@ import PropsTable from './PropsTable/PropsTable';
 import { components } from '../MdxProvider/MdxProvider';
 import useRawPath from '@/hooks/use-raw-path';
 
-export function MdxPageTabs({
-    data: frontmatter,
-    headings,
-    siblings,
-}: MdxPageProps) {
+export function MdxPageTabs({ data: frontmatter, headings }: MdxPageProps) {
     const [query, setQuery] = useState('');
     const { classes } = useStyles();
     const mobile = useMediaQuery('(max-width: 500px)');
@@ -115,7 +111,7 @@ export function MdxPageTabs({
                             <Component components={components}>
                                 {frontmatter.body.raw}
                             </Component>
-                            <MdxSiblings siblings={siblings} />
+                            <MdxSiblings type={'Guide'} route={rawPath} />
                         </div>
 
                         <div className={classes.tableOfContents}>
