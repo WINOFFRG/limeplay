@@ -14,7 +14,7 @@ import PropsTable from './PropsTable/PropsTable';
 import { components } from '../MdxProvider/MdxProvider';
 import useRawPath from '@/hooks/use-raw-path';
 
-export function MdxPageTabs({ data: frontmatter, headings }: MdxPageProps) {
+export function MdxPageTabs({ data: frontmatter }: MdxPageProps) {
     const [query, setQuery] = useState('');
     const { classes } = useStyles();
     const mobile = useMediaQuery('(max-width: 500px)');
@@ -115,7 +115,10 @@ export function MdxPageTabs({ data: frontmatter, headings }: MdxPageProps) {
                         </div>
 
                         <div className={classes.tableOfContents}>
-                            <TableOfContents headings={headings} withTabs />
+                            <TableOfContents
+                                headings={frontmatter.headings}
+                                withTabs
+                            />
                         </div>
                     </div>
                 </Tabs.Panel>
