@@ -1,13 +1,10 @@
 import React from 'react';
 import { MdxPage } from '../components/MdxPage/MdxPage';
-import { getDocsData } from '../components/Layout/get-docs-data';
-import { MdxPageProps, Frontmatter } from '../types';
 import { allDocuments, type DocumentTypes } from 'contentlayer/generated';
 import Layout from '@/components/Layout/Layout';
 import { Heading, getTableOfContents } from '@/utils/get-table-of-contents';
 import { MdxErrorPage } from '@/components/MdxPage/MdxErrorPage/MdxErrorPage';
 import useRawPath from '@/hooks/use-raw-path';
-import { getPageSiblings } from '@/utils/get-page-siblings';
 import SEO from '@/components/seo';
 
 export default function DocPage({
@@ -66,7 +63,6 @@ export const getStaticProps = ({ params }) => {
             props: {
                 mdx: {
                     data: document,
-                    headings: getTableOfContents(document.body.raw),
                 },
             },
         };

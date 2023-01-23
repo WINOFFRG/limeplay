@@ -121,12 +121,9 @@ export const Guide = defineDocumentType(() => ({
     fields: GuideFields,
     computedFields: {
         ...computedFields,
-        frontMatter: {
-            type: 'json',
-            resolve: (doc) => ({
-                ...computeFrontmatter(GuideFields, doc),
-                headings: getTableOfContents(doc.body.raw),
-            }),
+        headings: {
+            type: 'list',
+            resolve: (doc) => getTableOfContents(doc.body.raw),
         },
     },
 }));
