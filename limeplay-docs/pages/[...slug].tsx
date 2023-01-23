@@ -2,12 +2,9 @@ import React from 'react';
 import { MdxPage } from '../components/MdxPage/MdxPage';
 import { allDocuments, type DocumentTypes } from 'contentlayer/generated';
 import Layout from '@/components/Layout/Layout';
-import { Heading, getTableOfContents } from '@/utils/get-table-of-contents';
 import { MdxErrorPage } from '@/components/MdxPage/MdxErrorPage/MdxErrorPage';
-import useRawPath from '@/hooks/use-raw-path';
 import SEO from '@/components/seo';
-import { getDocumentsByType } from '@/utils/get-docs-by-type';
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
+import { GetStaticProps } from 'next';
 
 export default function DocPage({
     mdx,
@@ -20,8 +17,7 @@ export default function DocPage({
         return (
             <>
                 <Layout>
-                    NOT FOUND
-                    {/* <MdxErrorPage /> */}
+                    <MdxErrorPage />
                 </Layout>
             </>
         );
