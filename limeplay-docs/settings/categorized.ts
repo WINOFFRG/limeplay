@@ -4,17 +4,17 @@ const CORE_ORDER = ['data-display', 'overlay'] as const;
 
 const CORE_CATEGORIZES: Record<typeof CORE_ORDER[number], Category> = {
     'data-display': {
-        title: 'Data display Scam',
+        title: 'Data display',
     },
 
     overlay: {
-        title: 'Overlays Lol',
+        title: 'Overlays',
         // icon: IconBoxMultiple,
     },
 };
 
 export const CORE_CATEGORIZED = {
-    group: 'core',
+    group: 'mantine-core',
     categories: CORE_CATEGORIZES,
     order: CORE_ORDER,
 };

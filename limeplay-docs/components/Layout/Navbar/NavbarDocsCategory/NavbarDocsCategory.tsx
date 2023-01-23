@@ -75,7 +75,7 @@ export default function NavbarDocsCategory({
                 href={link.slug}
                 onClick={onLinkClick}
                 ref={(r) => {
-                    itemRefs.current[link.slug] = r;
+                    if (r) itemRefs.current[link.slug] = r;
                 }}
             >
                 {link.title}
@@ -100,7 +100,7 @@ export default function NavbarDocsCategory({
                           href={link.slug}
                           onClick={onLinkClick}
                           ref={(r) => {
-                              itemRefs.current[link.slug] = r;
+                              if (r) itemRefs.current[link.slug] = r;
                           }}
                       >
                           {link.title}

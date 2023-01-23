@@ -18,10 +18,7 @@ export function MdxSibling({ data, type, className }: MdxSiblingProps) {
     const { classes, cx } = useStyles();
 
     return (
-        <Link
-            href={data.slug}
-            className={cx(classes.control, classes[type], className)}
-        >
+        <Link href={data.slug} className={cx(classes.control, className)}>
             {type === 'prev' && <IconArrowLeft size={22} stroke={1.5} />}
 
             <div className={classes.body}>
@@ -33,7 +30,8 @@ export function MdxSibling({ data, type, className }: MdxSiblingProps) {
                     size="sm"
                     align={type === 'next' ? 'left' : 'right'}
                 >
-                    {data.title} – {data.package || upperFirst(data.group)}
+                    {data.title} –{' '}
+                    {data.package || (data.group && upperFirst(data.group))}
                 </Text>
             </div>
 

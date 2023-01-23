@@ -6,7 +6,7 @@ import { MdxPageProps } from '../../../types';
 import useStyles from './MdxErrorPage.styles';
 import { useMDXComponent } from 'next-contentlayer/hooks';
 
-export function MdxErrorPage({ data, children }: MdxPageProps) {
+export function MdxErrorPage() {
     const { classes } = useStyles();
     // const Component = useMDXComponent(data.body.code);
 

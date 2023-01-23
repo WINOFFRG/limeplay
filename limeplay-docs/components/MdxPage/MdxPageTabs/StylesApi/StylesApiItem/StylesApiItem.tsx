@@ -10,6 +10,7 @@ interface StylesApiItemProps {
 export function StylesApiItem({ component }: StylesApiItemProps) {
     const { classes } = useStyles();
 
+    // @ts-ignore
     const COMPONENT_STYLES = STYLES_API[component.replace('.', '')];
 
     if (!COMPONENT_STYLES || typeof COMPONENT_STYLES !== 'object') {

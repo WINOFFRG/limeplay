@@ -44,12 +44,19 @@ export function groupPages({ categories, order, group }: GroupPages): {
     groups: { category: Category; pages: DocumentTypes[] }[];
     group: string;
 } {
+
+    console.log({ group });
+
+    console.log({ allDocuments });
+
     const pages = allDocuments
         .map((node) => node)
         .filter((page) => !page.hidden)
         .filter((page) => page.group === group);
 
     const uncategorized: DocumentTypes[] = [];
+
+    console.log({ pages });
 
     const categorized = pages.reduce((acc: any, page) => {
         if (!(page.category in categories)) {
@@ -64,6 +71,8 @@ export function groupPages({ categories, order, group }: GroupPages): {
         acc[page.category].push({ ...page, order: page.order || 0 });
         return acc;
     }, {} as { category: Category; pages: DocumentTypes[] });
+
+    console.log({ order }, categorized);
 
     const groups = order.map((category) => ({
         category: categories[category],
