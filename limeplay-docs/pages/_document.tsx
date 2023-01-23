@@ -9,7 +9,15 @@ export default class _Document extends Document {
     render() {
         return (
             <Html>
-                <Head />
+                <Head>
+                    <link
+                        rel="preload"
+                        href="/fonts/Inter.woff2"
+                        as="font"
+                        type="font/woff2"
+                        crossOrigin="anonymous"
+                    />
+                </Head>
                 <body
                     style={{
                         overflow: 'visible',
