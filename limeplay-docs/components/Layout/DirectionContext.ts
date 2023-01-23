@@ -5,7 +5,10 @@ interface DirectionContextProps {
   toggleDirection(): void;
 }
 
-export const DirectionContext = createContext<DirectionContextProps | null>(null);
+export const DirectionContext = createContext<DirectionContextProps>({
+    dir: 'ltr',
+    toggleDirection: () => {},
+});
 
 export function useDirectionContext() {
   return useContext(DirectionContext);
