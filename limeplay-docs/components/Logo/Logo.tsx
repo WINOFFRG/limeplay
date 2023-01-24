@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { MantineLogo, MantineLogoProps } from '@mantine/ds';
 import useStyles from './Logo.styles';
+import { MantineLogo } from '@mantine/ds';
 
 export function Logo(props: MantineLogoProps) {
     const { classes } = useStyles();
@@ -9,6 +9,7 @@ export function Logo(props: MantineLogoProps) {
     return (
         <Link href="/" className={classes.logo} aria-label="Mantine">
             <MantineLogo size={30} {...props} />
+            Limeplay
         </Link>
     );
 }
