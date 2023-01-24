@@ -39,19 +39,14 @@ export default function NavbarDocsCategory({
     onLinkClick,
 }: NavbarDocsCategoryProps) {
     const { classes, cx } = useStyles();
-    const router = useRouter();
-
-    const [collapsed, setCollapsed] = useState(
-        !hasActiveLink(group, router.asPath)
-    );
+    const { rawPath, router } = useRawPath();
+    const routePath = rawPath.slice(0, -1);
+    const [collapsed, setCollapsed] = useState(true);
     const itemRefs = useRef<Record<string, HTMLElement>>({});
 
     useEffect(() => {
-        if (
-            hasActiveLink(group, router.asPath) &&
-            itemRefs.current[router.asPath]
-        ) {
-            const element = itemRefs.current[router.asPath];
+        if (hasActiveLink(group, routePath) && itemRefs.current[routePath]) {
+            const element = itemRefs.current[routePath];
             const height =
                 typeof window !== 'undefined' ? window.innerHeight : 0;
             const { top, bottom } = element.getBoundingClientRect();
@@ -60,7 +55,7 @@ export default function NavbarDocsCategory({
                 element.scrollIntoView({ block: 'center' });
             }
         }
-    }, [router.asPath]);
+    }, [routePath]);
 
     const uncategorized = (
         group.group === 'changelog'
@@ -72,7 +67,7 @@ export default function NavbarDocsCategory({
                 key={link.slug}
                 className={cx(
                     classes.link,
-                    ...(router.asPath === link.slug ? [classes.linkActive] : [])
+                    ...(routePath === link.slug ? [classes.linkActive] : [])
                 )}
                 href={link.slug}
                 onClick={onLinkClick}
@@ -97,7 +92,7 @@ export default function NavbarDocsCategory({
                           key={link.slug}
                           className={cx(
                               classes.link,
-                              ...(router.asPath === link.slug
+                              ...(routePath === link.slug
                                   ? [classes.linkActive]
                                   : [])
                           )}

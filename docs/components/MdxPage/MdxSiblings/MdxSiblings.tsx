@@ -3,15 +3,13 @@ import { SimpleGrid } from '@mantine/core';
 import { MdxSibling } from './MdxSibling/MdxSibling';
 import { DocumentTypeMap } from '.contentlayer/generated';
 import { getPageSiblings } from '@/utils/get-page-siblings';
+import { useRouter } from 'next/router';
+import useRawPath from '@/hooks/use-raw-path';
 
-export function MdxSiblings({
-    type,
-    route,
-}: {
-    type: keyof DocumentTypeMap;
-    route: string;
-}) {
-    const siblings = getPageSiblings(type, route);
+export function MdxSiblings({ type }: { type: keyof DocumentTypeMap }) {
+    const { rawPath } = useRawPath();
+    const routePath = rawPath.slice(0, -1);
+    const siblings = getPageSiblings(type, routePath);
 
     return (
         <SimpleGrid
