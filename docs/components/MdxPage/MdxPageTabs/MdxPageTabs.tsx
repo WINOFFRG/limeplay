@@ -111,7 +111,7 @@ export function MdxPageTabs({ data: frontmatter }: MdxPageProps) {
                             <Component components={components}>
                                 {frontmatter.body.raw}
                             </Component>
-                            <MdxSiblings type={'Guide'} route={rawPath} />
+                            <MdxSiblings type={'Guide'} route={router.asPath} />
                         </div>
 
                         <div className={classes.tableOfContents}>
