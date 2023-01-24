@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { IconChevronDown } from '@tabler/icons';
-import { Text } from '@mantine/core';
+import { IconChevronDown, IconChevronUp } from '@tabler/icons';
+import { Button, Text, UnstyledButton } from '@mantine/core';
 import { getDocsData } from '../../../../utils/get-docs-data';
 import useStyles from './NavbarDocsCategory.styles';
 import { HEADER_HEIGHT } from '../../Header/HeaderDesktop.styles';
@@ -38,10 +38,13 @@ export default function NavbarDocsCategory({
     group,
     onLinkClick,
 }: NavbarDocsCategoryProps) {
-    const { classes, cx } = useStyles();
     const { rawPath, router } = useRawPath();
     const routePath = rawPath.slice(0, -1);
-    const [collapsed, setCollapsed] = useState(true);
+    const [collapsed, setCollapsed] = useState(
+        !hasActiveLink(group, routePath)
+    );
+    const { classes, cx } = useStyles(collapsed);
+
     const itemRefs = useRef<Record<string, HTMLElement>>({});
 
     useEffect(() => {
@@ -83,9 +86,15 @@ export default function NavbarDocsCategory({
     const categorized = !Array.isArray(group.groups)
         ? []
         : group.groups.map((part) => {
+              const slugs = part.pages.map((link) => link.slug);
+              const [isCollapsed, setIsCollapsed] = useState(
+                  !slugs.includes(routePath)
+              );
+
               if (!part || !Array.isArray(part.pages)) {
                   return null;
               }
+
               const links = part.pages.map((link) => {
                   return (
                       <Link
@@ -119,8 +128,41 @@ export default function NavbarDocsCategory({
                               />
                           )}
                           {part.category.title}
+                          <UnstyledButton
+                              onClick={() => setIsCollapsed(!isCollapsed)}
+                          >
+                              {!isCollapsed ? (
+                                  <IconChevronDown
+                                      className={cx(classes.icon, {
+                                          [classes.iconCollapsed]: collapsed,
+                                      })}
+                                  />
+                              ) : (
+                                  <IconChevronUp
+                                      className={cx(classes.icon, {
+                                          [classes.iconCollapsed]: collapsed,
+                                      })}
+                                  />
+                              )}
+                          </UnstyledButton>
                       </Text>
-                      {links}
+                      <div
+                          style={{
+                              //   display: isCollapsed ? 'none' : 'block',
+                              padding: isCollapsed ? '0' : '0.5rem',
+                              paddingRight: 0,
+                              maxHeight: isCollapsed ? 0 : 1000,
+                              overflow: 'hidden',
+                              transition: 'all 250ms ease-in-out',
+                              transitionTimingFunction:
+                                  'cubic-bezier(.4,0,.2,1)',
+                              opacity: isCollapsed ? 0 : 1,
+                          }}
+                      >
+                          <div className={classes.listWrapper} style={{}}>
+                              {links}
+                          </div>
+                      </div>
                   </div>
               );
           });
@@ -132,16 +174,15 @@ export default function NavbarDocsCategory({
             })}
         >
             <button
+                style={{
+                    display: 'none',
+                }}
                 className={classes.header}
                 type="button"
                 onClick={() => setCollapsed((c) => !c)}
             >
-                <IconChevronDown
-                    className={cx(classes.icon, {
-                        [classes.iconCollapsed]: collapsed,
-                    })}
-                />
                 <Text
+                    // className={classes.title}
                     className={classes.title}
                     weight={700}
                     size="xs"
@@ -149,9 +190,30 @@ export default function NavbarDocsCategory({
                 >
                     {group.group.replace('-', ' ')}
                 </Text>
+                <IconChevronDown
+                    className={cx(classes.icon, {
+                        [classes.iconCollapsed]: collapsed,
+                    })}
+                />
             </button>
-            {!collapsed && uncategorized}
-            {!collapsed && categorized}
+            <div
+                style={{
+                    display: collapsed ? 'none' : 'block',
+                    padding: collapsed ? '0' : '0.5rem',
+                    paddingRight: 0,
+                    paddingLeft: 0,
+                    maxHeight: collapsed ? 0 : 1000,
+                    overflow: 'hidden',
+                    transition: 'all 250ms ease-in-out',
+                    transitionTimingFunction: 'cubic-bezier(.4,0,.2,1)',
+                    opacity: collapsed ? 0 : 1,
+                }}
+            >
+                <div className={classes.rootWrapper} style={{}}>
+                    {!collapsed && uncategorized}
+                    {!collapsed && categorized}
+                </div>
+            </div>
         </div>
     );
 }
