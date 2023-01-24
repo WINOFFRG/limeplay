@@ -1,9 +1,9 @@
 /* eslint-disable import/no-relative-packages */
 import React from 'react';
 import { Burger } from '@mantine/core';
-import { ColorSchemeControl } from '@mantine/ds';
 import { Logo } from '../../Logo/Logo';
 import useStyles from './HeaderMobile.styles';
+import { ColorSchemeControl } from './HeaderControls/ColorSchemeControl';
 
 interface HeaderProps {
     navbarOpened: boolean;

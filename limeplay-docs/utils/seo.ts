@@ -1,4 +1,4 @@
-import siteConfig from 'configs/site-config.json';
+import siteConfig from 'settings/site-config.json';
 
 type GetSeoOptions = {
     omitOpenGraphImage?: boolean;

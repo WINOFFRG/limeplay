@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { IconSearch } from '@tabler/icons';
 import { UnstyledButton, Text, Group, DefaultProps } from '@mantine/core';
-import { useOs } from '@mantine/hooks';
+import { useOs as getOs } from '@mantine/hooks';
 import useStyles from './SearchControl.styles';
 
 interface SearchControlProps
@@ -12,7 +12,11 @@ interface SearchControlProps
 
 export function SearchControl({ className, ...others }: SearchControlProps) {
     const { classes, cx } = useStyles();
-    const os = useOs();
+    const [os, setOs] = useState('undetermined');
+
+    useEffect(() => {
+        setOs(getOs());
+    }, []);
 
     return (
         <UnstyledButton {...others} className={cx(classes.root, className)}>
@@ -21,9 +25,9 @@ export function SearchControl({ className, ...others }: SearchControlProps) {
                 <Text size="sm" color="dimmed" pr={80}>
                     Search
                 </Text>
-                {/* <Text weight={700} className={classes.shortcut}>
+                <Text weight={700} className={classes.shortcut}>
                     {os === 'undetermined' || os === 'macos' ? '⌘' : 'Ctrl'} + K
-                </Text> */}
+                </Text>
             </Group>
         </UnstyledButton>
     );

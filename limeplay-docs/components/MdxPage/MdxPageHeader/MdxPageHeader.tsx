@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { ImportStatement } from './ImportStatement/ImportStatement';
 import { LinkItem } from './LinkItem/LinkItem';
 import { getGradient } from '../../HomePage/get-gradient';
-import { MdxPageProps } from '../../../types';
 import useStyles from './MdxPageHeader.styles';
 import { GithubIcon, NpmIcon } from '@mantine/ds';
-import { allDocuments, type DocumentTypes } from 'contentlayer/generated';
+import { type DocumentTypes } from 'contentlayer/generated';
+import siteConfig from '@/settings/site-config.json';
 
-const REPO_BASE = 'https://github.com/mantinedev/mantine/blob/master';
+const REPO_BASE = siteConfig.repo.editUrl;
 const DOCS_BASE = `${REPO_BASE}/docs/src/docs`;
 const SOURCE_BASE = `${REPO_BASE}/src`;
 

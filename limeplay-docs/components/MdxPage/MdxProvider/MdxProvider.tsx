@@ -1,7 +1,6 @@
 import React from 'react';
 import { Code, Text } from '@mantine/core';
 import { Prism } from '@mantine/prism';
-import { Demo } from '@mantine/ds';
 import { KeyboardEventsTable } from './KeyboardEventsTable/KeyboardEventsTable';
 import NextLink from './NextLink/NextLink';
 import DataTable from './DataTable/DataTable';
@@ -13,7 +12,6 @@ const h = (order: 1 | 2 | 3 | 4 | 5 | 6) => (props: any) =>
 export const components = {
     NextLink,
     DataTable,
-    Demo,
     KeyboardEventsTable,
     h1: h(1),
     h2: h(2),
