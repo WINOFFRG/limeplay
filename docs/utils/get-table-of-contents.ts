@@ -8,10 +8,10 @@ export interface Heading {
 }
 
 export function getTableOfContents(mdxContent: string) {
-    const regexp = new RegExp(/^(### |## )(.*)\n/, 'gm');
+    const regexp = new RegExp(/^(### |## )(.*)(\n|\r)/, 'gm');
     const headings = [...mdxContent.matchAll(regexp)];
-    let tableOfContents: Heading[] = [];
 
+    let tableOfContents: Heading[] = [];
 
     if (headings.length) {
         tableOfContents = headings.map((heading) => {
