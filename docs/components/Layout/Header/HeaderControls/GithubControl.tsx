@@ -1,6 +1,6 @@
 import React from 'react';
 import { HeaderControl } from './HeaderControl';
-import { GithubIcon } from '../Icons';
+import { GithubIcon } from '../../../SocialButton/Icons';
 
 interface GithubControlProps {
     link: string;
