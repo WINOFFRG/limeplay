@@ -23,7 +23,9 @@ function hasActiveLink(
 
     if (
         group.groups.some((_group) =>
-            _group.pages.some((link) => link.slug === pathname)
+            _group.pages.some((link) => {
+                return link.slug === pathname;
+            })
         )
     ) {
         return true;
@@ -37,7 +39,7 @@ export default function NavbarDocsCategory({
     onLinkClick,
 }: NavbarDocsCategoryProps) {
     const { classes, cx } = useStyles();
-    const { router, rawPath } = useRawPath();
+    const router = useRouter();
 
     const [collapsed, setCollapsed] = useState(
         !hasActiveLink(group, router.asPath)
@@ -70,7 +72,7 @@ export default function NavbarDocsCategory({
                 key={link.slug}
                 className={cx(
                     classes.link,
-                    rawPath === link.slug && classes.linkActive
+                    ...(router.asPath === link.slug ? [classes.linkActive] : [])
                 )}
                 href={link.slug}
                 onClick={onLinkClick}
@@ -95,7 +97,9 @@ export default function NavbarDocsCategory({
                           key={link.slug}
                           className={cx(
                               classes.link,
-                              rawPath === link.slug && classes.linkActive
+                              ...(router.asPath === link.slug
+                                  ? [classes.linkActive]
+                                  : [])
                           )}
                           href={link.slug}
                           onClick={onLinkClick}

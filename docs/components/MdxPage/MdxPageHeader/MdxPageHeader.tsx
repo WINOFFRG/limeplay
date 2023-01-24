@@ -4,7 +4,6 @@ import { IconPencil, IconLicense, IconCalendar } from '@tabler/icons';
 import Link from 'next/link';
 import { ImportStatement } from './ImportStatement/ImportStatement';
 import { LinkItem } from './LinkItem/LinkItem';
-import { getGradient } from '../../HomePage/get-gradient';
 import useStyles from './MdxPageHeader.styles';
 import { type DocumentTypes } from 'contentlayer/generated';
 import siteConfig from '@/settings/site-config.json';
@@ -41,7 +40,7 @@ export function MdxPageHeader({ frontmatter }: { frontmatter: DocumentTypes }) {
                             href="/guides/polymorphic/"
                             variant="gradient"
                             sx={(theme) => ({
-                                backgroundImage: getGradient(theme, 'bg'),
+                                // backgroundImage: getGradient(theme, 'bg'),
                                 cursor: 'pointer',
                             })}
                         >
