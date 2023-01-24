@@ -29,3 +29,5 @@ shaka-player/
 build/**
 dist/**
 .next/**
+.contentlayer
+.docgen
