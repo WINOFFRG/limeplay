@@ -56,7 +56,6 @@ export const components = {
 
         return (
             <>
-                &nbsp;
                 <Prism
                     language={
                         matches && matches.groups && matches.groups.lang
