@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "docs:docgen": "esno scripts/docgen"
+    "docs:docgen": "esno scripts/docgen",
+    "docs:build": "pnpm run docs:docgen && cd docs && pnpm run build"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.1",

@@ -42,7 +42,7 @@ export default function NavbarMainLink({
             ) : (
                 <ThemeIcon
                     size={30}
-                    sx={{ backgroundColor: color, color: theme.white }}
+                    sx={{ backgroundColor: color, color: theme.black }}
                     radius="lg"
                 >
                     {icon}
