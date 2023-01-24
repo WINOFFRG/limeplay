@@ -3,8 +3,9 @@ import { Container, Text, Group } from '@mantine/core';
 import { TwitterButton, DiscordButton } from '@mantine/ds';
 import { Logo } from '../Logo/Logo';
 import { LinksGroup } from './LinksGroup/LinksGroup';
-import { FOOTER_LINKS_DATA } from './data';
+import { FOOTER_LINKS_DATA } from '@/settings/footer-config';
 import useStyles from './Footer.styles';
+import siteConfig from '@/settings/site-config.json';
 
 interface FooterProps {
     withNavbar?: boolean;
@@ -41,11 +42,13 @@ export function Footer({ withNavbar }: FooterProps) {
                         <Group position="apart">
                             <Text size="xs" className={classes.afterFooterNote}>
                                 Built by{' '}
-                                <a href="https://github.com/rtivital">
-                                    Vitaly Rtishchev
+                                <a href={siteConfig.author.github}>
+                                    {siteConfig.author.name}
                                 </a>{' '}
                                 and{' '}
-                                <a href="https://github.com/mantinedev/mantine/graphs/contributors">
+                                <a
+                                    href={`${siteConfig.repo.url}/graphs/contributors`}
+                                >
                                     these awesome people
                                 </a>
                             </Text>
