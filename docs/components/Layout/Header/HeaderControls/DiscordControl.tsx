@@ -1,6 +1,6 @@
 import React from 'react';
 import { HeaderControl } from './HeaderControl';
-import { DiscordIcon } from '../Icons';
+import { DiscordIcon } from '../../../SocialButton/Icons';
 import { meta } from '@/settings/config';
 
 export function DiscordControl() {

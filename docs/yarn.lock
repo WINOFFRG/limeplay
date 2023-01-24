@@ -371,13 +371,6 @@
     "@radix-ui/react-scroll-area" "1.0.2"
     react-textarea-autosize "8.3.4"
 
-"@mantine/ds@^5.10.1":
-  version "5.10.1"
-  resolved "https://registry.yarnpkg.com/@mantine/ds/-/ds-5.10.1.tgz#5c5e2a6641533c78cc09049dccddfeb30d7b38a1"
-  integrity sha512-P0A/wbKWQ2UAIGAobv3OeTXBx5Uqan6NNANMsqGbmOxWv/nsOetUoPEO4tMz6SGytvwD6sVJUXmDk0y89FuliA==
-  dependencies:
-    "@mantine/utils" "5.10.1"
-
 "@mantine/hooks@^5.10.0":
   version "5.10.1"
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-5.10.1.tgz#0227441a818144932dd6e8fd8f53eb7525dfe005"
@@ -470,11 +463,6 @@
   version "13.1.2"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-13.1.2.tgz#4f13e3e9d44bb17fdc1d4543827459097035f10f"
   integrity sha512-PpT4UZIX66VMTqXt4HKEJ+/PwbS+tWmmhZlazaws1a+dbUA5pPdjntQ46Jvj616i3ZKN9doS9LHx3y50RLjAWg==
-
-"@next/font@13.1.2":
-  version "13.1.2"
-  resolved "https://registry.yarnpkg.com/@next/font/-/font-13.1.2.tgz#ee809ca03113d0e73495ac5d0e2a978885d0d97e"
-  integrity sha512-NXGXGFGiOKEnvBIHq9cdFTKbHO2/4B3Zd9K27M7j1DioIQVar7oVRqZMYs0h3XMVEZLwjjkdAtqRPCzzd3RtXg==
 
 "@next/swc-android-arm-eabi@13.1.2":
   version "13.1.2"

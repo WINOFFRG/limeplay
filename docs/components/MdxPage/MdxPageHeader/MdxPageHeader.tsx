@@ -6,9 +6,9 @@ import { ImportStatement } from './ImportStatement/ImportStatement';
 import { LinkItem } from './LinkItem/LinkItem';
 import { getGradient } from '../../HomePage/get-gradient';
 import useStyles from './MdxPageHeader.styles';
-import { GithubIcon, NpmIcon } from '@mantine/ds';
 import { type DocumentTypes } from 'contentlayer/generated';
 import siteConfig from '@/settings/site-config.json';
+import { GithubIcon, NpmIcon } from '@/components/SocialButton/Icons';
 
 const REPO_BASE = siteConfig.repo.editUrl;
 const DOCS_BASE = `${REPO_BASE}/docs/src/docs`;
