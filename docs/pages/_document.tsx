@@ -19,9 +19,9 @@ export default class _Document extends Document {
                     />
                 </Head>
                 <body
-                    style={{
-                        overflow: 'visible',
-                    }}
+                // style={{
+                //     overflow: 'visible',
+                // }}
                 >
                     <Main />
                     <NextScript />

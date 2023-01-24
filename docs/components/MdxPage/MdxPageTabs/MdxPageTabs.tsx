@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Tabs, Title, TextInput } from '@mantine/core';
+import { Tabs, Title, TextInput, CSSObject } from '@mantine/core';
 import { IconSearch } from '@tabler/icons';
 import { useMediaQuery } from '@mantine/hooks';
 import { MdxSiblings } from '../MdxSiblings/MdxSiblings';
@@ -60,6 +60,10 @@ export function MdxPageTabs({ data: frontmatter }: MdxPageProps) {
           })
         : null;
 
+    const tabStyle = {
+        borderBottom: 0,
+    };
+
     return (
         <MdxPageBase>
             <Tabs
@@ -83,14 +87,16 @@ export function MdxPageTabs({ data: frontmatter }: MdxPageProps) {
             >
                 <div className={classes.tabsWrapper}>
                     <Tabs.List>
-                        <Tabs.Tab value="docs">Documentation</Tabs.Tab>
+                        <Tabs.Tab style={tabStyle} value="docs">
+                            Documentation
+                        </Tabs.Tab>
                         {hasProps && (
-                            <Tabs.Tab value="props">
+                            <Tabs.Tab style={tabStyle} value="props">
                                 {mobile ? 'Props' : 'Component props'}
                             </Tabs.Tab>
                         )}
                         {hasStyles && (
-                            <Tabs.Tab value="styles-api">
+                            <Tabs.Tab style={tabStyle} value="styles-api">
                                 {mobile ? 'Styles' : 'Styles API'}
                             </Tabs.Tab>
                         )}

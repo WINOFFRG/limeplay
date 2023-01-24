@@ -16,8 +16,6 @@ function getActiveElement(rects: DOMRect[]) {
         return -1;
     }
 
-    console.log(rects);
-
     const closest = rects.reduce(
         (acc, item, index) => {
             if (Math.abs(acc.position) < Math.abs(item.y)) {
@@ -58,7 +56,6 @@ export default function TableOfContents({
     }, [headings, active]);
 
     const handleScroll = () => {
-        console.log('scroll', slugs.current);
         const value = getActiveElement(
             slugs.current.map((d) => d.getBoundingClientRect())
         );
