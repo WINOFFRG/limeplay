@@ -16,6 +16,8 @@ function getActiveElement(rects: DOMRect[]) {
         return -1;
     }
 
+    console.log(rects);
+
     const closest = rects.reduce(
         (acc, item, index) => {
             if (Math.abs(acc.position) < Math.abs(item.y)) {
@@ -41,9 +43,8 @@ export default function TableOfContents({
     const { classes, cx } = useStyles();
     const slugger = new Slugger();
     const [active, setActive] = useState(0);
-    const { router, rawPath } = useRawPath();
-
     const slugs = useRef<HTMLDivElement[]>([]);
+    const { rawPath, router } = useRawPath();
     const filteredHeadings = headings.filter((heading) => heading.depth > 1);
 
     useEffect(() => {
@@ -54,9 +55,10 @@ export default function TableOfContents({
                     slugger.slug(heading.value)
                 ) as HTMLDivElement
         );
-    }, [headings]);
+    }, [headings, active]);
 
     const handleScroll = () => {
+        console.log('scroll', slugs.current);
         const value = getActiveElement(
             slugs.current.map((d) => d.getBoundingClientRect())
         );
@@ -90,13 +92,6 @@ export default function TableOfContents({
                 })}
                 href={`#${slug}`}
                 sx={{ paddingLeft: (heading.depth - 1) * theme.spacing.lg }}
-                onClick={(event) => {
-                    event.preventDefault();
-
-                    router.push(`${rawPath}#${slug}`, undefined, {
-                        shallow: true,
-                    });
-                }}
             >
                 {heading.value}
             </Text>
