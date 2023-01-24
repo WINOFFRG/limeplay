@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../contentlayer.config.ts"],
-  "sourcesContent": ["import { defineDocumentType, makeSource } from 'contentlayer/source-files';\r\n\r\nexport const Guide = defineDocumentType(() => ({\r\n    name: 'Guide',\r\n    contentType: 'mdx',\r\n    // Location of Post source files (relative to `contentDirPath`)\r\n    filePathPattern: '**/*.mdx',\r\n    // At the time of writing, we also have to define the `fields`\r\n    // option to prevent an error on generation. We'll discuss\r\n    // this option later. For now, we'll add an empty object.\r\n    fields: {\r\n        title: {\r\n            type: 'string',\r\n            required: true,\r\n        },\r\n    },\r\n}));\r\n\r\nexport default makeSource({\r\n    // Location of source files for all defined documentTypes\r\n    contentDirPath: 'docs',\r\n    documentTypes: [Guide],\r\n});\r\n"],
-  "mappings": ";AAAA,SAAS,oBAAoB,kBAAkB;AAExC,IAAM,QAAQ,mBAAmB,OAAO;AAAA,EAC3C,MAAM;AAAA,EACN,aAAa;AAAA,EAEb,iBAAiB;AAAA,EAIjB,QAAQ;AAAA,IACJ,OAAO;AAAA,MACH,MAAM;AAAA,MACN,UAAU;AAAA,IACd;AAAA,EACJ;AACJ,EAAE;AAEF,IAAO,8BAAQ,WAAW;AAAA,EAEtB,gBAAgB;AAAA,EAChB,eAAe,CAAC,KAAK;AACzB,CAAC;",
-  "names": []
-}
