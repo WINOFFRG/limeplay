@@ -19,5 +19,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {
+    "next": "^13.1.5"
+  }
 }
