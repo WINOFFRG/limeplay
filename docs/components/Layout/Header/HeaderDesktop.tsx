@@ -8,6 +8,7 @@ import { Logo } from '../../Logo/Logo';
 import { useDirectionContext } from '../DirectionContext';
 import useStyles from './HeaderDesktop.styles';
 import { HeaderControls } from './HeaderControls';
+import siteConfig from '@/settings/site-config.json';
 
 interface Version {
     v: string;
@@ -67,7 +68,7 @@ export function HeaderDesktop() {
             <HeaderControls
                 pr="md"
                 onSearch={spotlight.openSpotlight}
-                githubLink="https://github.com/mantinedev/mantine"
+                githubLink={siteConfig.repo.url}
                 direction={dir}
                 toggleDirection={toggleDirection}
             />
