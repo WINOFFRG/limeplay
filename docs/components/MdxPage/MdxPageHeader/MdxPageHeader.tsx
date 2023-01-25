@@ -97,7 +97,7 @@ export function MdxPageHeader({ frontmatter }: { frontmatter: DocumentTypes }) {
                     </LinkItem>
                 )}
 
-                {frontmatter.package && (
+                {/* {frontmatter.package && (
                     <LinkItem
                         label="Package"
                         icon={<NpmIcon size={14} />}
@@ -108,7 +108,7 @@ export function MdxPageHeader({ frontmatter }: { frontmatter: DocumentTypes }) {
                     >
                         {frontmatter.package.replace('mantine-', '@mantine/')}
                     </LinkItem>
-                )}
+                )} */}
 
                 {frontmatter.license && (
                     <LinkItem
