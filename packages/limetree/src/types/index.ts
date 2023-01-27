@@ -2,7 +2,7 @@ import {
     Player as ShakaPlayer,
     ui as ShakaUI,
     extern as ShakaExtern,
-} from 'shaka-player/dist/shaka-player.ui.debug';
+} from 'shaka-player/dist/shaka-player.compiled';
 
 export interface MediaTimeStats {
     mediaCurrentTime: number | undefined;
@@ -11,6 +11,6 @@ export interface MediaTimeStats {
 
 export interface PlayerRefs {
     player: ShakaPlayer;
-    ui: ShakaUI.Overlay;
+    ui: typeof ShakaUI.Overlay;
     videoElement: HTMLVideoElement;
 }
