@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import useStore from '../../store';
 import PlaybackButton from '../PlaybackButton';
 import useStyles from './styles';
-import shaka from 'shaka-player/dist/shaka-player.ui.debug';
+import shaka from 'shaka-player/dist/shaka-player.compiled';
 import VolumeButton from '../VolumeButton';
 import FullscreenButton from '../FullscreenButton';
 import PipButton from '../PipButton';
