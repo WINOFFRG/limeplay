@@ -2,7 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import useStore from '../../store';
 import useStyles from './styles';
 
-function PlayIcon() {
+export function PlayIcon({
+    height,
+    width,
+}: {
+    height?: number;
+    width?: number;
+}) {
     const { classes } = useStyles();
 
     return (
@@ -10,6 +16,10 @@ function PlayIcon() {
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
             className={classes.iconStyle}
+            style={{
+                ...(height ? { height } : {}),
+                ...(width ? { width } : {}),
+            }}
         >
             <path
                 d="M4.245 2.563a.5.5 0 00-.745.435v18.004a.5.5 0 00.745.435l15.997-9.001a.5.5 0 000-.872L4.245 2.563z"
@@ -21,7 +31,7 @@ function PlayIcon() {
     );
 }
 
-function PauseIcon() {
+export function PauseIcon() {
     const { classes } = useStyles();
 
     return (
