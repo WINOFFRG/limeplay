@@ -1,0 +1,66 @@
+---
+group: 'mantine-core'
+package: '@mantine/core'
+title: Avatar
+order: 1
+polymorphic: true
+slug: /core/avatar/
+category: 'data-display'
+description: 'Display user profile image, initials or fallback icon'
+componentPrefix: 'Avatar'
+props: ['Avatar', 'AvatarGroup']
+import: "import { Avatar } from '@mantine/core';"
+source: 'mantine-core/src/Avatar/Avatar.tsx'
+docs: 'core/Avatar.mdx'
+styles: ['Avatar']
+---
+
+## Placeholder
+
+If `src` prop is not set, equals to null or image cannot be loaded, placeholder icon will be displayed instead.
+Any React node can be used instead of placeholder icon. Usually icon or initials are used in this case:
+
+## Size and radius
+
+```tsx
+<Avatar radius="lg" /> // -> theme predefined large radius
+<Avatar radius={10} /> // -> { borderRadius: '10px' }
+
+<Avatar size="sm" /> // -> predefined small size
+<Avatar size={50} /> // -> { width: '50px', height: '50px' }
+```
+
+
+## Change root element
+
+
+With custom component (react router example):
+
+```tsx
+import { Link } from 'react-router-dom';
+import { Card } from '@mantine/core';
+
+function Demo() {
+  return <Avatar component={Link} to="/my-route/" src="./avatar.png" />;
+}
+```
+
+### Avatar.Group
+
+`Avatar.Group` component can be used to combine multiple avatars into a stack:
+
+
+You can combine it with [Tooltip](/core/tooltip/) or [Popover](/core/popover/) to show additional information on hover
+
+
+### Accessibility
+
+Avatar renders img html element. Do not forget to add alt text.
+If image fails to load alt will be used as `title` for placeholder.
+
+```tsx
+<Avatar src={image} /> // -> not ok, no alt for image
+<Avatar src={image} alt="Rob Johnson" /> // -> ok
+<Avatar alt="Rob Johnson">RJ</Avatar> // -> ok, alt is used as title attribute
+<Avatar>RJ</Avatar> // -> ok, title is not required
+```

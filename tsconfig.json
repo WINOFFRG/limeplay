@@ -1,36 +1,29 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "isolatedModules": false,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "declaration": true,
-    "declarationDir": ".",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "noImplicitAny": true,
-    "rootDirs": ["./src"],
-    "outDir": "./dist",
-    "preserveConstEnums": true
-  },
+  "extends": "./tsconfig.base.json",
   "include": [
-    "src/**/*",
-    "docs/**/*",
-    "docs/next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "types/*.d.ts"
+    "src/mantine-*/src",
+    "src/mantine-*/demos",
+    "./types",
+    "./docs/src",
+    "./scripts",
+    "./configuration",
+    "./configuration/types",
+    "./tests"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "public",
+    ".cache",
+    "configuration/jest",
+    "configuration/storybook/main.js",
+    "node_modules",
+    "src/mantine-*/esm/**/*",
+    "src/mantine-*/lib/**/*",
+    "src/mantine-*/cjs/**/*"
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@mantine/*": ["src/mantine-*/src"],
+      "@demos/*": ["src/mantine-*/src/demos"]
+    }
+  }
 }

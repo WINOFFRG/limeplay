@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": true,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationDir": ".",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "rootDirs": ["./src"],
+    "outDir": "./dist",
+    "preserveConstEnums": true,
+    "typeRoots": ["./src/types"],
+    "paths": {
+      "shaka-player": ["./node_modules/shaka-player/dist/shaka-player.compiled"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "docs/**/*",
+    "docs/next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "types/*.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}
