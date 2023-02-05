@@ -6,8 +6,6 @@ import FullScreenPlayer from './components/FullScreenPlayer';
 import './globals.css';
 import './fonts/Graphik-Medium.woff';
 
-// console.log(shakaPlayer);
-
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
         <MantineProvider

@@ -2,7 +2,7 @@ import {
     Player as ShakaPlayer,
     ui as ShakaUI,
     extern as ShakaExtern,
-} from 'shaka-player/dist/shaka-player.compiled';
+} from 'shaka-player';
 
 export interface MediaTimeStats {
     mediaCurrentTime: number | undefined;
