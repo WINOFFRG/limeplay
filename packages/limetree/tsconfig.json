@@ -21,10 +21,13 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noImplicitAny": true,
-    "rootDirs": ["./src", "../shaka-player"],
+    "rootDirs": ["./src"],
     "outDir": "./dist",
     "preserveConstEnums": true,
-    "typeRoots": ["./src/types"]
+    "typeRoots": ["./src/types"],
+    "paths": {
+      "shaka-player": ["./node_modules/shaka-player/dist/shaka-player.compiled"]
+    }
   },
   "include": [
     "src/**/*",
@@ -32,8 +35,7 @@
     "docs/next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "types/*.d.ts",
-    "../shaka-player"
+    "types/*.d.ts"
   ],
   "exclude": ["node_modules"]
 }
