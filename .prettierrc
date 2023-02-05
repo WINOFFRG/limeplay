@@ -1,7 +1,7 @@
 {
   "overrides": [
     {
-      "files": ["*.tsx", "*.ts", "demo/**/*.js"],
+      "files": ["*.tsx", "*.ts", "demo/**/*.js", "*.js"],
       "options": {
         "tabWidth": 4,
         "singleQuote": true

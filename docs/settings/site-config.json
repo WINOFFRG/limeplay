@@ -1,0 +1,29 @@
+{
+  "copyright": "Copyright © {{date}} Rohan Gupta. All Rights Reserved.",
+  "author": {
+    "name": "Rohan Gupta",
+    "github": "https://github.com/winoffrg",
+    "twitter": "https://twitter.com/winoffrg",
+    "linkedin": "https://linkedin.com/in/winoffrg",
+    "email": "rohangupta1528@gmail.com"
+  },
+  "repo": {
+    "url": "https://github.com/winoffrg/limeplay",
+    "editUrl": "https://github.com/winoffrg/limeplay/tree/main/content",
+    "blobUrl": "https://github.com/winoffrg/limeplay/blob/main"
+  },
+  "seo": {
+    "title": "Limeplay",
+    "titleTemplate": "%s - Limeplay",
+    "description": "Simple, Modular and Accessible UI Components for your Video Player.",
+    "siteUrl": "https://limeplay.me",
+    "openGraph": {
+      "type": "website",
+      "locale": "en_US",
+      "url": "https://limeplay.me",
+      "title": "Chakra UI",
+      "description": "Simple, Modular and Accessible UI Components for your Video Player.",
+      "site_name": "Limeplay: Simple, Modular and Accessible UI Components for your Video Player."
+    }
+  }
+}

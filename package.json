@@ -1,28 +1,25 @@
 {
   "name": "limetree",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@dailymotion/vast-client": "^4.0.1",
-    "@emotion/react": "^11.10.5",
-    "@mantine/styles": "^5.9.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "shaka-player": "^4.2.3",
-    "zustand": "^4.1.4"
+    "docs:docgen": "esno scripts/docgen",
+    "docs:build": "pnpm install && pnpm run docs:docgen && pnpm run build"
   },
   "devDependencies": {
-    "@types/node": "^18.11.16",
-    "@types/react": "^18.0.22",
-    "@types/react-dom": "^18.0.7",
-    "@vitejs/plugin-react": "^2.2.0",
-    "typescript": "^4.9.4",
-    "vite": "^3.2.0"
+    "@types/fs-extra": "^11.0.1",
+    "@types/node": "^18.11.18",
+    "chalk": "^5.2.0",
+    "esno": "^0.16.3",
+    "fs-extra": "^11.1.0",
+    "react-docgen-typescript": "^2.2.2",
+    "typescript": "^4.9.4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "next": "^13.1.5"
   }
 }

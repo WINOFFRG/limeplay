@@ -1,8 +1,5 @@
-import withNextra from "nextra";
+const { withContentlayer } = require('next-contentlayer');
 
-const withNextraConfig = withNextra({
-  theme: "nextra-theme-docs",
-  themeConfig: "./theme.config.js",
-});
+const nextConfig = {};
 
-export default withNextraConfig();
+module.exports = withContentlayer(nextConfig);
