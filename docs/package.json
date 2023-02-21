@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build:docs": "cd ../ && pnpm run install && pnpm run docs:docgen",
-    "build:complete": "cd ../ && esno scripts/docgen && cd docs && pnpm run build"
+    "build:docs": "cd ../ && pnpm run docs:docgen && cd docs && pnpm run build"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
