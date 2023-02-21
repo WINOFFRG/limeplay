@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "build:docs": "cd ../ && pnpm run docs:docgen && cd docs && pnpm run build"
+    "lint": "next lint"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
