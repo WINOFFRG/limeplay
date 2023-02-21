@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docs": "cd ../ && pnpm run docs:docgen && cd docs && pnpm run build"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -27,7 +28,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "rehype-slug": "^5.1.0",
-    "stylis-plugin-rtl": "^2.1.1"
+    "stylis-plugin-rtl": "^2.1.1",
+    "esno": "^0.16.3"
   },
   "devDependencies": {
     "@types/node": "18.11.18",
