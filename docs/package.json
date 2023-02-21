@@ -19,6 +19,7 @@
     "@mantine/next": "^5.10.0",
     "@mantine/prism": "^5.10.1",
     "@mantine/spotlight": "^5.10.0",
+    "@mantine/utils": "^5.10.4",
     "@tabler/icons": "^1.119.0",
     "contentlayer": "^0.2.9",
     "esno": "^0.16.3",
