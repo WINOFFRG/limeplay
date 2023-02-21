@@ -31,3 +31,4 @@ dist/**
 .next/**
 .contentlayer
 .docgen
+.vercel
