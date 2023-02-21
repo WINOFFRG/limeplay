@@ -18,6 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "esno": "^0.16.3",
     "next": "^13.1.5"
   }
 }
