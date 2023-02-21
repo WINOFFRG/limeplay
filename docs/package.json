@@ -20,6 +20,7 @@
     "@mantine/spotlight": "^5.10.0",
     "@tabler/icons": "^1.119.0",
     "contentlayer": "^0.2.9",
+    "esno": "^0.16.3",
     "github-slugger": "^2.0.0",
     "next": "13.1.2",
     "next-contentlayer": "^0.2.9",
@@ -28,8 +29,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "rehype-slug": "^5.1.0",
-    "stylis-plugin-rtl": "^2.1.1",
-    "esno": "^0.16.3"
+    "stylis-plugin-rtl": "^2.1.1"
   },
   "devDependencies": {
     "@types/node": "18.11.18",
