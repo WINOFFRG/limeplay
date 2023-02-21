@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "docs:docgen": "esno scripts/docgen"
-  },
+  "scripts": {},
   "devDependencies": {
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.11.18",
@@ -18,7 +16,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "esno": "^0.16.3",
-    "next": "^13.1.5"
+    "esno": "^0.16.3"
   }
 }
