@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-interface PlaybackControls {
+interface UsePlaybackResult {
     /**
      * The current playback state of the track.
      * @returns true if the track is playing, false otherwise.
@@ -21,7 +21,7 @@ interface PlaybackControls {
 
 export default function usePlayback(
     playback: HTMLMediaElement | null
-): PlaybackControls {
+): UsePlaybackResult {
     const [isPlaying, setIsPlaying] = useState<boolean>(
         playback?.paused || false
     );
