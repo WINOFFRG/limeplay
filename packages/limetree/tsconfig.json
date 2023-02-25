@@ -26,7 +26,9 @@
     "preserveConstEnums": true,
     "typeRoots": ["./src/types"],
     "paths": {
-      "shaka-player": ["./node_modules/shaka-player/dist/shaka-player.compiled"]
+      "shaka-player": [
+        "./node_modules/shaka-player/dist/shaka-player.compiled.debug.js"
+      ]
     }
   },
   "include": [

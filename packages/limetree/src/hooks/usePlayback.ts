@@ -1,66 +1,62 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
- interface UsePlaybackResult {
-     /**
-      * The current playback state of the track.
-      * @returns true if the track is playing, false otherwise.
-      */
-     isPlaying: boolean;
+interface UsePlaybackResult {
+	/**
+	 * The current playback state of the track.
+	 * @returns true if the track is playing, false otherwise.
+	 */
+	isPlaying: boolean;
 
-     /**
-      * Toggles the playback state of the track.
-      */
-     togglePlayback: () => void;
+	/**
+	 * Toggles the playback state of the track.
+	 */
+	togglePlayback: () => void;
 
-     /**
-      * Sets the playback state of the track.
-      * @param state The state to set the track to.
-      */
-     setPlayback: (state: boolean) => void;
- }
+	/**
+	 * Sets the playback state of the track.
+	 * @param state The state to set the track to.
+	 */
+	setPlayback: (state: boolean) => void;
+}
 
- export default function usePlayback(
-     playback: HTMLMediaElement
- ): UsePlaybackResult {
-     const [isPlaying, setIsPlaying] = useState<boolean>(playback.paused);
+export default function usePlayback(
+	playback: HTMLMediaElement
+): UsePlaybackResult {
+	const [isPlaying, setIsPlaying] = useState<boolean>(playback.paused);
 
-     const playbackEventHandler = useCallback(() => {
-         setIsPlaying(!playback.paused);
-     }, [playback, isPlaying]);
+	const togglePlayback = () => {
+		if (playback.paused) playback.play();
+		else playback.pause();
+	};
 
-     const togglePlayback = useCallback(() => {
-         if (playback.paused) playback.play();
-         else playback.pause();
-     }, [playback]);
+	const setPlayback = (state: boolean) => {
+		if (state) playback.play();
+		else playback.pause();
+	};
 
-     const setPlayback = useCallback(
-         (state: boolean) => {
-             if (state) playback.play();
-             else playback.pause();
-         },
-         [togglePlayback]
-     );
+	useEffect(() => {
+		const playbackEventHandler = () => setIsPlaying(!playback.paused);
 
-     useEffect(() => {
-         playback.addEventListener('play', playbackEventHandler);
-         playback.addEventListener('pause', playbackEventHandler);
-         playback.addEventListener('playing', playbackEventHandler);
-         playback.addEventListener('waiting', playbackEventHandler);
-         playback.addEventListener('seeking', playbackEventHandler);
-         playback.addEventListener('seeked', playbackEventHandler);
-         playbackEventHandler();
+		playback.addEventListener('play', playbackEventHandler);
+		playback.addEventListener('pause', playbackEventHandler);
+		playback.addEventListener('playing', playbackEventHandler);
+		playback.addEventListener('waiting', playbackEventHandler);
+		playback.addEventListener('seeking', playbackEventHandler);
+		playback.addEventListener('seeked', playbackEventHandler);
 
-         return () => {
-             if (playback) {
-                 playback.removeEventListener('play', playbackEventHandler);
-                 playback.removeEventListener('pause', playbackEventHandler);
-                 playback.removeEventListener('playing', playbackEventHandler);
-                 playback.removeEventListener('waiting', playbackEventHandler);
-                 playback.removeEventListener('seeking', playbackEventHandler);
-                 playback.removeEventListener('seeked', playbackEventHandler);
-             }
-         };
-     }, [playback]);
+		playbackEventHandler();
 
-     return { isPlaying, togglePlayback, setPlayback } as UsePlaybackResult;
- }
+		return () => {
+			if (playback) {
+				playback.removeEventListener('play', playbackEventHandler);
+				playback.removeEventListener('pause', playbackEventHandler);
+				playback.removeEventListener('playing', playbackEventHandler);
+				playback.removeEventListener('waiting', playbackEventHandler);
+				playback.removeEventListener('seeking', playbackEventHandler);
+				playback.removeEventListener('seeked', playbackEventHandler);
+			}
+		};
+	}, [playback]);
+
+	return { isPlaying, togglePlayback, setPlayback } as UsePlaybackResult;
+}
