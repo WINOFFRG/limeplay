@@ -7,24 +7,24 @@ import './globals.css';
 import './fonts/Graphik-Medium.woff';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
-        <MantineProvider
-            withGlobalStyles
-            withNormalizeCSS
-            theme={{
-                colorScheme: 'dark',
-                defaultRadius: '50%',
+	<React.StrictMode>
+		<MantineProvider
+			withGlobalStyles
+			withNormalizeCSS
+			theme={{
+				colorScheme: 'dark',
+				defaultRadius: '50%',
 
-                fontSizes: {
-                    xs: 12,
-                    sm: 14,
-                    md: 16,
-                    lg: 18,
-                    xl: 20,
-                },
-            }}
-        >
-            <FullScreenPlayer />
-        </MantineProvider>
-    </React.StrictMode>
+				fontSizes: {
+					xs: 12,
+					sm: 14,
+					md: 16,
+					lg: 18,
+					xl: 20,
+				},
+			}}
+		>
+			<FullScreenPlayer />
+		</MantineProvider>
+	</React.StrictMode>
 );

@@ -31,3 +31,5 @@ dist/**
 .next/**
 .contentlayer
 .docgen
+.vercel
+shaka-player

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import useStore from '../../store';
 import useStyles from './styles';
 import { useMove } from '../../hooks/use-move';
+import useVolume from '../../hooks/useVolume';
 
 function UnmuteIcon() {
     const { classes } = useStyles();
@@ -77,58 +78,20 @@ function VolumeHalf() {
 }
 
 export default function VolumeButton() {
-    const { classes } = useStyles();
-    const video = useStore((state) => state.video);
-    const shakaPlayer = useStore((state) => state.shakaPlayer);
-    const [isMuted, setIsMuted] = useState(false);
-    const [volume, setVolume] = useState(0);
+	const { classes } = useStyles();
+	const video = useStore((state) => state.video);
 
-    const { ref, active } = useMove(({ x }) => handleVolumeChange(x));
-
-    const handleVolumeChange = useCallback(
-        (x: number) => {
-            if (video) {
-                if (x === 0) video.muted = true;
-                else video.muted = false;
-
-                setIsMuted(video.muted);
-                video.volume = x;
-                setVolume(x);
-            }
-        },
-        [video]
-    );
-
-    const toggleMute = () => {
-        if (video) {
-            if (video.muted) handleVolumeChange(1);
-            else handleVolumeChange(0);
-        }
-    };
-
-    useEffect(() => {
-        if (video) {
-            video.addEventListener('volumechange', () => {
-                handleVolumeChange(video.volume);
-            });
-
-            setIsMuted(video.muted);
-            setVolume(video.volume);
-        }
-
-        return () => {
-            if (video) {
-                video.removeEventListener('volumechange', () => {
-                    handleVolumeChange(video.volume);
-                });
-            }
-        };
-    }, [video]);
+	const { volume, muted, setVolume, toggleMute } = useVolume(video, {
+		initialVolume: 0.5,
+	});
+    const { ref, active } = useMove(({ x }) => {
+        setVolume(x);
+    });
 
     return (
         <div className={classes.volumeControl}>
             <button className={classes.controlButton} onClick={toggleMute}>
-                {isMuted ? (
+                {muted ? (
                     <MuteIcon />
                 ) : volume > 0.5 ? (
                     <UnmuteIcon />

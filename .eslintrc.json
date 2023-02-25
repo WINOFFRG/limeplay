@@ -1,0 +1,65 @@
+{
+	"env": {
+		"browser": true,
+		"es2021": true
+	},
+	"plugins": [
+		"react",
+		"@typescript-eslint",
+		"prettier",
+		"react-hooks",
+		"jsx-a11y",
+		"import"
+	],
+	"extends": [
+		"plugin:react/recommended",
+		"plugin:prettier/recommended",
+		"airbnb",
+		"prettier",
+		"plugin:jsx-a11y/recommended",
+		"plugin:react-hooks/recommended",
+		"plugin:import/recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 14,
+		"sourceType": "module"
+	},
+	"rules": {
+		"react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
+		"react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
+		"react/react-in-jsx-scope": "off",
+		"no-param-reassign": "off",
+		"import/extensions": [
+			"error",
+			"ignorePackages",
+			{
+				"js": "never",
+				"jsx": "never",
+				"ts": "never",
+				"tsx": "never"
+			}
+		],
+		"react/jsx-filename-extension": 0,
+		"prettier/prettier": [
+			"error",
+			{
+				"endOfLine": "auto"
+			}
+		],
+		"@typescript-eslint/ban-ts-comment": "off"
+	},
+	"settings": {
+		"import/resolver": {
+			"node": {
+				"extensions": [".ts", ".tsx"],
+				"moduleDirectory": ["src", "node_modules"]
+			}
+		}
+	}
+}

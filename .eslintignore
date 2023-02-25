@@ -1,0 +1,13 @@
+# Similar to .gitignore, this lists files ignored by eslint.
+
+# This is default ignored, but we want to still lint it.
+mantine-styles
+shaka-player
+lib
+esm
+cjs
+dist
+public
+.cache
+.eslintrc.js
+*.d.ts
