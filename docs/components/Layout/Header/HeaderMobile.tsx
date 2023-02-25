@@ -6,27 +6,27 @@ import useStyles from './HeaderMobile.styles';
 import { ColorSchemeControl } from './HeaderControls/ColorSchemeControl';
 
 interface HeaderProps {
-    navbarOpened: boolean;
-    toggleNavbar(): void;
+	navbarOpened: boolean;
+	toggleNavbar(): void;
 }
 
 export function HeaderMobile({ navbarOpened, toggleNavbar }: HeaderProps) {
-    const { classes } = useStyles();
+	const { classes } = useStyles();
 
-    return (
-        <div className={classes.header}>
-            <div className={classes.inner}>
-                <Burger
-                    opened={navbarOpened}
-                    size="sm"
-                    onClick={toggleNavbar}
-                    aria-label="Toggle navbar"
-                />
-                <div className={classes.logo}>
-                    <Logo size={26} />
-                </div>
-                <ColorSchemeControl />
-            </div>
-        </div>
-    );
+	return (
+		<div className={classes.header}>
+			<div className={classes.inner}>
+				<Burger
+					opened={navbarOpened}
+					size="sm"
+					onClick={toggleNavbar}
+					aria-label="Toggle navbar"
+				/>
+				<div className={classes.logo}>
+					<Logo />
+				</div>
+				<ColorSchemeControl />
+			</div>
+		</div>
+	);
 }
