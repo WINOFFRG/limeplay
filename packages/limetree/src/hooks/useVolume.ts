@@ -1,62 +1,69 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-interface UseVolumeResult {}
+interface UseVolumeResult {
+	volume: number;
+	setVolume: (volume: number) => void;
+	muted: boolean;
+	lastVolume: number;
+	toggleMute: () => void;
+}
 
-interface UseVolumeProps {}
+interface UseVolumeProps {
+	initialVolume?: number;
+}
 
-export default function useVolume(playback: HTMLMediaElement | null) {
-    const [currentVolume, setCurrentVolume] = useState<number>(
-        playback?.muted ? 0 : playback?.volume || 0
-    );
-    const [lastVolume, setLastVolume] = useState<number>(
-        currentVolume === 0 ? 1 : currentVolume
-    );
-    const [muted, setMuted] = useState<boolean>(playback?.muted || false);
+export default function useVolume(
+	playback: HTMLMediaElement,
+	{ initialVolume }: UseVolumeProps
+): UseVolumeResult {
+	const [currentVolume, setCurrentVolume] = useState<number>(
+		playback.muted ? 0 : initialVolume || playback.volume
+	);
+	const [lastVolume, setLastVolume] = useState<number>(
+		currentVolume === 0 ? initialVolume || 1 : currentVolume
+	);
+	const [muted, setMuted] = useState<boolean>(
+		playback.muted || currentVolume === 0
+	);
 
-    const volumeEventHandler = useCallback(() => {
-        if (playback) {
-            const volume = playback.volume;
-            setCurrentVolume(volume);
-            setMuted(volume === 0 || playback.muted);
-            if (volume > 0) setLastVolume(volume);
-        }
-    }, [playback, setLastVolume, setCurrentVolume, setMuted]);
+	const setVolume = (volume: number) => {
+		if (playback.muted) playback.muted = false;
+		playback.volume = volume;
+	};
 
-    const setVolume = useCallback(
-        (volume: number) => {
-            if (playback) playback.volume = volume;
-        },
-        [playback]
-    );
+	const toggleMute = () => {
+		playback.muted = !playback.muted;
+		playback.volume = playback.muted ? 0 : lastVolume;
+	};
 
-    const toggleMute = useCallback(() => {
-        if (playback) {
-            playback.muted = playback.muted ? false : true;
-            setVolume(playback.muted ? 0 : lastVolume);
-        }
-    }, [playback, lastVolume, setVolume]);
+	useEffect(() => {
+		const volumeEventHandler = () => {
+			const { volume } = playback;
+			setCurrentVolume(volume);
+			setMuted(volume === 0 || playback.muted);
+			if (volume > 0) setLastVolume(volume);
+		};
 
-    useEffect(() => {
-        if (playback) {
-            playback.addEventListener('volumechange', volumeEventHandler);
-            if (playback.muted) setVolume(0);
-            volumeEventHandler();
-        }
+		playback.addEventListener('volumechange', volumeEventHandler);
 
-        return () => {
-            if (playback) {
-                playback.removeEventListener(
-                    'volumechange',
-                    volumeEventHandler
-                );
-            }
-        };
-    }, [playback]);
+		if (playback.muted) playback.volume = 0;
+		volumeEventHandler();
 
-    return {
-        volume: currentVolume,
-        setVolume,
-        muted,
-        toggleMute,
-    };
+		return () => {
+			if (playback) {
+				playback.removeEventListener(
+					'volumechange',
+					volumeEventHandler
+				);
+			}
+		};
+	}, [playback]);
+
+	return {
+		volume: currentVolume,
+		setVolume,
+		muted,
+		lastVolume,
+		toggleMute,
+	} as const;
 }

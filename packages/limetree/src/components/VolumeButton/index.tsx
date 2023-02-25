@@ -78,10 +78,12 @@ function VolumeHalf() {
 }
 
 export default function VolumeButton() {
-    const { classes } = useStyles();
-    const video = useStore((state) => state.video);
-    const shakaPlayer = useStore((state) => state.shakaPlayer);
-    const { volume, muted, setVolume, toggleMute } = useVolume(video);
+	const { classes } = useStyles();
+	const video = useStore((state) => state.video);
+
+	const { volume, muted, setVolume, toggleMute } = useVolume(video, {
+		initialVolume: 0.5,
+	});
     const { ref, active } = useMove(({ x }) => {
         setVolume(x);
     });
