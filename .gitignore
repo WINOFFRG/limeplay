@@ -32,3 +32,4 @@ dist/**
 .contentlayer
 .docgen
 .vercel
+shaka-player
