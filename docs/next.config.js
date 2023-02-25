@@ -1,4 +1,5 @@
-import withContentlayer from 'next-contentlayer';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { withContentlayer } = require('next-contentlayer');
 
 const nextConfig = {
 	typescript: {
@@ -9,4 +10,4 @@ const nextConfig = {
 	},
 };
 
-export default withContentlayer(nextConfig);
+module.exports = withContentlayer(nextConfig);
