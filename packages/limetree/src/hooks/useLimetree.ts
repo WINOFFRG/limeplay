@@ -1,41 +1,43 @@
 import { useEffect, useState } from 'react';
+import shaka from 'shaka-player';
 import useStore from '../store';
 import configure from './configure';
-import shaka from 'shaka-player';
 
 export default function useLimetree() {
-    const video = useStore((state) => state.video);
-    const setPlayerConfig = useStore((state) => state.setPlayerConfig);
-    const setShakaPlayer = useStore((state) => state.setShakaPlayer);
-    const [isDestroyed, setIsDestroyed] = useState(true);
+	const video = useStore((state) => state.video);
+	const setPlayerConfig = useStore((state) => state.setPlayerConfig);
+	const setShakaPlayer = useStore((state) => state.setShakaPlayer);
+	const [isDestroyed, setIsDestroyed] = useState(true);
 
-    useEffect(() => {
-        if (!video || !isDestroyed) return;
+	useEffect(() => {
+		if (!video || !isDestroyed) return;
 
-        const mainPlayer = new shaka.Player(video);
-        const configuration = configure(mainPlayer);
-        mainPlayer.configure(configuration.shaka);
+		const mainPlayer = new shaka.Player(video);
+		const configuration = configure(mainPlayer);
+		mainPlayer.configure(configuration.shaka);
 
-        setPlayerConfig(configuration);
-        setShakaPlayer(mainPlayer);
+		window.shaka = mainPlayer;
 
-        (async () => {
-            await mainPlayer.load(configuration.playback.url);
-            await video.play();
-        })();
+		setPlayerConfig(configuration);
+		setShakaPlayer(mainPlayer);
 
-        return () => {
-            (async () => {
-                if (!mainPlayer) return;
-                setIsDestroyed(false);
+		(async () => {
+			await mainPlayer.load(configuration.playback.url);
+			// await video.play();
+		})();
 
-                await mainPlayer.detach();
-                await mainPlayer.destroy();
+		return () => {
+			(async () => {
+				if (!mainPlayer) return;
+				setIsDestroyed(false);
 
-                setShakaPlayer(null);
-                setPlayerConfig(null);
-                setIsDestroyed(true);
-            })();
-        };
-    }, [video, isDestroyed]);
+				await mainPlayer.detach();
+				await mainPlayer.destroy();
+
+				setShakaPlayer(null);
+				setPlayerConfig(null);
+				setIsDestroyed(true);
+			})();
+		};
+	}, [video, isDestroyed]);
 }

@@ -53,7 +53,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
         position: 'absolute',
         height: '100%',
         width: '100%',
-        backgroundColor: '#5e5e5e',
+        backgroundColor: '#808080',
         borderRadius: '2px',
         transition: 'height border-radius 0.2s ease-in-out',
     },

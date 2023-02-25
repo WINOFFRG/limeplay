@@ -9,6 +9,7 @@ export function DiscordControl() {
             tooltip="Discord"
             component="a"
             href={meta.discordLink}
+            // @ts-ignore
             sx={(theme) => ({
                 color: theme.white,
                 backgroundColor: meta.discordColor,

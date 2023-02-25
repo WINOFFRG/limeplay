@@ -8,7 +8,6 @@ import useStyles from './styles';
 
 export default function ControlsOverlay() {
     const { classes } = useStyles();
-    const idle = useIdle(2000);
 
     return (
         <div className={classes.skinControls} role={'none'}>
