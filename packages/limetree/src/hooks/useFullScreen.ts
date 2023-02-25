@@ -6,7 +6,7 @@ export default function useFullScreen(
 	{
 		onError,
 	}: {
-		onError?: (error: Error) => void;
+		onError?: (event: Event) => void;
 	}
 ) {
 	const [isFullscreen, setIsFullscreen] = useState(
