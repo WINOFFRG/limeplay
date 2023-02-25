@@ -5,7 +5,8 @@
 	"main": "index.js",
 	"scripts": {
 		"limeplay:dev": "cd packages/limetree && pnpm run dev",
-		"lint": "eslint ."
+		"lint": "eslint .",
+		"docgen": "esno ./scripts/docgen.ts"
 	},
 	"devDependencies": {
 		"@types/fs-extra": "^11.0.1",
@@ -21,7 +22,6 @@
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-react": "^7.32.2",
 		"eslint-plugin-react-hooks": "^4.6.0",
-		"fs-extra": "^11.1.0",
 		"prettier": "^2.8.4",
 		"react-docgen-typescript": "^2.2.2",
 		"typescript": "^4.9.4"
@@ -30,6 +30,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"esno": "^0.16.3"
+		"esno": "^0.16.3",
+		"fs-extra": "^11.1.0"
 	}
 }
