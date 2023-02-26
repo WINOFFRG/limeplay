@@ -5,13 +5,29 @@ export default function useFullScreen(
 	elementRef: React.RefObject<HTMLElement>,
 	{
 		onError,
+		toggleOrientation = true,
+		onOrientationChangeError,
 	}: {
 		onError?: (event: Event) => void;
+		toggleOrientation?: boolean;
+		onOrientationChangeError?: (error: Error) => void;
 	}
 ) {
 	const [isFullscreen, setIsFullscreen] = useState(
 		(screenfull.isEnabled && screenfull.isFullscreen) || false
 	);
+	const [orientation, setOrientation] = useState<string>(
+		window.screen.orientation.type
+	);
+
+	const orientationError = (error: Error) => {
+		if (
+			onOrientationChangeError &&
+			typeof onOrientationChangeError === 'function'
+		) {
+			onOrientationChangeError(error);
+		}
+	};
 
 	const toggleFullscreen = () => {
 		if (!elementRef.current) return;
@@ -20,16 +36,32 @@ export default function useFullScreen(
 			if (isFullscreen) {
 				screenfull.exit();
 			} else {
-				screenfull.request(elementRef.current);
+				screenfull.request(elementRef.current).then(() => {
+					if (!toggleOrientation) return;
+
+					if (orientation === 'landscape-primary') {
+						window.screen.orientation
+							.lock('portrait')
+							.catch(orientationError);
+					} else {
+						window.screen.orientation
+							.lock('landscape')
+							.catch(orientationError);
+					}
+				});
 			}
 		}
 
-		// https://github.com/sindresorhus/screenfull#support
+		// Missing iOS Mobile Support https://github.com/sindresorhus/screenfull#support
 	};
 
 	useEffect(() => {
 		const fullscreenEventHandler = () => {
 			setIsFullscreen(screenfull.isFullscreen);
+		};
+
+		const orientationEventHandler = () => {
+			setOrientation(window.screen.orientation.type);
 		};
 
 		if (screenfull.isEnabled) {
@@ -40,6 +72,13 @@ export default function useFullScreen(
 			}
 		}
 
+		if (toggleOrientation) {
+			window.addEventListener(
+				'orientationchange',
+				orientationEventHandler
+			);
+		}
+
 		return () => {
 			if (screenfull.isEnabled) {
 				screenfull.off('change', fullscreenEventHandler);
@@ -48,11 +87,19 @@ export default function useFullScreen(
 					screenfull.off('error', onError);
 				}
 			}
+
+			if (toggleOrientation) {
+				window.removeEventListener(
+					'orientationchange',
+					orientationEventHandler
+				);
+			}
 		};
-	}, [elementRef]);
+	}, [elementRef, onError, toggleOrientation]);
 
 	return {
 		isFullscreen,
 		toggleFullscreen,
+		orientation,
 	};
 }
