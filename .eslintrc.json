@@ -8,8 +8,7 @@
 		"@typescript-eslint",
 		"prettier",
 		"react-hooks",
-		"jsx-a11y",
-		"import"
+		"jsx-a11y"
 	],
 	"extends": [
 		"plugin:react/recommended",
@@ -18,7 +17,6 @@
 		"prettier",
 		"plugin:jsx-a11y/recommended",
 		"plugin:react-hooks/recommended",
-		"plugin:import/recommended",
 		"plugin:@typescript-eslint/eslint-recommended",
 		"plugin:@typescript-eslint/recommended"
 	],
@@ -35,16 +33,6 @@
 		"react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
 		"react/react-in-jsx-scope": "off",
 		"no-param-reassign": "off",
-		"import/extensions": [
-			"error",
-			"ignorePackages",
-			{
-				"js": "never",
-				"jsx": "never",
-				"ts": "never",
-				"tsx": "never"
-			}
-		],
 		"react/jsx-filename-extension": 0,
 		"prettier/prettier": [
 			"error",
@@ -53,13 +41,5 @@
 			}
 		],
 		"@typescript-eslint/ban-ts-comment": "off"
-	},
-	"settings": {
-		"import/resolver": {
-			"node": {
-				"extensions": [".ts", ".tsx"],
-				"moduleDirectory": ["src", "node_modules"]
-			}
-		}
 	}
 }
