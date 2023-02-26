@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import useStore from '../../store';
 import useStyles from './styles';
-import useFullScreen from '../../hooks/useFullscreen';
+import useFullScreen from '../../hooks/useFullScreen';
 
 function FullscreenExit() {
 	const { classes } = useStyles();
@@ -52,14 +52,7 @@ function FullscreenEnter() {
 export default function FullscreenButton() {
 	const { classes } = useStyles();
 	const playerBaseWrapper = useStore((state) => state.playerBaseWrapper);
-	const { isFullscreen, toggleFullscreen } = useFullScreen(
-		playerBaseWrapper,
-		{
-			onError: (error) => {
-				console.error('Fullscreen error', error);
-			},
-		}
-	);
+	const { isFullscreen, toggleFullscreen } = useFullScreen(playerBaseWrapper);
 
 	return (
 		<button
