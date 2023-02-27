@@ -23,7 +23,7 @@ export default function useLimetree() {
 
 		(async () => {
 			await mainPlayer.load(configuration.playback.url);
-			await video.play();
+			// await video.play();
 		})();
 
 		return () => {

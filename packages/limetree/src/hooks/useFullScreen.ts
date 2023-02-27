@@ -1,17 +1,25 @@
 import { useEffect, useState } from 'react';
 import screenfull from 'screenfull';
 
+interface UseFullScreenProps {
+	toggleOrientation?: boolean;
+	onError?: (event: Event) => void;
+	onOrientationChangeError?: (error: Error) => void;
+}
+
+interface UseFullScreenReturn {
+	isFullscreen: boolean;
+	toggleFullscreen: () => void;
+	orientation: string;
+}
+
 export default function useFullScreen(
 	elementRef: React.RefObject<HTMLElement>,
 	{
-		onError,
 		toggleOrientation = true,
+		onError,
 		onOrientationChangeError,
-	}: {
-		onError?: (event: Event) => void;
-		toggleOrientation?: boolean;
-		onOrientationChangeError?: (error: Error) => void;
-	}
+	}: UseFullScreenProps
 ) {
 	const [isFullscreen, setIsFullscreen] = useState(
 		(screenfull.isEnabled && screenfull.isFullscreen) || false
@@ -101,5 +109,5 @@ export default function useFullScreen(
 		isFullscreen,
 		toggleFullscreen,
 		orientation,
-	};
+	} as UseFullScreenReturn;
 }
