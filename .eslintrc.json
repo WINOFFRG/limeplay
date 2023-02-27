@@ -40,6 +40,11 @@
 				"endOfLine": "auto"
 			}
 		],
-		"@typescript-eslint/ban-ts-comment": "off"
+		"@typescript-eslint/ban-ts-comment": "off",
+		"import/no-extraneous-dependencies": [
+			"error",
+			{ "devDependencies": true }
+		],
+		"import/prefer-default-export": "off"
 	}
 }
