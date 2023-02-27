@@ -8,9 +8,9 @@
     "email": "rohangupta1528@gmail.com"
   },
   "repo": {
-    "url": "https://github.com/winoffrg/limeplay",
-    "editUrl": "https://github.com/winoffrg/limeplay/tree/main/content",
-    "blobUrl": "https://github.com/winoffrg/limeplay/blob/main"
+		"url": "https://github.com/winoffrg/limeplay",
+		"editUrl": "https://github.com/winoffrg/limeplay/tree/main",
+		"blobUrl": "https://github.com/winoffrg/limeplay/blob/main"
   },
   "seo": {
     "title": "Limeplay",

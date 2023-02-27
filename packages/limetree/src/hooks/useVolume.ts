@@ -45,8 +45,8 @@ export default function useVolume(
 		};
 
 		playback.addEventListener('volumechange', volumeEventHandler);
+		playback.volume = currentVolume;
 
-		if (playback.muted) playback.volume = 0;
 		volumeEventHandler();
 
 		return () => {
@@ -57,7 +57,8 @@ export default function useVolume(
 				);
 			}
 		};
-	}, [playback]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [playback]); // Because currentVolume is set by events, we only need to set it initially
 
 	return {
 		volume: currentVolume,

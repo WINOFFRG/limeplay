@@ -1,22 +1,20 @@
 import { Category } from './types';
 
-const CORE_ORDER = ['data-display', 'overlay'] as const;
+const CORE_ORDER = ['components', 'hooks'] as const;
 
-const CORE_CATEGORIZES: Record<typeof CORE_ORDER[number], Category> = {
-    'data-display': {
-        title: 'Data display',
-    },
-
-    overlay: {
-        title: 'Overlays',
-        // icon: IconBoxMultiple,
-    },
+const CORE_CATEGORIZES: Record<(typeof CORE_ORDER)[number], Category> = {
+	components: {
+		title: 'Components',
+	},
+	hooks: {
+		title: 'Hooks',
+	},
 };
 
 export const CORE_CATEGORIZED = {
-    group: 'mantine-core',
-    categories: CORE_CATEGORIZES,
-    order: CORE_ORDER,
+	group: 'limeplay-hooks',
+	categories: CORE_CATEGORIZES,
+	order: CORE_ORDER,
 };
 
 export const CATEGORIZED = [CORE_CATEGORIZED];
