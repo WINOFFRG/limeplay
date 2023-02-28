@@ -1,17 +1,22 @@
 import { useEffect, useState } from 'react';
+import shaka from 'shaka-player';
 
-interface UseVolumeResult {
-	volume: number;
-	setVolume: (volume: number) => void;
-	muted: boolean;
-	lastVolume: number;
-	toggleMute: () => void;
-}
+export default function useLoading(player: shaka.Player) {
+	const [isLoading, setIsLoading] = useState(false);
 
-interface UseVolumeProps {
-	initialVolume?: number;
-}
+	useEffect(() => {
+		const loadingEventHandler = () => {
+			setIsLoading(player.isBuffering());
+		};
 
-export default function useVolume(player) {
-	return {};
+		player.addEventListener('buffering', loadingEventHandler);
+
+		return () => {
+			player.removeEventListener('buffering', loadingEventHandler);
+		};
+	}, [player]);
+
+	return {
+		isLoading,
+	};
 }

@@ -3,18 +3,17 @@ import ControlsOverlay from '../ControlsOverlay';
 import PlayerLoader from '../Loader';
 import useStyles from './styles';
 
-const PlayerOverlay: React.FC = () => {
-    const { classes } = useStyles();
-    const video = useStore((state) => state.video);
+export default function PlayerOverlay() {
+	const { classes } = useStyles();
+	const video = useStore((state) => state.video);
+	const shakaPlayer = useStore((state) => state.shakaPlayer);
 
-    if (!video) return null;
+	if (!video || !shakaPlayer) return null;
 
-    return (
-        <div className={classes.overlayWrapper}>
-            <PlayerLoader />
-            <ControlsOverlay />
-        </div>
-    );
-};
-
-export default PlayerOverlay;
+	return (
+		<div className={classes.overlayWrapper}>
+			<PlayerLoader />
+			<ControlsOverlay />
+		</div>
+	);
+}

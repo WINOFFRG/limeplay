@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import useStore from '../../store';
 import useStyles from './styles';
-import { useMove } from '../../hooks/use-move';
+import { useMove } from '../../utils/useMove';
 import useVolume from '../../hooks/useVolume';
 
 function UnmuteIcon() {
