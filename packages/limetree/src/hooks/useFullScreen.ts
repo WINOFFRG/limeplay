@@ -19,7 +19,7 @@ export default function useFullScreen(
 		toggleOrientation = true,
 		onError,
 		onOrientationChangeError,
-	}: UseFullScreenProps
+	}: UseFullScreenProps = {}
 ) {
 	const [isFullscreen, setIsFullscreen] = useState(
 		(screenfull.isEnabled && screenfull.isFullscreen) || false

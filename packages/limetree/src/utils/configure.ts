@@ -1,10 +1,12 @@
 export default function configure(player: shaka.Player) {
 	const config: PlayerConfig = {
 		playback: {
-			url: import.meta.env.VITE_PLAYBACK_URL,
-			// 'https://dash.akamaized.net/dash264/TestCasesUHD/2b/11/MultiRate.mpd',
+			url:
+				// 'https://dash.akamaized.net/dash264/TestCasesUHD/2b/11/MultiRate.mpd',
+				import.meta.env.VITE_PLAYBACK_URL,
 			// 'https://storage.googleapis.com/shaka-demo-assets/sintel/dash.mpd',
 			// 'https://media-files.vidstack.io/hls/index.m3u8',
+			// 'https://livesim.dashif.org/livesim/testpic_2s/Manifest_thumbs.mpd',
 			prerolls: [],
 		},
 		shaka: player.getConfiguration(),
