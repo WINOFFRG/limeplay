@@ -1,12 +1,9 @@
-import { useRef, useState } from 'react';
 import useStore from '../../store';
 import useStyles from './styles';
 import useTimeline from '../../hooks/useTimeline';
-import {
-	getChangeValue,
-	buildTimeString,
-	getClientPosition,
-} from './utils/index';
+import { buildTimeString } from './utils/index';
+
+import HoverContainer from './HoverContainer';
 
 export default function PresentationTimeline() {
 	const { classes } = useStyles();
@@ -20,13 +17,10 @@ export default function PresentationTimeline() {
 		duration,
 		isLive,
 		liveLatency,
-		seekRange,
-		isSeeking,
 		isHour,
 	} = useTimeline(video, shakaPlayer);
 
-	const [hoverTime, setHoverTime] = useState<string | null>(null);
-	const hoverPos = useRef<number | null>(null);
+	// console.log('PresentationTimeline', liveLatency);
 
 	return (
 		<div className={classes.timelineWrrapper}>
@@ -43,33 +37,6 @@ export default function PresentationTimeline() {
 			<div
 				className={classes.timelineSlider__Continer}
 				ref={ref as React.LegacyRef<HTMLDivElement>}
-				onPointerMove={(e) => {
-					if (!ref.current) return;
-
-					const rect = ref.current.getBoundingClientRect();
-					const changePosition = getClientPosition(e.nativeEvent);
-					const changeValue = getChangeValue({
-						value: changePosition - rect.left,
-						max: seekRange.end,
-						min: seekRange.start,
-						step: 0.01,
-						containerWidth: rect.width,
-					});
-
-					const hoverTimeText = buildTimeString(
-						isLive ? seekRange.end - changeValue : changeValue,
-						isHour
-					);
-
-					setHoverTime(hoverTimeText);
-
-					hoverPos.current = isLive
-						? 100 - ((seekRange.end - changeValue) / duration) * 100
-						: (changeValue / duration) * 100;
-				}}
-				onPointerLeave={() => {
-					setHoverTime(null);
-				}}
 			>
 				<div className={classes.timelineSlider__ProgressBar}>
 					<div className={classes.timelineSlider__DurationBar} />
@@ -87,24 +54,13 @@ export default function PresentationTimeline() {
 						left: `${progress}%`,
 					}}
 				/>
-				<div
-					style={{
-						display: hoverTime ? 'block' : 'none',
-						left: `${hoverPos.current}%`,
-					}}
-					className={classes.timelineSlider__VerticalBar__Hover}
-				/>
-				<div
-					style={{
-						display: hoverTime ? 'block' : 'none',
-						left: `${hoverPos.current}%`,
-					}}
-					className={
-						classes.timelineSlider__VerticalBarDuration__Hover
-					}
-				>
-					{hoverTime}
-				</div>
+				{shakaPlayer && video && (
+					<HoverContainer
+						player={shakaPlayer}
+						playback={video}
+						forwardRef={ref}
+					/>
+				)}
 			</div>
 
 			<div
