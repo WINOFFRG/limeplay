@@ -17,8 +17,10 @@ export default function useTimeline(
 	player: shaka.Player
 ) {
 	const precision = 8;
-	const UPDATE_INTERVAL = 400;
+	const UPDATE_INTERVAL = 250;
 	const SEEK_ALLOWED = true;
+	const UPDATE_WHILE_SEEKING = false;
+
 	const [currentTime, setCurrentTime] = useState(0);
 	const [isLive, setIsLive] = useState(false);
 	const [seekRange, setSeekRange] = useState<SeekRange>({ start: 0, end: 0 });
@@ -26,21 +28,23 @@ export default function useTimeline(
 	const [liveLatency, setLiveLatency] = useState<number>(-1);
 	const [progress, setProgress] = useState<number>(0);
 	const [isHour, setIsHour] = useState(false);
-	const currentTimerId = useRef<number>(-1);
+	const [scrubbedTime, setScrubbedTime] = useState(0);
 
-	const [scurbbedTime, setScrubbedTime] = useState(0);
+	const currentTimerId = useRef<number>(-1);
 
 	const { ref, active } = useMove(
 		({ x: newPosition }) => {
 			if (!SEEK_ALLOWED) return;
 
-			if (playback && player) {
-				const newTimeInSeconds = newPosition * duration;
-				// playback.currentTime =
-				// 	newTimeInSeconds + player.seekRange().start;
-				setProgress(newPosition * 100);
-				setScrubbedTime(newTimeInSeconds + player.seekRange().start);
+			const newTimeInSeconds = newPosition * duration;
+
+			if (UPDATE_WHILE_SEEKING) {
+				playback.currentTime =
+					newTimeInSeconds + player.seekRange().start;
 			}
+
+			setProgress(newPosition * 100);
+			setScrubbedTime(newTimeInSeconds + player.seekRange().start);
 		},
 		{
 			// onScrubStart: () => {
@@ -50,6 +54,8 @@ export default function useTimeline(
 			// 	}
 			// },
 			onScrubEnd: () => {
+				if (UPDATE_WHILE_SEEKING) return;
+
 				setScrubbedTime((prev) => {
 					if (playback) {
 						playback.currentTime = prev;
