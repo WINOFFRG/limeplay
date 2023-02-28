@@ -7,3 +7,8 @@ interface PlayerConfig {
     };
     shaka: shaka.extern.PlayerConfiguration;
 }
+
+interface LimeplayRequiredProps {
+	playback: HTMLMediaElement;
+	player: shaka.Player;
+}
