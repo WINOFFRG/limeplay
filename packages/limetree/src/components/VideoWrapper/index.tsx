@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import useStore from '../../store/index';
 import useStyles from './styles';
-import useLimetree from '../../hooks/useLimetree';
+import useLimetree from '../../utils/useLimetree';
 
 function VideoWrapper() {
 	const { classes } = useStyles();
@@ -20,7 +20,6 @@ function VideoWrapper() {
 				<video
 					autoPlay
 					playsInline
-					muted
 					ref={videoRef}
 					className={classes.videoElement}
 				/>

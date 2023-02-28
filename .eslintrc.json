@@ -45,6 +45,24 @@
 			"error",
 			{ "devDependencies": true }
 		],
-		"import/prefer-default-export": "off"
+		"import/prefer-default-export": "off",
+		"import/no-unresolved": 0,
+		"import/extensions": [
+			"error",
+			"ignorePackages",
+			{
+				"js": "never",
+				"jsx": "never",
+				"ts": "never",
+				"tsx": "never"
+			}
+		]
+	},
+	"settings": {
+		"import/resolver": {
+			"node": {
+				"extensions": [".js", ".jsx", ".ts", ".tsx"]
+			}
+		}
 	}
 }
