@@ -81,6 +81,7 @@ export default function VolumeButton() {
 	const { classes } = useStyles();
 	const video = useStore((state) => state.video);
 
+	// @ts-ignore
 	const { volume, muted, setVolume, toggleMute } = useVolume(video, {
 		initialVolume: 0.5,
 	});
@@ -88,7 +89,12 @@ export default function VolumeButton() {
 
 	return (
 		<div className={classes.volumeControl}>
-			<button className={classes.controlButton} onClick={toggleMute}>
+			<button
+				type="button"
+				className={classes.controlButton}
+				onClick={toggleMute}
+			>
+				{/* eslint-disable-next-line no-nested-ternary */}
 				{muted ? (
 					<MuteIcon />
 				) : volume > 0.5 ? (
@@ -98,11 +104,7 @@ export default function VolumeButton() {
 				)}
 			</button>
 			<div className={classes.volumeSlider}>
-				<div
-					className={classes.volumeSlider__Slider}
-					role="slider"
-					tabIndex={-1}
-				>
+				<div className={classes.volumeSlider__Slider} tabIndex={-1}>
 					{/* @ts-ignore */}
 					<div ref={ref} className={classes.volumeSlider__Duration}>
 						<div
