@@ -3,4 +3,4 @@ An open source UI library for Video Player on React based on [Shaka Player](http
 
 ### Preview: https://limeplay.me/
 
-### Documentation: https://docs.limeplay.me/
+### Documentation: https://docs.limeplay.me/hooks/useVolume
