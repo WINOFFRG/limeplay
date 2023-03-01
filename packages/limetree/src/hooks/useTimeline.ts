@@ -17,7 +17,7 @@ export default function useTimeline(
 	player: shaka.Player
 ) {
 	const precision = 8;
-	const UPDATE_INTERVAL = 1250;
+	const UPDATE_INTERVAL = 250;
 	const SEEK_ALLOWED = true;
 	const UPDATE_WHILE_SEEKING = false;
 
