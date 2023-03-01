@@ -59,6 +59,15 @@ export default function HoverContainer({
 				: (changeValue / duration) * 100;
 		};
 
+		/*
+            It is important that we add listeners on these elements in react way, 
+            since the component rerenders everytime mouse is moved it causes a 
+            huge impact. I checked with Chrome performance monitor tools, whenever 
+            mouse was hovered the number of listeners increased exponentially as 
+            everytime the component renders onPointerMove and onPointerLeave events 
+            were added. 
+        */
+
 		if (element) {
 			element.addEventListener('pointermove', pointerMoveEventHandler);
 			element.addEventListener('pointerleave', pointerLeaveEventHandler);
@@ -78,20 +87,19 @@ export default function HoverContainer({
 		};
 	}, [player, playback, forwardRef, seekRange]);
 
+	const hoverBarStyles = {
+		display: hoverTime ? 'block' : 'none',
+		left: `${hoverPos.current}%`,
+	};
+
 	return (
 		<>
 			<div
-				style={{
-					display: hoverTime ? 'block' : 'none',
-					left: `${hoverPos.current}%`,
-				}}
+				style={hoverBarStyles}
 				className={classes.timelineSlider__VerticalBar__Hover}
 			/>
 			<div
-				style={{
-					display: hoverTime ? 'block' : 'none',
-					left: `${hoverPos.current}%`,
-				}}
+				style={hoverBarStyles}
 				className={classes.timelineSlider__VerticalBarDuration__Hover}
 			>
 				{hoverTime}

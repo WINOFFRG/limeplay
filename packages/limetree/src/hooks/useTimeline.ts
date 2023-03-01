@@ -17,7 +17,7 @@ export default function useTimeline(
 	player: shaka.Player
 ) {
 	const precision = 8;
-	const UPDATE_INTERVAL = 250;
+	const UPDATE_INTERVAL = 1250;
 	const SEEK_ALLOWED = true;
 	const UPDATE_WHILE_SEEKING = false;
 
@@ -105,7 +105,7 @@ export default function useTimeline(
 					setSeekRange(player.seekRange());
 					setDuration(playback.duration);
 					setCurrentTime(playback.currentTime);
-					if (liveLatency) setLiveLatency(-1);
+					if (liveLatency !== -1) setLiveLatency(-1);
 
 					let localProgress =
 						(playback.currentTime / playback.duration) * 100;
