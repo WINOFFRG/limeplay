@@ -18,6 +18,7 @@ export default function PresentationTimeline() {
 		isLive,
 		liveLatency,
 		isHour,
+		// @ts-ignore
 	} = useTimeline(video, shakaPlayer);
 
 	return (

@@ -1,5 +1,5 @@
 {
-  "compilerOptions": {
+	"compilerOptions": {
 		"target": "ESNext",
 		"useDefineForClassFields": true,
 		"lib": ["DOM", "DOM.Iterable", "ESNext"],
@@ -15,6 +15,7 @@
 		"resolveJsonModule": true,
 		"isolatedModules": false,
 		"noEmit": true,
+		"noEmitOnError": true,
 		"jsx": "react-jsx",
 		"declaration": true,
 		"declarationDir": ".",
@@ -24,20 +25,8 @@
 		"rootDirs": ["./src"],
 		"outDir": "./dist",
 		"preserveConstEnums": true,
-		"typeRoots": ["./src/types", "./node_modules/"],
-		"paths": {
-			"shaka-player": [
-				"./node_modules/shaka-player/dist/shaka-player.compiled.debug.js"
-			]
-		}
-  },
-  "include": [
-    "src/**/*",
-    "docs/**/*",
-    "docs/next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "types/*.d.ts"
-  ],
-  "exclude": ["node_modules"]
+		"typeRoots": ["./src/types", "./node_modules/types"]
+	},
+	"include": ["src/**/*", "**/*.ts", "**/*.tsx", "types/*.d.ts"],
+	"exclude": ["node_modules"]
 }
