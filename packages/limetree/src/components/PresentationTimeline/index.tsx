@@ -20,8 +20,6 @@ export default function PresentationTimeline() {
 		isHour,
 	} = useTimeline(video, shakaPlayer);
 
-	// console.log('PresentationTimeline', liveLatency);
-
 	return (
 		<div className={classes.timelineWrrapper}>
 			<div
@@ -96,9 +94,9 @@ export default function PresentationTimeline() {
 					alignItems: 'center',
 					justifyContent: 'center',
 				}}
-				onClick={() => {
-					shakaPlayer?.goToLive();
-				}}
+				// onClick={() => {
+				// 	shakaPlayer?.goToLive();
+				// }}
 			>
 				<div>{currentTime >= 3 ? 'GO TO LIVE' : 'LIVE'}</div>
 			</button>
