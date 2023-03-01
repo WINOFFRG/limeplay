@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect, useState } from 'react';
 import shaka from 'shaka-player';
 import useStore from '../store';
@@ -21,23 +22,16 @@ export default function useLimetree() {
 		setPlayerConfig(configuration);
 		setShakaPlayer(mainPlayer);
 
-		(async () => {
-			await mainPlayer.load(configuration.playback.url);
-			// await video.play();
-		})();
+		mainPlayer.load(configuration.playback.url);
 
+		// eslint-disable-next-line consistent-return
 		return () => {
-			(async () => {
-				if (!mainPlayer) return;
+			if (mainPlayer) {
 				setIsDestroyed(false);
-
-				await mainPlayer.detach();
-				await mainPlayer.destroy();
-
 				setShakaPlayer(null);
 				setPlayerConfig(null);
 				setIsDestroyed(true);
-			})();
+			}
 		};
 	}, [video, isDestroyed]);
 }

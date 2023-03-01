@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import useStore from '../../store';
 import PlaybackButton, { PlayIcon } from '../PlaybackButton';
 import useStyles from './styles';
@@ -69,7 +69,7 @@ export function ControlsMiddlePanel() {
 			}}
 		>
 			<div className={classes.centrePlaybackIcon}>
-				<PlayIcon height={48} width={48} />
+				<PlayIcon />
 			</div>
 		</div>
 	);

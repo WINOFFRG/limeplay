@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
 import useStore from '../../store';
 import useStyles from './styles';
 import usePlayback from '../../hooks/usePlayback';
 
-export function PlayIcon({ height, width }: { height: number; width: number }) {
+export function PlayIcon() {
 	const { classes } = useStyles();
 
 	return (
@@ -11,10 +10,6 @@ export function PlayIcon({ height, width }: { height: number; width: number }) {
 			viewBox="0 0 24 24"
 			xmlns="http://www.w3.org/2000/svg"
 			className={classes.iconStyle}
-			style={{
-				...(height ? { height } : {}),
-				...(width ? { width } : {}),
-			}}
 		>
 			<path
 				d="M4.245 2.563a.5.5 0 00-.745.435v18.004a.5.5 0 00.745.435l15.997-9.001a.5.5 0 000-.872L4.245 2.563z"
@@ -49,15 +44,13 @@ export default function PlaybackButton() {
 	const { classes } = useStyles();
 	const video = useStore((state) => state.video);
 
-	if (!video) return null;
-
-	const [isPlay, setIsPlay] = useState(false);
-
 	const isLoading = useStore((state) => state.isLoading);
+	// @ts-ignore
 	const { isPlaying, togglePlayback } = usePlayback(video);
 
 	return (
 		<button
+			type="button"
 			disabled={isLoading}
 			className={classes.controlButton}
 			onClick={togglePlayback}

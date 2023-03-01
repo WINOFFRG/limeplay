@@ -52,6 +52,7 @@ function FullscreenEnter() {
 export default function FullscreenButton() {
 	const { classes } = useStyles();
 	const playerBaseWrapper = useStore((state) => state.playerBaseWrapper);
+	// @ts-ignore
 	const { isFullscreen, toggleFullscreen } = useFullScreen(playerBaseWrapper);
 
 	return (

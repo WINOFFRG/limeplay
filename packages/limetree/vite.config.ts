@@ -10,7 +10,7 @@ export default defineConfig({
 	],
 	resolve: {
 		alias: {
-			'shaka-player': 'shaka-player/dist/shaka-player.compiled',
+			'shaka-player': 'shaka-player/dist/shaka-player.compiled.debug.js',
 		},
 	},
 	server: {
