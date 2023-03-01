@@ -104,6 +104,7 @@ importers:
       '@types/react': ^18.0.22
       '@types/react-dom': ^18.0.7
       '@vitejs/plugin-react': ^2.2.0
+      lodash: ^4.17.21
       react: ^18.2.0
       react-dom: ^18.2.0
       screenfull: ^6.0.2
@@ -114,6 +115,7 @@ importers:
     dependencies:
       '@emotion/react': 11.10.5_3stiutgnnbnfnf3uowm5cip22i
       '@mantine/styles': 5.10.1_sogmqz4enknxtkxk3k5s6bqwnq
+      lodash: 4.17.21
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       screenfull: 6.0.2
@@ -7015,7 +7017,6 @@ packages:
 
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
 
   /log4js/6.7.1:
     resolution: {integrity: sha512-lzbd0Eq1HRdWM2abSD7mk6YIVY0AogGJzb/z+lqzRk+8+XJP+M6L1MS5FUSc3jjGru4dbKjEMJmqlsoYYpuivQ==}
