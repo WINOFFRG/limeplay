@@ -17,7 +17,9 @@ export default function useLimetree() {
 		const configuration = configure(mainPlayer);
 		mainPlayer.configure(configuration.shaka);
 
-		window.shaka = mainPlayer;
+		// Only for debugging purposes
+		window.player = mainPlayer;
+		window.shaka = shaka;
 
 		setPlayerConfig(configuration);
 		setShakaPlayer(mainPlayer);
