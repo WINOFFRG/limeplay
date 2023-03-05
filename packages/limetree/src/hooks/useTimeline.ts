@@ -43,9 +43,9 @@ export default function useTimeline(
 			onDrag: ({ down, offset: [x, y] }) => {
 				if (!SEEK_ALLOWED || playback.readyState < 3) return;
 
-				const newPosition = x;
+				const newPosition = (x * currentTime) / duration;
 
-				console.log('useTimeline: onDrag', newPosition);
+				console.log('useTimeline: onDrag', newPosition, x);
 
 				const newTimeInSeconds = newPosition * duration;
 				const newPlaybackTime =
@@ -55,7 +55,9 @@ export default function useTimeline(
 					playback.currentTime = newPlaybackTime;
 				}
 
-				setProgress(newPosition / 100);
+				if (newPosition >= 0 && newPosition <= 100) {
+					setProgress(newPosition);
+				}
 
 				setScrubbedTime(
 					clamp(newPlaybackTime, seekRange.start, seekRange.end)
@@ -166,7 +168,7 @@ export default function useTimeline(
 
 					localProgress = Number(localProgress.toFixed(precision));
 
-					if (!active) setProgress(localProgress);
+					// if (!active) setProgress(localProgress);
 				} else {
 					setSeekRange(player.seekRange());
 					setDuration(playback.duration);
