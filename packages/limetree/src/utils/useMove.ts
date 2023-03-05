@@ -35,6 +35,8 @@ export function useMove<T extends HTMLElement = HTMLDivElement>(
 		mounted.current = true;
 	}, []);
 
+	console.log('useMove: onChange');
+
 	useEffect(() => {
 		const onScrub = ({ x, y }: UseMovePosition) => {
 			cancelAnimationFrame(frame.current);

@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import useStore from '../../store';
 import useStyles from './styles';
 import useTimeline from '../../hooks/useTimeline';
@@ -11,15 +12,20 @@ export default function PresentationTimeline() {
 	const shakaPlayer = useStore((state) => state.shakaPlayer);
 
 	const {
-		ref,
+		bind,
 		progress,
 		currentTime,
 		duration,
 		isLive,
 		liveLatency,
 		isHour,
+		readyState,
 		// @ts-ignore
 	} = useTimeline(video, shakaPlayer);
+
+	// console.log('useTimeline', progress);
+
+	// if (readyState < 3) return null;
 
 	return (
 		<div className={classes.timelineWrrapper}>
@@ -31,12 +37,11 @@ export default function PresentationTimeline() {
 					gap: '2px',
 				}}
 			>
-				<span>{buildTimeString(currentTime, isHour)}</span>
+				{currentTime > 0 && (
+					<span>{buildTimeString(currentTime, isHour)}</span>
+				)}
 			</div>
-			<div
-				className={classes.timelineSlider__Continer}
-				ref={ref as React.LegacyRef<HTMLDivElement>}
-			>
+			<div className={classes.timelineSlider__Continer} {...bind()}>
 				<div className={classes.timelineSlider__ProgressBar}>
 					<div className={classes.timelineSlider__DurationBar} />
 					<div
@@ -57,7 +62,7 @@ export default function PresentationTimeline() {
 					<HoverContainer
 						player={shakaPlayer}
 						playback={video}
-						forwardRef={ref}
+						forwardRef={bind}
 					/>
 				)}
 			</div>

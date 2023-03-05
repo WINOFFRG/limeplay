@@ -18,6 +18,10 @@ function VideoWrapper() {
 		<div className={classes.playerWrapper}>
 			<div className={classes.playerNode}>
 				<video
+					style={{
+						opacity: 0,
+					}}
+					muted
 					autoPlay
 					playsInline
 					ref={videoRef}

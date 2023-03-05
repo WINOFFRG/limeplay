@@ -20,6 +20,7 @@ export default function configure(player: shaka.Player) {
 	}
 
 	config.shaka.manifest.dash.ignoreMinBufferTime = true;
+	// config.shaka.manifest.availabilityWindowOverride = 120;
 	config.shaka.streaming.forceTransmux = true;
 
 	return config;
