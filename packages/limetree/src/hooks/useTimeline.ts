@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import clamp from 'lodash/clamp';
+import { useGesture } from '@use-gesture/react';
 import { useMove } from '../utils/useMove';
 
 interface UseTimelineResult {
@@ -16,77 +18,138 @@ export default function useTimeline(
 	playback: HTMLMediaElement,
 	player: shaka.Player
 ) {
-	const precision = 8;
-	const UPDATE_INTERVAL = 250;
+	const precision = 5;
+	const UPDATE_INTERVAL = 1000;
 	const SEEK_ALLOWED = true;
 	const UPDATE_WHILE_SEEKING = false;
+	const PAUSE_WHILE_SEEKING = false;
 
-	const [currentTime, setCurrentTime] = useState(0);
-	const [isLive, setIsLive] = useState(false);
+	const [currentTime, setCurrentTime] = useState<number>(
+		playback.currentTime
+	);
+	const [isLive, setIsLive] = useState<boolean>(false);
 	const [seekRange, setSeekRange] = useState<SeekRange>({ start: 0, end: 0 });
-	const [duration, setDuration] = useState(0);
+	const [duration, setDuration] = useState(playback.duration);
 	const [liveLatency, setLiveLatency] = useState<number>(-1);
 	const [progress, setProgress] = useState<number>(0);
-	const [isHour, setIsHour] = useState(false);
-	const [scrubbedTime, setScrubbedTime] = useState(0);
+	const [isHour, setIsHour] = useState<boolean>(false);
+	const [scrubbedTime, setScrubbedTime] = useState<number>(0);
+	const [active, setIsActive] = useState<boolean>(false);
 
-	const currentTimerId = useRef<number>(-1);
+	// console.log('useTimeline: playback');
 
-	const { ref, active } = useMove(
-		({ x: newPosition }) => {
-			if (!SEEK_ALLOWED) return;
+	const bind = useGesture(
+		{
+			onDrag: ({ down, offset: [x, y] }) => {
+				if (!SEEK_ALLOWED || playback.readyState < 3) return;
 
-			const newTimeInSeconds = newPosition * duration;
+				const newPosition = x;
 
-			if (UPDATE_WHILE_SEEKING) {
-				playback.currentTime =
+				console.log('useTimeline: onDrag', newPosition);
+
+				const newTimeInSeconds = newPosition * duration;
+				const newPlaybackTime =
 					newTimeInSeconds + player.seekRange().start;
-			}
 
-			setProgress(newPosition * 100);
-			setScrubbedTime(newTimeInSeconds + player.seekRange().start);
+				if (UPDATE_WHILE_SEEKING) {
+					playback.currentTime = newPlaybackTime;
+				}
+
+				setProgress(newPosition / 100);
+
+				setScrubbedTime(
+					clamp(newPlaybackTime, seekRange.start, seekRange.end)
+				);
+			},
+			onDragStart: () => {
+				setIsActive(true);
+			},
+			onDragEnd: () => {
+				setIsActive(false);
+			},
 		},
 		{
-			// onScrubStart: () => {
-			// 	updateVideoTime.current = null;
-			// 	if (video) {
-			// 		video.pause();
-			// 	}
-			// },
-			onScrubEnd: () => {
-				if (UPDATE_WHILE_SEEKING) return;
-
-				setScrubbedTime((prev) => {
-					if (playback) {
-						playback.currentTime = prev;
-					}
-					return prev;
-				});
+			drag: {
+				axis: 'x',
 			},
 		}
 	);
 
+	const currentTimerId = useRef<number>(-1);
+
+	// const { ref, active } = useMove(
+	// 	({ x: newPosition }) => {
+	// 		if (!SEEK_ALLOWED || playback.readyState < 3) return;
+
+	// 		const newTimeInSeconds = newPosition * duration;
+	// 		const newPlaybackTime = newTimeInSeconds + player.seekRange().start;
+
+	// 		if (UPDATE_WHILE_SEEKING) {
+	// 			playback.currentTime = newPlaybackTime;
+	// 		}
+
+	// 		setProgress(newPosition * 100);
+
+	// 		setScrubbedTime(
+	// 			clamp(newPlaybackTime, seekRange.start, seekRange.end)
+	// 		);
+	// 	},
+	// 	{
+	// 		onScrubStart: () => {
+	// 			if (playback.readyState < 3 || !SEEK_ALLOWED) return;
+
+	// 			if (PAUSE_WHILE_SEEKING) {
+	// 				playback.pause();
+	// 			}
+	// 		},
+	// 		onScrubEnd: () => {
+	// 			if (playback.readyState < 3 || !SEEK_ALLOWED) return;
+
+	// 			if (PAUSE_WHILE_SEEKING) {
+	// 				playback.play();
+	// 			}
+
+	// 			if (UPDATE_WHILE_SEEKING) return;
+
+	// 			setScrubbedTime((prev) => {
+	// 				if (playback) {
+	// 					playback.currentTime = prev;
+	// 				}
+	// 				return prev;
+	// 			});
+	// 		},
+	// 	}
+	// );
+
 	useEffect(() => {
 		const updateSeekHandler = () => {
+			clearInterval(currentTimerId.current);
+
 			setIsLive(player.isLive());
 			setDuration(player.seekRange().end - player.seekRange().start);
 			setSeekRange(player.seekRange());
 			setIsHour(duration > 3600);
 
-			clearInterval(currentTimerId.current);
-
 			currentTimerId.current = window.setInterval(() => {
 				if (isLive) {
 					setSeekRange(player.seekRange());
+
+					if (playback.currentTime < player.seekRange().start) {
+						// playback.currentTime = player.seekRange().start;
+					}
+
 					setCurrentTime(
 						playback.currentTime - player.seekRange().start
 					);
+
 					setDuration(
 						player.seekRange().end - player.seekRange().start
 					);
+
 					setLiveLatency(
 						player.seekRange().end - playback.currentTime
 					);
+
 					setIsHour(
 						player.seekRange().end - player.seekRange().start > 3600
 					);
@@ -98,6 +161,9 @@ export default function useTimeline(
 						100;
 
 					localProgress = 100 - localProgress;
+
+					localProgress = localProgress < 0 ? 0 : localProgress;
+
 					localProgress = Number(localProgress.toFixed(precision));
 
 					if (!active) setProgress(localProgress);
@@ -127,7 +193,7 @@ export default function useTimeline(
 			player.removeEventListener('trackschanged', updateSeekHandler);
 			clearInterval(currentTimerId.current);
 		};
-	}, [playback, player, isLive, active]);
+	}, [playback, player, isLive]);
 
 	return {
 		currentTime,
@@ -135,9 +201,9 @@ export default function useTimeline(
 		isLive,
 		seekRange,
 		liveLatency,
-		ref,
+		bind,
 		progress,
-		isSeeking: active,
+		// isSeeking: active,
 		isHour,
 	};
 }
