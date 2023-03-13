@@ -35,8 +35,6 @@ export function useMove<T extends HTMLElement = HTMLDivElement>(
 		mounted.current = true;
 	}, []);
 
-	console.log('useMove: onChange');
-
 	useEffect(() => {
 		const onScrub = ({ x, y }: UseMovePosition) => {
 			cancelAnimationFrame(frame.current);
@@ -45,6 +43,8 @@ export function useMove<T extends HTMLElement = HTMLDivElement>(
 				if (mounted.current && ref.current) {
 					ref.current.style.userSelect = 'none';
 					const rect = ref.current.getBoundingClientRect();
+					// console.log('ref', ref.current, rect);
+					// console.log('Old:', x, rect.left, rect.width);
 
 					if (rect.width && rect.height) {
 						// eslint-disable-next-line no-underscore-dangle

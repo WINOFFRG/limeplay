@@ -34,94 +34,12 @@ export default function useTimeline(
 	const [progress, setProgress] = useState<number>(0);
 	const [isHour, setIsHour] = useState<boolean>(false);
 	const [scrubbedTime, setScrubbedTime] = useState<number>(0);
-	const [active, setIsActive] = useState<boolean>(false);
 
-	// console.log('useTimeline: playback');
-
-	const bind = useGesture(
-		{
-			onDrag: ({ down, offset: [x, y] }) => {
-				if (!SEEK_ALLOWED || playback.readyState < 3) return;
-
-				const newPosition = (x * currentTime) / duration;
-
-				console.log('useTimeline: onDrag', newPosition, x);
-
-				const newTimeInSeconds = newPosition * duration;
-				const newPlaybackTime =
-					newTimeInSeconds + player.seekRange().start;
-
-				if (UPDATE_WHILE_SEEKING) {
-					playback.currentTime = newPlaybackTime;
-				}
-
-				if (newPosition >= 0 && newPosition <= 100) {
-					setProgress(newPosition);
-				}
-
-				setScrubbedTime(
-					clamp(newPlaybackTime, seekRange.start, seekRange.end)
-				);
-			},
-			onDragStart: () => {
-				setIsActive(true);
-			},
-			onDragEnd: () => {
-				setIsActive(false);
-			},
-		},
-		{
-			drag: {
-				axis: 'x',
-			},
-		}
-	);
+	const { ref, active } = useMove(({ x: newPosition }) => {
+		// console.log({ newPosition: newPosition * 100 });
+	});
 
 	const currentTimerId = useRef<number>(-1);
-
-	// const { ref, active } = useMove(
-	// 	({ x: newPosition }) => {
-	// 		if (!SEEK_ALLOWED || playback.readyState < 3) return;
-
-	// 		const newTimeInSeconds = newPosition * duration;
-	// 		const newPlaybackTime = newTimeInSeconds + player.seekRange().start;
-
-	// 		if (UPDATE_WHILE_SEEKING) {
-	// 			playback.currentTime = newPlaybackTime;
-	// 		}
-
-	// 		setProgress(newPosition * 100);
-
-	// 		setScrubbedTime(
-	// 			clamp(newPlaybackTime, seekRange.start, seekRange.end)
-	// 		);
-	// 	},
-	// 	{
-	// 		onScrubStart: () => {
-	// 			if (playback.readyState < 3 || !SEEK_ALLOWED) return;
-
-	// 			if (PAUSE_WHILE_SEEKING) {
-	// 				playback.pause();
-	// 			}
-	// 		},
-	// 		onScrubEnd: () => {
-	// 			if (playback.readyState < 3 || !SEEK_ALLOWED) return;
-
-	// 			if (PAUSE_WHILE_SEEKING) {
-	// 				playback.play();
-	// 			}
-
-	// 			if (UPDATE_WHILE_SEEKING) return;
-
-	// 			setScrubbedTime((prev) => {
-	// 				if (playback) {
-	// 					playback.currentTime = prev;
-	// 				}
-	// 				return prev;
-	// 			});
-	// 		},
-	// 	}
-	// );
 
 	useEffect(() => {
 		const updateSeekHandler = () => {
@@ -180,7 +98,7 @@ export default function useTimeline(
 
 					localProgress = Number(localProgress.toFixed(precision));
 
-					if (!active) setProgress(localProgress);
+					// if (!active) setProgress(localProgress);
 				}
 			}, UPDATE_INTERVAL);
 		};
@@ -203,9 +121,9 @@ export default function useTimeline(
 		isLive,
 		seekRange,
 		liveLatency,
-		bind,
 		progress,
 		// isSeeking: active,
 		isHour,
+		ref,
 	};
 }

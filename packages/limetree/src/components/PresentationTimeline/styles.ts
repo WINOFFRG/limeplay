@@ -8,6 +8,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		gap: theme.spacing.sm,
+		userSelect: 'none',
 	},
 
 	timelineSlider__Continer: {
@@ -16,6 +17,8 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 		display: 'flex',
 		alignItems: 'center',
 		position: 'relative',
+		touchAction: 'none',
+		userSelect: 'none',
 
 		[`&:hover .${getRef('timelineSlider__ProgressBar')}`]: {
 			height: '6px',

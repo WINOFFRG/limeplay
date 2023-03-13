@@ -17,6 +17,10 @@ export default function useLimetree() {
 		const configuration = configure(mainPlayer);
 		mainPlayer.configure(configuration.shaka);
 
+		mainPlayer.addEventListener('stalldetected', (e) => {
+			console.log('stalldetected', e);
+		});
+
 		// Only for debugging purposes
 		window.player = mainPlayer;
 		window.shaka = shaka;
