@@ -1,4 +1,6 @@
-import { useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useGesture } from '@use-gesture/react';
+import clamp from 'lodash/clamp';
 import useStore from '../../store';
 import useStyles from './styles';
 import useTimeline from '../../hooks/useTimeline';
@@ -10,22 +12,47 @@ export default function PresentationTimeline() {
 	const { classes } = useStyles();
 	const video = useStore((state) => state.video);
 	const shakaPlayer = useStore((state) => state.shakaPlayer);
+	const [progress, setProgress] = useState(50);
+	const elementRef = useRef<HTMLDivElement>(null);
+	const playHead = useRef<HTMLDivElement>(null);
 
-	const {
-		bind,
-		progress,
-		currentTime,
-		duration,
-		isLive,
-		liveLatency,
-		isHour,
-		readyState,
-		// @ts-ignore
-	} = useTimeline(video, shakaPlayer);
+	const cbFunction = useCallback(({ event }) => {
+		const rect = event.currentTarget.getBoundingClientRect();
 
-	// console.log('useTimeline', progress);
+		console.log('Callback Function');
 
-	// if (readyState < 3) return null;
+		const newValue = ((event.clientX - rect.left) / rect.width) * 100;
+
+		const clammpedValue = clamp(newValue, 0, 100);
+
+		setProgress(clammpedValue);
+	}, []);
+
+	const callbackRef = useRef(cbFunction);
+
+	useEffect(() => {
+		if (callbackRef.current === cbFunction) {
+			console.log('The same memoized function is being used');
+		} else {
+			console.log('A new function is being created');
+			callbackRef.current = cbFunction;
+		}
+	});
+
+	const bind = useGesture(
+		{
+			onDrag: cbFunction,
+			onMouseDown: cbFunction,
+		},
+		{
+			drag: {
+				axis: 'x',
+				filterTaps: false,
+			},
+		}
+	);
+
+	console.log('Component Rendered');
 
 	return (
 		<div className={classes.timelineWrrapper}>
@@ -36,12 +63,13 @@ export default function PresentationTimeline() {
 					justifyContent: 'center',
 					gap: '2px',
 				}}
+			/>
+			<div
+				className={classes.timelineSlider__Continer}
+				ref={elementRef}
+				// eslint-disable-next-line react/jsx-props-no-spreading
+				{...bind()}
 			>
-				{currentTime > 0 && (
-					<span>{buildTimeString(currentTime, isHour)}</span>
-				)}
-			</div>
-			<div className={classes.timelineSlider__Continer} {...bind()}>
 				<div className={classes.timelineSlider__ProgressBar}>
 					<div className={classes.timelineSlider__DurationBar} />
 					<div
@@ -57,55 +85,17 @@ export default function PresentationTimeline() {
 					style={{
 						left: `${progress}%`,
 					}}
+					tabIndex={0}
+					ref={playHead}
 				/>
 				{shakaPlayer && video && (
 					<HoverContainer
 						player={shakaPlayer}
 						playback={video}
-						forwardRef={bind}
+						forwardRef={elementRef}
 					/>
 				)}
 			</div>
-
-			<div
-				style={{
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'center',
-					gap: '2px',
-				}}
-			>
-				<span>{shakaPlayer?.isLive() ? '-' : ''}</span>
-				<span>
-					{buildTimeString(isLive ? liveLatency : duration, isHour)}
-				</span>
-			</div>
-			<button
-				className={classes.controlButton}
-				type="button"
-				style={{
-					display: shakaPlayer?.isLive() ? 'flex' : 'none',
-					backgroundColor: shakaPlayer?.isLive() ? 'red' : 'gray',
-					color: 'white',
-					padding: '5px 10px',
-					borderRadius: '5px',
-					border: 'none',
-					fontSize: '12px',
-					height: 'max-content',
-					fontWeight: '700',
-					outline: 'none',
-					cursor: 'pointer',
-					width: 'max-content',
-					whiteSpace: 'nowrap',
-					alignItems: 'center',
-					justifyContent: 'center',
-				}}
-				// onClick={() => {
-				// 	shakaPlayer?.goToLive();
-				// }}
-			>
-				<div>{currentTime >= 3 ? 'GO TO LIVE' : 'LIVE'}</div>
-			</button>
 		</div>
 	);
 }
