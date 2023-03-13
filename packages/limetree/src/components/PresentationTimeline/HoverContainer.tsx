@@ -18,8 +18,10 @@ export default function HoverContainer({
 	forwardRef,
 }: HoverContainerProps) {
 	const { classes } = useStyles();
-	const [hoverTime, setHoverTime] = useState<string | null>(null);
+	const [hoverTime, setHoverTime] = useState<string | null>('0');
 	const hoverPos = useRef<number | null>(null);
+	const bubbleRef = useRef<HTMLDivElement>(null);
+	const hoverBarRef = useRef<HTMLDivElement>(null);
 
 	const { duration, isLive, seekRange, isHour } = useTimeline(
 		playback,
@@ -30,7 +32,8 @@ export default function HoverContainer({
 		const element = forwardRef.current;
 
 		const pointerLeaveEventHandler = (e: PointerEvent) => {
-			setHoverTime(null);
+			if (bubbleRef.current) bubbleRef.current.style.display = 'none';
+			if (hoverBarRef.current) hoverBarRef.current.style.display = 'none';
 		};
 
 		const pointerMoveEventHandler = (e: PointerEvent) => {
@@ -52,11 +55,22 @@ export default function HoverContainer({
 				isHour
 			);
 
-			setHoverTime(hoverTimeText);
+			// setHoverTime(hoverTimeText);
 
-			hoverPos.current = isLive
+			const dP = isLive
 				? 100 - ((seekRange.end - changeValue) / duration) * 100
 				: (changeValue / duration) * 100;
+
+			if (bubbleRef.current) {
+				bubbleRef.current.style.display = 'block';
+				bubbleRef.current.innerText = hoverTimeText;
+				bubbleRef.current.style.left = `${dP}%`;
+			}
+
+			if (hoverBarRef.current) {
+				hoverBarRef.current.style.display = 'block';
+				hoverBarRef.current.style.left = `${dP}%`;
+			}
 		};
 
 		/*
@@ -85,25 +99,18 @@ export default function HoverContainer({
 				);
 			}
 		};
-	}, [player, playback, forwardRef, seekRange]);
-
-	const hoverBarStyles = {
-		display: hoverTime ? 'block' : 'none',
-		left: `${hoverPos.current}%`,
-	};
+	}, [player, playback, forwardRef, seekRange, bubbleRef, hoverBarRef]);
 
 	return (
 		<>
 			<div
-				style={hoverBarStyles}
+				ref={hoverBarRef}
 				className={classes.timelineSlider__VerticalBar__Hover}
 			/>
 			<div
-				style={hoverBarStyles}
+				ref={bubbleRef}
 				className={classes.timelineSlider__VerticalBarDuration__Hover}
-			>
-				{hoverTime}
-			</div>
+			/>
 		</>
 	);
 }
