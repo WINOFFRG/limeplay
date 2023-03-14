@@ -3,9 +3,9 @@ export default function configure(player: shaka.Player) {
 		playback: {
 			url:
 				// 'https://dash.akamaized.net/dash264/TestCasesUHD/2b/11/MultiRate.mpd',
-				import.meta.env.VITE_PLAYBACK_URL,
-			// 'https://storage.googleapis.com/shaka-demo-assets/sintel/dash.mpd',
-			// 'https://media-files.vidstack.io/hls/index.m3u8',
+				// import.meta.env.VITE_PLAYBACK_URL,
+				// 'https://storage.googleapis.com/shaka-demo-assets/sintel/dash.mpd',
+				'https://media-files.vidstack.io/hls/index.m3u8',
 			// 'https://livesim.dashif.org/livesim/testpic_2s/Manifest_thumbs.mpd',
 			prerolls: [],
 		},
@@ -22,6 +22,7 @@ export default function configure(player: shaka.Player) {
 	config.shaka.manifest.dash.ignoreMinBufferTime = true;
 	// config.shaka.manifest.availabilityWindowOverride = 120;
 	config.shaka.streaming.forceTransmux = true;
+	config.shaka.streaming.bufferingGoal = 120;
 
 	return config;
 }
