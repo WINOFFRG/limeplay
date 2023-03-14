@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef } from 'react';
+import { shallow } from 'zustand/shallow';
+
 import {
 	getChangeValue,
 	buildTimeString,
@@ -6,26 +8,25 @@ import {
 } from './utils/index';
 
 import useStyles from './styles';
-import useTimeline from '../../hooks/useTimeline';
+import useStore from '../../store';
 
 interface HoverContainerProps extends LimeplayRequiredProps {
 	forwardRef: React.MutableRefObject<HTMLDivElement | undefined>;
 }
 
-export default function HoverContainer({
-	playback,
-	player,
-	forwardRef,
-}: HoverContainerProps) {
+function HoverContainer({ forwardRef }: HoverContainerProps) {
 	const { classes } = useStyles();
-	const [hoverTime, setHoverTime] = useState<string | null>('0');
-	const hoverPos = useRef<number | null>(null);
 	const bubbleRef = useRef<HTMLDivElement>(null);
 	const hoverBarRef = useRef<HTMLDivElement>(null);
 
-	const { duration, isLive, seekRange, isHour } = useTimeline(
-		playback,
-		player
+	const { duration, isLive, start, end } = useStore(
+		(state) => ({
+			duration: state.duration,
+			isLive: state.isLive,
+			start: state.seekRange.start,
+			end: state.seekRange.end,
+		}),
+		shallow
 	);
 
 	useEffect(() => {
@@ -44,31 +45,29 @@ export default function HoverContainer({
 
 			const changeValue = getChangeValue({
 				value: changePosition - rect.left,
-				max: seekRange.end,
-				min: seekRange.start,
+				max: end,
+				min: start,
 				step: 0.01,
 				containerWidth: rect.width,
 			});
 
 			const hoverTimeText = buildTimeString(
-				isLive ? seekRange.end - changeValue : changeValue,
-				isHour
+				isLive ? end - changeValue : changeValue,
+				duration > 3600
 			);
 
 			// setHoverTime(hoverTimeText);
 
 			const dP = isLive
-				? 100 - ((seekRange.end - changeValue) / duration) * 100
+				? 100 - ((end - changeValue) / duration) * 100
 				: (changeValue / duration) * 100;
 
 			if (bubbleRef.current) {
-				bubbleRef.current.style.display = 'block';
 				bubbleRef.current.innerText = hoverTimeText;
 				bubbleRef.current.style.left = `${dP}%`;
 			}
 
 			if (hoverBarRef.current) {
-				hoverBarRef.current.style.display = 'block';
 				hoverBarRef.current.style.left = `${dP}%`;
 			}
 		};
@@ -82,13 +81,31 @@ export default function HoverContainer({
             were added. 
         */
 
+		const pointerEnterEventHandler = (e: PointerEvent) => {
+			if (bubbleRef.current) {
+				bubbleRef.current.style.display = 'block';
+			}
+
+			if (hoverBarRef.current) {
+				hoverBarRef.current.style.display = 'block';
+			}
+		};
+
 		if (element) {
+			element.addEventListener('pointerenter', pointerEnterEventHandler);
 			element.addEventListener('pointermove', pointerMoveEventHandler);
 			element.addEventListener('pointerleave', pointerLeaveEventHandler);
 		}
 
+		hoverBarRef.current.style.display = 'none';
+		bubbleRef.current.style.display = 'none';
+
 		return () => {
 			if (element) {
+				element.removeEventListener(
+					'pointerenter',
+					pointerEnterEventHandler
+				);
 				element.removeEventListener(
 					'pointermove',
 					pointerMoveEventHandler
@@ -99,7 +116,7 @@ export default function HoverContainer({
 				);
 			}
 		};
-	}, [player, playback, forwardRef, seekRange, bubbleRef, hoverBarRef]);
+	}, [forwardRef, bubbleRef, hoverBarRef, duration]);
 
 	return (
 		<>
@@ -114,3 +131,7 @@ export default function HoverContainer({
 		</>
 	);
 }
+
+const MemoizedHoverContainer = memo(HoverContainer);
+
+export default MemoizedHoverContainer;
