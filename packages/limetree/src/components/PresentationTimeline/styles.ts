@@ -1,33 +1,37 @@
 import { createStyles } from '@mantine/styles';
 
 const useStyles = createStyles((theme, _params, getRef) => ({
-	timelineWrrapper: {
-		display: 'flex',
-		flexDirection: 'row',
-		padding: `0 ${theme.spacing.md}px`,
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		gap: theme.spacing.sm,
-		userSelect: 'none',
-	},
+	// timelineWrrapper: {
+	// 	display: 'flex',
+	// 	flexDirection: 'row',
+	// 	padding: `0 ${theme.spacing.lg}px`,
+	// 	alignItems: 'center',
+	// 	justifyContent: 'space-between',
+	// 	gap: theme.spacing.sm,
+	// 	userSelect: 'none',
+	// },
 
-	timelineSlider__Continer: {
-		width: '100%',
+	timelineSlider__Container: {
 		height: '36px',
 		display: 'flex',
 		alignItems: 'center',
+		alignSelf: 'stretch',
 		position: 'relative',
 		touchAction: 'none',
 		userSelect: 'none',
+		margin: `0 ${theme.spacing.lg}px`,
+		// padding: `0 ${theme.spacing.xs}px`,
 
 		[`&:hover .${getRef('timelineSlider__ProgressBar')}`]: {
 			height: '6px',
-			borderRadius: '6px',
+		},
+
+		[`&:hover .${getRef('timelineSlider__Buffer')}`]: {
+			height: '6px',
 		},
 
 		[`&:hover .${getRef('timelineSlider__DurationBar')}`]: {
 			height: '6px',
-			borderRadius: '6px',
 		},
 
 		[`&:hover .${getRef('timelineSlider__PlayHead')}`]: {
@@ -44,11 +48,36 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 
 	timelineSlider__ProgressBar: {
 		ref: getRef('timelineSlider__ProgressBar'),
-		position: 'absolute',
+		position: 'relative',
 		height: '4px',
 		width: '100%',
-		borderRadius: '2px',
+		// borderRadius: '2px',
 		transition: 'height border-radius 0.2s ease-in-out',
+		flex: '1 1 auto',
+
+		'&:before': {
+			content: '""',
+			position: 'absolute',
+			top: 0,
+			height: '100%',
+			width: '4px',
+			// zIndex: 1,
+			borderRadius: '2px 0 0 2px',
+			left: '-4px',
+			backgroundColor: theme.colors.blue[8],
+		},
+
+		'&:after': {
+			content: '""',
+			position: 'absolute',
+			top: 0,
+			height: '100%',
+			width: '4px',
+			// zIndex: 1,
+			borderRadius: '0 2px 2px 0',
+			right: '-4px',
+			backgroundColor: '#808080',
+		},
 	},
 
 	timelineSlider__DurationBar: {
@@ -57,17 +86,27 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 		height: '100%',
 		width: '100%',
 		backgroundColor: '#808080',
-		borderRadius: '2px',
-		transition: 'height border-radius 0.2s ease-in-out',
+		// borderRadius: '2px',
+		transition: 'transform 0.2s ease-in-out',
 	},
 
 	timelineSlider__DurationPlayed: {
 		ref: getRef('timelineSlider__DurationPlayed'),
 		position: 'absolute',
 		height: '100%',
-		backgroundColor: theme.colors.gray[2],
-		borderRadius: '2px',
+		backgroundColor: theme.colors.blue[8],
 		transition: 'transform 0.2s ease-in-out',
+		zIndex: 1,
+	},
+
+	timelineSlider__Buffer: {
+		ref: getRef('timelineSlider__Buffer'),
+		position: 'relative',
+		height: '100%',
+		borderRadius: '2px',
+		backgroundColor: theme.colors.red[5],
+		zIndex: 2,
+		transition: 'width 0.2s ease-in-out',
 	},
 
 	timelineSlider__PlayHead: {
@@ -93,6 +132,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 		backgroundColor: theme.white,
 		borderRadius: '2px',
 		transform: 'translate(-50%)',
+		zIndex: 2,
 		// transition: 'all 0.2s ease-in-out',
 	},
 

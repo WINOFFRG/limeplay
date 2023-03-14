@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import clamp from 'lodash/clamp';
 import { useGesture } from '@use-gesture/react';
-import { useMove } from '../utils/useMove';
+import { shallow } from 'zustand/shallow';
+import useStore from '../store';
 
 interface UseTimelineResult {
 	currentTime: number;
@@ -9,54 +10,107 @@ interface UseTimelineResult {
 	isLive: boolean;
 }
 
-interface SeekRange {
-	start: number;
-	end: number;
-}
-
 export default function useTimeline(
 	playback: HTMLMediaElement,
 	player: shaka.Player
 ) {
-	const precision = 5;
-	const UPDATE_INTERVAL = 1000;
+	const precision = 3;
+	const UPDATE_INTERVAL = 500;
 	const SEEK_ALLOWED = true;
 	const UPDATE_WHILE_SEEKING = false;
 	const PAUSE_WHILE_SEEKING = false;
 
-	const [currentTime, setCurrentTime] = useState<number>(
-		playback.currentTime
+	const {
+		currentTime,
+		duration,
+		isLive,
+		liveLatency,
+		progress,
+		seekRange,
+		isSeeking,
+	} = useStore(
+		(state) => ({
+			currentTime: state.currentTime,
+			duration: state.duration,
+			isLive: state.isLive,
+			liveLatency: state.liveLatency,
+			progress: state.progress,
+			seekRange: state.seekRange,
+			isSeeking: state.isSeeking,
+		}),
+		shallow
 	);
-	const [isLive, setIsLive] = useState<boolean>(false);
-	const [seekRange, setSeekRange] = useState<SeekRange>({ start: 0, end: 0 });
-	const [duration, setDuration] = useState(playback.duration);
-	const [liveLatency, setLiveLatency] = useState<number>(-1);
-	const [progress, setProgress] = useState<number>(0);
-	const [isHour, setIsHour] = useState<boolean>(false);
-	const [scrubbedTime, setScrubbedTime] = useState<number>(0);
 
-	const { ref, active } = useMove(({ x: newPosition }) => {
-		// console.log({ newPosition: newPosition * 100 });
-	});
+	const {
+		setCurrentTime,
+		setDuration,
+		getDuration,
+		setIsLive,
+		getIsLive,
+		setLiveLatency,
+		getLiveLatency,
+		setProgress,
+		setSeekRange,
+		setIsSeeking,
+		getIsSeeking,
+	} = useStore(
+		(state) => ({
+			setCurrentTime: state.setCurrentTime,
+			setDuration: state.setDuration,
+			getDuration: state.getDuration,
+			setIsLive: state.setIsLive,
+			getIsLive: state.getIsLive,
+			setLiveLatency: state.setLiveLatency,
+			getLiveLatency: state.getLiveLatency,
+			setProgress: state.setProgress,
+			setSeekRange: state.setSeekRange,
+			setIsSeeking: state.setIsSeeking,
+			getIsSeeking: state.getIsSeeking,
+		}),
+		shallow
+	);
 
 	const currentTimerId = useRef<number>(-1);
+
+	const cbFunction = ({ event }) => {
+		const rect = event.currentTarget.getBoundingClientRect();
+		const newValue = ((event.clientX - rect.left) / rect.width) * 100;
+		const clammpedValue = clamp(newValue, 0, 100);
+		setProgress(clammpedValue);
+
+		if (event.type === 'pointerup' || event.type === 'mousedown') {
+			playback.currentTime =
+				seekRange.start + (duration * clammpedValue) / 100;
+		}
+	};
+
+	const bind = useGesture(
+		{
+			onDrag: cbFunction,
+			onMouseUp: () => {
+				setIsSeeking(false);
+			},
+			onMouseDown: ({ event }) => {
+				setIsSeeking(true);
+				cbFunction({ event });
+			},
+		},
+		{
+			drag: {
+				axis: 'x',
+				filterTaps: false,
+			},
+		}
+	);
 
 	useEffect(() => {
 		const updateSeekHandler = () => {
 			clearInterval(currentTimerId.current);
-
 			setIsLive(player.isLive());
-			setDuration(player.seekRange().end - player.seekRange().start);
-			setSeekRange(player.seekRange());
-			setIsHour(duration > 3600);
 
 			currentTimerId.current = window.setInterval(() => {
-				if (isLive) {
+				if (getIsLive()) {
 					setSeekRange(player.seekRange());
-
-					if (playback.currentTime < player.seekRange().start) {
-						// playback.currentTime = player.seekRange().start;
-					}
 
 					setCurrentTime(
 						playback.currentTime - player.seekRange().start
@@ -68,10 +122,6 @@ export default function useTimeline(
 
 					setLiveLatency(
 						player.seekRange().end - playback.currentTime
-					);
-
-					setIsHour(
-						player.seekRange().end - player.seekRange().start > 3600
 					);
 
 					let localProgress =
@@ -86,19 +136,27 @@ export default function useTimeline(
 
 					localProgress = Number(localProgress.toFixed(precision));
 
-					// if (!active) setProgress(localProgress);
+					if (!getIsSeeking()) setProgress(localProgress);
+
+					if (getIsLive() !== player.isLive()) {
+						setIsLive(player.isLive());
+					}
 				} else {
-					setSeekRange(player.seekRange());
 					setDuration(playback.duration);
+
+					if (getLiveLatency() !== -1) setLiveLatency(-1);
+
+					if (seekRange.start === 0 || seekRange.end === 0)
+						setSeekRange(player.seekRange());
+
 					setCurrentTime(playback.currentTime);
-					if (liveLatency !== -1) setLiveLatency(-1);
 
 					let localProgress =
 						(playback.currentTime / playback.duration) * 100;
 
 					localProgress = Number(localProgress.toFixed(precision));
 
-					// if (!active) setProgress(localProgress);
+					if (!getIsSeeking()) setProgress(localProgress);
 				}
 			}, UPDATE_INTERVAL);
 		};
@@ -122,8 +180,7 @@ export default function useTimeline(
 		seekRange,
 		liveLatency,
 		progress,
-		// isSeeking: active,
-		isHour,
-		ref,
+		isSeeking,
+		bind,
 	};
 }
