@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import shaka from 'shaka-player';
+import { useLimeplayStore } from '../store';
 
-export default function useLoading(player: shaka.Player) {
+export default function useLoading() {
+	const player = useLimeplayStore((state) => state.player);
 	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
@@ -10,9 +11,11 @@ export default function useLoading(player: shaka.Player) {
 		};
 
 		player.addEventListener('buffering', loadingEventHandler);
+		player.addEventListener('loading', loadingEventHandler);
 
 		return () => {
 			player.removeEventListener('buffering', loadingEventHandler);
+			player.removeEventListener('loading', loadingEventHandler);
 		};
 	}, [player]);
 

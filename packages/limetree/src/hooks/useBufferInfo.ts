@@ -1,23 +1,19 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useInterval } from '../utils/use-interval';
 import { getPercentage } from '../utils';
+import useStore from '../store';
 
-interface BufferInfo {
-	start: number;
-	end: number;
-	width: number;
-	startPosition: number;
+interface BufferInfoProps {
+	updateInterval?: number;
 }
 
-export default function useBufferInfo(
-	playback: HTMLMediaElement,
-	player: shaka.Player
-) {
+export default function useBufferInfo() {
 	const UPDATE_INTERVAL = 2000;
-	const [bufferInfo, setBufferInfo] = useState<BufferInfo[]>([]);
+
+	const { setBufferInfo, shakaPlayer: player } = useStore.getState();
 
 	const callbackFn = useCallback(() => {
-		const buffer = player.getBufferedInfo().total;
+		const { total: buffer } = player.getBufferedInfo();
 		const seekRange = player.seekRange();
 		const duration = seekRange.end - seekRange.start;
 
@@ -53,5 +49,5 @@ export default function useBufferInfo(
 		};
 	}, []);
 
-	return { bufferInfo };
+	return {};
 }
