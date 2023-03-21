@@ -1,35 +1,23 @@
-import { useRef, useEffect } from 'react';
-import useStore from '../../store/index';
+import { forwardRef } from 'react';
 import useStyles from './styles';
-import useLimetree from '../../utils/useLimetree';
 
-function VideoWrapper() {
+const VideoWrapper = forwardRef<HTMLMediaElement>((props, ref) => {
 	const { classes } = useStyles();
-	const videoRef = useRef<HTMLVideoElement>(null);
-	const setVideoElement = useStore((state) => state.setVideoElement);
-	useLimetree();
-
-	useEffect(() => {
-		const videoElement = videoRef.current;
-		if (videoElement) setVideoElement(videoElement);
-	}, []);
 
 	return (
 		<div className={classes.playerWrapper}>
 			<div className={classes.playerNode}>
 				<video
-					style={{
-						opacity: 0,
-					}}
 					muted
 					autoPlay
+					controls={false}
 					playsInline
-					ref={videoRef}
+					ref={ref as React.RefObject<HTMLVideoElement>}
 					className={classes.videoElement}
 				/>
 			</div>
 		</div>
 	);
-}
+});
 
 export default VideoWrapper;

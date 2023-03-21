@@ -12,3 +12,8 @@ interface LimeplayRequiredProps {
 	playback: HTMLMediaElement;
 	player: shaka.Player;
 }
+
+interface HookProps {
+	playback: HTMLMediaElement;
+	player: shaka.Player;
+}

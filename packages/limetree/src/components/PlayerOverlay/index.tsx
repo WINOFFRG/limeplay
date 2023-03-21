@@ -1,19 +1,19 @@
-import useStore from '../../store';
+import usePlayback from '../../hooks/usePlayback';
+import { useLimeplayStore, useLimeplayStoreAPI } from '../../store';
 import ControlsOverlay from '../ControlsOverlay';
 import PlayerLoader from '../Loader';
 import useStyles from './styles';
 
 export default function PlayerOverlay() {
 	const { classes } = useStyles();
-	const video = useStore((state) => state.video);
-	const shakaPlayer = useStore((state) => state.shakaPlayer);
 
-	if (!video || !shakaPlayer) return null;
+	const player = useLimeplayStore((state) => state.player);
+	const playback = useLimeplayStore((state) => state.playback);
 
 	return (
 		<div className={classes.overlayWrapper}>
-			<PlayerLoader />
-			<ControlsOverlay />
+			{/* <PlayerLoader /> */}
+			{player && <ControlsOverlay />}
 		</div>
 	);
 }
