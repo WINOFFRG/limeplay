@@ -60,7 +60,8 @@
 				"ts": "never",
 				"tsx": "never"
 			}
-		]
+		],
+		"no-underscore-dangle": "off"
 		// "tsdoc/syntax": "warn"
 	},
 	"settings": {

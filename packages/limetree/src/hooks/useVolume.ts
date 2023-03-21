@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { StateCreator } from 'zustand';
+import hookDefaultValue from './utils/default-value';
 
 interface UseVolumeResult {
 	volume: number;
@@ -15,7 +17,7 @@ interface UseVolumeProps {
 export default function useVolume(
 	playback: HTMLMediaElement,
 	{ initialVolume }: UseVolumeProps
-): UseVolumeResult {
+) {
 	const [currentVolume, setCurrentVolume] = useState<number>(
 		playback.muted ? 0 : initialVolume || playback.volume
 	);
@@ -59,12 +61,29 @@ export default function useVolume(
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [playback]); // Because currentVolume is set by events, we only need to set it initially
-
-	return {
-		volume: currentVolume,
-		setVolume,
-		muted,
-		lastVolume,
-		toggleMute,
-	} as const;
 }
+
+const hookName = 'useVolume';
+
+export interface VolumeSlice {
+	volume: number;
+	_setVolume: (volume: number) => void;
+	muted: boolean;
+	_setMuted: (muted: boolean) => void;
+	lastVolume: number;
+	_setLastVolume: (lastVolume: number) => void;
+	toggleMute: () => void;
+	_setToggleMute: (toggleMute: () => void) => void;
+}
+
+export const createVolumeSlice: StateCreator<VolumeSlice> = (set) => ({
+	volume: 0,
+	_setVolume: (volume: number) => set({ volume }),
+	// setVolume: hookDefaultValue(hookName),
+	muted: false,
+	_setMuted: (muted: boolean) => set({ muted }),
+	lastVolume: 1,
+	_setLastVolume: (lastVolume: number) => set({ lastVolume }),
+	toggleMute: hookDefaultValue(hookName),
+	_setToggleMute: (toggleMute: () => void) => set({ toggleMute }),
+});

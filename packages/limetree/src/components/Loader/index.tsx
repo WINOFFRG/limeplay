@@ -1,13 +1,10 @@
 import { memo } from 'react';
 import useStyles from './styles';
-import useLoading from '../../hooks/useLoading';
+import { useLimeplayStore } from '../../store';
 
-function PlayerLoader() {
+export default function PlayerLoader() {
 	const { classes } = useStyles();
-	const { isLoading } = useLoading();
+	const isLoading = useLimeplayStore((state) => state.isLoading);
 
 	return isLoading ? <div className={classes.playerLoader} /> : null;
 }
-
-const MemoPlayerLoader = memo(PlayerLoader);
-export default MemoPlayerLoader;
