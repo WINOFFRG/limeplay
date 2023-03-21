@@ -1,8 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import useStore from '../../store';
+import { useCallback } from 'react';
+import { useLimeplayStore } from '../../store';
 import useStyles from './styles';
-import { useMove } from '../../utils/useMove';
-import useVolume from '../../hooks/useVolume';
 
 function UnmuteIcon() {
 	const { classes } = useStyles();
@@ -79,13 +77,29 @@ function VolumeHalf() {
 
 export default function VolumeButton() {
 	const { classes } = useStyles();
-	const video = useStore((state) => state.video);
 
-	// @ts-ignore
-	const { volume, muted, setVolume, toggleMute } = useVolume(video, {
-		initialVolume: 0.5,
-	});
-	const { ref } = useMove(({ x }) => setVolume(x));
+	const playback = useLimeplayStore((state) => state.playback);
+	const muted = useLimeplayStore((state) => state.muted);
+	const volume = useLimeplayStore((state) => state.volume);
+	const lastVolume = useLimeplayStore((state) => state.lastVolume);
+	const bindVolumeEvents = useLimeplayStore(
+		(state) => state.bindVolumeEvents
+	);
+	const isVolumeHookInjected = useLimeplayStore(
+		(state) => state.isVolumeHookInjected
+	);
+
+	const toggleMute = () => {
+		if (playback.muted) {
+			playback.muted = false;
+			playback.volume = lastVolume;
+		} else {
+			playback.muted = true;
+			playback.volume = 0;
+		}
+	};
+
+	if (!isVolumeHookInjected) return null;
 
 	return (
 		<div className={classes.volumeControl}>
@@ -105,8 +119,11 @@ export default function VolumeButton() {
 			</button>
 			<div className={classes.volumeSlider}>
 				<div className={classes.volumeSlider__Slider} tabIndex={-1}>
-					{/* @ts-ignore */}
-					<div ref={ref} className={classes.volumeSlider__Duration}>
+					<div
+						// eslint-disable-next-line react/jsx-props-no-spreading
+						{...bindVolumeEvents()}
+						className={classes.volumeSlider__Duration}
+					>
 						<div
 							className={classes.volumeSlider__Progress}
 							style={{

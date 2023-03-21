@@ -8,6 +8,9 @@ const VideoWrapper = forwardRef<HTMLMediaElement>((props, ref) => {
 		<div className={classes.playerWrapper}>
 			<div className={classes.playerNode}>
 				<video
+					style={{
+						opacity: 0,
+					}}
 					muted
 					autoPlay
 					controls={false}

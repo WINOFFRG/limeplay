@@ -1,4 +1,4 @@
-import { useLoading, usePlayback } from '../../hooks';
+import { useLoading, usePlayback, useVolume } from '../../hooks';
 import { useLimeplayStore } from '../../store';
 import ControlsOverlay from '../ControlsOverlay';
 import PlayerLoader from '../Loader';
@@ -10,6 +10,7 @@ export default function PlayerOverlay() {
 	const player = useLimeplayStore((state) => state.playback);
 	usePlayback();
 	useLoading();
+	useVolume();
 
 	return (
 		<div className={classes.overlayWrapper}>

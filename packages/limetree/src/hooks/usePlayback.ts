@@ -24,7 +24,10 @@ export function usePlayback({ events }: UsePlaybackConfig = {}) {
 	};
 
 	useEffect(() => {
-		const playbackEventHandler = () => setIsPlaying(!playback.paused);
+		const playbackEventHandler = (e) => {
+			console.log('Playback Event', e?.type);
+			setIsPlaying(!playback.paused);
+		};
 
 		const hookEvents: HTMLMediaElementEvents = events || [
 			'play',
