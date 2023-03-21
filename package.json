@@ -11,18 +11,7 @@
 	"devDependencies": {
 		"@types/fs-extra": "^11.0.1",
 		"@types/node": "^18.11.18",
-		"@typescript-eslint/eslint-plugin": "5.0.0",
 		"chalk": "^5.2.0",
-		"eslint": "^8.0.1",
-		"eslint-config-airbnb": "^19.0.4",
-		"eslint-config-prettier": "^8.6.0",
-		"eslint-config-standard-with-typescript": "^34.0.0",
-		"eslint-plugin-import": "2.25.2",
-		"eslint-plugin-jsx-a11y": "^6.7.1",
-		"eslint-plugin-prettier": "^4.2.1",
-		"eslint-plugin-react": "^7.32.2",
-		"eslint-plugin-react-hooks": "^4.6.0",
-		"prettier": "^2.8.4",
 		"react-docgen-typescript": "^2.2.2",
 		"typescript": "^4.9.4"
 	},
@@ -32,5 +21,13 @@
 	"dependencies": {
 		"esno": "^0.16.3",
 		"fs-extra": "^11.1.0"
+	},
+	"tsdoc": {
+		"tags": {
+			"memberof": {
+				"allowMultiple": false,
+				"syntax": "<category> <namepath>"
+			}
+		}
 	}
 }
