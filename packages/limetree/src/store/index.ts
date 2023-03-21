@@ -1,11 +1,16 @@
-import { RefObject, useContext } from 'react';
+import { RefObject, memo, useContext } from 'react';
 import { create, useStore } from 'zustand';
 import { createStore } from 'zustand/vanilla';
 import { devtools } from 'zustand/middleware';
 import shaka from 'shaka-player';
 import { LimeplayContext } from './context';
 import { logger } from './utils';
-import { StoreSlice, createLoadingSlice, createPlaybackSlice } from '../hooks';
+import {
+	StoreSlice,
+	createLoadingSlice,
+	createPlaybackSlice,
+	createVolumeSlice,
+} from '../hooks';
 
 interface InitialProps {
 	mediaElementRef: RefObject<HTMLMediaElement>;
@@ -39,6 +44,7 @@ export function createLimeplayStore({ mediaElementRef }: InitialProps) {
 					player,
 					...createPlaybackSlice(set, get, storeApi),
 					...createLoadingSlice(set, get, storeApi),
+					...createVolumeSlice(set, get, storeApi),
 				}),
 				{
 					name: 'Limeplay Store',

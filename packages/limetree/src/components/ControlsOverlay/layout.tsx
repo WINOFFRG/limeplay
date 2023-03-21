@@ -136,8 +136,8 @@ export function ControlsBottomPanel() {
 				<div>
 					<PlaybackButton />
 					{/* <ReverseButton />
-					<ForwardButton />
-					<VolumeButton /> */}
+					<ForwardButton /> */}
+					<VolumeButton />
 				</div>
 				<div>
 					<SettingsButton />
