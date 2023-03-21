@@ -10,10 +10,7 @@ interface BufferInfo {
 	startPosition: number;
 }
 
-interface Store {
+interface InitialStore {
 	playback: HTMLMediaElement;
 	player: shaka.Player;
-	isPlaying: boolean;
-	setIsPlaying: (isPlaying: boolean) => void;
-	togglePlayback: () => void | null;
 }

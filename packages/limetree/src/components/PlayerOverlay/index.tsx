@@ -7,8 +7,9 @@ import useStyles from './styles';
 export default function PlayerOverlay() {
 	const { classes } = useStyles();
 
-	const player = useLimeplayStore((state) => state.player);
+	const player = useLimeplayStore((state) => state.playback);
 	const playback = useLimeplayStore((state) => state.playback);
+	usePlayback();
 
 	return (
 		<div className={classes.overlayWrapper}>
