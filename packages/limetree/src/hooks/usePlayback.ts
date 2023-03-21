@@ -49,7 +49,6 @@ export default function usePlayback(): UsePlaybackResult {
 		const events: Array<keyof HTMLMediaElementEventMap> = [
 			'play',
 			'pause',
-			'playing',
 			'waiting',
 			'seeking',
 			'seeked',
@@ -73,3 +72,24 @@ export default function usePlayback(): UsePlaybackResult {
 
 	return { togglePlayback, setPlayback } as UsePlaybackResult;
 }
+
+function defaultFunction() {
+	console.error(
+		'usePlaybackHook must be mounted before accessing its values'
+	);
+}
+
+export interface PlaybackSlice {
+	isPlaying: boolean;
+	setIsPlaying: (isPlaying: boolean) => void;
+	togglePlayback: () => void;
+	setTogglePlayback: (toggleFn: () => void) => void;
+}
+
+export const createPlaybackSlice: StateCreator<PlaybackSlice> = (set) => ({
+	isPlaying: false,
+	setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
+	togglePlayback: defaultFunction,
+	setTogglePlayback: (toggleFn: () => void) =>
+		set({ togglePlayback: toggleFn }),
+});
