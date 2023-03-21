@@ -1,12 +1,13 @@
-import useStore from '../../store/index';
+import { memo } from 'react';
 import useStyles from './styles';
 import useLoading from '../../hooks/useLoading';
 
-export default function PlayerLoader() {
+function PlayerLoader() {
 	const { classes } = useStyles();
-	const shakaPlayer = useStore((state) => state.shakaPlayer);
-	// @ts-ignore
-	const { isLoading } = useLoading(shakaPlayer);
+	const { isLoading } = useLoading();
 
 	return isLoading ? <div className={classes.playerLoader} /> : null;
 }
+
+const MemoPlayerLoader = memo(PlayerLoader);
+export default MemoPlayerLoader;

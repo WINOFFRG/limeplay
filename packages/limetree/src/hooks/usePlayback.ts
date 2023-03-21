@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { StateCreator } from 'zustand';
+import { useLimeplayStore, useLimeplayStoreAPI } from '../store';
 
 interface UsePlaybackResult {
 	/**
@@ -19,10 +21,17 @@ interface UsePlaybackResult {
 	setPlayback: (state: boolean) => void;
 }
 
-export default function usePlayback(
-	playback: HTMLMediaElement
-): UsePlaybackResult {
-	const [isPlaying, setIsPlaying] = useState<boolean>(playback.paused);
+interface UsePlaybackConfig {
+	events: Array<keyof HTMLMediaElementEventMap>;
+}
+
+export default function usePlayback(): UsePlaybackResult {
+	const playback = useLimeplayStore((state) => state.playback);
+	// const setIsPlaying = useLimeplayStore((state) => state.setIsPlaying);
+	const { setIsPlaying } = useLimeplayStoreAPI().getState();
+	const setTogglePlayback = useLimeplayStore(
+		(state) => state.setTogglePlayback
+	);
 
 	const togglePlayback = () => {
 		if (playback.paused) playback.play();
@@ -37,26 +46,30 @@ export default function usePlayback(
 	useEffect(() => {
 		const playbackEventHandler = () => setIsPlaying(!playback.paused);
 
-		playback.addEventListener('play', playbackEventHandler);
-		playback.addEventListener('pause', playbackEventHandler);
-		playback.addEventListener('playing', playbackEventHandler);
-		playback.addEventListener('waiting', playbackEventHandler);
-		playback.addEventListener('seeking', playbackEventHandler);
-		playback.addEventListener('seeked', playbackEventHandler);
+		const events: Array<keyof HTMLMediaElementEventMap> = [
+			'play',
+			'pause',
+			'playing',
+			'waiting',
+			'seeking',
+			'seeked',
+		];
+
+		events.forEach((event) => {
+			playback.addEventListener(event, playbackEventHandler);
+		});
 
 		playbackEventHandler();
+		setTogglePlayback(togglePlayback);
 
 		return () => {
 			if (playback) {
-				playback.removeEventListener('play', playbackEventHandler);
-				playback.removeEventListener('pause', playbackEventHandler);
-				playback.removeEventListener('playing', playbackEventHandler);
-				playback.removeEventListener('waiting', playbackEventHandler);
-				playback.removeEventListener('seeking', playbackEventHandler);
-				playback.removeEventListener('seeked', playbackEventHandler);
+				events.forEach((event) => {
+					playback.removeEventListener(event, playbackEventHandler);
+				});
 			}
 		};
 	}, [playback]);
 
-	return { isPlaying, togglePlayback, setPlayback } as UsePlaybackResult;
+	return { togglePlayback, setPlayback } as UsePlaybackResult;
 }

@@ -100,6 +100,7 @@ export default function useTimeline(
 				axis: 'x',
 				filterTaps: false,
 			},
+			enabled: playback.readyState > 2,
 		}
 	);
 

@@ -9,17 +9,10 @@ export default function ControlsOverlay() {
 	const { classes } = useStyles();
 
 	return (
-		<div className={classes.skinControls} role="none">
-			<div
-				className={classes.controlsWrapper}
-				style={
-					{
-						// opacity: idle ? 0 : 1,
-					}
-				}
-			>
-				<ControlsTopPanel />
-				<ControlsMiddlePanel />
+		<div className={classes.skinControls}>
+			<div className={classes.controlsWrapper}>
+				{/* <ControlsTopPanel />
+				<ControlsMiddlePanel /> */}
 				<ControlsBottomPanel />
 			</div>
 		</div>

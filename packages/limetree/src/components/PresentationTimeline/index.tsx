@@ -14,9 +14,7 @@ function BufferRangeBar({
 	shakaPlayer: shaka.Player;
 }) {
 	const { classes } = useStyles();
-	const { bufferInfo } = useBufferInfo(video, shakaPlayer);
-
-	console.log('bufferInfo', bufferInfo);
+	const bufferInfo = useStore((state) => state.bufferInfo);
 
 	return (
 		<div

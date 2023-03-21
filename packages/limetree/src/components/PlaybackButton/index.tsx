@@ -1,4 +1,5 @@
-import useStore from '../../store';
+import { useEffect } from 'react';
+import { useLimeplayStore } from '../../store';
 import useStyles from './styles';
 import usePlayback from '../../hooks/usePlayback';
 
@@ -42,16 +43,14 @@ export function PauseIcon() {
 
 export default function PlaybackButton() {
 	const { classes } = useStyles();
-	const video = useStore((state) => state.video);
-
-	const isLoading = useStore((state) => state.isLoading);
-	// @ts-ignore
-	const { isPlaying, togglePlayback } = usePlayback(video);
+	const isPlaying = useLimeplayStore((state) => state.isPlaying);
+	const togglePlayback = useLimeplayStore((state) => state.togglePlayback);
+	usePlayback();
 
 	return (
 		<button
 			type="button"
-			disabled={isLoading}
+			// disabled={isLoading}
 			className={classes.controlButton}
 			onClick={togglePlayback}
 		>

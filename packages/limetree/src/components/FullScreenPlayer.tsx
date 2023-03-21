@@ -17,19 +17,12 @@ const useStyles = createStyles((theme) => ({
 
 function FullScreenPlayer() {
 	const { classes } = useStyles();
-	const playerBase = useRef<HTMLDivElement>(null);
-	const setPlayerBaseWrapper = useStore(
-		(state) => state.setPlayerBaseWrapper
-	);
 
-	useEffect(() => {
-		if (playerBase.current) {
-			setPlayerBaseWrapper(playerBase);
-		}
-	}, []);
+	// useConfigure which has a prop ssed
 
 	return (
-		<div className={classes.playerBase} ref={playerBase}>
+		// This should be wrapped in a context
+		<div className={classes.playerBase}>
 			<PlayerOverlay />
 			<VideoWrapper />
 		</div>
