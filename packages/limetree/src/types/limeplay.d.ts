@@ -17,3 +17,7 @@ interface HookProps {
 	playback: HTMLMediaElement;
 	player: shaka.Player;
 }
+
+type HTMLMediaElementEvents = Array<keyof HTMLMediaElementEventMap>;
+
+type ShakaPlayerEvents = Array<'loading' | 'buffering'>;

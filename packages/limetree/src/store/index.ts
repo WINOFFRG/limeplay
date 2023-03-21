@@ -4,22 +4,12 @@ import { createStore } from 'zustand/vanilla';
 import { devtools } from 'zustand/middleware';
 import shaka from 'shaka-player';
 import { LimeplayContext } from './context';
-import { PlaybackSlice, createPlaybackSlice } from '../hooks/usePlayback';
+import { logger } from './utils';
+import { StoreSlice, createLoadingSlice, createPlaybackSlice } from '../hooks';
 
 interface InitialProps {
 	mediaElementRef: RefObject<HTMLMediaElement>;
 }
-
-const log = (config) => (set, get, api) =>
-	config(
-		(args) => {
-			console.log('  applying', args);
-			set(args);
-			// console.log('  new state', get());
-		},
-		get,
-		api
-	);
 
 export function createLimeplayStore({ mediaElementRef }: InitialProps) {
 	const element = mediaElementRef.current;
@@ -41,13 +31,14 @@ export function createLimeplayStore({ mediaElementRef }: InitialProps) {
 		'https://bpprod6linear.akamaized.net/bpk-tv/irdeto_com_Channel_637/output/manifest.mpd'
 	);
 
-	const store = createStore<Store & PlaybackSlice>()(
-		log(
+	const store = createStore<InitialStore & StoreSlice>()(
+		logger(
 			devtools(
 				(set, get, storeApi) => ({
 					playback: element,
 					player,
 					...createPlaybackSlice(set, get, storeApi),
+					...createLoadingSlice(set, get, storeApi),
 				}),
 				{
 					name: 'Limeplay Store',
@@ -60,7 +51,7 @@ export function createLimeplayStore({ mediaElementRef }: InitialProps) {
 }
 
 export function useLimeplayStore<T>(
-	selector: (state: Store) => T,
+	selector: (state: InitialStore & StoreSlice) => T,
 	equalityFn?: (left: T, right: T) => boolean
 ): T {
 	const store = useContext(LimeplayContext);

@@ -45,7 +45,6 @@ export default function PlaybackButton() {
 	const { classes } = useStyles();
 	const isPlaying = useLimeplayStore((state) => state.isPlaying);
 	const togglePlayback = useLimeplayStore((state) => state.togglePlayback);
-	usePlayback();
 
 	return (
 		<button

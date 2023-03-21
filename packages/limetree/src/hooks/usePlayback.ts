@@ -1,36 +1,20 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { StateCreator } from 'zustand';
-import { useLimeplayStore, useLimeplayStoreAPI } from '../store';
+import { useLimeplayStore } from '../store';
 
-interface UsePlaybackResult {
+export interface UsePlaybackConfig {
 	/**
-	 * The current playback state of the track.
-	 * @returns true if the track is playing, false otherwise.
+	 * HTMLMediaElement events to listen to
+	 * @default Events - ['play', 'pause', 'waiting', 'seeking', 'seeked']
 	 */
-	isPlaying: boolean;
-
-	/**
-	 * Toggles the playback state of the track.
-	 */
-	togglePlayback: () => void;
-
-	/**
-	 * Sets the playback state of the track.
-	 * @param state The state to set the track to.
-	 */
-	setPlayback: (state: boolean) => void;
+	events?: HTMLMediaElementEvents;
 }
 
-interface UsePlaybackConfig {
-	events: Array<keyof HTMLMediaElementEventMap>;
-}
-
-export default function usePlayback(): UsePlaybackResult {
+export function usePlayback({ events }: UsePlaybackConfig = {}) {
 	const playback = useLimeplayStore((state) => state.playback);
-	// const setIsPlaying = useLimeplayStore((state) => state.setIsPlaying);
-	const { setIsPlaying } = useLimeplayStoreAPI().getState();
+	const setIsPlaying = useLimeplayStore((state) => state.setIsPlaying);
 	const setTogglePlayback = useLimeplayStore(
-		(state) => state.setTogglePlayback
+		(state) => state._setTogglePlayback
 	);
 
 	const togglePlayback = () => {
@@ -46,7 +30,7 @@ export default function usePlayback(): UsePlaybackResult {
 	useEffect(() => {
 		const playbackEventHandler = () => setIsPlaying(!playback.paused);
 
-		const events: Array<keyof HTMLMediaElementEventMap> = [
+		const hookEvents: HTMLMediaElementEvents = events || [
 			'play',
 			'pause',
 			'waiting',
@@ -54,7 +38,7 @@ export default function usePlayback(): UsePlaybackResult {
 			'seeked',
 		];
 
-		events.forEach((event) => {
+		hookEvents.forEach((event) => {
 			playback.addEventListener(event, playbackEventHandler);
 		});
 
@@ -63,14 +47,12 @@ export default function usePlayback(): UsePlaybackResult {
 
 		return () => {
 			if (playback) {
-				events.forEach((event) => {
+				hookEvents.forEach((event) => {
 					playback.removeEventListener(event, playbackEventHandler);
 				});
 			}
 		};
 	}, [playback]);
-
-	return { togglePlayback, setPlayback } as UsePlaybackResult;
 }
 
 function defaultFunction() {
@@ -83,13 +65,35 @@ export interface PlaybackSlice {
 	isPlaying: boolean;
 	setIsPlaying: (isPlaying: boolean) => void;
 	togglePlayback: () => void;
-	setTogglePlayback: (toggleFn: () => void) => void;
+
+	/**
+	 * Set a function that toggles the playback state.
+	 * @param toggleFn - A function that toggles the playback state.
+	 * @memberof PlaybackSlice
+	 */
+	_setTogglePlayback: (toggleFn: () => void) => void;
+
+	/**
+	 *
+	 * @param state - The state to set the playback to.
+	 * @returns void
+	 */
+	setPlayback: (state: boolean) => void;
+
+	/**
+	 * Set a function that sets the playback state.
+	 * @param setPlayback - A function that sets the playback state.
+	 */
+	_setSetPlayback: (setPlayback: (state: boolean) => void) => void;
 }
 
 export const createPlaybackSlice: StateCreator<PlaybackSlice> = (set) => ({
 	isPlaying: false,
 	setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
 	togglePlayback: defaultFunction,
-	setTogglePlayback: (toggleFn: () => void) =>
+	_setTogglePlayback: (toggleFn: () => void) =>
 		set({ togglePlayback: toggleFn }),
+	setPlayback: defaultFunction,
+	_setSetPlayback: (setPlayback: (state: boolean) => void) =>
+		set({ setPlayback }),
 });
