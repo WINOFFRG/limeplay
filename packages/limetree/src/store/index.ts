@@ -4,6 +4,7 @@ import { createStore } from 'zustand/vanilla';
 import { devtools } from 'zustand/middleware';
 import shaka from 'shaka-player';
 import { LimeplayContext } from './context';
+import { PlaybackSlice, createPlaybackSlice } from '../hooks/usePlayback';
 
 interface InitialProps {
 	mediaElementRef: RefObject<HTMLMediaElement>;
@@ -40,19 +41,13 @@ export function createLimeplayStore({ mediaElementRef }: InitialProps) {
 		'https://bpprod6linear.akamaized.net/bpk-tv/irdeto_com_Channel_637/output/manifest.mpd'
 	);
 
-	const store = createStore<Store>()(
+	const store = createStore<Store & PlaybackSlice>()(
 		log(
 			devtools(
-				(set, get) => ({
+				(set, get, storeApi) => ({
 					playback: element,
 					player,
-					isPlaying: false,
-					setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
-					togglePlayback: () => {
-						console.log('togglePlayback');
-					},
-					setTogglePlayback: (fn: () => void) =>
-						set({ togglePlayback: fn }),
+					...createPlaybackSlice(set, get, storeApi),
 				}),
 				{
 					name: 'Limeplay Store',
