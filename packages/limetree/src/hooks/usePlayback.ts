@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { StateCreator } from 'zustand';
 import { useLimeplayStore } from '../store';
-import hookDefaultValue from './utils/default-value';
 
 export interface UsePlaybackConfig {
 	/**
@@ -11,23 +10,22 @@ export interface UsePlaybackConfig {
 	events?: HTMLMediaElementEvents;
 }
 
+export interface PlaybackSlice {
+	isPlaybackHookInjected: boolean;
+	_setIsPlaybackHookInjected: (isPlaybackHookInjected: boolean) => void;
+	isPlaying: boolean;
+	_setIsPlaying: (isPlaying: boolean) => void;
+}
+
 export function usePlayback({ events }: UsePlaybackConfig = {}) {
 	const playback = useLimeplayStore((state) => state.playback);
 	const setIsPlaying = useLimeplayStore((state) => state._setIsPlaying);
-	const setTogglePlayback = useLimeplayStore(
-		(state) => state._setTogglePlayback
+	const setIsPlaybackHookInjected = useLimeplayStore(
+		(state) => state._setIsPlaybackHookInjected
 	);
 
-	const togglePlayback = () => {
-		if (playback.paused) playback.play();
-		else playback.pause();
-	};
-
 	useEffect(() => {
-		const playbackEventHandler = (e) => {
-			console.log('Playback Event', e?.type);
-			setIsPlaying(!playback.paused);
-		};
+		const playbackEventHandler = () => setIsPlaying(!playback.paused);
 
 		const hookEvents: HTMLMediaElementEvents = events || [
 			'play',
@@ -42,7 +40,7 @@ export function usePlayback({ events }: UsePlaybackConfig = {}) {
 		});
 
 		playbackEventHandler();
-		setTogglePlayback(togglePlayback);
+		setIsPlaybackHookInjected(true);
 
 		return () => {
 			if (playback) {
@@ -51,28 +49,16 @@ export function usePlayback({ events }: UsePlaybackConfig = {}) {
 				});
 			}
 		};
-	}, [playback]);
+	}, [playback, events]);
 }
 
-const hookName = 'usePlayback';
-
-export interface PlaybackSlice {
-	isPlaying: boolean;
-	_setIsPlaying: (isPlaying: boolean) => void;
-	togglePlayback: () => void;
-
-	/**
-	 * Set a function that toggles the playback state.
-	 * @param toggleFn - A function that toggles the playback state.
-	 * @memberof PlaybackSlice
-	 */
-	_setTogglePlayback: (toggleFn: () => void) => void;
-}
+const hookName = '@limeplay/hooks/usePlayback';
+usePlayback.displayName = hookName;
 
 export const createPlaybackSlice: StateCreator<PlaybackSlice> = (set) => ({
+	isPlaybackHookInjected: false,
+	_setIsPlaybackHookInjected: (isPlaybackHookInjected: boolean) =>
+		set({ isPlaybackHookInjected }),
 	isPlaying: false,
 	_setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
-	togglePlayback: hookDefaultValue(hookName),
-	_setTogglePlayback: (toggleFn: () => void) =>
-		set({ togglePlayback: toggleFn }),
 });
