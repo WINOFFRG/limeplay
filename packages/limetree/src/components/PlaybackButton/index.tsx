@@ -43,13 +43,19 @@ export function PauseIcon() {
 
 export default function PlaybackButton() {
 	const { classes } = useStyles();
+	const playback = useLimeplayStore((state) => state.playback);
 	const isPlaying = useLimeplayStore((state) => state.isPlaying);
-	const togglePlayback = useLimeplayStore((state) => state.togglePlayback);
+	const isLoading = useLimeplayStore((state) => state.isLoading);
+
+	const togglePlayback = () => {
+		if (playback.paused) playback.play();
+		else playback.pause();
+	};
 
 	return (
 		<button
 			type="button"
-			// disabled={isLoading}
+			disabled={isLoading}
 			className={classes.controlButton}
 			onClick={togglePlayback}
 		>

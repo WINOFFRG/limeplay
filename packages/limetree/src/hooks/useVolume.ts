@@ -14,6 +14,21 @@ export interface UseVolumeConfig {
 	initialVolume?: number;
 }
 
+export interface VolumeSlice {
+	isVolumeHookInjected: boolean;
+	setIsVolumeHookInjected: (isVolumeHookInjected: boolean) => void;
+	volume: number;
+	_setVolume: (volume: number) => void;
+	muted: boolean;
+	_setMuted: (muted: boolean) => void;
+	lastVolume: number;
+	_setLastVolume: (lastVolume: number) => void;
+	bindVolumeEvents: ReturnType<typeof useGesture>;
+	_setBindVolumeEvents: (
+		bindVolumeEvents: ReturnType<typeof useGesture>
+	) => void;
+}
+
 export function useVolume({ initialVolume, events }: UseVolumeConfig = {}) {
 	const playback = useLimeplayStore((state) => state.playback);
 	const setVolume = useLimeplayStore((state) => state._setVolume);
@@ -64,22 +79,8 @@ export function useVolume({ initialVolume, events }: UseVolumeConfig = {}) {
 	}, [playback]);
 }
 
-const hookName = 'useVolume';
-
-export interface VolumeSlice {
-	isVolumeHookInjected: boolean;
-	setIsVolumeHookInjected: (isVolumeHookInjected: boolean) => void;
-	volume: number;
-	_setVolume: (volume: number) => void;
-	muted: boolean;
-	_setMuted: (muted: boolean) => void;
-	lastVolume: number;
-	_setLastVolume: (lastVolume: number) => void;
-	bindVolumeEvents: ReturnType<typeof useGesture>;
-	_setBindVolumeEvents: (
-		bindVolumeEvents: ReturnType<typeof useGesture>
-	) => void;
-}
+const hookName = '@limeplay/hooks/useVolume';
+useVolume.displayName = hookName;
 
 export const createVolumeSlice: StateCreator<VolumeSlice> = (set) => ({
 	isVolumeHookInjected: false,
