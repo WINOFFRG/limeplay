@@ -20,8 +20,8 @@ export function useLoading({ events }: UseLoadingConfig = {}) {
 			const isBuffering = player.isBuffering();
 			setIsLoading(isBuffering);
 
-			// if (!playback.paused && isBuffering) playback.pause();
-			// else if (playback.paused && !isBuffering) playback.play();
+			if (!playback.paused && isBuffering) playback.pause();
+			else if (playback.paused && !isBuffering) playback.play();
 		};
 
 		const hookEvents: ShakaPlayerEvents = events || [

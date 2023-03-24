@@ -9,6 +9,7 @@ import {
 	StoreSlice,
 	createLoadingSlice,
 	createPlaybackSlice,
+	createTimelineSlice,
 	createVolumeSlice,
 } from '../hooks';
 
@@ -45,6 +46,7 @@ export function createLimeplayStore({ mediaElementRef }: InitialProps) {
 					...createPlaybackSlice(set, get, storeApi),
 					...createLoadingSlice(set, get, storeApi),
 					...createVolumeSlice(set, get, storeApi),
+					...createTimelineSlice(set, get, storeApi),
 				}),
 				{
 					name: 'Limeplay Store',
