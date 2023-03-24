@@ -116,7 +116,7 @@ export default function VolumeControl(props: VolumeControlProps) {
 				{/* eslint-disable-next-line no-nested-ternary */}
 				{!children && muted
 					? muteIcon
-					: volume > 0.5
+					: volume < 0.5
 					? volumeHalfIcon
 					: volumeFullIcon}
 				{children}

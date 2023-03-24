@@ -118,8 +118,8 @@ const useStyles = createStyles((theme, _params) => ({
 		width: '12px',
 		borderRadius: '50%',
 		backgroundColor: theme.white,
-		transform: 'translateX(-50%)',
-		transition: 'transform 0.2s cubic-bezier(0.4,0,0.2,1)',
+		// transform: 'translateX(-50%)',
+		// transition: 'transform 0.2s cubic-bezier(0.4,0,0.2,1)',
 		transformOrigin: 'left',
 		zIndex: 1,
 		cursor: 'grab',
@@ -145,36 +145,6 @@ const useStyles = createStyles((theme, _params) => ({
 		color: theme.white,
 		borderRadius: '2px',
 		transform: 'translateX(-50%) translateY(-120%)',
-	},
-
-	controlButton: {
-		display: 'inline-flex',
-		alignItems: 'center',
-		width: '44px',
-		height: '44px',
-		opacity: 0.7,
-		transition: 'opacity 0.1s ease-in-out',
-		backgroundColor: 'transparent',
-		border: 'none',
-
-		'&:hover': {
-			opacity: 1,
-			cursor: 'pointer',
-			transform: 'scale(1.1)',
-		},
-
-		'&:disabled': {
-			opacity: 0.3,
-			cursor: 'not-allowed',
-			transform: 'none',
-		},
-	},
-
-	iconStyle: {
-		width: '24px',
-		height: '24px',
-		margin: 'auto',
-		pointerEvents: 'none',
 	},
 }));
 

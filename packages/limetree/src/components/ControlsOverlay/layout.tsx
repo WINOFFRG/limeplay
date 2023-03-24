@@ -146,8 +146,8 @@ export function ControlsBottomPanel() {
 					<SeekControl seekIcon={<Forward10 />} type="forward" />
 					<VolumeButton
 						muteIcon={<MuteIcon />}
-						volumeFullIcon={<UnmuteIcon />}
 						volumeHalfIcon={<VolumeHalf />}
+						volumeFullIcon={<UnmuteIcon />}
 					/>
 				</div>
 				<div>
