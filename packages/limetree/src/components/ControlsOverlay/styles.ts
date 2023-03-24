@@ -13,6 +13,7 @@ const useStyles = createStyles((theme) => ({
 		display: 'flex',
 		flexDirection: 'column',
 		height: '100%',
+		padding: `0 ${theme.spacing.md}`,
 		transition:
 			'opacity .5s cubic-bezier(0.4,0,0.2,1) ,transform .2s cubic-bezier(0.4,0,0.2,1)',
 	},
@@ -20,7 +21,7 @@ const useStyles = createStyles((theme) => ({
 	controlsTopPanel: {
 		height: 'auto',
 		width: '100%',
-		padding: `0 ${theme.spacing.xl}px`,
+		padding: theme.spacing.xl,
 		paddingTop: theme.spacing.md,
 		flex: `0 1 auto`,
 		// backgroundImage: `linear-gradient(180deg,rgba(0,0,0,.0001),rgba(0,0,0,.0156863) 8.62%,rgba(0,0,0,.0509804) 16.56%,rgba(0,0,0,.113725) 23.93%,rgba(0,0,0,.188235) 30.85%,rgba(0,0,0,.278431) 37.42%,rgba(0,0,0,.372549) 43.77%,rgba(0,0,0,.47451) 50%,rgba(0,0,0,.576471) 56.23%,rgba(0,0,0,.67451) 62.58%,rgba(0,0,0,.760784) 69.15%,rgba(0,0,0,.839216) 76.07%,rgba(0,0,0,.898039) 83.44%,rgba(0,0,0,.937255) 91.38%,rgba(0,0,0,.94902))`,
@@ -44,7 +45,6 @@ const useStyles = createStyles((theme) => ({
 	controlsBottomPanelWrapper: {
 		display: 'flex',
 		flexDirection: 'column',
-		padding: `0 ${theme.spacing.xl}px`,
 	},
 
 	controlsBottomPanel: {
@@ -83,6 +83,66 @@ const useStyles = createStyles((theme) => ({
 				display: 'none',
 			},
 		},
+	},
+
+	playbackNotification: {
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		transform: 'translate(-50%, -50%)',
+		height: '4rem',
+		width: '4rem',
+		pointerEvents: 'none',
+		userSelect: 'none',
+		animation: 'buttonFader .5s ease-in-out normal forwards',
+
+		'@keyframes buttonFader': {
+			'0%': {
+				opacity: 0,
+				animationTimingFunction: 'cubic-bezier(0.333, 0, 0.833, 1)',
+			},
+			'10%': {
+				opacity: 1,
+				animationTimingFunction: 'cubic-bezier(0.167, 0, 0.833, 1)',
+			},
+			'40%': {
+				opacity: 1,
+				animationTimingFunction: 'cubic-bezier(0.167, 0, 0.833, 1)',
+			},
+			'86.7%': {
+				opacity: 0,
+			},
+			'100%': {
+				opacity: 0,
+			},
+		},
+	},
+
+	playbackNotificationBackground: {
+		position: 'absolute',
+		width: '100%',
+		height: '100%',
+		borderRadius: '50%',
+		background: 'rgba(0,0,0,0.4)',
+	},
+
+	playbackNotificationIcon: {
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		transform: 'translate(-50%, -50%)',
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		height: '3.8rem',
+		width: '3.8rem',
+	},
+
+	iconStyle: {
+		width: '24px',
+		height: '24px',
+		margin: 'auto',
+		pointerEvents: 'none',
 	},
 }));
 
