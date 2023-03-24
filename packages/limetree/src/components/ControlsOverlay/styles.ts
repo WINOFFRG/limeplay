@@ -138,11 +138,12 @@ const useStyles = createStyles((theme) => ({
 		width: '3.8rem',
 	},
 
-	iconStyle: {
-		width: '24px',
-		height: '24px',
-		margin: 'auto',
-		pointerEvents: 'none',
+	controlsLeftContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		gap: theme.spacing.sm,
 	},
 }));
 

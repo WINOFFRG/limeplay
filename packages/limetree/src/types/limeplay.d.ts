@@ -20,6 +20,8 @@ interface HookProps {
 
 type HTMLMediaElementEvents = Array<keyof HTMLMediaElementEventMap>;
 
-type ShakaPlayerEvents = Array<'loading' | 'buffering'>;
+type ShakaPlayerEvents = Array<
+	'loading' | 'buffering' | 'trackschanged' | 'manifestparsed'
+>;
 
 type UseGestureEvents = PointerEvent | MouseEvent | TouchEvent | KeyboardEvent;

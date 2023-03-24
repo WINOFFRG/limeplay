@@ -1,6 +1,6 @@
-import { createStyles } from '@mantine/styles';
+import { createStyles, getStylesRef as getRef } from '@mantine/styles';
 
-const useStyles = createStyles((theme, _params, getRef) => ({
+const useStyles = createStyles((theme, _params) => ({
 	// timelineWrrapper: {
 	// 	display: 'flex',
 	// 	flexDirection: 'row',
@@ -19,8 +19,8 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 		position: 'relative',
 		touchAction: 'none',
 		userSelect: 'none',
-		margin: `0 ${theme.spacing.lg}px`,
-		// padding: `0 ${theme.spacing.xs}px`,
+		margin: `0 ${theme.spacing.xs}`,
+		// padding: `0 ${theme.spacing.xs}`,
 
 		[`&:hover .${getRef('timelineSlider__ProgressBar')}`]: {
 			height: '6px',
