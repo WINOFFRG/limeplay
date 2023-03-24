@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { StateCreator } from 'zustand';
-import { useGesture } from '@use-gesture/react';
+import { useGesture, EventTypes, Handler } from '@use-gesture/react';
+import { clamp } from 'lodash';
 import hookDefaultValue from './utils/default-value';
 import { useLimeplayStore } from '../store';
 
@@ -23,37 +24,26 @@ export interface VolumeSlice {
 	_setMuted: (muted: boolean) => void;
 	lastVolume: number;
 	_setLastVolume: (lastVolume: number) => void;
-	bindVolumeEvents: ReturnType<typeof useGesture>;
-	_setBindVolumeEvents: (
-		bindVolumeEvents: ReturnType<typeof useGesture>
-	) => void;
 }
 
-export function useVolume({ initialVolume, events }: UseVolumeConfig = {}) {
+export function useVolume({ initialVolume = 1, events }: UseVolumeConfig = {}) {
 	const playback = useLimeplayStore((state) => state.playback);
 	const setVolume = useLimeplayStore((state) => state._setVolume);
 	const setMuted = useLimeplayStore((state) => state._setMuted);
-	const setLastVolume = useLimeplayStore((state) => state._setLastVolume);
 	const setIsVolumeHookInjected = useLimeplayStore(
 		(state) => state.setIsVolumeHookInjected
 	);
-	const setBindVolumeEvents = useLimeplayStore(
-		(state) => state._setBindVolumeEvents
-	);
-
-	const bindVolumeEvents = useGesture({
-		onDrag: ({ movement: [x] }) => {
-			const volume = x / 100;
-			playback.volume = volume > 1 ? 1 : volume < 0 ? 0 : volume;
-		},
-	});
 
 	useEffect(() => {
 		const volumeEventHandler = () => {
 			const { volume } = playback;
 			setVolume(volume);
-			setMuted(volume === 0 || playback.muted);
-			if (volume > 0) setLastVolume(volume);
+
+			if (volume === 0 || playback.muted) {
+				setMuted(true);
+			} else if (volume > 0 || !playback.muted) {
+				setMuted(false);
+			}
 		};
 
 		const hookEvents: HTMLMediaElementEvents = events || ['volumechange'];
@@ -65,7 +55,6 @@ export function useVolume({ initialVolume, events }: UseVolumeConfig = {}) {
 		playback.volume = playback.muted ? 0 : initialVolume || playback.volume;
 
 		volumeEventHandler();
-		setBindVolumeEvents(bindVolumeEvents);
 
 		setIsVolumeHookInjected(true);
 
@@ -92,7 +81,4 @@ export const createVolumeSlice: StateCreator<VolumeSlice> = (set) => ({
 	_setMuted: (muted: boolean) => set({ muted }),
 	lastVolume: 1,
 	_setLastVolume: (lastVolume: number) => set({ lastVolume }),
-	bindVolumeEvents: hookDefaultValue(hookName),
-	_setBindVolumeEvents: (bindVolumeEvents: ReturnType<typeof useGesture>) =>
-		set({ bindVolumeEvents }),
 });

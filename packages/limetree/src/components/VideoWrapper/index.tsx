@@ -13,7 +13,6 @@ const VideoWrapper = forwardRef<HTMLMediaElement>((props, ref) => {
 							// opacity: 0,
 						}
 					}
-					muted
 					autoPlay
 					controls={false}
 					playsInline

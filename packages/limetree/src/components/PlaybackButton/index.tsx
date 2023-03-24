@@ -1,65 +1,60 @@
-import { useEffect } from 'react';
+import { useCallback } from 'react';
+import { shallow } from 'zustand/shallow';
+import { DefaultProps, useComponentDefaultProps } from '@mantine/styles';
 import { useLimeplayStore } from '../../store';
-import useStyles from './styles';
-import usePlayback from '../../hooks/usePlayback';
+import { usePlayback } from '../../hooks';
+import ControlButton from '../ControlButton';
 
-export function PlayIcon() {
-	const { classes } = useStyles();
-
-	return (
-		<svg
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			className={classes.iconStyle}
-		>
-			<path
-				d="M4.245 2.563a.5.5 0 00-.745.435v18.004a.5.5 0 00.745.435l15.997-9.001a.5.5 0 000-.872L4.245 2.563z"
-				fill="#FFF"
-				stroke="#FFF"
-				fillRule="evenodd"
-			/>
-		</svg>
-	);
+interface PlaybackButtonProps extends DefaultProps {
+	onClick?: () => void;
+	playIcon?: React.ReactNode;
+	pauseIcon?: React.ReactNode;
+	children?: React.ReactNode;
 }
 
-export function PauseIcon() {
-	const { classes } = useStyles();
+const defaultProps: Partial<PlaybackButtonProps> = {
+	playIcon: null,
+	pauseIcon: null,
+	children: null,
+	// TODO: Add Utils default function here
+	onClick: () => {},
+};
 
-	return (
-		<svg
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-			className={classes.iconStyle}
-		>
-			<path
-				d="M18 2.5A1.5 1.5 0 0016.5 4v16a1.5 1.5 0 003 0V4A1.5 1.5 0 0018 2.5zm-12 0A1.5 1.5 0 004.5 4v16a1.5 1.5 0 003 0V4A1.5 1.5 0 006 2.5z"
-				fill="#FFF"
-				stroke="#FFF"
-				fillRule="evenodd"
-			/>
-		</svg>
-	);
-}
+export default function PlaybackButton(props: PlaybackButtonProps) {
+	usePlayback(); // <--- Singleton hook has been injected here
+	const { isLoading, playback, isPlaying, isPlaybackHookInjected } =
+		useLimeplayStore(
+			(state) => ({
+				playback: state.playback,
+				isPlaying: state.isPlaying,
+				isLoading: state.isLoading,
+				isPlaybackHookInjected: state.isPlaybackHookInjected,
+			}),
+			shallow
+		);
 
-export default function PlaybackButton() {
-	const { classes } = useStyles();
-	const playback = useLimeplayStore((state) => state.playback);
-	const isPlaying = useLimeplayStore((state) => state.isPlaying);
-	const isLoading = useLimeplayStore((state) => state.isLoading);
+	const { onClick, playIcon, pauseIcon, children, ...others } =
+		useComponentDefaultProps('PlaybackButton', defaultProps, props);
 
+	// TODO: Move this function to utils
 	const togglePlayback = () => {
+		if (isLoading) return;
 		if (playback.paused) playback.play();
 		else playback.pause();
 	};
 
+	if (!isPlaybackHookInjected) return null;
+
 	return (
-		<button
-			type="button"
-			disabled={isLoading}
-			className={classes.controlButton}
+		<ControlButton
 			onClick={togglePlayback}
+			aria-label={isPlaying ? 'Pause' : 'Play'}
+			{...others}
 		>
-			{!isPlaying ? <PlayIcon /> : <PauseIcon />}
-		</button>
+			{!children && !isPlaying ? playIcon : pauseIcon}
+			{children}
+		</ControlButton>
 	);
 }
+
+PlaybackButton.defaultProps = defaultProps;

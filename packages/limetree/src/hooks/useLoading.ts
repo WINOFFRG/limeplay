@@ -12,11 +12,16 @@ export interface UseLoadingConfig {
 
 export function useLoading({ events }: UseLoadingConfig = {}) {
 	const player = useLimeplayStore((state) => state.player);
+	const playback = useLimeplayStore((state) => state.playback);
 	const setIsLoading = useLimeplayStore((state) => state._setIsLoading);
 
 	useEffect(() => {
 		const loadingEventHandler = () => {
-			setIsLoading(player.isBuffering());
+			const isBuffering = player.isBuffering();
+			setIsLoading(isBuffering);
+
+			// if (!playback.paused && isBuffering) playback.pause();
+			// else if (playback.paused && !isBuffering) playback.play();
 		};
 
 		const hookEvents: ShakaPlayerEvents = events || [

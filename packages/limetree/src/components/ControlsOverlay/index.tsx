@@ -11,8 +11,8 @@ export default function ControlsOverlay() {
 	return (
 		<div className={classes.skinControls}>
 			<div className={classes.controlsWrapper}>
-				{/* <ControlsTopPanel />
-				<ControlsMiddlePanel /> */}
+				<ControlsTopPanel />
+				<ControlsMiddlePanel />
 				<ControlsBottomPanel />
 			</div>
 		</div>

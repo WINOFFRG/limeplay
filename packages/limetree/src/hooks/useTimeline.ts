@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import clamp from 'lodash/clamp';
 import { useGesture } from '@use-gesture/react';
 import { shallow } from 'zustand/shallow';
-import useStore from '../store';
+import { useLimeplayStore } from '../store';
 
 interface UseTimelineResult {
 	currentTime: number;
@@ -28,7 +28,7 @@ export default function useTimeline(
 		progress,
 		seekRange,
 		isSeeking,
-	} = useStore(
+	} = useLimeplayStore(
 		(state) => ({
 			currentTime: state.currentTime,
 			duration: state.duration,
@@ -53,7 +53,7 @@ export default function useTimeline(
 		setSeekRange,
 		setIsSeeking,
 		getIsSeeking,
-	} = useStore(
+	} = useLimeplayStore(
 		(state) => ({
 			setCurrentTime: state.setCurrentTime,
 			setDuration: state.setDuration,
