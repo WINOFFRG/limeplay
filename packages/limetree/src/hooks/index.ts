@@ -19,11 +19,23 @@ import {
 	createVolumeSlice,
 } from './useVolume';
 
-export { createPlaybackSlice, createLoadingSlice, createVolumeSlice };
+import {
+	UseTimelineConfig,
+	useTimeline,
+	TimelineSlice,
+	createTimelineSlice,
+} from './useTimeline';
 
-type StoreSlice = PlaybackSlice & LoadingSlice & VolumeSlice;
+export {
+	createPlaybackSlice,
+	createLoadingSlice,
+	createVolumeSlice,
+	createTimelineSlice,
+};
 
-export { usePlayback, useLoading, useVolume };
+type StoreSlice = PlaybackSlice & LoadingSlice & VolumeSlice & TimelineSlice;
+
+export { usePlayback, useLoading, useVolume, useTimeline };
 
 export type {
 	StoreSlice,
@@ -33,4 +45,6 @@ export type {
 	UseLoadingConfig,
 	VolumeSlice,
 	UseVolumeConfig,
+	TimelineSlice,
+	UseTimelineConfig,
 };

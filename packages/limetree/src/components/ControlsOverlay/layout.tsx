@@ -10,12 +10,15 @@ import PresentationTimeline from '../PresentationTimeline';
 import AnimationContainer from './AnimationContainer';
 import PlaybackNotification from './PlaybackNotification';
 import {
+	Forward10,
 	MuteIcon,
 	PauseIcon,
 	PlayIcon,
+	Reverse10,
 	UnmuteIcon,
 	VolumeHalf,
 } from '../Icons';
+import SeekControl from '../SeekControl';
 
 export function ControlsTopPanel() {
 	const { classes } = useStyles();
@@ -132,15 +135,15 @@ export function ControlsBottomPanel() {
 
 	return (
 		<div className={classes.controlsBottomPanelWrapper}>
-			{/* <PresentationTimeline /> */}
+			<PresentationTimeline />
 			<div className={classes.controlsBottomPanel}>
-				<div>
+				<div className={classes.controlsLeftContainer}>
 					<PlaybackButton
 						playIcon={<PlayIcon />}
 						pauseIcon={<PauseIcon />}
 					/>
-					{/* <ReverseButton />
-					<ForwardButton /> */}
+					<SeekControl seekIcon={<Reverse10 />} type="backward" />
+					<SeekControl seekIcon={<Forward10 />} type="forward" />
 					<VolumeButton
 						muteIcon={<MuteIcon />}
 						volumeFullIcon={<UnmuteIcon />}

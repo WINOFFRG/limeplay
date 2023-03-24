@@ -1,10 +1,12 @@
 import { memo, useRef } from 'react';
-import useStore from '../../store';
+import { useGesture } from '@use-gesture/react';
+import { clamp } from 'lodash';
+import { useLimeplayStore } from '../../store';
 import useStyles from './styles';
-import useTimeline from '../../hooks/useTimeline';
 
 import HoverContainer from './HoverContainer';
 import useBufferInfo from '../../hooks/useBufferInfo';
+import { useTimeline } from '../../hooks';
 
 function BufferRangeBar({
 	video,
@@ -43,11 +45,58 @@ const MemoizedBufferRangeBar = memo(BufferRangeBar);
 export default function PresentationTimeline() {
 	const { classes } = useStyles();
 	const elementRef = useRef<HTMLDivElement>(null);
-	const { video, shakaPlayer } = useStore((state) => ({
-		video: state.video,
-		shakaPlayer: state.shakaPlayer,
+
+	const {
+		playback,
+		player,
+		seekRange,
+		duration,
+		currentProgress,
+		setCurrentProgress,
+		setIsSeeking,
+	} = useLimeplayStore((state) => ({
+		playback: state.playback,
+		player: state.player,
+		seekRange: state.seekRange,
+		duration: state.duration,
+		currentProgress: state.currentProgress,
+		setCurrentProgress: state._setCurrentProgress,
+		setIsSeeking: state._setIsSeeking,
 	}));
-	const { bind, progress } = useTimeline(video, shakaPlayer);
+
+	useTimeline();
+
+	const cbFunction = ({ event }) => {
+		const rect = event.currentTarget.getBoundingClientRect();
+		const newValue = ((event.clientX - rect.left) / rect.width) * 100;
+		const clammpedValue = clamp(newValue, 0, 100);
+		setCurrentProgress(clammpedValue);
+
+		if (event.type === 'pointerup' || event.type === 'mousedown') {
+			playback.currentTime =
+				seekRange.start + (duration * clammpedValue) / 100;
+		}
+	};
+
+	const bind = useGesture(
+		{
+			onDrag: cbFunction,
+			onMouseUp: () => {
+				setIsSeeking(false);
+			},
+			onMouseDown: ({ event }) => {
+				setIsSeeking(true);
+				cbFunction({ event });
+			},
+		},
+		{
+			drag: {
+				axis: 'x',
+				filterTaps: false,
+			},
+			enabled: playback.readyState > 2,
+		}
+	);
 
 	return (
 		<div
@@ -61,18 +110,18 @@ export default function PresentationTimeline() {
 				<div
 					className={classes.timelineSlider__DurationPlayed}
 					style={{
-						width: `${progress}%`,
+						width: `${currentProgress}%`,
 					}}
 				/>
-				<MemoizedBufferRangeBar
+				{/* <MemoizedBufferRangeBar
 					video={video}
 					shakaPlayer={shakaPlayer}
-				/>
+				/> */}
 			</div>
 			<div
 				className={classes.timelineSlider__PlayHead}
 				style={{
-					left: `${progress}%`,
+					left: `${currentProgress}%`,
 				}}
 			/>
 			<HoverContainer forwardRef={elementRef} />

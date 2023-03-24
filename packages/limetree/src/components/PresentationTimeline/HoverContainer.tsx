@@ -8,7 +8,7 @@ import {
 } from './utils/index';
 
 import useStyles from './styles';
-import useStore from '../../store';
+import { useLimeplayStore } from '../../store';
 
 interface HoverContainerProps extends LimeplayRequiredProps {
 	forwardRef: React.MutableRefObject<HTMLDivElement | undefined>;
@@ -19,12 +19,11 @@ function HoverContainer({ forwardRef }: HoverContainerProps) {
 	const bubbleRef = useRef<HTMLDivElement>(null);
 	const hoverBarRef = useRef<HTMLDivElement>(null);
 
-	const { duration, isLive, start, end } = useStore(
+	const { duration, isLive, seekRange } = useLimeplayStore(
 		(state) => ({
 			duration: state.duration,
 			isLive: state.isLive,
-			start: state.seekRange.start,
-			end: state.seekRange.end,
+			seekRange: state.seekRange,
 		}),
 		shallow
 	);
@@ -45,21 +44,21 @@ function HoverContainer({ forwardRef }: HoverContainerProps) {
 
 			const changeValue = getChangeValue({
 				value: changePosition - rect.left,
-				max: end,
-				min: start,
+				max: seekRange.end,
+				min: seekRange.start,
 				step: 0.01,
 				containerWidth: rect.width,
 			});
 
 			const hoverTimeText = buildTimeString(
-				isLive ? end - changeValue : changeValue,
+				isLive ? seekRange.end - changeValue : changeValue,
 				duration > 3600
 			);
 
 			// setHoverTime(hoverTimeText);
 
 			const dP = isLive
-				? 100 - ((end - changeValue) / duration) * 100
+				? 100 - ((seekRange.end - changeValue) / duration) * 100
 				: (changeValue / duration) * 100;
 
 			if (bubbleRef.current) {
