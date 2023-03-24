@@ -7,6 +7,7 @@ import useStyles from './styles';
 import HoverContainer from './HoverContainer';
 import useBufferInfo from '../../hooks/useBufferInfo';
 import { useTimeline } from '../../hooks';
+import ControlButton from '../ControlButton';
 
 function BufferRangeBar({
 	video,
@@ -102,7 +103,12 @@ export default function PresentationTimeline() {
 		<div
 			className={classes.timelineSlider__Container}
 			ref={elementRef}
-			// eslint-disable-next-line react/jsx-props-no-spreading
+			aria-orientation="horizontal"
+			aria-valuemax={Number(duration.toFixed(0))}
+			aria-valuemin={0}
+			aria-valuenow={Number(playback.currentTime.toFixed(0))}
+			role="slider"
+			tabIndex={-1}
 			{...bind()}
 		>
 			<div className={classes.timelineSlider__ProgressBar}>
@@ -118,12 +124,28 @@ export default function PresentationTimeline() {
 					shakaPlayer={shakaPlayer}
 				/> */}
 			</div>
-			<div
+			<ControlButton
+				aria-label="Seek Time Scrubber"
+				aria-valuemax={Number(duration.toFixed(0))}
+				aria-valuemin={0}
+				aria-valuenow={Number(playback.currentTime.toFixed(0))}
+				aria-valuetext={`${playback.currentTime.toFixed(
+					0
+				)} of ${duration.toFixed(0)}`}
 				className={classes.timelineSlider__PlayHead}
+				tabIndex={0}
 				style={{
 					left: `${currentProgress}%`,
+					opacity: 1,
 				}}
-			/>
+			>
+				{/* <div
+					className={classes.timelineSlider__PlayHead}
+					style={{
+						left: `${currentProgress}%`,
+					}}
+				/> */}
+			</ControlButton>
 			<HoverContainer forwardRef={elementRef} />
 		</div>
 	);
