@@ -1,9 +1,6 @@
 import { createStyles } from '@mantine/styles';
-
-import { useEffect, useRef } from 'react';
 import PlayerOverlay from './PlayerOverlay';
 import VideoWrapper from './VideoWrapper';
-import useStore from '../store';
 
 const useStyles = createStyles((theme) => ({
 	playerBase: {
