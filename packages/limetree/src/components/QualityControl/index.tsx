@@ -96,14 +96,17 @@ export default function QualityControl() {
 										<Text
 											size="sm"
 											weight="400"
-											className={classes.qualityName}
+											// className={classes.qualityName}
 											color="white"
 										>
 											{value.name}
 										</Text>
 									</UnstyledButton>
 								</div>
-								<Text size="xs" className={classes.qualityTag}>
+								<Text
+									size="xs"
+									// className={classes.qualityTag}
+								>
 									{value.tag}
 								</Text>
 							</div>

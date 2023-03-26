@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { memo, useRef } from 'react';
 import {
 	UserGestureConfig,
@@ -23,7 +24,7 @@ function BufferRangeBar({
 	shakaPlayer: shaka.Player;
 }) {
 	const { classes } = useStyles();
-	const bufferInfo = useStore((state) => state.bufferInfo);
+	// const bufferInfo = useLimeplayStore((state) => state.bufferInfo);
 
 	return (
 		<div
@@ -32,7 +33,7 @@ function BufferRangeBar({
 				width: '100%',
 			}}
 		>
-			{bufferInfo.map((buffer) => (
+			{/* {bufferInfo.map((buffer) => (
 				<div
 					key={`${buffer.start}-${buffer.end}`}
 					className={classes.timelineSlider__Buffer}
@@ -42,7 +43,7 @@ function BufferRangeBar({
 						position: 'absolute',
 					}}
 				/>
-			))}
+			))} */}
 		</div>
 	);
 }

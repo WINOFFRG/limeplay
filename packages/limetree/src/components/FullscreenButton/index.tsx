@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
-import useStore from '../../store';
+import { useLimeplayStore } from '../../store';
 import useStyles from './styles';
 import useFullScreen from '../../hooks/useFullScreen';
+import { FullscreenEnter, FullscreenExit } from '../Icons';
 
 export default function FullscreenButton() {
 	const { classes } = useStyles();
-	const playerBaseWrapper = useStore((state) => state.playerBaseWrapper);
+	const playerBaseWrapper = useLimeplayStore((state) => state.playback);
 	// @ts-ignore
 	const { isFullscreen, toggleFullscreen } = useFullScreen(playerBaseWrapper);
 

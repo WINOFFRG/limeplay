@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { DefaultProps, useComponentDefaultProps } from '@mantine/styles';
-import useStyles from './styles';
 import { useLimeplayStore } from '../../store';
 import ControlButton from '../ControlButton';
 
@@ -15,6 +14,9 @@ const defaultProps: Partial<PipControlProps> = {
 	pipEnterIcon: null,
 	pipExitIcon: null,
 	children: null,
+	onClick: () => {
+		console.log('onClick');
+	},
 };
 
 export default function PipButton(props: PipControlProps) {
@@ -63,3 +65,5 @@ export default function PipButton(props: PipControlProps) {
 		</ControlButton>
 	);
 }
+
+PipButton.defaultProps = defaultProps;

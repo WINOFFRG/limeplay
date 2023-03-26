@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback, useEffect } from 'react';
 import { useInterval } from '../utils/use-interval';
 import { getPercentage } from '../utils';

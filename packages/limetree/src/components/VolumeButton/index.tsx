@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback } from 'react';
 import { useGesture } from '@use-gesture/react';
 import { clamp } from 'lodash';
