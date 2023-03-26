@@ -25,23 +25,23 @@ export default function NavbarMainLink({
 }: NavbarMainLinkProps) {
 	const { classes, cx } = useStyles();
 	const theme = useMantineTheme();
-	const { router } = useRawPath();
+	const { rawPath } = useRawPath();
 
 	const Component: any = to.startsWith('https') ? 'a' : Link;
 
 	return (
 		<Component
 			className={cx(
+				rawPath === to ? classes.active : {},
 				classes.mainLink,
-				className,
-				router.asPath === to ? classes.active : null
+				className
 			)}
 			onClick={onClick}
 			href={to}
-			{...(to.startsWith('https') && {
-				href: to,
-				className: classes.mainLink,
-			})}
+			// {...(to.startsWith('https') && {
+			// 	href: to,
+			// 	className: classes.mainLink,
+			// })}
 		>
 			{rawIcon ? (
 				icon

@@ -18,10 +18,7 @@ export default createStyles((theme: MantineTheme) => ({
 		marginRight: rem(-5),
 		borderRadius: theme.radius.sm,
 		userSelect: 'none',
-
-		'& + &': {
-			marginTop: rem(5),
-		},
+		marginTop: rem(5),
 	},
 
 	active: {

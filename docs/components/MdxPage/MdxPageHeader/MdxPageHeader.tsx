@@ -37,14 +37,13 @@ export function MdxPageHeader({ frontmatter }: { frontmatter: DocumentTypes }) {
 					{frontmatter.polymorphic && (
 						<Badge
 							component={Link}
-							href="/guides/polymorphic/"
+							href="/pages/hooks#singleton"
 							variant="gradient"
 							sx={(theme) => ({
-								// backgroundImage: getGradient(theme, 'bg'),
 								cursor: 'pointer',
 							})}
 						>
-							polymorphic
+							Singleton
 						</Badge>
 					)}
 				</Title>
