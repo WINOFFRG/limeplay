@@ -1,10 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
-import Slugger, { slug } from 'github-slugger';
+import Slugger from 'github-slugger';
 import { Text, ScrollArea, useMantineTheme, rem } from '@mantine/core';
 import { IconList } from '@tabler/icons';
 import useStyles from './TableOfContents.styles';
 import { type Heading } from '@/utils/get-table-of-contents';
-import useRawPath from '@/hooks/use-raw-path';
 
 interface TableOfContentsProps {
 	headings: Heading[];
@@ -42,7 +41,6 @@ export default function TableOfContents({
 	const slugger = new Slugger();
 	const [active, setActive] = useState(0);
 	const slugs = useRef<HTMLDivElement[]>([]);
-	const { rawPath, router } = useRawPath();
 	const filteredHeadings = headings.filter((heading) => heading.depth > 1);
 
 	useEffect(() => {
