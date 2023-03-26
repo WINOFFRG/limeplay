@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
-import { IconChevronDown, IconChevronUp } from '@tabler/icons';
-import { Button, Text, UnstyledButton } from '@mantine/core';
+import { IconChevronDown } from '@tabler/icons';
+import { Text } from '@mantine/core';
 import { getDocsData } from '../../../../utils/get-docs-data';
 import useStyles from './NavbarDocsCategory.styles';
 import { HEADER_HEIGHT } from '../../Header/HeaderDesktop.styles';

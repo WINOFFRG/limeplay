@@ -18,12 +18,12 @@
     "description": "Simple, Modular and Accessible UI Components for your Video Player.",
     "siteUrl": "https://limeplay.me",
     "openGraph": {
-      "type": "website",
-      "locale": "en_US",
-      "url": "https://limeplay.me",
-      "title": "Chakra UI",
-      "description": "Simple, Modular and Accessible UI Components for your Video Player.",
-      "site_name": "Limeplay: Simple, Modular and Accessible UI Components for your Video Player."
-    }
+		"type": "website",
+		"locale": "en_US",
+		"url": "https://limeplay.me",
+		"title": "Limeplay UI",
+		"description": "Simple, Modular and Accessible UI Components for your Video Player.",
+		"site_name": "Limeplay: Simple, Modular and Accessible UI Components for your Video Player."
+	}
   }
 }
