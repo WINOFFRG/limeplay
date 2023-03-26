@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons';
 import { Button, Text, UnstyledButton } from '@mantine/core';
-import { useRouter } from 'next/router';
 import { getDocsData } from '../../../../utils/get-docs-data';
 import useStyles from './NavbarDocsCategory.styles';
 import { HEADER_HEIGHT } from '../../Header/HeaderDesktop.styles';
@@ -82,6 +81,7 @@ export default function NavbarDocsCategory({
 		? []
 		: group.groups.map((part) => {
 				const slugs = part.pages.map((link) => link.slug);
+
 				const [isCollapsed, setIsCollapsed] = useState(
 					!slugs.includes(routePath)
 				);

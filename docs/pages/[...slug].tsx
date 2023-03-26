@@ -38,10 +38,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 		const pathAsked =
 			params?.slug && Array.isArray(params.slug)
 				? `/${params.slug.join('/')}`
-				: params?.slug;
-		const pathFound = post.slug;
+				: `${params?.slug}`;
 
-		return pathAsked === pathFound;
+		return pathAsked === post.slug;
 	});
 
 	if (document) {

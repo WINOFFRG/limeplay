@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useMantineTheme } from '@mantine/styles';
-import { Code, Group, Text } from '@mantine/core';
-import useStore, { useLimeplayStore } from '../../store';
+import { useLimeplayStore } from '../../store';
 import PlaybackButton from '../PlaybackButton';
 import useStyles from './styles';
 import VolumeButton from '../VolumeButton';
@@ -13,12 +11,15 @@ import {
 	Forward10,
 	MuteIcon,
 	PauseIcon,
+	PipEnter,
+	PipExit,
 	PlayIcon,
 	Reverse10,
 	UnmuteIcon,
 	VolumeHalf,
 } from '../Icons';
 import SeekControl from '../SeekControl';
+import PipButton from '../PipButton';
 
 export function ControlsTopPanel() {
 	const { classes } = useStyles();
@@ -26,9 +27,10 @@ export function ControlsTopPanel() {
 	return (
 		<div className={classes.controlsTopPanel} role="none">
 			<div className={classes.topRightSection}>
-				{/* <QualityControl />
-				<PipButton />
-				<FullscreenButton /> */}
+				<PipButton
+					pipEnterIcon={<PipEnter />}
+					pipExitIcon={<PipExit />}
+				/>
 			</div>
 		</div>
 	);

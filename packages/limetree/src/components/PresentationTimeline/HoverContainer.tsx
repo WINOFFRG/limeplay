@@ -19,8 +19,9 @@ function HoverContainer({ forwardRef }: HoverContainerProps) {
 	const bubbleRef = useRef<HTMLDivElement>(null);
 	const hoverBarRef = useRef<HTMLDivElement>(null);
 
-	const { duration, isLive, seekRange } = useLimeplayStore(
+	const { isSeeking, duration, isLive, seekRange } = useLimeplayStore(
 		(state) => ({
+			isSeeking: state.isSeeking,
 			duration: state.duration,
 			isLive: state.isLive,
 			seekRange: state.seekRange,
@@ -36,8 +37,10 @@ function HoverContainer({ forwardRef }: HoverContainerProps) {
 			if (hoverBarRef.current) hoverBarRef.current.style.display = 'none';
 		};
 
-		const pointerMoveEventHandler = (e: PointerEvent) => {
+		const pointerMoveEventHandler = (e: PointerEvent, check?: boolean) => {
 			if (!element) return;
+
+			if (!check) console.clear();
 
 			const rect = element.getBoundingClientRect();
 			const changePosition = getClientPosition(e);
@@ -60,6 +63,8 @@ function HoverContainer({ forwardRef }: HoverContainerProps) {
 			const dP = isLive
 				? 100 - ((seekRange.end - changeValue) / duration) * 100
 				: (changeValue / duration) * 100;
+
+			console.log({ dP });
 
 			if (bubbleRef.current) {
 				bubbleRef.current.innerText = hoverTimeText;
@@ -88,6 +93,10 @@ function HoverContainer({ forwardRef }: HoverContainerProps) {
 			if (hoverBarRef.current) {
 				hoverBarRef.current.style.display = 'block';
 			}
+
+			console.log('pointerEnterEventHandler');
+
+			pointerMoveEventHandler(e, true);
 		};
 
 		if (element) {
@@ -96,8 +105,8 @@ function HoverContainer({ forwardRef }: HoverContainerProps) {
 			element.addEventListener('pointerleave', pointerLeaveEventHandler);
 		}
 
-		hoverBarRef.current.style.display = 'none';
-		bubbleRef.current.style.display = 'none';
+		if (hoverBarRef.current) hoverBarRef.current.style.display = 'none';
+		if (bubbleRef.current) bubbleRef.current.style.display = 'none';
 
 		return () => {
 			if (element) {
@@ -119,10 +128,12 @@ function HoverContainer({ forwardRef }: HoverContainerProps) {
 
 	return (
 		<>
+			{/* {!isSeeking && ( */}
 			<div
 				ref={hoverBarRef}
 				className={classes.timelineSlider__VerticalBar__Hover}
 			/>
+			{/* )} */}
 			<div
 				ref={bubbleRef}
 				className={classes.timelineSlider__VerticalBarDuration__Hover}

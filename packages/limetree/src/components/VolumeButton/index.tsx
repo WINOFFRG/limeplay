@@ -1,4 +1,4 @@
-import { memo, useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import { useGesture } from '@use-gesture/react';
 import { clamp } from 'lodash';
 import { DefaultProps, useComponentDefaultProps } from '@mantine/styles';
@@ -6,7 +6,6 @@ import { useLimeplayStore } from '../../store';
 import useStyles from './styles';
 import { useVolume } from '../../hooks';
 import ControlButton from '../ControlButton';
-import { UnmuteIcon, VolumeHalf } from '../Icons';
 import { Box } from '../Box';
 
 interface VolumeControlProps extends DefaultProps {
@@ -108,7 +107,7 @@ export default function VolumeControl(props: VolumeControlProps) {
 		<Box className={classes.volumeControl}>
 			<ControlButton
 				onClick={toggleMute}
-				aria-label={muted ? 'Volume' : 'Mute'}
+				aria-label={muted ? 'Unmute' : 'Mute'}
 				aria-pressed={muted}
 				disabled={disabled}
 				{...others}
@@ -131,7 +130,6 @@ export default function VolumeControl(props: VolumeControlProps) {
 					aria-valuenow={Number((volume * 100).toFixed(0))}
 					aria-valuetext={`${(volume * 100).toFixed(0)}% volume`}
 					aria-label="Volume"
-					title="Volume"
 					{...bindVolumeEvents()}
 				>
 					<div className={classes.volumeSlider__Slider}>

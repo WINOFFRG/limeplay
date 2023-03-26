@@ -6,13 +6,6 @@ import {
 import rehypeSlug from 'rehype-slug';
 import { getTableOfContents } from './utils/get-table-of-contents';
 
-const computedFields: ComputedFields = {
-	slug: {
-		type: 'string',
-		resolve: (doc) => `/${doc._raw.flattenedPath}`,
-	},
-};
-
 export const Guide = defineDocumentType(() => ({
 	name: 'Guide',
 	contentType: 'mdx',
@@ -27,26 +20,26 @@ export const Guide = defineDocumentType(() => ({
 		},
 		props: {
 			type: 'list',
-			required: true,
+			required: false,
 			of: {
 				type: 'string',
 			},
 		},
 		import: {
 			type: 'string',
-			required: true,
+			required: false,
 		},
 		docs: {
 			type: 'string',
-			required: true,
+			required: false,
 		},
 		source: {
 			type: 'string',
-			required: true,
+			required: false,
 		},
 		package: {
 			type: 'string',
-			required: true,
+			required: false,
 		},
 		installation: {
 			type: 'string',
@@ -68,7 +61,7 @@ export const Guide = defineDocumentType(() => ({
 		},
 		order: {
 			type: 'number',
-			required: true,
+			required: false,
 		},
 		slug: {
 			type: 'string',
@@ -76,7 +69,7 @@ export const Guide = defineDocumentType(() => ({
 		},
 		category: {
 			type: 'string',
-			required: true,
+			required: false,
 		},
 		release: {
 			type: 'string',
@@ -104,7 +97,6 @@ export const Guide = defineDocumentType(() => ({
 		},
 	},
 	computedFields: {
-		...computedFields,
 		headings: {
 			type: 'list',
 			resolve: (doc) => getTableOfContents(doc.body.raw),

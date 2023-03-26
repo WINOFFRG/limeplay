@@ -1,5 +1,10 @@
 import { memo, useRef } from 'react';
-import { useGesture } from '@use-gesture/react';
+import {
+	UserGestureConfig,
+	useGesture,
+	State,
+	FullGestureState,
+} from '@use-gesture/react';
 import { clamp } from 'lodash';
 import { useLimeplayStore } from '../../store';
 import useStyles from './styles';
@@ -8,6 +13,7 @@ import HoverContainer from './HoverContainer';
 import useBufferInfo from '../../hooks/useBufferInfo';
 import { useTimeline } from '../../hooks';
 import ControlButton from '../ControlButton';
+import { buildTimeString } from './utils';
 
 function BufferRangeBar({
 	video,
@@ -52,22 +58,30 @@ export default function PresentationTimeline() {
 		player,
 		seekRange,
 		duration,
+		currentTime,
 		currentProgress,
+		liveLatency,
+		isLive,
 		setCurrentProgress,
 		setIsSeeking,
 	} = useLimeplayStore((state) => ({
 		playback: state.playback,
 		player: state.player,
 		seekRange: state.seekRange,
+		currentTime: state.currentTime,
 		duration: state.duration,
 		currentProgress: state.currentProgress,
+		liveLatency: state.liveLatency,
+		isLive: state.isLive,
 		setCurrentProgress: state._setCurrentProgress,
 		setIsSeeking: state._setIsSeeking,
 	}));
 
 	useTimeline();
 
-	const cbFunction = ({ event }) => {
+	const step = 10;
+
+	const cbFunction = ({ event }: FullGestureState<'drag' | 'move'>) => {
 		const rect = event.currentTarget.getBoundingClientRect();
 		const newValue = ((event.clientX - rect.left) / rect.width) * 100;
 		const clammpedValue = clamp(newValue, 0, 100);
@@ -77,76 +91,135 @@ export default function PresentationTimeline() {
 			playback.currentTime =
 				seekRange.start + (duration * clammpedValue) / 100;
 		}
+
+		if (event.type === 'keydown') {
+			const { key } = event;
+			if (key === 'ArrowUp' || key === 'ArrowRight') {
+				const lClammpedValue = clamp(
+					playback.currentTime + step,
+					seekRange.start,
+					seekRange.end
+				).toFixed(2);
+				playback.currentTime = Number(lClammpedValue);
+
+				setCurrentProgress(
+					((playback.currentTime - seekRange.start) /
+						(seekRange.end - seekRange.start)) *
+						100
+				);
+			} else if (key === 'ArrowDown' || key === 'ArrowLeft') {
+				const lClammpedValue = clamp(
+					playback.currentTime - step,
+					seekRange.start,
+					seekRange.end
+				).toFixed(2);
+				playback.currentTime = Number(lClammpedValue);
+
+				setCurrentProgress(
+					((playback.currentTime - seekRange.start) /
+						(seekRange.end - seekRange.start)) *
+						100
+				);
+			}
+		}
 	};
+
+	const onSeekStartHandler = () => setIsSeeking(true);
+
+	const onSeekEndHandler = () => setIsSeeking(false);
+
+	//  need to set for false seeking as well
 
 	const bind = useGesture(
 		{
 			onDrag: cbFunction,
-			onMouseUp: () => {
-				setIsSeeking(false);
-			},
+			onMouseUp: onSeekEndHandler,
 			onMouseDown: ({ event }) => {
 				setIsSeeking(true);
 				cbFunction({ event });
 			},
+			onKeyDown: onSeekStartHandler,
+			onDragStart: onSeekStartHandler,
+			onDragEnd: onSeekEndHandler,
 		},
 		{
 			drag: {
 				axis: 'x',
-				filterTaps: false,
 			},
-			enabled: playback.readyState > 2,
 		}
 	);
 
+	const parsedCurrentTime = Number(
+		(player.isLive()
+			? duration - liveLatency
+			: playback.currentTime
+		).toFixed(0)
+	);
+	const parsedDuration = Number(duration.toFixed(0));
+
 	return (
-		<div
-			className={classes.timelineSlider__Container}
-			ref={elementRef}
-			aria-orientation="horizontal"
-			aria-valuemax={Number(duration.toFixed(0))}
-			aria-valuemin={0}
-			aria-valuenow={Number(playback.currentTime.toFixed(0))}
-			role="slider"
-			tabIndex={-1}
-			{...bind()}
-		>
-			<div className={classes.timelineSlider__ProgressBar}>
-				<div className={classes.timelineSlider__DurationBar} />
-				<div
-					className={classes.timelineSlider__DurationPlayed}
-					style={{
-						width: `${currentProgress}%`,
-					}}
-				/>
-				{/* <MemoizedBufferRangeBar
+		<div className={classes.timelineWrrapper}>
+			<span>
+				{!isLive && buildTimeString(duration, duration > 3600)}
+				{isLive && (
+					<ControlButton
+						onClick={() => {
+							player.goToLive();
+						}}
+						style={{
+							width: 'auto',
+						}}
+					>
+						{seekRange.end - playback.currentTime > 5
+							? `-${buildTimeString(
+									seekRange.end - playback.currentTime,
+									duration > 3600
+							  )}`
+							: 'LIVE'}
+					</ControlButton>
+				)}
+			</span>
+			<div
+				className={classes.timelineSlider__Container}
+				ref={elementRef}
+				aria-orientation="horizontal"
+				aria-valuemax={parsedDuration}
+				aria-valuemin={0}
+				aria-valuenow={parsedCurrentTime}
+				role="slider"
+				{...bind()}
+			>
+				<div className={classes.timelineSlider__ProgressBar}>
+					<div className={classes.timelineSlider__DurationBar} />
+					<div
+						className={classes.timelineSlider__DurationPlayed}
+						style={{
+							width: `${currentProgress}%`,
+						}}
+					/>
+					{/* <MemoizedBufferRangeBar
 					video={video}
 					shakaPlayer={shakaPlayer}
 				/> */}
-			</div>
-			<ControlButton
-				aria-label="Seek Time Scrubber"
-				aria-valuemax={Number(duration.toFixed(0))}
-				aria-valuemin={0}
-				aria-valuenow={Number(playback.currentTime.toFixed(0))}
-				aria-valuetext={`${playback.currentTime.toFixed(
-					0
-				)} of ${duration.toFixed(0)}`}
-				className={classes.timelineSlider__PlayHead}
-				tabIndex={0}
-				style={{
-					left: `${currentProgress}%`,
-					opacity: 1,
-				}}
-			>
-				{/* <div
+				</div>
+				<ControlButton
+					aria-label="Seek Time Scrubber"
+					aria-valuemax={parsedDuration}
+					aria-valuemin={0}
+					aria-valuenow={parsedCurrentTime}
+					aria-valuetext={`${parsedCurrentTime} of ${duration.toFixed(
+						0
+					)}`}
 					className={classes.timelineSlider__PlayHead}
+					tabIndex={0}
 					style={{
 						left: `${currentProgress}%`,
+						opacity: 1,
 					}}
-				/> */}
-			</ControlButton>
-			<HoverContainer forwardRef={elementRef} />
+				/>
+				<HoverContainer forwardRef={elementRef} />
+			</div>
+			{buildTimeString(duration, duration > 3600)}
 		</div>
 	);
 }

@@ -12,7 +12,7 @@ const CORE_CATEGORIZES: Record<(typeof CORE_ORDER)[number], Category> = {
 };
 
 export const CORE_CATEGORIZED = {
-	group: 'limeplay-hooks',
+	group: 'limeplay',
 	categories: CORE_CATEGORIZES,
 	order: CORE_ORDER,
 };

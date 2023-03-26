@@ -5,7 +5,7 @@ import useStyles from './styles';
 interface ControlButtonProps
 	extends DefaultProps,
 		React.ButtonHTMLAttributes<HTMLButtonElement> {
-	children: React.ReactNode;
+	children?: React.ReactNode;
 }
 
 export default function ControlButton({
@@ -22,9 +22,14 @@ export default function ControlButton({
 			className={cx(classes.controlButton, className)}
 			{...others}
 		>
-			<div role="presentation" className={classes.controlElementWrapper}>
-				{children}
-			</div>
+			{children && (
+				<div
+					role="presentation"
+					className={classes.controlElementWrapper}
+				>
+					{children}
+				</div>
+			)}
 		</Box>
 	);
 }

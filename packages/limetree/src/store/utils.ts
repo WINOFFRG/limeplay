@@ -17,7 +17,7 @@ type LoggerImpl = <T extends State>(
 const loggerImpl: LoggerImpl = (f, name) => (set, get, store) => {
 	type T = ReturnType<typeof f>;
 	const loggedSet: typeof set = (...a) => {
-		console.log(`Setting Property`, ...a);
+		// console.log(`Setting Property`, ...a);
 		set(...a);
 	};
 	store.setState = loggedSet;
