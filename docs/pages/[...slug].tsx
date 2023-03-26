@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { GetStaticProps } from 'next';
 import { allDocuments, type DocumentTypes } from '@/.contentlayer/generated';
 import { MdxPage } from '../components/MdxPage/MdxPage';
@@ -24,11 +24,13 @@ export default function DocPage({
 	return (
 		<>
 			<SEO title={mdx.title} description={mdx.description} />
-			<Layout>
-				<article>
-					<MdxPage mdx={mdx} />
-				</article>
-			</Layout>
+			<Suspense fallback={<DocPage mdx={mdx} error />}>
+				<Layout>
+					<article>
+						<MdxPage mdx={mdx} />
+					</article>
+				</Layout>
+			</Suspense>
 		</>
 	);
 }
