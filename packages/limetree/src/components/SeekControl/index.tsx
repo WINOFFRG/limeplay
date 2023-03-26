@@ -1,7 +1,7 @@
 import { DefaultProps, useComponentDefaultProps } from '@mantine/styles';
 import { shallow } from 'zustand/shallow';
 import ControlButton from '../ControlButton';
-import { useLimeplayStore } from '../../store';
+import { useLimeplayStore, useLimeplayStoreAPI } from '../../store';
 
 interface SeekControlProps extends DefaultProps {
 	seekIcon?: React.ReactNode;
@@ -30,12 +30,21 @@ export default function SeekControl(props: SeekControlProps) {
 		shallow
 	);
 
+	const store = useLimeplayStoreAPI();
+
 	const { onClick, seekIcon, type, seekValue, children, ...others } =
 		useComponentDefaultProps('SeekButton', defaultProps, props);
 
 	const handleSeek = () => {
+		const { seekRange } = store.getState();
 		if (type === 'forward') {
-			playback.currentTime += seekValue;
+			if (playback.currentTime + seekValue > seekRange.end) {
+				// playback.currentTime = seekRange.end;
+			} else {
+				playback.currentTime += seekValue;
+			}
+		} else if (playback.currentTime - seekValue < seekRange.start) {
+			// playback.currentTime = seekRange.start;
 		} else {
 			playback.currentTime -= seekValue;
 		}
@@ -44,7 +53,7 @@ export default function SeekControl(props: SeekControlProps) {
 	return (
 		<ControlButton
 			onClick={handleSeek}
-			// aria-label={isPlaying ? 'Pause' : 'Play'}
+			aria-label={`Seek ${type} ${seekValue} seconds`}
 			{...others}
 		>
 			{!children && seekIcon}
@@ -52,3 +61,5 @@ export default function SeekControl(props: SeekControlProps) {
 		</ControlButton>
 	);
 }
+
+SeekControl.defaultProps = defaultProps;

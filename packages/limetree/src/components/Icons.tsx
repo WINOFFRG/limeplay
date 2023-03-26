@@ -186,6 +186,140 @@ function _Forward10() {
 	);
 }
 
+function _PipExit() {
+	const { classes } = useStyles();
+
+	return (
+		<svg
+			viewBox="0 0 24 18"
+			xmlns="http://www.w3.org/2000/svg"
+			className={classes.iconStyle}
+		>
+			<g transform="translate(0 -3)" fill="none" fillRule="evenodd">
+				<path d="M4 4v14h19V4H4z" stroke="#FFF" strokeWidth={2} />
+				<path
+					d="M19.167 7l.027.002a.748.748 0 01.804.8l.002.031v3.334a.833.833 0 11-1.667 0v-1.44L15.28 12.78a.75.75 0 01-1.06-1.06l3.052-3.054h-1.439a.833.833 0 010-1.666h3.334z"
+					fill="#FFF"
+					fillRule="nonzero"
+				/>
+				<rect
+					fill="#FFF"
+					transform="matrix(-1 0 0 1 11 0)"
+					y={13}
+					width={11}
+					height={8}
+					rx={1}
+				/>
+			</g>
+		</svg>
+	);
+}
+
+function _PipEnter() {
+	const { classes } = useStyles();
+
+	return (
+		<svg
+			viewBox="0 0 28 28"
+			xmlns="http://www.w3.org/2000/svg"
+			className={classes.iconStyle}
+		>
+			<g transform="matrix(-1 0 0 1 28 2)" fill="none" fillRule="evenodd">
+				<path
+					d="M5 5l5 5m1-4v5H6"
+					stroke="#FFF"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+					strokeWidth={2}
+				/>
+				<rect
+					stroke="#FFF"
+					strokeWidth={2}
+					transform="matrix(-1 0 0 1 24 0)"
+					x={1}
+					y={1}
+					width={22}
+					height={17}
+					rx={1}
+				/>
+				<rect
+					fill="#FFF"
+					transform="matrix(-1 0 0 1 41 0)"
+					x={13}
+					y={13}
+					width={15}
+					height={11}
+					rx={1}
+				/>
+			</g>
+		</svg>
+	);
+}
+
+function _FullscreenExit() {
+	const { classes } = useStyles();
+
+	return (
+		<svg
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			className={classes.iconStyle}
+		>
+			<g
+				stroke="#FFF"
+				strokeWidth={2}
+				fill="none"
+				fillRule="evenodd"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			>
+				<path d="M1 1l6 6m1-5v6H2m21-7l-6 6m-1-5v6h6M1 23l6-6m1 5v-6H2M23 23l-6-6m-1 5v-6h6" />
+			</g>
+		</svg>
+	);
+}
+
+function _FullscreenEnter() {
+	const { classes } = useStyles();
+
+	return (
+		<svg
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			className={classes.iconStyle}
+		>
+			<g
+				stroke="#FFF"
+				strokeWidth={2}
+				fill="none"
+				fillRule="evenodd"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			>
+				<path d="M8 8L2 2M1 7V1h6m9 7l6-6m1 5V1h-6M8 16l-6 6m-1-5v6h6M16 16l6 6m1-5v6h-6" />
+			</g>
+		</svg>
+	);
+}
+
+function _SettingsIcon() {
+	const { classes } = useStyles();
+
+	return (
+		<svg
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			className={classes.iconStyle}
+		>
+			<path
+				d="M9.273 0l1.444 2.87a9.209 9.209 0 012.654.025L15.104.113s.872.229 1.693.577c.822.349 1.068.5 1.563.805l-.797 3.176a9.584 9.584 0 011.87 1.89l3.188-.734S23.723 8.097 24 9.34l-2.87 1.442a9.202 9.202 0 01-.026 2.653l2.783 1.732a12.14 12.14 0 01-1.382 3.255l-3.178-.797a9.246 9.246 0 01-1.894 1.859l.743 3.193A12.181 12.181 0 0114.895 24l-1.683-2.81a9.215 9.215 0 01-2.654-.025l-1.733 2.782a12.381 12.381 0 01-1.693-.577 11.82 11.82 0 01-1.564-.804l.798-3.177a9.246 9.246 0 01-1.86-1.893l-3.177.739A12.295 12.295 0 010 14.952l2.8-1.675a9.196 9.196 0 01.025-2.653L.042 8.892a12.14 12.14 0 011.382-3.255l3.178.797a9.261 9.261 0 011.893-1.859l-.742-3.193A12.319 12.319 0 019.273 0zM12 7a5 5 0 100 10 5 5 0 000-10z"
+				fill="#FEFEFE"
+				fillRule="evenodd"
+			/>
+		</svg>
+	);
+}
+
 export const UnmuteIcon = memo(_UnmuteIcon);
 export const MuteIcon = memo(_MuteIcon);
 export const VolumeHalf = memo(_VolumeHalf);
@@ -193,3 +327,8 @@ export const PlayIcon = memo(_PlayIcon);
 export const PauseIcon = memo(_PauseIcon);
 export const Reverse10 = memo(_Reverse10);
 export const Forward10 = memo(_Forward10);
+export const PipExit = memo(_PipExit);
+export const PipEnter = memo(_PipEnter);
+export const FullscreenExit = memo(_FullscreenExit);
+export const FullscreenEnter = memo(_FullscreenEnter);
+export const SettingsIcon = memo(_SettingsIcon);

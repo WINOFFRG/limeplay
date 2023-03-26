@@ -68,6 +68,8 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 		shallow
 	);
 
+	const store = useLimeplayStoreAPI();
+
 	const currentTimerId = useRef<number>(-1);
 
 	useEffect(() => {
@@ -76,6 +78,8 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 			setIsLive(player.isLive());
 
 			currentTimerId.current = window.setInterval(() => {
+				if (playback.readyState < 2) return;
+
 				const seekRange = player.seekRange();
 
 				if (player.isLive()) {
@@ -89,7 +93,10 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 						)
 					);
 
-					setDuration(seekRange.end - seekRange.start);
+					const duration = seekRange.end - seekRange.start;
+
+					if (store.getState().duration !== duration)
+						setDuration(duration);
 
 					setLiveLatency(
 						Number(
@@ -100,13 +107,11 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 					);
 
 					let localProgress =
-						((seekRange.end - playback.currentTime) /
-							(seekRange.end - seekRange.start)) *
-						100;
+						100 -
+						((seekRange.end - playback.currentTime) / duration) *
+							100;
 
-					localProgress = 100 - localProgress;
-
-					localProgress = localProgress < 0 ? 0 : localProgress;
+					localProgress = clamp(localProgress, 0, 100);
 
 					localProgress = Number(localProgress.toFixed(precision));
 
@@ -116,12 +121,10 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 						setIsLive(player.isLive());
 					}
 				} else {
-					setDuration(playback.duration);
+					if (!store.getState().duration)
+						setDuration(playback.duration);
 
-					// if (getLiveLatency() !== -1) setLiveLatency(-1);
-
-					if (seekRange.start === 0 || seekRange.end === 0)
-						setSeekRange(player.seekRange());
+					if (seekRange.end === 0) setSeekRange(player.seekRange());
 
 					setCurrentTime(playback.currentTime);
 
@@ -130,7 +133,8 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 
 					localProgress = Number(localProgress.toFixed(precision));
 
-					if (!getIsSeeking()) setCurrentProgress(localProgress);
+					if (!store.getState().isSeeking)
+						setCurrentProgress(localProgress);
 				}
 			}, UPDATE_INTERVAL);
 		};
