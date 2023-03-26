@@ -1,5 +1,4 @@
-import { allDocuments } from '.contentlayer/generated';
+import { allDocuments } from '@/.contentlayer/generated';
 
-export const getDocumentsByType = (type: string) => {
-    return allDocuments.filter((document) => document.type === type);
-};
+export const getDocumentsByType = (type: string) =>
+	allDocuments.filter((document) => document.type === type);

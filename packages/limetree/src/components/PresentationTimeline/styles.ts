@@ -1,26 +1,27 @@
 import { createStyles, getStylesRef as getRef } from '@mantine/styles';
 
 const useStyles = createStyles((theme, _params) => ({
-	// timelineWrrapper: {
-	// 	display: 'flex',
-	// 	flexDirection: 'row',
-	// 	padding: `0 ${theme.spacing.lg}px`,
-	// 	alignItems: 'center',
-	// 	justifyContent: 'space-between',
-	// 	gap: theme.spacing.sm,
-	// 	userSelect: 'none',
-	// },
+	timelineWrrapper: {
+		display: 'flex',
+		width: '100%',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		gap: theme.spacing.sm,
+		userSelect: 'none',
+		boxSizing: 'border-box',
+		position: 'relative',
+	},
 
 	timelineSlider__Container: {
 		height: '36px',
+		width: '100%',
 		display: 'flex',
 		alignItems: 'center',
 		alignSelf: 'stretch',
 		position: 'relative',
 		touchAction: 'none',
 		userSelect: 'none',
-		margin: `0 ${theme.spacing.xs}`,
-		// padding: `0 ${theme.spacing.xs}`,
 
 		[`&:hover .${getRef('timelineSlider__ProgressBar')}`]: {
 			height: '6px',
@@ -35,7 +36,7 @@ const useStyles = createStyles((theme, _params) => ({
 		},
 
 		[`&:hover .${getRef('timelineSlider__PlayHead')}`]: {
-			transform: 'scale(1.5) translateX(-50%)',
+			transform: 'translateX(-50%)  scale(1.5)',
 		},
 	},
 
@@ -118,9 +119,9 @@ const useStyles = createStyles((theme, _params) => ({
 		width: '12px',
 		borderRadius: '50%',
 		backgroundColor: theme.white,
-		// transform: 'translateX(-50%)',
+		transform: 'translateX(-50%)',
 		// transition: 'transform 0.2s cubic-bezier(0.4,0,0.2,1)',
-		transformOrigin: 'left',
+		// transformOrigin: 'left',
 		zIndex: 1,
 		cursor: 'grab',
 	},

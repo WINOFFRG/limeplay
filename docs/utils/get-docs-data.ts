@@ -45,7 +45,6 @@ export function groupPages({ categories, order, group }: GroupPages): {
 	group: string;
 } {
 	const pages = allDocuments
-		.map((node) => node)
 		.filter((page) => !page.hidden)
 		.filter((page) => page.group === group);
 

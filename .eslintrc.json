@@ -29,7 +29,7 @@
 			"jsx": true
 		},
 		"ecmaVersion": 14,
-		"project": "./packages/limetree/tsconfig.json",
+		// "project": "./packages/limetree/tsconfig.json",
 		"sourceType": "module"
 	},
 	"rules": {
@@ -61,8 +61,8 @@
 				"tsx": "never"
 			}
 		],
-		"no-underscore-dangle": "off"
-		// "tsdoc/syntax": "warn"
+		"no-underscore-dangle": "off",
+		"react/jsx-props-no-spreading": "off"
 	},
 	"settings": {
 		"import/resolver": {
