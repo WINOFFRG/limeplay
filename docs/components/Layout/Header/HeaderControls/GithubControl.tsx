@@ -3,13 +3,13 @@ import { HeaderControl } from './HeaderControl';
 import { GithubIcon } from '../../../SocialButton/Icons';
 
 interface GithubControlProps {
-    link: string;
+	link: string;
 }
 
 export function GithubControl({ link }: GithubControlProps) {
-    return (
-        <HeaderControl tooltip="Source code" component="a" href={link}>
-            <GithubIcon size={22} />
-        </HeaderControl>
-    );
+	return (
+		<HeaderControl tooltip="Source code" component="a" href={link}>
+			<GithubIcon size={22} />
+		</HeaderControl>
+	);
 }

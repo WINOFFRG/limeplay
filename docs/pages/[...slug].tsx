@@ -1,6 +1,6 @@
 import React from 'react';
-import { allDocuments, type DocumentTypes } from 'contentlayer/generated';
 import { GetStaticProps } from 'next';
+import { allDocuments, type DocumentTypes } from '@/.contentlayer/generated';
 import { MdxPage } from '../components/MdxPage/MdxPage';
 import Layout from '@/components/Layout/Layout';
 import { MdxErrorPage } from '@/components/MdxPage/MdxErrorPage/MdxErrorPage';

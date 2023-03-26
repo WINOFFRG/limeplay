@@ -5,7 +5,6 @@ import { KeyboardEventsTable } from './KeyboardEventsTable/KeyboardEventsTable';
 import NextLink from './NextLink/NextLink';
 import DataTable from './DataTable/DataTable';
 import MdxTitle from './MdxTitle/MdxTitle';
-import Test from '@/components/Test';
 
 const h = (order: 1 | 2 | 3 | 4 | 5 | 6) =>
 	function (props: any) {
@@ -71,5 +70,4 @@ export const components = {
 			</Prism>
 		);
 	},
-	Test,
 };
