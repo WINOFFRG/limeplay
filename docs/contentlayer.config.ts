@@ -109,5 +109,10 @@ export default makeSource({
 	documentTypes: [Guide],
 	mdx: {
 		rehypePlugins: [rehypeSlug],
+		esbuildOptions: (options) => {
+			options.platform = 'node';
+
+			return options;
+		},
 	},
 });
