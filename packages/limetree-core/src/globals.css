@@ -1,0 +1,52 @@
+@font-face {
+	font-family: "Graphik-Medium, Graphik";
+	src: local("Graphik-Medium"),
+		url("./fonts//Graphik-Medium.woff") format("woff");
+}
+
+@keyframes Layer-2-Outlines-2_t {
+	0% {
+		transform: translate(54px, 54px) scale(0.6, 0.6)
+			translate(-23.625px, -30px);
+		animation-timing-function: cubic-bezier(0.301, 0, 0.305, 1);
+	}
+	33.3% {
+		transform: translate(54px, 54px) scale(1, 1) translate(-23.625px, -30px);
+	}
+	100% {
+		transform: translate(54px, 54px) scale(1, 1) translate(-23.625px, -30px);
+	}
+}
+@keyframes Layer-2-Outlines-2-2_t {
+	0% {
+		transform: translate(54px, 54px) scale(0.6, 0.6)
+			translate(-23.625px, -30px);
+		animation-timing-function: cubic-bezier(0.301, 0, 0.305, 1);
+	}
+	33.3% {
+		transform: translate(54px, 54px) scale(1, 1) translate(-23.625px, -30px);
+	}
+	100% {
+		transform: translate(54px, 54px) scale(1, 1) translate(-23.625px, -30px);
+	}
+}
+@keyframes Group-1_o {
+	0% {
+		opacity: 0;
+		animation-timing-function: cubic-bezier(0.333, 0, 0.833, 1);
+	}
+	10% {
+		opacity: 1;
+		animation-timing-function: cubic-bezier(0.167, 0, 0.833, 1);
+	}
+	40% {
+		opacity: 1;
+		animation-timing-function: cubic-bezier(0.167, 0, 0.833, 1);
+	}
+	86.7% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 0;
+	}
+}
