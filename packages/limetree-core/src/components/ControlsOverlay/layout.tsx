@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLimeplayStore } from '../../store';
 import PlaybackButton from '../PlaybackButton';
 import useStyles from './styles';
-import VolumeButton from '../VolumeButton';
+import { VolumeControl } from '../VolumeButton';
 import SettingsButton from '../SettingsButton';
 import PresentationTimeline from '../PresentationTimeline';
 import AnimationContainer from './AnimationContainer';
@@ -146,7 +146,7 @@ export function ControlsBottomPanel() {
 					/>
 					<SeekControl seekIcon={<Reverse10 />} type="backward" />
 					<SeekControl seekIcon={<Forward10 />} type="forward" />
-					<VolumeButton
+					<VolumeControl
 						muteIcon={<MuteIcon />}
 						volumeHalfIcon={<VolumeHalf />}
 						volumeFullIcon={<UnmuteIcon />}
