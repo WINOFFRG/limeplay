@@ -2,7 +2,7 @@
 import { useCallback, useEffect } from 'react';
 import { useInterval } from '../utils/use-interval';
 import { getPercentage } from '../utils';
-import useStore from '../store';
+import { useLimeplayStore } from '../store';
 
 interface BufferInfoProps {
 	updateInterval?: number;
@@ -11,7 +11,7 @@ interface BufferInfoProps {
 export default function useBufferInfo() {
 	const UPDATE_INTERVAL = 2000;
 
-	const { setBufferInfo, shakaPlayer: player } = useStore.getState();
+	const { setBufferInfo, shakaPlayer: player } = useLimeplayStore.getState();
 
 	const callbackFn = useCallback(() => {
 		const { total: buffer } = player.getBufferedInfo();

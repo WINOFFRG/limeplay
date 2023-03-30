@@ -25,8 +25,7 @@
 		"rootDirs": ["./src"],
 		"outDir": "dist",
 		"preserveConstEnums": true,
-		"typeRoots": ["./src/types", "./node_modules/types"],
-		"composite": true
+		"typeRoots": ["./src/types", "./node_modules/types"]
 	},
 	"include": ["src/**/*", "**/*.ts", "**/*.tsx", "types/*.d.ts"],
 	"exclude": ["node_modules"]
