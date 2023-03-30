@@ -32,7 +32,7 @@ const defaultProps: Partial<VolumeControlProps> = {
 	step: 0.05,
 };
 
-export default function VolumeControl(props: VolumeControlProps) {
+export function VolumeControl(props: VolumeControlProps) {
 	const { classes } = useStyles();
 
 	const playback = useLimeplayStore((state) => state.playback);

@@ -24,17 +24,8 @@ export function createLimeplayStore({ mediaElementRef }: InitialProps) {
 
 	const player = new shaka.Player(element);
 
-	player.configure({
-		drm: {
-			clearKeys: {
-				'31f563ec4d055f04a7077e638b046de4':
-					'695248391f00f7395e51f0e13201ed00',
-			},
-		},
-	});
-
 	player.load(
-		'https://bpprod6linear.akamaized.net/bpk-tv/irdeto_com_Channel_637/output/manifest.mpd'
+		'https://storage.googleapis.com/shaka-demo-assets/sintel/dash.mpd'
 	);
 
 	const store = createStore<InitialStore & StoreSlice>()(

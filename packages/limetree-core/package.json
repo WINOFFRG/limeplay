@@ -1,19 +1,26 @@
 {
-	"name": "limetree",
-	"private": true,
-	"version": "0.0.0",
-	"type": "module",
-	"types": "lib/index.d.ts",
+	"name": "@limetree/core",
+	"description": "React UI library for Shaka Player focused on usability, accessibility, performance and developer experience",
+	"version": "1.0.0",
+	"main": "src/index.ts",
+	"module": "esm/index.js",
+	"license": "MIT",
+	"author": "Rohan Gupta <rohangupta1528@gmail.com>",
 	"scripts": {
-		"dev": "vite",
-		"build": "tsc && vite build",
-		"preview": "vite preview"
+		"build": "tsup src --dts",
+		"dev": "pnpm build:fast -- --watch",
+		"clean": "rimraf dist .turbo",
+		"typecheck": "tsc --noEmit",
+		"build:fast": "tsup src",
+		"prepack": "clean-package",
+		"postpack": "clean-package restore"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.10.5",
-		"@mantine/core": "^5.10.0",
-		"@mantine/hooks": "^5.10.0",
+		"@mantine/core": "^6.0.4",
+		"@mantine/hooks": "^6.0.4",
 		"@mantine/styles": "^6.0.4",
+		"@types/lodash": "^4.14.192",
 		"@use-gesture/react": "^10.2.25",
 		"lodash": "^4.17.21",
 		"react": "^18.2.0",
@@ -22,25 +29,12 @@
 		"shaka-player": "^4.3.3",
 		"zustand": "^4.1.4"
 	},
-	"devDependencies": {
-		"@types/lodash": "^4.14.191",
-		"@types/node": "^18.11.16",
-		"@types/react": "^18.0.22",
-		"@types/react-dom": "^18.0.7",
-		"@typescript-eslint/eslint-plugin": "5.0.0",
-		"@vitejs/plugin-react": "^2.2.0",
-		"eslint": "^8.0.1",
-		"eslint-config-airbnb": "^19.0.4",
-		"eslint-config-prettier": "^8.6.0",
-		"eslint-config-standard-with-typescript": "^34.0.0",
-		"eslint-plugin-import": "2.25.2",
-		"eslint-plugin-jsx-a11y": "^6.7.1",
-		"eslint-plugin-prettier": "^4.2.1",
-		"eslint-plugin-react": "^7.32.2",
-		"eslint-plugin-react-hooks": "^4.6.0",
-		"eslint-plugin-tsdoc": "^0.2.17",
-		"prettier": "^2.8.4",
-		"typescript": "^4.9.4",
-		"vite": "^4.0.4"
+	"tsup": {
+		"clean": true,
+		"target": "es2019",
+		"format": [
+			"cjs",
+			"esm"
+		]
 	}
 }
