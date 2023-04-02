@@ -1,0 +1,56 @@
+{
+	"name": "@limetree/core",
+	"version": "1.0.0",
+	"description": "React UI library for Shaka Player focused on usability, accessibility, performance and developer experience",
+	"main": "src/index.ts",
+	"files": [
+		"dist"
+	],
+	"sideEffects": false,
+	"publishConfig": {
+		"access": "public"
+	},
+	"dependencies": {
+		"@emotion/react": "^11.10.5",
+		"@mantine/core": "^6.0.4",
+		"@mantine/hooks": "^6.0.4",
+		"@mantine/styles": "^6.0.4",
+		"@use-gesture/react": "^10.2.25",
+		"lodash": "^4.17.21",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"screenfull": "^6.0.2",
+		"shaka-player": "^4.3.3",
+		"zustand": "^4.1.4"
+	},
+	"author": "Rohan Gupta <rohangupta1528@gmail.com>",
+	"license": "MIT",
+	"homepage": "https://limeplay.me",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/winoffrg/limeplay",
+		"directory": "packages/limeplay-core"
+	},
+	"storybook": {
+		"title": "Limeplay UI",
+		"url": "https://storybook.limeplay.me"
+	},
+	"scripts": {
+		"build": "tsup src --dts",
+		"dev": "pnpm build:fast -- --watch",
+		"clean": "rimraf dist .turbo",
+		"typecheck": "tsc --noEmit",
+		"build:fast": "tsup src",
+		"prepack": "clean-package",
+		"postpack": "clean-package restore"
+	},
+	"clean-package": "../../../clean-package.config.json",
+	"tsup": {
+		"clean": true,
+		"target": "es2019",
+		"format": [
+			"cjs",
+			"esm"
+		]
+	}
+}
