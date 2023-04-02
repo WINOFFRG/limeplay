@@ -4,13 +4,15 @@ import siteConfig from 'settings/site-config.json';
 
 export type SEOProps = Pick<NextSeoProps, 'title' | 'description'>;
 
-const SEO = ({ title, description }: SEOProps) => (
-    <NextSeo
-        title={title}
-        description={description}
-        openGraph={{ title, description }}
-        titleTemplate={siteConfig.seo.titleTemplate}
-    />
-);
+function SEO({ title, description }: SEOProps) {
+	return (
+		<NextSeo
+			title={title}
+			description={description}
+			openGraph={{ title, description }}
+			titleTemplate={siteConfig.seo.titleTemplate}
+		/>
+	);
+}
 
 export default SEO;

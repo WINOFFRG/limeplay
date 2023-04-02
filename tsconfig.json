@@ -1,29 +1,28 @@
 {
-  "extends": "./tsconfig.base.json",
-  "include": [
-    "src/mantine-*/src",
-    "src/mantine-*/demos",
-    "./types",
-    "./docs/src",
-    "./scripts",
-    "./configuration",
-    "./configuration/types",
-    "./tests"
-  ],
-  "exclude": [
-    "public",
-    ".cache",
-    "configuration/jest",
-    "configuration/storybook/main.js",
-    "node_modules",
-    "src/mantine-*/esm/**/*",
-    "src/mantine-*/lib/**/*",
-    "src/mantine-*/cjs/**/*"
-  ],
-  "compilerOptions": {
-    "paths": {
-      "@mantine/*": ["src/mantine-*/src"],
-      "@demos/*": ["src/mantine-*/src/demos"]
-    }
-  }
+	"compilerOptions": {
+		"target": "ESNext",
+		"useDefineForClassFields": true,
+		"lib": ["DOM", "DOM.Iterable", "ESNext"],
+		"allowJs": true,
+		"checkJs": false,
+		"skipLibCheck": true,
+		"esModuleInterop": false,
+		"allowSyntheticDefaultImports": true,
+		"strict": false,
+		"forceConsistentCasingInFileNames": true,
+		"module": "ESNext",
+		"moduleResolution": "Node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"sourceMap": true,
+		"noEmit": false,
+		"noEmitOnError": true,
+		"jsx": "react-jsx",
+		"declaration": true,
+		"declarationMap": true,
+		"preserveConstEnums": true
+	},
+	"include": ["@types", "packages", "scripts", "tooling", "plopfile.ts"],
+	"exclude": ["**/node_modules", "**/template*"]
 }
+  

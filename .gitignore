@@ -33,3 +33,4 @@ dist/**
 .docgen
 .vercel
 shaka-player
+.turbo
