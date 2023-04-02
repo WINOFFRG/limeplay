@@ -39,7 +39,7 @@ jobs:
           commit: "ci(changesets): version packages"
           setupGitUser: false
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.  }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN  }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
