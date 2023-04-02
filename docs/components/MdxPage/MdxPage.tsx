@@ -6,15 +6,14 @@ import { MdxPageProps, Frontmatter } from '../../types';
 import { DocumentTypes } from '@/.contentlayer/generated';
 
 export function MdxPage({ mdx }: { mdx: DocumentTypes }) {
-
-    return (
-        <>
-            <MdxPageHeader frontmatter={mdx} />
-            {Array.isArray(mdx.props) ? (
-                <MdxPageTabs data={mdx} />
-            ) : (
-                <MdxRawContent data={mdx} />
-            )}
-        </>
-    );
+	return (
+		<>
+			<MdxPageHeader frontmatter={mdx} />
+			{Array.isArray(mdx.props) ? (
+				<MdxPageTabs data={mdx} />
+			) : (
+				<MdxRawContent data={mdx} />
+			)}
+		</>
+	);
 }
