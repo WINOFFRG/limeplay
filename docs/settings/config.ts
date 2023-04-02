@@ -19,7 +19,7 @@ export const meta = {
 	discordLink: 'https://discord.gg/',
 	twitterLink: 'https://twitter.com/',
 
-	npmLink: 'https://www.npmjs.com/org/mantine',
+	npmLink: 'https://www.npmjs.com/org/limeplay',
 
 	discordColor: '#5865f2',
 	twitterColor: '#1C8CD8',

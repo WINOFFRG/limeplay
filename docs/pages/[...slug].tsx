@@ -1,6 +1,6 @@
-import React from 'react';
-import { allDocuments, type DocumentTypes } from 'contentlayer/generated';
+import React, { Suspense } from 'react';
 import { GetStaticProps } from 'next';
+import { allDocuments, type DocumentTypes } from '@/.contentlayer/generated';
 import { MdxPage } from '../components/MdxPage/MdxPage';
 import Layout from '@/components/Layout/Layout';
 import { MdxErrorPage } from '@/components/MdxPage/MdxErrorPage/MdxErrorPage';
@@ -24,11 +24,13 @@ export default function DocPage({
 	return (
 		<>
 			<SEO title={mdx.title} description={mdx.description} />
-			<Layout>
-				<article>
-					<MdxPage mdx={mdx} />
-				</article>
-			</Layout>
+			<Suspense fallback={<DocPage mdx={mdx} error />}>
+				<Layout>
+					<article>
+						<MdxPage mdx={mdx} />
+					</article>
+				</Layout>
+			</Suspense>
 		</>
 	);
 }
@@ -38,10 +40,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 		const pathAsked =
 			params?.slug && Array.isArray(params.slug)
 				? `/${params.slug.join('/')}`
-				: params?.slug;
-		const pathFound = post.slug;
+				: `${params?.slug}`;
 
-		return pathAsked === pathFound;
+		return pathAsked === post.slug;
 	});
 
 	if (document) {
