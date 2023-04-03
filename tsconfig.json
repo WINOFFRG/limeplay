@@ -22,7 +22,7 @@
 		"declarationMap": true,
 		"preserveConstEnums": true
 	},
-	"include": ["@types", "packages", "scripts", "tooling", "plopfile.ts"],
+	"include": ["@types", "packages", "scripts"],
 	"exclude": ["**/node_modules", "**/template*"]
 }
   
