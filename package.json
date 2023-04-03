@@ -9,13 +9,19 @@
 		"docgen": "esno ./scripts/docgen.ts",
 		"build": "turbo run build --filter=!./docs",
 		"build:fast": "turbo run build:fast",
-		"clean": "pnpm -r --parallel exec rimraf dist .turbo *.log"
+		"clean": "pnpm -r --parallel exec rimraf dist .turbo *.log",
+		"changelog:latest": "tsx scripts/changelog.ts --latest",
+		"changelog:commit": "git add . && git commit -am 'docs: add changelog' && git push",
+		"changelog:format": "prettier --write .changelog"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
 		"@changesets/cli": "^2.26.1",
+		"@changesets/get-release-plan": "^3.0.16",
+		"@changesets/types": "^5.2.1",
+		"@octokit/rest": "^19.0.7",
 		"@types/fs-extra": "^11.0.1",
 		"@types/lodash": "^4.14.192",
 		"@types/node": "^18.15.11",
@@ -24,6 +30,7 @@
 		"@typescript-eslint/eslint-plugin": "^5.57.0",
 		"chalk": "^5.2.0",
 		"clean-package": "^2.2.0",
+		"edit-json-file": "^1.7.0",
 		"eslint": "^8.37.0",
 		"eslint-config-airbnb": "^19.0.4",
 		"eslint-config-prettier": "^8.8.0",
@@ -40,6 +47,7 @@
 		"react-docgen-typescript": "^2.2.2",
 		"rimraf": "^3.0.2",
 		"tsup": "^6.7.0",
+		"tsx": "^3.12.6",
 		"turbo": "^1.8.8",
 		"typescript": "^5.0.2"
 	},
