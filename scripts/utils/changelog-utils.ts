@@ -9,6 +9,7 @@ const config = {
 	owner: 'winoffrg',
 	repo: 'limeplay',
 	description: 'Limeplay Changelog',
+	package: 'limetree/core',
 };
 
 /* -----------------------------------------------------------------------------
@@ -49,7 +50,8 @@ export function getPrData(pr: PullRequest): PrData | undefined {
 		dateFormatOptions
 	);
 
-	const match = content.match(/## @chakra-ui\/react\@(?<version>\d.+)/);
+	const regex = new RegExp(`## @${config.package}@(?<version>\\d.+)`);
+	const match = content.match(regex);
 	const version = match?.groups?.version;
 
 	const sanitized = content
@@ -104,7 +106,7 @@ export async function getLatestPr(): Promise<PullRequest> {
 		owner: config.owner,
 		repo: config.repo,
 		base: 'main',
-		head: `${config.repo}:changeset-release/main`,
+		head: `${config.owner}:changeset-release/main`,
 		per_page: 1,
 	});
 
