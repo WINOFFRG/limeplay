@@ -12,7 +12,11 @@
 		"clean": "pnpm -r --parallel exec rimraf dist .turbo *.log",
 		"changelog:latest": "tsx scripts/changelog.ts --latest",
 		"changelog:commit": "git add . && git commit -am 'docs: add changelog' && git push",
-		"changelog:format": "prettier --write .changelog"
+		"changelog:format": "prettier --write .changelog",
+		"version": "changeset version",
+		"release": "changeset publish",
+		"version:dev": "changeset version --snapshot dev",
+		"release:dev": "changeset publish --tag dev"
 	},
 	"keywords": [],
 	"author": "",
