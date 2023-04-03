@@ -11,7 +11,7 @@ import { GithubIcon, NpmIcon } from '@/components/SocialButton/Icons';
 
 const REPO_BASE = siteConfig.repo.editUrl;
 const DOCS_BASE = `${REPO_BASE}/docs/src/docs`;
-const SOURCE_BASE = `${REPO_BASE}/packages/limetree/src`;
+const SOURCE_BASE = `${REPO_BASE}/packages/limeplay/src`;
 
 export function MdxPageHeader({ frontmatter }: { frontmatter: DocumentTypes }) {
 	const { classes, cx } = useStyles();
