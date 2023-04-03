@@ -28,8 +28,8 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Generate docs
-        run: pnpm build:prop-docs
+      # - name: Generate docs
+      #   run: pnpm build:prop-docs
 
       - name: Create release Pull Request or publish to NPM
         id: changesets
