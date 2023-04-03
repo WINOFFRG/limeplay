@@ -1,5 +1,5 @@
 ---
-"@limetree/core": major
+"@limeplay/core": major
 ---
 
 test release

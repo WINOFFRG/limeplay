@@ -9,7 +9,7 @@ const config = {
 	owner: 'winoffrg',
 	repo: 'limeplay',
 	description: 'Limeplay Changelog',
-	package: 'limetree/core',
+	package: 'limeplay/core',
 };
 
 /* -----------------------------------------------------------------------------
