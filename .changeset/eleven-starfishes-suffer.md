@@ -1,5 +1,5 @@
 ---
-"@limetree/core": minor
+"@limeplay/core": minor
 ---
 
 Test another release 7

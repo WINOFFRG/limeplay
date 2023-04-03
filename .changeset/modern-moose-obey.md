@@ -1,5 +1,5 @@
 ---
-"@limetree/core": patch
+"@limeplay/core": patch
 ---
 
 Testing temp fix
