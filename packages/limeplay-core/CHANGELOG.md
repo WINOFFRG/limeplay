@@ -1,4 +1,4 @@
-# @limetree/core
+# @limeplay/core
 
 ## 1.0.0
 
