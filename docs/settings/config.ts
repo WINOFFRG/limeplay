@@ -16,7 +16,7 @@ export const FOOTER_LINKS_DATA: LinksGroupProps[] = [
 export const meta = {
 	docsLink: 'https://docs.limeplay.me',
 
-	discordLink: 'https://discord.gg/',
+	discordLink: 'https://discord.gg/ZjXFzqmqjn',
 	twitterLink: 'https://twitter.com/',
 
 	npmLink: 'https://www.npmjs.com/org/limeplay',
