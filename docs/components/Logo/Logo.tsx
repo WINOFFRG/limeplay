@@ -16,7 +16,15 @@ export function Logo() {
 					fontWeight: 500,
 				}}
 			>
-				Limeplay
+				<Image
+					src="/tint.png"
+					alt="Mantine Logo"
+					width={30}
+					height={30}
+					style={{
+						borderRadius: '50%',
+					}}
+				/>
 			</Text>
 		</Link>
 	);
