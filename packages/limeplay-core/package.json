@@ -1,6 +1,6 @@
 {
 	"name": "@limeplay/core",
-	"version": "0.2.3",
+	"version": "0.2.4",
 	"description": "React UI library for Shaka Player focused on usability, accessibility, performance and developer experience",
 	"main": "src/index.ts",
 	"files": [
