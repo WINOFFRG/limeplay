@@ -1,7 +1,8 @@
 {
-	"name": "limetree",
+	"name": "limeplay",
 	"version": "1.0.0",
 	"description": "",
+	"private": true,
 	"main": "index.js",
 	"scripts": {
 		"limeplay:dev": "cd packages/limetree && pnpm run dev",
