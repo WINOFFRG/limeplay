@@ -4,7 +4,10 @@ import { DeclarationPath } from './docgen/get-declarations-list';
 import { generateDeclarations } from './docgen/generate-declarations';
 
 const PATHS: DeclarationPath[] = [
-	{ type: 'package', path: path.join(__dirname, '../packages/limeplay/src') },
+	{
+		type: 'package',
+		path: path.join(__dirname, '../packages/limeplay-core/src'),
+	},
 ];
 
 fs.ensureDirSync(path.join(__dirname, '../docs/.docgen'));
