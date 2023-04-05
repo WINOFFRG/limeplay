@@ -36,7 +36,7 @@
 		"url": "https://storybook.limeplay.me"
 	},
 	"scripts": {
-		"build": "tsup src --dts",
+		"build": "tsup src --dts --metafile",
 		"dev": "pnpm build:fast -- --watch",
 		"clean": "rimraf dist .turbo",
 		"typecheck": "tsc --noEmit",
