@@ -1,5 +1,11 @@
 # @limeplay/core
 
+## 0.0.0-dev-20230405190848
+
+### Patch Changes
+
+- 58efb3e: Minor Fixes, Testing TS Docs
+
 ## 2.0.1
 
 ### Patch Changes
