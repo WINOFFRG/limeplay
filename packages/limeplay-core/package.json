@@ -23,6 +23,21 @@
 		"shaka-player": "^4.3.3",
 		"zustand": "^4.1.4"
 	},
+	"keywords": [
+		"player",
+		"react",
+		"ui",
+		"library",
+		"shaka",
+		"shaka-player",
+		"video",
+		"drm",
+		"dash",
+		"hls",
+		"accessible",
+		"design-system",
+		"components"
+	],
 	"author": "Rohan Gupta <rohangupta1528@gmail.com>",
 	"license": "MIT",
 	"homepage": "https://limeplay.me",
