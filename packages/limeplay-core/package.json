@@ -11,9 +11,8 @@
 		"access": "public"
 	},
 	"dependencies": {
+		"@emotion/cache": "^11.10.7",
 		"@emotion/react": "^11.10.5",
-		"@mantine/core": "^6.0.4",
-		"@mantine/hooks": "^6.0.4",
 		"@mantine/styles": "^6.0.4",
 		"@use-gesture/react": "^10.2.25",
 		"lodash": "^4.17.21",
