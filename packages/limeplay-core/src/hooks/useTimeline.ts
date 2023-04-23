@@ -44,6 +44,7 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 	const {
 		playback,
 		player,
+		seekRange: storeSeekRange,
 		getIsSeeking,
 		setSeekRange,
 		setCurrentTime,
@@ -56,6 +57,7 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 		(state) => ({
 			playback: state.playback,
 			player: state.player,
+			seekRange: state.seekRange,
 			getIsSeeking: state._getIsSeeking,
 			setSeekRange: state._setSeekRange,
 			setCurrentTime: state._setCurrentTime,
@@ -78,7 +80,7 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 			setIsLive(player.isLive());
 
 			currentTimerId.current = window.setInterval(() => {
-				if (playback.readyState < 2) return;
+				if (playback.readyState === 0) return;
 
 				const seekRange = player.seekRange();
 
@@ -124,7 +126,8 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 					if (!store.getState().duration)
 						setDuration(playback.duration);
 
-					if (seekRange.end === 0) setSeekRange(player.seekRange());
+					if (storeSeekRange.start === 0 && storeSeekRange.end === 0)
+						setSeekRange(player.seekRange());
 
 					setCurrentTime(playback.currentTime);
 
