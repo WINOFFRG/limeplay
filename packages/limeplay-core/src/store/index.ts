@@ -25,7 +25,7 @@ export function createLimeplayStore({ mediaElementRef }: InitialProps) {
 	const player = new shaka.Player(element);
 
 	player.load(
-		'https://storage.googleapis.com/shaka-demo-assets/sintel/dash.mpd'
+		'https://storage.googleapis.com/nodejs-streaming.appspot.com/uploads/f6b7c492-e78f-4b26-b95f-81ea8ca21a18/1642708128072/manifest.mpd'
 	);
 
 	const store = createStore<InitialStore & StoreSlice>()(

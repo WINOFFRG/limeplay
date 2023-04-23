@@ -28,7 +28,7 @@ const useStyles = createStyles((theme) => ({
 			top: '50%',
 			marginTop: '-37px',
 			position: 'absolute',
-			borderRadius: theme.defaultRadius,
+			borderRadius: '50%',
 			transform: 'translateX(-50%)',
 			border: `3px solid ${theme.white}`,
 			borderRightColor: 'transparent',
