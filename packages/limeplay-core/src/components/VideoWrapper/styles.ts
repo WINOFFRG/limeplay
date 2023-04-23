@@ -27,7 +27,6 @@ const useStyles = createStyles((theme) => ({
 		backgroundSize: 'cover',
 		backgroundPosition: 'center',
 		backgroundColor: theme.black,
-		animation: `${zoomOut} 0.3s ${theme.transitionTimingFunction}`,
 	},
 
 	videoElement: {

@@ -1,12 +1,4 @@
-import { useDisclosure } from '@mantine/hooks';
-import {
-	Popover,
-	Text,
-	Button,
-	ActionIcon,
-	UnstyledButton,
-} from '@mantine/core';
-import useStyles from './styles';
+import useStyles from '../styles';
 
 export function QualityIcon() {
 	const { classes } = useStyles();
@@ -38,8 +30,6 @@ export function QualityIcon() {
 }
 
 export default function QualityControl() {
-	const [opened, { close, open }] = useDisclosure(true);
-
 	const { classes } = useStyles();
 
 	const qualityValues = [
@@ -60,60 +50,62 @@ export default function QualityControl() {
 		},
 	];
 
-	return (
-		<Popover
-			width={200}
-			withArrow
-			arrowOffset={15}
-			arrowSize={10}
-			position="bottom"
-			opened={!opened}
-			offset={5}
-		>
-			<Popover.Target>
-				<UnstyledButton
-					className={classes.controlButton}
-					onMouseEnter={open}
-					onMouseLeave={close}
-				>
-					<QualityIcon />
-				</UnstyledButton>
-			</Popover.Target>
-			<Popover.Dropdown className={classes.qualitywrapper}>
-				<div className={classes.qualityContainer}>
-					<div className={classes.qualityValues}>
-						{qualityValues.map((value) => (
-							<div className={classes.qualityItem}>
-								<div
-									style={{
-										display: 'flex',
-										alignItems: 'center',
-										flexDirection: 'row',
-									}}
-								>
-									{/* {value.isActive && <>✅</>} */}
-									<UnstyledButton>
-										<Text
-											size="sm"
-											weight="400"
-											// className={classes.qualityName}
-											color="white"
-										>
-											{value.name}
-										</Text>
-									</UnstyledButton>
-								</div>
-								<Text
-									size="xs"
-									// className={classes.qualityTag}
-								>
-									{value.tag}
-								</Text>
-							</div>
-						))}
-					</div>
-				</div>
-			</Popover.Dropdown>
-		</Popover>
-	);
+	return null;
+
+	// return (
+	// 	<Popover
+	// 		width={200}
+	// 		withArrow
+	// 		arrowOffset={15}
+	// 		arrowSize={10}
+	// 		position="bottom"
+	// 		opened={!opened}
+	// 		offset={5}
+	// 	>
+	// 		<Popover.Target>
+	// 			<UnstyledButton
+	// 				className={classes.controlButton}
+	// 				onMouseEnter={open}
+	// 				onMouseLeave={close}
+	// 			>
+	// 				<QualityIcon />
+	// 			</UnstyledButton>
+	// 		</Popover.Target>
+	// 		<Popover.Dropdown className={classes.qualitywrapper}>
+	// 			<div className={classes.qualityContainer}>
+	// 				<div className={classes.qualityValues}>
+	// 					{qualityValues.map((value) => (
+	// 						<div className={classes.qualityItem}>
+	// 							<div
+	// 								style={{
+	// 									display: 'flex',
+	// 									alignItems: 'center',
+	// 									flexDirection: 'row',
+	// 								}}
+	// 							>
+	// 								{/* {value.isActive && <>✅</>} */}
+	// 								<UnstyledButton>
+	// 									<Text
+	// 										size="sm"
+	// 										weight="400"
+	// 										// className={classes.qualityName}
+	// 										color="white"
+	// 									>
+	// 										{value.name}
+	// 									</Text>
+	// 								</UnstyledButton>
+	// 							</div>
+	// 							<Text
+	// 								size="xs"
+	// 								// className={classes.qualityTag}
+	// 							>
+	// 								{value.tag}
+	// 							</Text>
+	// 						</div>
+	// 					))}
+	// 				</div>
+	// 			</div>
+	// 		</Popover.Dropdown>
+	// 	</Popover>
+	// );
 }
