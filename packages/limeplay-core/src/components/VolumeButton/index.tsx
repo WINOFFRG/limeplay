@@ -82,6 +82,8 @@ export function VolumeControl(props: VolumeControlProps) {
 				playback.volume = Number(clammpedValue);
 			}
 		}
+
+		event.preventDefault();
 	};
 
 	const bindVolumeEvents = useGesture({

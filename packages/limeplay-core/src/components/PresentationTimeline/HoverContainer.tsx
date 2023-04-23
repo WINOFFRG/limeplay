@@ -73,12 +73,12 @@ function HoverContainer({ forwardRef }: HoverContainerProps) {
 		};
 
 		/*
-            It is important that we add listeners on these elements in react way, 
-            since the component rerenders everytime mouse is moved it causes a 
-            huge impact. I checked with Chrome performance monitor tools, whenever 
-            mouse was hovered the number of listeners increased exponentially as 
-            everytime the component renders onPointerMove and onPointerLeave events 
-            were added. 
+            It is important that we add listeners on these elements in react way,
+            since the component rerenders everytime mouse is moved it causes a
+            huge impact. I checked with Chrome performance monitor tools, whenever
+            mouse was hovered the number of listeners increased exponentially as
+            everytime the component renders onPointerMove and onPointerLeave events
+            were added.
         */
 
 		const pointerEnterEventHandler = (e: PointerEvent) => {
