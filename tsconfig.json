@@ -22,7 +22,6 @@
 		"declarationMap": true,
 		"preserveConstEnums": true
 	},
-	"include": ["@types", "packages", "scripts"],
+	"include": ["@types", "packages", "scripts", "stories"],
 	"exclude": ["**/node_modules", "**/template*"]
 }
-  
