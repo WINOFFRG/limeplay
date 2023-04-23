@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { shallow } from 'zustand/shallow';
 import { DefaultProps, useComponentDefaultProps } from '@mantine/styles';
 import { useLimeplayStore } from '../../store';
@@ -35,6 +35,21 @@ export default function PlaybackButton(props: PlaybackButtonProps) {
 
 	const { onClick, playIcon, pauseIcon, children, ...others } =
 		useComponentDefaultProps('PlaybackButton', defaultProps, props);
+
+	useEffect(() => {
+		const spacePlayback = (e) => {
+			if (e.code === 'Space' && playback) {
+				togglePlayback();
+				return e.preventDefault();
+			}
+		};
+
+		document.addEventListener('keydown', spacePlayback);
+
+		return () => {
+			document.removeEventListener('keydown', spacePlayback);
+		};
+	}, [playback]);
 
 	// TODO: Move this function to utils
 	const togglePlayback = () => {

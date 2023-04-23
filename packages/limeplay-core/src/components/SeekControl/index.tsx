@@ -30,21 +30,20 @@ export default function SeekControl(props: SeekControlProps) {
 		shallow
 	);
 
-	const store = useLimeplayStoreAPI();
+	const seekRange = useLimeplayStore((state) => state.seekRange);
 
 	const { onClick, seekIcon, type, seekValue, children, ...others } =
 		useComponentDefaultProps('SeekButton', defaultProps, props);
 
 	const handleSeek = () => {
-		const { seekRange } = store.getState();
 		if (type === 'forward') {
 			if (playback.currentTime + seekValue > seekRange.end) {
-				// playback.currentTime = seekRange.end;
+				playback.currentTime = seekRange.end;
 			} else {
 				playback.currentTime += seekValue;
 			}
 		} else if (playback.currentTime - seekValue < seekRange.start) {
-			// playback.currentTime = seekRange.start;
+			playback.currentTime = seekRange.start;
 		} else {
 			playback.currentTime -= seekValue;
 		}

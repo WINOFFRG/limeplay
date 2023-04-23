@@ -77,11 +77,14 @@ function NfPauseIcon() {
 export function ControlsMiddlePanel() {
 	const { classes } = useStyles();
 	const cuesContainer = useRef<HTMLDivElement>(null);
-
-	const isPlaying = useLimeplayStore((state) => state.isPlaying);
 	const timeout = useRef<number>(0);
 	const [playAnim, setPlayAnim] = useState(false);
 	const [pauseAnim, setPauseAnim] = useState(false);
+
+	const { isPlaying, playback } = useLimeplayStore((state) => ({
+		isPlaying: state.isPlaying,
+		playback: state.playback,
+	}));
 
 	useEffect(() => {
 		if (isPlaying) {
@@ -107,12 +110,12 @@ export function ControlsMiddlePanel() {
 			ref={cuesContainer}
 			className={classes.controlsMiddlePanel}
 			role="none"
-			// onClick={() => {
-			// 	if (video) {
-			// 		if (video.paused) video.play();
-			// 		else video.pause();
-			// 	}
-			// }}
+			onClick={() => {
+				if (playback) {
+					if (playback.paused) playback.play();
+					else playback.pause();
+				}
+			}}
 		>
 			{playAnim && (
 				<PlaybackNotification>
@@ -151,10 +154,6 @@ export function ControlsBottomPanel() {
 						volumeHalfIcon={<VolumeHalf />}
 						volumeFullIcon={<UnmuteIcon />}
 					/>
-				</div>
-				<div>
-					<SettingsButton />
-					{/* <Demo /> */}
 				</div>
 			</div>
 		</div>
