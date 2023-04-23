@@ -8,12 +8,6 @@ const VideoWrapper = forwardRef<HTMLMediaElement>((props, ref) => {
 		<div className={classes.playerWrapper}>
 			<div className={classes.playerNode}>
 				<video
-					style={
-						{
-							// opacity: 0,
-						}
-					}
-					autoPlay
 					controls={false}
 					playsInline
 					ref={ref as React.RefObject<HTMLVideoElement>}
