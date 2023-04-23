@@ -4,7 +4,7 @@ import { LimeplayStore, createLimeplayStore } from '../store';
 import VideoWrapper from './VideoWrapper';
 import PlayerOverlay from './PlayerOverlay';
 
-function Player() {
+export function Player() {
 	const mediaElementRef = useRef<HTMLMediaElement>(null);
 	const store = useRef<LimeplayStore | null>(null);
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -24,7 +24,7 @@ function Player() {
 				style={{
 					position: 'relative',
 					width: 'auto',
-					height: '100vh',
+					height: '100%',
 					padding: 0,
 					margin: 0,
 				}}
@@ -35,5 +35,3 @@ function Player() {
 		</LimeplayContext.Provider>
 	);
 }
-
-export default Player;
