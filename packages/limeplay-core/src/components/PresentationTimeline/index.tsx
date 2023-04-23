@@ -53,6 +53,7 @@ const MemoizedBufferRangeBar = memo(BufferRangeBar);
 export default function PresentationTimeline() {
 	const { classes } = useStyles();
 	const elementRef = useRef<HTMLDivElement>(null);
+	useTimeline();
 
 	const {
 		playback,
@@ -78,8 +79,6 @@ export default function PresentationTimeline() {
 		setIsSeeking: state._setIsSeeking,
 	}));
 
-	useTimeline();
-
 	const cbFunction = ({
 		event,
 		elapsedTime,
@@ -104,6 +103,7 @@ export default function PresentationTimeline() {
 
 		if (event.type === 'keydown') {
 			const { key } = event;
+
 			if (key === 'ArrowUp' || key === 'ArrowRight') {
 				const lClammpedValue = clamp(
 					playback.currentTime + step,
@@ -136,6 +136,8 @@ export default function PresentationTimeline() {
 				setCurrentProgress(progress);
 			}
 		}
+
+		event.preventDefault();
 	};
 
 	const onSeekStartHandler = () => setIsSeeking(true);
@@ -144,24 +146,17 @@ export default function PresentationTimeline() {
 
 	//  need to set for false seeking as well
 
-	const bind = useGesture(
-		{
-			onDrag: cbFunction,
-			onMouseUp: onSeekEndHandler,
-			onMouseDown: ({ event }) => {
-				setIsSeeking(true);
-				cbFunction({ event });
-			},
-			onKeyDown: onSeekEndHandler,
-			onDragStart: onSeekStartHandler,
-			onDragEnd: onSeekEndHandler,
+	const bind = useGesture({
+		onDrag: cbFunction,
+		onMouseUp: onSeekEndHandler,
+		onMouseDown: ({ event }) => {
+			setIsSeeking(true);
+			cbFunction({ event });
 		},
-		{
-			drag: {
-				axis: 'x',
-			},
-		}
-	);
+		onKeyDown: onSeekEndHandler,
+		onDragStart: onSeekStartHandler,
+		onDragEnd: onSeekEndHandler,
+	});
 
 	const parsedCurrentTime = Number(
 		(player.isLive()
@@ -174,7 +169,7 @@ export default function PresentationTimeline() {
 	return (
 		<div className={classes.timelineWrrapper}>
 			<span>
-				{!isLive && buildTimeString(duration, duration > 3600)}
+				{!isLive && buildTimeString(currentTime, duration > 3600)}
 				{isLive && (
 					<ControlButton
 						onClick={() => {
