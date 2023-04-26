@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useCallback } from 'react';
+import { Profiler, useCallback } from 'react';
 import { useGesture } from '@use-gesture/react';
 import { clamp } from 'lodash';
 import { DefaultProps, useComponentDefaultProps } from '@mantine/styles';
@@ -43,7 +43,6 @@ export function VolumeControl(props: VolumeControlProps) {
 	const isVolumeHookInjected = useLimeplayStore(
 		(state) => state.isVolumeHookInjected
 	);
-	useVolume();
 
 	const {
 		muteIcon,
@@ -87,8 +86,7 @@ export function VolumeControl(props: VolumeControlProps) {
 	};
 
 	const bindVolumeEvents = useGesture({
-		onDrag: volumeChangeHandler,
-		onMouseUp: ({ event }) => {
+		onDrag: ({ event }) => {
 			volumeChangeHandler({ event });
 			if (playback.volume > 0) setLastVolume(playback.volume);
 		},

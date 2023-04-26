@@ -28,7 +28,6 @@ export default function PipButton(props: PipControlProps) {
 		useComponentDefaultProps('PipControl', defaultProps, props);
 
 	const togglePip = useCallback(async () => {
-		console.log('togglePip');
 		if (document.pictureInPictureElement) {
 			await document.exitPictureInPicture();
 			setIsPip(false);
@@ -41,10 +40,6 @@ export default function PipButton(props: PipControlProps) {
 	useEffect(() => {
 		if (!isSupported) {
 			setIsSupported(document.pictureInPictureEnabled);
-		} else if (document.pictureInPictureElement) {
-			setIsPip(true);
-		} else {
-			setIsPip(false);
 		}
 	}, [playback]);
 
