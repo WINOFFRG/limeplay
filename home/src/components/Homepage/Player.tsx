@@ -55,7 +55,7 @@ const useStyles = makeStyles<{ visible: boolean }>()((theme, { visible }) => ({
 			'--radius': '8px',
 		},
 		width: '100%',
-		height: '100%',
+		minHeight: '600px',
 		display: 'grid',
 		gridTemplateColumns: '1fr',
 		gridTemplateRows: '1fr',
