@@ -53,7 +53,6 @@ const MemoizedBufferRangeBar = memo(BufferRangeBar);
 export default function PresentationTimeline() {
 	const { classes } = useStyles();
 	const elementRef = useRef<HTMLDivElement>(null);
-	useTimeline();
 
 	const {
 		playback,
