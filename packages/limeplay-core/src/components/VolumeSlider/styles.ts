@@ -58,7 +58,6 @@ const useStyles = createStyles((theme) => ({
 
 		'&[data-orientation="horizontal"]': {
 			height: '100%',
-			left: 0,
 		},
 
 		'&[data-orientation="vertical"]': {
@@ -75,11 +74,43 @@ const useStyles = createStyles((theme) => ({
 		boxShadow: '0 2px 10px rgba(0, 0, 0, 0.07)',
 		borderRadius: '10px',
 		cursor: 'pointer',
-		opacity: 0.5,
+		// opacity: 0.5,
+		color: '#fff',
 
 		'&[data-disabled]': {
 			cursor: 'not-allowed',
 		},
+	},
+
+	TooltipContent: {
+		borderRadius: '4px',
+		padding: '10px 15px',
+		fontSize: '15px',
+		lineHeight: '1',
+		color: '#6F00FF',
+		backgroundColor: 'white',
+		boxShadow:
+			'rgba(54, 54, 54, 0.35) 0px 10px 38px -10px, rgba(54, 54, 54, 0.2) 0px 10px 20px -15px',
+		userSelect: 'none',
+		animationDuration: '400ms',
+		animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+		willChange: 'transform, opacity',
+		'&[data-state="delayed-open"][data-side="top"]': {
+			animationName: 'slideDownAndFade',
+		},
+		'&[data-state="delayed-open"][data-side="right"]': {
+			animationName: 'slideLeftAndFade',
+		},
+		'&[data-state="delayed-open"][data-side="bottom"]': {
+			animationName: 'slideUpAndFade',
+		},
+		'&[data-state="delayed-open"][data-side="left"]': {
+			animationName: 'slideRightAndFade',
+		},
+		zIndex: 1000,
+	},
+	TooltipArrow: {
+		fill: 'white',
 	},
 }));
 
