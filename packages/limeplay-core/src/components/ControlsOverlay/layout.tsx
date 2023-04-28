@@ -20,6 +20,7 @@ import {
 } from '../Icons';
 import SeekControl from '../SeekControl';
 import PipButton from '../PipButton';
+import { VolumeSlider } from '../VolumeSlider/Slider';
 
 export function ControlsTopPanel() {
 	const { classes } = useStyles();
@@ -154,6 +155,7 @@ export function ControlsBottomPanel() {
 						volumeHalfIcon={<VolumeHalf />}
 						volumeFullIcon={<UnmuteIcon />}
 					/>
+					<VolumeSlider />
 				</div>
 			</div>
 		</div>

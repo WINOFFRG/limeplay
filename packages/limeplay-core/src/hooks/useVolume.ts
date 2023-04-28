@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { StateCreator } from 'zustand';
 import { useGesture, EventTypes, Handler } from '@use-gesture/react';
-import { clamp } from 'lodash';
+import { clamp, get } from 'lodash';
 import hookDefaultValue from './utils/default-value';
-import { useLimeplayStore } from '../store';
+import { useLimeplayStore, useLimeplayStoreAPI } from '../store';
 
 export interface UseVolumeConfig {
 	/**
@@ -13,11 +13,11 @@ export interface UseVolumeConfig {
 	events?: HTMLMediaElementEvents;
 
 	initialVolume?: number;
+
+	syncMuteState?: boolean;
 }
 
 export interface VolumeSlice {
-	isVolumeHookInjected: boolean;
-	setIsVolumeHookInjected: (isVolumeHookInjected: boolean) => void;
 	volume: number;
 	_setVolume: (volume: number) => void;
 	muted: boolean;
@@ -26,23 +26,81 @@ export interface VolumeSlice {
 	_setLastVolume: (lastVolume: number) => void;
 }
 
-export function useVolume({ initialVolume = 1, events }: UseVolumeConfig = {}) {
-	const playback = useLimeplayStore((state) => state.playback);
-	const setVolume = useLimeplayStore((state) => state._setVolume);
-	const setMuted = useLimeplayStore((state) => state._setMuted);
-	const setIsVolumeHookInjected = useLimeplayStore(
-		(state) => state.setIsVolumeHookInjected
+// if (syncMuteState) {
+// 	// Means a Toggle Event
+// 	if (playback.muted !== getState().muted) {
+// 		setMuted(playback.muted);
+
+// 		if (playback.muted) {
+// 			setVolume(0);
+// 		} else {
+// 			setVolume(getState().lastVolume);
+// 		}
+// 	}
+
+// 	// Means a Volume Slide Event
+// 	if (playback.volume !== getState().volume) {
+// 	}
+// } else {
+// 	//
+// }
+
+export function useVolume({
+	initialVolume = 1,
+	events,
+	syncMuteState,
+}: UseVolumeConfig = {}) {
+	const { playback, setVolume, setMuted, setLastVolume } = useLimeplayStore(
+		(state) => ({
+			playback: state.playback,
+			setVolume: state._setVolume,
+			setMuted: state._setMuted,
+			setLastVolume: state._setLastVolume,
+		})
 	);
+
+	const { getState } = useLimeplayStoreAPI();
 
 	useEffect(() => {
 		const volumeEventHandler = () => {
-			const { volume } = playback;
-			setVolume(volume);
+			if (syncMuteState) {
+				if (playback.muted !== getState().muted) {
+					setMuted(playback.muted);
 
-			if (volume === 0 || playback.muted) {
-				setMuted(true);
-			} else if (volume > 0 || !playback.muted) {
-				setMuted(false);
+					if (playback.muted === true) {
+						setVolume(0);
+					} else {
+						setVolume(getState().lastVolume);
+					}
+				} else if (playback.muted === true && playback.volume > 0) {
+					playback.muted = false;
+					setMuted(false);
+					setVolume(playback.volume);
+				} else if (playback.volume === 0) {
+					playback.muted = true;
+					setMuted(true);
+					setVolume(playback.volume);
+				} else {
+					setVolume(playback.volume);
+				}
+			} else if (!syncMuteState) {
+				if (playback.muted !== getState().muted) {
+					setMuted(playback.muted);
+
+					if (playback.muted === false && getState().volume === 0) {
+						setVolume(getState().lastVolume);
+					}
+				} else {
+					setVolume(playback.volume);
+
+					if (playback.volume === 0) {
+						setMuted(true);
+					}
+				}
+			}
+
+			if (playback.volume > 0) {
+				setLastVolume(playback.volume);
 			}
 		};
 
@@ -55,8 +113,6 @@ export function useVolume({ initialVolume = 1, events }: UseVolumeConfig = {}) {
 		playback.volume = playback.muted ? 0 : initialVolume || playback.volume;
 
 		volumeEventHandler();
-
-		setIsVolumeHookInjected(true);
 
 		return () => {
 			if (playback) {
@@ -72,9 +128,6 @@ const hookName = '@limeplay/hooks/useVolume';
 useVolume.displayName = hookName;
 
 export const createVolumeSlice: StateCreator<VolumeSlice> = (set) => ({
-	isVolumeHookInjected: false,
-	setIsVolumeHookInjected: (isVolumeHookInjected: boolean) =>
-		set({ isVolumeHookInjected }),
 	volume: 0,
 	_setVolume: (volume: number) => set({ volume }),
 	muted: false,
