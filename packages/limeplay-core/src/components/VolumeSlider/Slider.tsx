@@ -1,13 +1,6 @@
-import {
-	createContext,
-	forwardRef,
-	useContext,
-	useMemo,
-	useRef,
-	useState,
-} from 'react';
+import { createContext, forwardRef, useContext, useMemo, useRef } from 'react';
 import { clamp } from 'lodash';
-import { DragState, useGesture } from '@use-gesture/react';
+import { DragState, useDrag } from '@use-gesture/react';
 import { useLimeplayStore } from '../../store';
 import { useVolume } from '../../hooks';
 import useStyles from './styles';
@@ -15,6 +8,44 @@ import { useComposedRefs } from '../../hooks/compose-refs';
 
 type Direction = 'ltr' | 'rtl';
 type Side = 'top' | 'right' | 'bottom' | 'left';
+type Size = 'width' | 'height';
+type SlideDirection = 'from-left' | 'from-right' | 'from-bottom' | 'from-top';
+
+type Config = {
+	[key in SlideDirection]: {
+		axis: 'x' | 'y';
+		size: Size;
+		startEdge: Side;
+		transform: string;
+	};
+};
+
+const config: Config = {
+	'from-left': {
+		axis: 'x',
+		size: 'width',
+		startEdge: 'left',
+		transform: 'translateX(-50%)',
+	},
+	'from-right': {
+		axis: 'x',
+		size: 'width',
+		startEdge: 'right',
+		transform: 'translateX(50%)',
+	},
+	'from-bottom': {
+		axis: 'y',
+		size: 'height',
+		startEdge: 'bottom',
+		transform: 'translateY(50%)',
+	},
+	'from-top': {
+		axis: 'y',
+		size: 'height',
+		startEdge: 'top',
+		transform: 'translateY(-50%)',
+	},
+};
 
 interface SliderContextValue {
 	disabled?: boolean;
@@ -22,12 +53,10 @@ interface SliderContextValue {
 	max: number;
 	orientation: SliderProps['orientation'];
 	startEdge: Side;
-	size: 'width' | 'height';
-	direction: number;
+	size: Size;
 	value: number;
+	dir: Direction;
 }
-
-const SLIDER_NAME = 'LimeplayVolumeSlider';
 
 const Slider = createContext<SliderContextValue | undefined>(undefined);
 
@@ -49,6 +78,7 @@ interface SliderProps extends React.HTMLAttributes<HTMLDivElement> {
 	children?: React.ReactNode;
 	style?: React.CSSProperties;
 	volume?: number;
+	inverted?: boolean;
 }
 
 const SliderRoot = forwardRef<HTMLDivElement, SliderProps>(
@@ -57,7 +87,7 @@ const SliderRoot = forwardRef<HTMLDivElement, SliderProps>(
 			name,
 			disabled,
 			orientation,
-			dir,
+			dir = 'ltr',
 			min,
 			max,
 			step,
@@ -67,24 +97,44 @@ const SliderRoot = forwardRef<HTMLDivElement, SliderProps>(
 			children,
 			style,
 			volume,
+			inverted,
 			...others
 		},
 		forwardedRef
 	) => {
 		const ref = useRef<HTMLDivElement>(null);
 		const composedRefs = useComposedRefs(forwardedRef, ref);
+
+		let configType: SlideDirection = 'from-left';
+
+		if (orientation === 'vertical') {
+			if (inverted) {
+				configType = 'from-bottom';
+			} else {
+				configType = 'from-top';
+			}
+		} else if (orientation === 'horizontal') {
+			if (inverted) {
+				configType = 'from-right';
+			} else {
+				configType = 'from-left';
+			}
+		}
+
+		const { axis, size, startEdge, transform } = config[configType];
+
 		const context: SliderContextValue = useMemo(
 			() => ({
 				min,
 				max,
 				disabled,
 				orientation,
-				value: volume,
-				startEdge: orientation === 'vertical' ? 'bottom' : 'left',
-				size: orientation === 'vertical' ? 'height' : 'width',
-				direction: 1,
+				value,
+				startEdge,
+				size,
+				dir,
 			}),
-			[min, max, disabled, orientation]
+			[min, max, disabled, orientation, inverted]
 		);
 
 		return (
@@ -96,11 +146,8 @@ const SliderRoot = forwardRef<HTMLDivElement, SliderProps>(
 						['--volume-slider-progress' as string]: `${
 							volume * 100
 						}%`,
-						['--volume-slider_thumb-transform' as string]: `${
-							orientation === 'vertical'
-								? `translateY(50%)`
-								: `translateX(-50%)`
-						}`,
+						['--volume-slider_thumb-transform' as string]:
+							transform,
 					}}
 					data-disabled={disabled ? '' : undefined}
 					data-orientation={orientation}
@@ -131,7 +178,6 @@ const SliderTrack = forwardRef<HTMLSpanElement, SliderTrackProps>(
 				data-orientation={orientation}
 				{...trackProps}
 				ref={composedRefs}
-				// {...bindVolumeEvents()}
 			>
 				{children}
 			</span>
@@ -147,7 +193,7 @@ type SliderRangeProps = React.HTMLAttributes<HTMLSpanElement>;
 
 const SliderRange = forwardRef<HTMLSpanElement, SliderRangeProps>(
 	({ children, style, ...rangeProps }, forwardedRef) => {
-		const { orientation, disabled, size } = useContext(Slider);
+		const { orientation, disabled, size, startEdge } = useContext(Slider);
 		const ref = useRef<HTMLSpanElement>(null);
 		const composedRefs = useComposedRefs(forwardedRef, ref);
 
@@ -159,6 +205,7 @@ const SliderRange = forwardRef<HTMLSpanElement, SliderRangeProps>(
 				style={{
 					...style,
 					[size]: 'var(--volume-slider-progress)',
+					[startEdge]: 0,
 				}}
 				{...rangeProps}
 			>
@@ -176,7 +223,7 @@ type SliderThumbProps = React.HTMLAttributes<HTMLSpanElement>;
 
 const SliderThumb = forwardRef<HTMLSpanElement, SliderThumbProps>(
 	({ children, ...thumbProps }, forwardedRef) => {
-		const { startEdge, min, max, orientation, disabled } =
+		const { startEdge, min, max, orientation, disabled, dir } =
 			useContext(Slider);
 		const volume = useLimeplayStore((state) => state.volume);
 		const ariaVolume = Number((volume * 100).toFixed(0));
@@ -211,47 +258,94 @@ const SliderThumb = forwardRef<HTMLSpanElement, SliderThumbProps>(
 	}
 );
 
-export function toggleVolume({ lastVolume, playback }) {
-	if (playback.muted) {
-		playback.muted = false;
-		playback.volume = lastVolume;
-	} else {
-		playback.muted = true;
-		playback.volume = 0;
-	}
+type SlideHandlerProps = {
+	min: number;
+	max: number;
+	step: number;
+	orientation: React.AriaAttributes['aria-orientation'];
+	disabled: boolean;
+	dir: Direction;
+	inverted: boolean;
+};
+
+function calculateVolume(event: UIEvent, props: SlideHandlerProps): number {
+	const { min, max, step, orientation: o9n, dir, inverted } = props;
+
+	const clientPosition = o9n === 'vertical' ? event.clientY : event.clientX;
+
+	const rect = event.currentTarget.getBoundingClientRect();
+
+	const sliderSize =
+		o9n === 'vertical'
+			? event.currentTarget.clientHeight
+			: event.currentTarget.clientWidth;
+
+	// Get the position of the slider
+	const sliderPosition = o9n === 'vertical' ? rect.top : rect.left;
+
+	// Calculate the position of the event relative to the slider
+	const relativePosition = clientPosition - sliderPosition;
+
+	// Calculate the percentage of the slider the event is at
+	const percentage = relativePosition / sliderSize;
+
+	// Calculate the new volume value based on the percentage
+	let volume = percentage * (max - min) + min;
+
+	// Invert the volume if necessary
+	if (inverted) volume = max - volume + min;
+
+	volume = clamp(volume, min, max);
+
+	return volume;
 }
+
+// const rect = event.currentTarget.getBoundingClientRect();
+
+// if (orientation === 'vertical') {
+// 	newVolume = 1 - (event.clientY - rect.top) / rect.height;
+// } else if (direction === 'rtl') {
+// 	newVolume = 1 - (event.clientX - rect.left) / rect.width;
+// } else {
+// 	newVolume = (event.clientX - rect.left) / rect.width;
+// }
 
 export function VolumeSlider() {
 	const { classes } = useStyles();
-
 	const { volume, playback } = useLimeplayStore((state) => ({
 		volume: state.volume,
 		playback: state.playback,
 	}));
 
-	const syncMuteState = true;
+	const direction = 'ltr';
 
 	useVolume({
-		initialVolume: 0.5,
-		syncMuteState,
+		syncMuteState: true,
+		initialVolume: 0.4,
 	});
+
+	const configProps: SlideHandlerProps = {
+		min: 0,
+		max: 1,
+		step: 0.05,
+		orientation: 'horizontal',
+		disabled: false,
+		dir: 'ltr',
+		inverted: true,
+	};
 
 	const volumeChangeHandler = ({ event }: DragState) => {
 		let newVolume = null;
 		const step = 0.05;
-		const orientation = event.target.getAttribute('data-orientation');
+		// const orientation = event.target.getAttribute('data-orientation');
+		// const disabled = event.target.getAttribute('data-disabled');
+
+		// if (disabled !== null) return;
 
 		switch (event.type) {
 			case 'pointermove':
 			case 'pointerdown': {
-				const rect = event.currentTarget.getBoundingClientRect();
-
-				if (orientation === 'vertical') {
-					newVolume = 1 - (event.clientY - rect.top) / rect.height;
-				} else {
-					newVolume = (event.clientX - rect.left) / rect.width;
-				}
-
+				newVolume = calculateVolume(event, configProps);
 				break;
 			}
 			case 'keydown':
@@ -273,15 +367,12 @@ export function VolumeSlider() {
 		}
 
 		if (newVolume !== null) {
-			const clammpedValue = clamp(newVolume, 0, 1);
-			playback.volume = clammpedValue;
+			playback.volume = newVolume;
 			if (event.defaultPrevented) event.preventDefault();
 		}
 	};
 
-	const events = useGesture({
-		onDrag: volumeChangeHandler,
-	});
+	const events = useDrag(volumeChangeHandler);
 
 	return (
 		<div
@@ -296,15 +387,15 @@ export function VolumeSlider() {
 				tabIndex={0}
 				volume={volume}
 				className={classes.sliderRoot}
-				orientation="horizontal"
 				{...events()}
+				{...configProps}
 			>
 				<SliderTrack className={classes.sliderTrack}>
 					<SliderRange className={classes.sliderRange} />
 				</SliderTrack>
 				<SliderThumb className={classes.sliderThumb} />
 			</SliderRoot>
-			<SliderRoot
+			{/* <SliderRoot
 				tabIndex={0}
 				volume={volume}
 				className={classes.sliderRoot}
@@ -315,8 +406,10 @@ export function VolumeSlider() {
 				<SliderTrack className={classes.sliderTrack}>
 					<SliderRange className={classes.sliderRange} />
 				</SliderTrack>
-				<SliderThumb className={classes.sliderThumb} />
-			</SliderRoot>
+				<SliderThumb className={classes.sliderThumb}>
+					<div>20</div>
+				</SliderThumb>
+			</SliderRoot> */}
 		</div>
 	);
 }

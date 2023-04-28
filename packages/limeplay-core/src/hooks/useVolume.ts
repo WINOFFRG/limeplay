@@ -26,30 +26,12 @@ export interface VolumeSlice {
 	_setLastVolume: (lastVolume: number) => void;
 }
 
-// if (syncMuteState) {
-// 	// Means a Toggle Event
-// 	if (playback.muted !== getState().muted) {
-// 		setMuted(playback.muted);
-
-// 		if (playback.muted) {
-// 			setVolume(0);
-// 		} else {
-// 			setVolume(getState().lastVolume);
-// 		}
-// 	}
-
-// 	// Means a Volume Slide Event
-// 	if (playback.volume !== getState().volume) {
-// 	}
-// } else {
-// 	//
-// }
-
 export function useVolume({
 	initialVolume = 1,
 	events,
 	syncMuteState,
 }: UseVolumeConfig = {}) {
+	const { getState } = useLimeplayStoreAPI();
 	const { playback, setVolume, setMuted, setLastVolume } = useLimeplayStore(
 		(state) => ({
 			playback: state.playback,
@@ -58,8 +40,6 @@ export function useVolume({
 			setLastVolume: state._setLastVolume,
 		})
 	);
-
-	const { getState } = useLimeplayStoreAPI();
 
 	useEffect(() => {
 		const volumeEventHandler = () => {
@@ -121,7 +101,7 @@ export function useVolume({
 				});
 			}
 		};
-	}, [playback]);
+	}, [playback, events, syncMuteState, initialVolume]);
 }
 
 const hookName = '@limeplay/hooks/useVolume';
