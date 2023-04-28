@@ -315,7 +315,7 @@ importers:
         version: 11.10.7
       '@emotion/react':
         specifier: ^11.10.5
-        version: 11.10.5(@babel/core@7.21.4)(@types/react@18.0.31)(react@18.2.0)
+        version: 11.10.5(@babel/core@7.21.4)(react@18.2.0)
       '@mantine/styles':
         specifier: ^6.0.4
         version: 6.0.4(@emotion/react@11.10.5)(react-dom@18.2.0)(react@18.2.0)
@@ -3492,31 +3492,6 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@emotion/react@11.10.5(@babel/core@7.21.4)(@types/react@18.0.31)(react@18.2.0):
-    resolution: {integrity: sha512-TZs6235tCJ/7iF6/rvTaOH4oxQg2gMAcdHemjwLKIjKz4rRuYe1HJ2TQJKnAcRAfOUDdU8XoDadCe1rl72iv8A==}
-    peerDependencies:
-      '@babel/core': ^7.0.0
-      '@types/react': '*'
-      react: '>=16.8.0'
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      '@types/react':
-        optional: true
-    dependencies:
-      '@babel/core': 7.21.4
-      '@babel/runtime': 7.20.13
-      '@emotion/babel-plugin': 11.10.5(@babel/core@7.21.4)
-      '@emotion/cache': 11.10.7
-      '@emotion/serialize': 1.1.1
-      '@emotion/use-insertion-effect-with-fallbacks': 1.0.0(react@18.2.0)
-      '@emotion/utils': 1.2.0
-      '@emotion/weak-memoize': 0.3.0
-      '@types/react': 18.0.31
-      hoist-non-react-statics: 3.3.2
-      react: 18.2.0
-    dev: false
-
   /@emotion/react@11.10.5(@babel/core@7.21.4)(@types/react@18.0.33)(react@18.2.0):
     resolution: {integrity: sha512-TZs6235tCJ/7iF6/rvTaOH4oxQg2gMAcdHemjwLKIjKz4rRuYe1HJ2TQJKnAcRAfOUDdU8XoDadCe1rl72iv8A==}
     peerDependencies:
@@ -3540,6 +3515,30 @@ packages:
       '@types/react': 18.0.33
       hoist-non-react-statics: 3.3.2
       react: 18.2.0
+
+  /@emotion/react@11.10.5(@babel/core@7.21.4)(react@18.2.0):
+    resolution: {integrity: sha512-TZs6235tCJ/7iF6/rvTaOH4oxQg2gMAcdHemjwLKIjKz4rRuYe1HJ2TQJKnAcRAfOUDdU8XoDadCe1rl72iv8A==}
+    peerDependencies:
+      '@babel/core': ^7.0.0
+      '@types/react': '*'
+      react: '>=16.8.0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/core': 7.21.4
+      '@babel/runtime': 7.20.13
+      '@emotion/babel-plugin': 11.10.5(@babel/core@7.21.4)
+      '@emotion/cache': 11.10.7
+      '@emotion/serialize': 1.1.1
+      '@emotion/use-insertion-effect-with-fallbacks': 1.0.0(react@18.2.0)
+      '@emotion/utils': 1.2.0
+      '@emotion/weak-memoize': 0.3.0
+      hoist-non-react-statics: 3.3.2
+      react: 18.2.0
+    dev: false
 
   /@emotion/serialize@1.1.1:
     resolution: {integrity: sha512-Zl/0LFggN7+L1liljxXdsVSVlg6E/Z/olVWpfxUTxOAmi8NU7YoeWeLfi1RmnB2TATHoaWwIBRoL+FvAJiTUQA==}
@@ -4544,7 +4543,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@emotion/react': 11.10.5(@babel/core@7.21.4)(@types/react@18.0.26)(react@18.2.0)
+      '@emotion/react': 11.10.5(@babel/core@7.21.4)(react@18.2.0)
       clsx: 1.1.1
       csstype: 3.0.9
       react: 18.2.0
