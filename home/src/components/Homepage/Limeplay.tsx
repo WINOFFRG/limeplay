@@ -21,7 +21,7 @@ function _LimeplayPlayer({
 		setPlayer(limeplayInstance);
 	}, []);
 
-	return <div>{Player && inView && <Player />}</div>;
+	return Player && inView && <Player />;
 }
 
 export const LimeplayPlayer = memo(_LimeplayPlayer);
