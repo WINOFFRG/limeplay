@@ -15,6 +15,7 @@
 		"@emotion/cache": "^11.10.7",
 		"@emotion/react": "^11.10.5",
 		"@limeplay/core": "workspace:*",
+		"@mantine/styles": "^6.0.4",
 		"@radix-ui/react-collapsible": "^1.0.2",
 		"@radix-ui/react-label": "^2.0.1",
 		"@radix-ui/react-navigation-menu": "^1.1.2",

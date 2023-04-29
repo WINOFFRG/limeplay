@@ -1,7 +1,10 @@
 import { useLimeplayStore } from '../../store';
 import useStyles from './styles';
 import useFullScreen from '../../hooks/useFullScreen';
-import { FullscreenEnter, FullscreenExit } from '../Icons';
+import {
+	FullscreenEnter,
+	FullscreenExit,
+} from '../../../../../home/src/components/Player/Icons';
 
 export default function FullscreenButton() {
 	const { classes } = useStyles();
