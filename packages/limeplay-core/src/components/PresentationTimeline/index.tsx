@@ -7,13 +7,13 @@ import {
 	FullGestureState,
 } from '@use-gesture/react';
 import { clamp } from 'lodash';
+import ControlButton from 'home/src/components/Player/ControlButton/ControlButton';
 import { useLimeplayStore } from '../../store';
 import useStyles from './styles';
 
 import HoverContainer from './HoverContainer';
 import useBufferInfo from '../../hooks/useBufferInfo';
 import { useTimeline } from '../../hooks';
-import ControlButton from '../ControlButton';
 import { buildTimeString } from './utils';
 
 function BufferRangeBar({
@@ -171,7 +171,8 @@ export default function PresentationTimeline() {
 			<span>
 				{!isLive && buildTimeString(currentTime, duration > 3600)}
 				{isLive && (
-					<ControlButton
+					<button
+						type="button"
 						onClick={() => {
 							player.goToLive();
 						}}
@@ -185,7 +186,7 @@ export default function PresentationTimeline() {
 									duration > 3600
 							  )}`
 							: 'LIVE'}
-					</ControlButton>
+					</button>
 				)}
 			</span>
 			<div

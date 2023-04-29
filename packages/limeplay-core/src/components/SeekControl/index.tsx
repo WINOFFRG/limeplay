@@ -1,64 +1,28 @@
-import { DefaultProps, useComponentDefaultProps } from '@mantine/styles';
-import { shallow } from 'zustand/shallow';
-import ControlButton from '../ControlButton';
-import { useLimeplayStore, useLimeplayStoreAPI } from '../../store';
+import { forwardRef } from 'react';
 
-interface SeekControlProps extends DefaultProps {
-	seekIcon?: React.ReactNode;
+type PrimitiveButtonProps = React.ComponentPropsWithoutRef<'button'>;
+
+interface SeekButtonProps extends PrimitiveButtonProps {
 	seekValue?: number;
-	type: 'forward' | 'backward';
-	children?: React.ReactNode;
-	onClick?: () => void;
+	seekType: 'forward' | 'backward';
 }
 
-const defaultProps: Partial<SeekControlProps> = {
-	seekIcon: null,
-	seekValue: 10,
-	children: null,
-	// TODO: Add Utils default function here
-	onClick: () => {},
-};
+const SeekButton = forwardRef<HTMLButtonElement, SeekButtonProps>(
+	(props, forwardedRef) => {
+		const { children, seekValue = 10, seekType, ...buttonProps } = props;
 
-export default function SeekControl(props: SeekControlProps) {
-	const { playback } = useLimeplayStore(
-		(state) => ({
-			playback: state.playback,
-			isPlaying: state.isPlaying,
-			isLoading: state.isLoading,
-			isPlaybackHookInjected: state.isPlaybackHookInjected,
-		}),
-		shallow
-	);
+		return (
+			<button
+				type="button"
+				aria-label={`Seek ${seekType} ${seekValue} seconds`}
+				data-disabled={props.disabled ? '' : undefined}
+				ref={forwardedRef}
+				{...buttonProps}
+			>
+				{children}
+			</button>
+		);
+	}
+);
 
-	const seekRange = useLimeplayStore((state) => state.seekRange);
-
-	const { onClick, seekIcon, type, seekValue, children, ...others } =
-		useComponentDefaultProps('SeekButton', defaultProps, props);
-
-	const handleSeek = () => {
-		if (type === 'forward') {
-			if (playback.currentTime + seekValue > seekRange.end) {
-				playback.currentTime = seekRange.end;
-			} else {
-				playback.currentTime += seekValue;
-			}
-		} else if (playback.currentTime - seekValue < seekRange.start) {
-			playback.currentTime = seekRange.start;
-		} else {
-			playback.currentTime -= seekValue;
-		}
-	};
-
-	return (
-		<ControlButton
-			onClick={handleSeek}
-			aria-label={`Seek ${type} ${seekValue} seconds`}
-			{...others}
-		>
-			{!children && seekIcon}
-			{children}
-		</ControlButton>
-	);
-}
-
-SeekControl.defaultProps = defaultProps;
+export { SeekButton };
