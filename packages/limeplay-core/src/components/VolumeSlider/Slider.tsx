@@ -1,6 +1,6 @@
 import { createContext, forwardRef, useContext, useMemo, useRef } from 'react';
 import { clamp } from 'lodash';
-import { DragState, useDrag } from '@use-gesture/react';
+import { useDrag } from '@use-gesture/react';
 import { useLimeplayStore } from '../../store';
 import { useVolume } from '../../hooks';
 import useStyles from './styles';
@@ -77,7 +77,6 @@ interface SliderProps extends React.HTMLAttributes<HTMLDivElement> {
 	onValueChange?(value: number): void;
 	children?: React.ReactNode;
 	style?: React.CSSProperties;
-	volume?: number;
 	inverted?: boolean;
 }
 
@@ -96,7 +95,6 @@ const SliderRoot = forwardRef<HTMLDivElement, SliderProps>(
 			onValueChange,
 			children,
 			style,
-			volume,
 			inverted,
 			...others
 		},
@@ -108,20 +106,14 @@ const SliderRoot = forwardRef<HTMLDivElement, SliderProps>(
 		let configType: SlideDirection = 'from-left';
 
 		if (orientation === 'vertical') {
-			if (inverted) {
-				configType = 'from-bottom';
-			} else {
-				configType = 'from-top';
-			}
+			if (inverted) configType = 'from-bottom';
+			else configType = 'from-top';
 		} else if (orientation === 'horizontal') {
-			if (inverted) {
-				configType = 'from-right';
-			} else {
-				configType = 'from-left';
-			}
+			if (inverted || dir === 'rtl') configType = 'from-right';
+			else configType = 'from-left';
 		}
 
-		const { axis, size, startEdge, transform } = config[configType];
+		const { size, startEdge, transform } = config[configType];
 
 		const context: SliderContextValue = useMemo(
 			() => ({
@@ -134,7 +126,7 @@ const SliderRoot = forwardRef<HTMLDivElement, SliderProps>(
 				size,
 				dir,
 			}),
-			[min, max, disabled, orientation, inverted]
+			[min, max, disabled, orientation, inverted, value, dir]
 		);
 
 		return (
@@ -144,7 +136,7 @@ const SliderRoot = forwardRef<HTMLDivElement, SliderProps>(
 					style={{
 						...style,
 						['--volume-slider-progress' as string]: `${
-							volume * 100
+							value * 100
 						}%`,
 						['--volume-slider_thumb-transform' as string]:
 							transform,
@@ -223,9 +215,14 @@ type SliderThumbProps = React.HTMLAttributes<HTMLSpanElement>;
 
 const SliderThumb = forwardRef<HTMLSpanElement, SliderThumbProps>(
 	({ children, ...thumbProps }, forwardedRef) => {
-		const { startEdge, min, max, orientation, disabled, dir } =
-			useContext(Slider);
-		const volume = useLimeplayStore((state) => state.volume);
+		const {
+			startEdge,
+			min,
+			max,
+			orientation,
+			disabled,
+			value: volume,
+		} = useContext(Slider);
 		const ariaVolume = Number((volume * 100).toFixed(0));
 		const ref = useRef<HTMLSpanElement>(null);
 		const composedRefs = useComposedRefs(forwardedRef, ref);
@@ -268,7 +265,10 @@ type SlideHandlerProps = {
 	inverted: boolean;
 };
 
-function calculateVolume(event: UIEvent, props: SlideHandlerProps): number {
+function calculateVolume(
+	event: React.MouseEvent<HTMLElement>,
+	props: SlideHandlerProps
+): number {
 	const { min, max, step, orientation: o9n, dir, inverted } = props;
 
 	const clientPosition = o9n === 'vertical' ? event.clientY : event.clientX;
@@ -293,22 +293,13 @@ function calculateVolume(event: UIEvent, props: SlideHandlerProps): number {
 	let volume = percentage * (max - min) + min;
 
 	// Invert the volume if necessary
-	if (inverted) volume = max - volume + min;
+	if (inverted || (dir === 'rtl' && o9n === 'horizontal'))
+		volume = max - volume + min;
 
 	volume = clamp(volume, min, max);
 
 	return volume;
 }
-
-// const rect = event.currentTarget.getBoundingClientRect();
-
-// if (orientation === 'vertical') {
-// 	newVolume = 1 - (event.clientY - rect.top) / rect.height;
-// } else if (direction === 'rtl') {
-// 	newVolume = 1 - (event.clientX - rect.left) / rect.width;
-// } else {
-// 	newVolume = (event.clientX - rect.left) / rect.width;
-// }
 
 export function VolumeSlider() {
 	const { classes } = useStyles();
@@ -316,8 +307,6 @@ export function VolumeSlider() {
 		volume: state.volume,
 		playback: state.playback,
 	}));
-
-	const direction = 'ltr';
 
 	useVolume({
 		syncMuteState: true,
@@ -331,24 +320,28 @@ export function VolumeSlider() {
 		orientation: 'horizontal',
 		disabled: false,
 		dir: 'ltr',
-		inverted: true,
+		inverted: false,
 	};
 
-	const volumeChangeHandler = ({ event }: DragState) => {
+	const volumeChangeHandler = ({
+		event,
+	}: {
+		event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
+	}) => {
 		let newVolume = null;
 		const step = 0.05;
-		// const orientation = event.target.getAttribute('data-orientation');
-		// const disabled = event.target.getAttribute('data-disabled');
-
-		// if (disabled !== null) return;
 
 		switch (event.type) {
 			case 'pointermove':
 			case 'pointerdown': {
-				newVolume = calculateVolume(event, configProps);
+				newVolume = calculateVolume(
+					event as React.MouseEvent<HTMLElement>,
+					configProps
+				);
 				break;
 			}
 			case 'keydown':
+				// @ts-ignore
 				switch (event.key) {
 					case 'ArrowUp':
 					case 'ArrowRight':
@@ -367,49 +360,25 @@ export function VolumeSlider() {
 		}
 
 		if (newVolume !== null) {
-			playback.volume = newVolume;
+			playback.volume = clamp(newVolume, 0, 1);
 			if (event.defaultPrevented) event.preventDefault();
 		}
 	};
 
-	const events = useDrag(volumeChangeHandler);
+	const events: any = useDrag(volumeChangeHandler);
 
 	return (
-		<div
-			style={{
-				display: 'flex',
-				justifyContent: 'space-between',
-				alignItems: 'center',
-				gap: '1rem',
-			}}
+		<SliderRoot
+			tabIndex={0}
+			value={volume}
+			className={classes.sliderRoot}
+			{...events()}
+			{...configProps}
 		>
-			<SliderRoot
-				tabIndex={0}
-				volume={volume}
-				className={classes.sliderRoot}
-				{...events()}
-				{...configProps}
-			>
-				<SliderTrack className={classes.sliderTrack}>
-					<SliderRange className={classes.sliderRange} />
-				</SliderTrack>
-				<SliderThumb className={classes.sliderThumb} />
-			</SliderRoot>
-			{/* <SliderRoot
-				tabIndex={0}
-				volume={volume}
-				className={classes.sliderRoot}
-				orientation="vertical"
-				{...events()}
-				disabled
-			>
-				<SliderTrack className={classes.sliderTrack}>
-					<SliderRange className={classes.sliderRange} />
-				</SliderTrack>
-				<SliderThumb className={classes.sliderThumb}>
-					<div>20</div>
-				</SliderThumb>
-			</SliderRoot> */}
-		</div>
+			<SliderTrack className={classes.sliderTrack}>
+				<SliderRange className={classes.sliderRange} />
+			</SliderTrack>
+			<SliderThumb className={classes.sliderThumb} />
+		</SliderRoot>
 	);
 }

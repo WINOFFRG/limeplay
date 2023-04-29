@@ -1,6 +1,12 @@
 {
 	"extends": "../../tsconfig.json",
-	"include": ["./src", "../../@types"],
+	"include": [
+		"./src",
+		"../../@types",
+		"../../home/src/components/Player/Icons.tsx",
+		"../../home/src/components/Player/VideoWrapper",
+		"../../home/src/components/Player/PlayerOverlay"
+	],
 	"compilerOptions": {
 		"typeRoots": ["./src/types"]
 	}

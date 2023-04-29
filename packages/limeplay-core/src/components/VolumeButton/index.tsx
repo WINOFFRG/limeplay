@@ -4,7 +4,6 @@ import { useLimeplayStore } from '../../store';
 import useStyles from './styles';
 import { useVolume } from '../../hooks';
 import ControlButton from '../ControlButton';
-import { Box } from '../Box';
 
 interface VolumeControlProps extends DefaultProps {
 	// onClick?: () => void;
@@ -56,22 +55,18 @@ export function VolumeControl(props: VolumeControlProps) {
 	} = useComponentDefaultProps('VolumeControl', defaultProps, props);
 
 	return (
-		<Box className={classes.volumeControl}>
-			<ControlButton
-				onClick={() => (playback.muted = !playback.muted)}
-				aria-label={muted ? 'Unmute' : 'Mute'}
-				aria-pressed={muted}
-				disabled={disabled}
-				{...others}
-			>
-				{/* eslint-disable-next-line no-nested-ternary */}
-				{muted
-					? muteIcon
-					: volume < 0.5
-					? volumeHalfIcon
-					: volumeFullIcon}
-			</ControlButton>
-		</Box>
+		// <Box className={classes.volumeControl}>
+		<ControlButton
+			onClick={() => (playback.muted = !playback.muted)}
+			aria-label={muted ? 'Unmute' : 'Mute'}
+			aria-pressed={muted}
+			disabled={disabled}
+			{...others}
+		>
+			{/* eslint-disable-next-line no-nested-ternary */}
+			{muted ? muteIcon : volume < 0.5 ? volumeHalfIcon : volumeFullIcon}
+		</ControlButton>
+		// </Box>
 	);
 }
 

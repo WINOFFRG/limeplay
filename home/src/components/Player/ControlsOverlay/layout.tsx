@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLimeplayStore } from '../../store';
-import PlaybackButton from '../PlaybackButton';
+import { useLimeplayStore } from '@limeplay/core/src/store';
+// import PlaybackButton from '../PlaybackButton';
 import useStyles from './styles';
-import { VolumeControl } from '../VolumeButton';
-import SettingsButton from '../SettingsButton';
-import PresentationTimeline from '../PresentationTimeline';
+// import { VolumeControl } from '../VolumeButton';
+// import SettingsButton from '../SettingsButton';
+// import PresentationTimeline from '../PresentationTimeline';
 import AnimationContainer from './AnimationContainer';
 import PlaybackNotification from './PlaybackNotification';
 import {
@@ -18,8 +18,8 @@ import {
 	UnmuteIcon,
 	VolumeHalf,
 } from '../Icons';
-import SeekControl from '../SeekControl';
-import PipButton from '../PipButton';
+// import SeekControl from '../SeekControl';
+// import PipButton from '../PipButton';
 import { VolumeSlider } from '../VolumeSlider/Slider';
 
 export function ControlsTopPanel() {
@@ -28,10 +28,10 @@ export function ControlsTopPanel() {
 	return (
 		<div className={classes.controlsTopPanel} role="none">
 			<div className={classes.topRightSection}>
-				<PipButton
+				{/* <PipButton
 					pipEnterIcon={<PipEnter />}
 					pipExitIcon={<PipExit />}
-				/>
+				/> */}
 			</div>
 		</div>
 	);
@@ -141,15 +141,15 @@ export function ControlsBottomPanel() {
 
 	return (
 		<div className={classes.controlsBottomPanelWrapper}>
-			<PresentationTimeline />
+			{/* <PresentationTimeline /> */}
 			<div className={classes.controlsBottomPanel}>
 				<div className={classes.controlsLeftContainer}>
-					<PlaybackButton
+					{/* <PlaybackButton
 						playIcon={<PlayIcon />}
 						pauseIcon={<PauseIcon />}
 					/>
 					<SeekControl seekIcon={<Reverse10 />} type="backward" />
-					<SeekControl seekIcon={<Forward10 />} type="forward" />
+					<SeekControl seekIcon={<Forward10 />} type="forward" /> */}
 					<VolumeControl
 						muteIcon={<MuteIcon />}
 						volumeHalfIcon={<VolumeHalf />}
