@@ -1,5 +1,9 @@
 import { useRef } from 'react';
-import { LimeplayPlayer } from '@/components/Homepage/Limeplay';
+import dynamic from 'next/dynamic';
+
+const LimeplayPlayer = dynamic(() => import('@/components/Player'), {
+	ssr: false,
+});
 
 export default function Player() {
 	const ref = useRef(null);
@@ -12,7 +16,7 @@ export default function Player() {
 				height: '100vh',
 			}}
 		>
-			<LimeplayPlayer parentRef={ref} />
+			<LimeplayPlayer />
 		</div>
 	);
 }

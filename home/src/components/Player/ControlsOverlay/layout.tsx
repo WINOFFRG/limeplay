@@ -20,7 +20,7 @@ import {
 } from '../Icons';
 // import SeekControl from '../SeekControl';
 // import PipButton from '../PipButton';
-import { VolumeSlider } from '../VolumeSlider/Slider';
+import { VolumeSlider } from '../Volume/Slider';
 
 export function ControlsTopPanel() {
 	const { classes } = useStyles();
@@ -150,11 +150,11 @@ export function ControlsBottomPanel() {
 					/>
 					<SeekControl seekIcon={<Reverse10 />} type="backward" />
 					<SeekControl seekIcon={<Forward10 />} type="forward" /> */}
-					<VolumeControl
+					{/* <VolumeControl
 						muteIcon={<MuteIcon />}
 						volumeHalfIcon={<VolumeHalf />}
 						volumeFullIcon={<UnmuteIcon />}
-					/>
+					/> */}
 					<VolumeSlider />
 				</div>
 			</div>
