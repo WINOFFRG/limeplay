@@ -7,7 +7,6 @@ import {
 	SliderThumb,
 	SliderTrack,
 	onSlideHandler,
-	useVolume,
 } from '@limeplay/core';
 import { useLimeplayStore } from '@limeplay/core/src/store';
 import useStyles from './styles';
@@ -18,11 +17,6 @@ export function VolumeSlider() {
 		volume: state.volume,
 		playback: state.playback,
 	}));
-
-	useVolume({
-		syncMuteState: false,
-		initialVolume: 0.4,
-	});
 
 	const configProps: OnSliderHandlerProps = {
 		min: 0,
