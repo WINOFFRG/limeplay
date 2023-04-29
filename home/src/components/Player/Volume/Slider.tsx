@@ -20,7 +20,7 @@ export function VolumeSlider() {
 	}));
 
 	useVolume({
-		syncMuteState: true,
+		syncMuteState: false,
 		initialVolume: 0.4,
 	});
 
