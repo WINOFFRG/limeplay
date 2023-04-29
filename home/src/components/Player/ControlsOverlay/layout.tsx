@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLimeplayStore } from '@limeplay/core/src/store';
 // import PlaybackButton from '../PlaybackButton';
+import { VolumeButton } from '@limeplay/core';
 import useStyles from './styles';
 // import { VolumeControl } from '../VolumeButton';
 // import SettingsButton from '../SettingsButton';
@@ -136,8 +137,17 @@ export function ControlsMiddlePanel() {
 	);
 }
 
+function VolumeIcon({ volume, muted }) {
+	if (volume === 0 || muted) return <MuteIcon />;
+	if (volume < 0.5) return <VolumeHalf />;
+	return <UnmuteIcon />;
+}
+
 export function ControlsBottomPanel() {
 	const { classes } = useStyles();
+	const volume = useLimeplayStore((state) => state.volume);
+	const muted = useLimeplayStore((state) => state.muted);
+	const playback = useLimeplayStore((state) => state.playback);
 
 	return (
 		<div className={classes.controlsBottomPanelWrapper}>
@@ -150,11 +160,14 @@ export function ControlsBottomPanel() {
 					/>
 					<SeekControl seekIcon={<Reverse10 />} type="backward" />
 					<SeekControl seekIcon={<Forward10 />} type="forward" /> */}
-					{/* <VolumeControl
-						muteIcon={<MuteIcon />}
-						volumeHalfIcon={<VolumeHalf />}
-						volumeFullIcon={<UnmuteIcon />}
-					/> */}
+					<VolumeButton
+						className={classes.controlButton}
+						onClick={() => {
+							playback.muted = !playback.muted;
+						}}
+					>
+						<VolumeIcon volume={volume} muted={muted} />
+					</VolumeButton>
 					<VolumeSlider />
 				</div>
 			</div>

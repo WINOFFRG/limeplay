@@ -1,4 +1,4 @@
-import { createStyles } from '@mantine/styles';
+import { createStyles, getStylesRef as getRef } from '@mantine/styles';
 
 const useStyles = createStyles((theme) => ({
 	skinControls: {
@@ -144,6 +144,57 @@ const useStyles = createStyles((theme) => ({
 		alignItems: 'center',
 		justifyContent: 'center',
 		gap: theme.spacing.sm,
+	},
+
+	controlButton: {
+		display: 'inline-flex',
+		alignItems: 'center',
+		width: '44px',
+		height: '44px',
+		opacity: 0.7,
+		transition: 'opacity 0.1s ease-in-out',
+		backgroundColor: 'transparent',
+		border: 'none',
+		...theme.fn.focusStyles(),
+
+		'&:hover': {
+			opacity: 1,
+			cursor: 'pointer',
+			transform: 'scale(1.1)',
+		},
+
+		'&:disabled': {
+			opacity: 0.3,
+			cursor: 'not-allowed',
+			transform: 'none',
+		},
+	},
+
+	iconStyle: {
+		width: '24px',
+		height: '24px',
+		margin: 'auto',
+		pointerEvents: 'none',
+	},
+
+	volumeControl: {
+		display: 'inline-flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+
+		[`&:hover .${getRef('volumeSlider__Slider')}`]: {
+			width: '100px',
+			opacity: 1,
+		},
+
+		[`&:hover .${getRef('volumeSlider__Progress')}`]: {
+			opacity: 1,
+		},
+
+		[`&:hover .${getRef('volumeSlider__Head')}`]: {
+			opacity: 1,
+		},
 	},
 }));
 
