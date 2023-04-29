@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useLimeplayStore } from '@limeplay/core/src/store';
 // import PlaybackButton from '../PlaybackButton';
-import { VolumeButton } from '@limeplay/core';
+import { PlaybackButton, SeekButton, VolumeButton } from '@limeplay/core';
+import PresentationTimeline from '@limeplay/core/src/components/PresentationTimeline';
 import useStyles from './styles';
 // import { VolumeControl } from '../VolumeButton';
 // import SettingsButton from '../SettingsButton';
@@ -143,23 +144,79 @@ function VolumeIcon({ volume, muted }) {
 	return <UnmuteIcon />;
 }
 
+function SeekControls() {
+	const { classes } = useStyles();
+	const { playback, seekRange } = useLimeplayStore((state) => ({
+		playback: state.playback,
+		seekRange: state.seekRange,
+	}));
+
+	return (
+		<>
+			<SeekButton
+				className={classes.controlButton}
+				seekType="backward"
+				onClick={() => {
+					playback.currentTime -= 10;
+				}}
+			>
+				<Reverse10 />
+			</SeekButton>
+			<SeekButton
+				className={classes.controlButton}
+				seekType="forward"
+				onClick={() => {
+					playback.currentTime += 10;
+				}}
+			>
+				<Forward10 />
+			</SeekButton>
+		</>
+	);
+}
+
 export function ControlsBottomPanel() {
 	const { classes } = useStyles();
 	const volume = useLimeplayStore((state) => state.volume);
 	const muted = useLimeplayStore((state) => state.muted);
 	const playback = useLimeplayStore((state) => state.playback);
+	const isPlaying = useLimeplayStore((state) => state.isPlaying);
+	const isLoading = useLimeplayStore((state) => state.isLoading);
+
+	const togglePlayback = useCallback(() => {
+		if (isLoading) return;
+		if (playback.paused) playback.play();
+		else playback.pause();
+	}, [isLoading, playback]);
+
+	useEffect(() => {
+		const spacePlayback = (e) => {
+			if (e.code === 'Space' && playback) {
+				togglePlayback();
+				return e.preventDefault();
+			}
+		};
+
+		document.addEventListener('keydown', spacePlayback);
+
+		return () => {
+			document.removeEventListener('keydown', spacePlayback);
+		};
+	}, [playback]);
 
 	return (
 		<div className={classes.controlsBottomPanelWrapper}>
-			{/* <PresentationTimeline /> */}
+			<PresentationTimeline />
 			<div className={classes.controlsBottomPanel}>
 				<div className={classes.controlsLeftContainer}>
-					{/* <PlaybackButton
-						playIcon={<PlayIcon />}
-						pauseIcon={<PauseIcon />}
-					/>
-					<SeekControl seekIcon={<Reverse10 />} type="backward" />
-					<SeekControl seekIcon={<Forward10 />} type="forward" /> */}
+					<PlaybackButton
+						className={classes.controlButton}
+						onClick={togglePlayback}
+						isPlaying={isPlaying}
+					>
+						{isPlaying ? <PauseIcon /> : <PlayIcon />}
+					</PlaybackButton>
+					<SeekControls />
 					<VolumeButton
 						className={classes.controlButton}
 						onClick={() => {

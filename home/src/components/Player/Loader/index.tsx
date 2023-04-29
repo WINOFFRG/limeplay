@@ -1,6 +1,5 @@
-import { memo } from 'react';
+import { useLimeplayStore } from '@limeplay/core/src/store';
 import useStyles from './styles';
-import { useLimeplayStore } from '../../store';
 
 export default function PlayerLoader() {
 	const { classes } = useStyles();

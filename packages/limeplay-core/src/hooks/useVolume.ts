@@ -26,7 +26,7 @@ export interface VolumeSlice {
 export function useVolume({
 	initialVolume = 1,
 	events,
-	syncMuteState,
+	syncMuteState = true,
 }: UseVolumeConfig = {}) {
 	const { getState } = useLimeplayStoreAPI();
 	const { playback, setVolume, setMuted, setLastVolume } = useLimeplayStore(
