@@ -1,10 +1,7 @@
 import { useLimeplayStore } from '../../store';
-import useStyles from './styles';
 import useFullScreen from '../../hooks/useFullScreen';
-import {
-	FullscreenEnter,
-	FullscreenExit,
-} from '../../../../../home/src/components/Player/Icons';
+
+type PrimitiveButtonProps = React.ComponentPropsWithoutRef<'button'>;
 
 export default function FullscreenButton() {
 	const { classes } = useStyles();

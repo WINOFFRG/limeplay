@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { DefaultProps, useComponentDefaultProps } from '@mantine/styles';
+import ControlButton from 'home/src/components/Player/ControlButton/ControlButton';
 import { useLimeplayStore } from '../../store';
-import ControlButton from '../ControlButton';
 
 interface PipControlProps extends DefaultProps {
 	onClick?: () => void;

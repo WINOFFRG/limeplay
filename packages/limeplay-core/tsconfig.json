@@ -3,9 +3,7 @@
 	"include": [
 		"./src",
 		"../../@types",
-		"../../home/src/components/Player/Icons.tsx",
-		"../../home/src/components/Player/VideoWrapper",
-		"../../home/src/components/Player/PlayerOverlay"
+		"../../home/src/components/Player/Loader"
 	],
 	"compilerOptions": {
 		"typeRoots": ["./src/types"]
