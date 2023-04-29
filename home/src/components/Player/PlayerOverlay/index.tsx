@@ -5,8 +5,8 @@ import {
 	useVolume,
 } from '@limeplay/core/src/hooks';
 import { useLimeplayStore } from '@limeplay/core/src/store';
-import ControlsOverlay from '@limeplay/core/src/components/ControlsOverlay';
 import PlayerLoader from '@limeplay/core/src/components/Loader';
+import ControlsOverlay from '../ControlsOverlay';
 import useStyles from './styles';
 
 export default function PlayerOverlay() {

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { LimeplayContext } from '../store/context';
-import { LimeplayStore, createLimeplayStore } from '../store';
+import { LimeplayContext } from '@limeplay/core/src/store/context';
+import { LimeplayStore, createLimeplayStore } from '@limeplay/core/src/store';
 import VideoWrapper from './VideoWrapper';
-import PlayerOverlay from './PlayerOverlay';
+import PlayerOverlay from '@/components/Player/PlayerOverlay';
 
-export function Player() {
+export function LimeplayPlayer() {
 	const mediaElementRef = useRef<HTMLMediaElement>(null);
 	const store = useRef<LimeplayStore | null>(null);
 	const [isLoaded, setIsLoaded] = useState(false);

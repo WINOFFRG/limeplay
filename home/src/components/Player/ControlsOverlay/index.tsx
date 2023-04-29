@@ -1,4 +1,3 @@
-import { useLimeplayStore } from '../../store';
 import {
 	ControlsBottomPanel,
 	ControlsMiddlePanel,

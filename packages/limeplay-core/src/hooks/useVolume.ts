@@ -1,8 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { StateCreator } from 'zustand';
-import { useGesture, EventTypes, Handler } from '@use-gesture/react';
-import { clamp, get } from 'lodash';
-import hookDefaultValue from './utils/default-value';
 import { useLimeplayStore, useLimeplayStoreAPI } from '../store';
 
 export interface UseVolumeConfig {
