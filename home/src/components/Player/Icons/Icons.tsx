@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import useStyles from '@limeplay/core/src/components/styles';
+import useStyles from './styles';
 
 function _UnmuteIcon() {
 	const { classes } = useStyles();
