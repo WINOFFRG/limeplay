@@ -4,7 +4,7 @@ import { LimeplayStore, createLimeplayStore } from '@limeplay/core/src/store';
 import VideoWrapper from './VideoWrapper';
 import PlayerOverlay from '@/components/Player/PlayerOverlay';
 
-export function LimeplayPlayer() {
+export default function LimeplayPlayer() {
 	const mediaElementRef = useRef<HTMLMediaElement>(null);
 	const store = useRef<LimeplayStore | null>(null);
 	const [isLoaded, setIsLoaded] = useState(false);
