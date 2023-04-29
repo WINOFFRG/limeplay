@@ -11,10 +11,9 @@ const useStyles = createStyles((theme) => ({
 		WebkitUserSelect: 'none',
 		...theme.fn.focusStyles(),
 		borderRadius: '0.2rem',
-		outlineOffset: '1.2rem',
 
 		'&[data-orientation="horizontal"]': {
-			height: '20px',
+			height: '40px',
 			width: '200px',
 		},
 

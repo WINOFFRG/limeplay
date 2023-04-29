@@ -14,6 +14,8 @@ export default function PlayerOverlay() {
 
 	const player = useLimeplayStore((state) => state.playback);
 	useLoading();
+	useVolume();
+
 	// useTimeline();
 
 	return (

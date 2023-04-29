@@ -18,7 +18,7 @@ import {
 	Reverse10,
 	UnmuteIcon,
 	VolumeHalf,
-} from '../Icons';
+} from '../Icons/Icons';
 // import SeekControl from '../SeekControl';
 // import PipButton from '../PipButton';
 import { VolumeSlider } from '../Volume/Slider';
