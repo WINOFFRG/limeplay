@@ -287,16 +287,16 @@ function onSlideHandler(
 	// Calculate the percentage of the slider the event is at
 	const percentage = relativePosition / sliderSize;
 
-	// Calculate the new volume value based on the percentage
-	let volume = percentage * (max - min) + min;
+	// Calculate the new value based on the percentage
+	let newValue = percentage * (max - min) + min;
 
 	// Invert the volume if necessary
 	if (inverted || (dir === 'rtl' && o9n === 'horizontal'))
-		volume = max - volume + min;
+		newValue = max - newValue + min;
 
-	volume = clamp(volume, min, max);
+	newValue = clamp(newValue, min, max);
 
-	return volume;
+	return newValue;
 }
 
 const Root = SliderRoot;

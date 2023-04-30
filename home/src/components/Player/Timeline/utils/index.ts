@@ -1,3 +1,3 @@
 export * from './getChangeValue';
 export * from './getClientPosition';
-export * from './getTimeString';
+export * from '@limeplay/core/src/utils/getTimeString';

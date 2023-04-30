@@ -36,21 +36,14 @@ const useStyles = createStyles((theme, _params) => ({
 		},
 
 		[`&:hover .${getRef('timelineSlider__PlayHead')}`]: {
-			transform: 'translateX(-50%)  scale(1.25)',
-			transformOrigin: '50% 50%',
+			transform: 'scale(1.25)',
+			// transformOrigin: '50% 50%',
 		},
 
 		[`&:focus .${getRef('timelineSlider__PlayHead')}`]: {
-			transform: 'translateX(-50%)  scale(1.25)',
-			transformOrigin: '50% 50%',
+			transform: 'scale(1.25)',
+			// transformOrigin: '50% 50%',
 		},
-	},
-
-	timelineSlider: {
-		display: 'flex',
-		height: '36px',
-		width: '100%',
-		alignItems: 'center',
 	},
 
 	timelineSlider__ProgressBar: {
@@ -61,6 +54,7 @@ const useStyles = createStyles((theme, _params) => ({
 		// borderRadius: '2px',
 		transition: 'height border-radius 0.2s ease-in-out',
 		flex: '1 1 auto',
+		backgroundColor: '#808080',
 
 		'&:before': {
 			content: '""',
@@ -89,12 +83,25 @@ const useStyles = createStyles((theme, _params) => ({
 
 	timelineSlider__DurationBar: {
 		ref: getRef('timelineSlider__DurationBar'),
+		// position: 'absolute',
+		// height: '100%',
+		// width: '100%',
+		// backgroundColor: '#808080',
+		// // borderRadius: '2px',
+		// transition: 'transform 0.2s ease-in-out',
+
 		position: 'absolute',
-		height: '100%',
-		width: '100%',
-		backgroundColor: '#808080',
-		// borderRadius: '2px',
-		transition: 'transform 0.2s ease-in-out',
+		backgroundColor: '#1db954',
+		borderRadius: '2px',
+
+		'&[data-orientation="horizontal"]': {
+			height: '100%',
+		},
+
+		'&[data-orientation="vertical"]': {
+			width: '100%',
+			bottom: 0,
+		},
 	},
 
 	timelineSlider__DurationPlayed: {
@@ -117,18 +124,39 @@ const useStyles = createStyles((theme, _params) => ({
 	},
 
 	timelineSlider__PlayHead: {
+		ref: getRef('timelineSlider__PlayHead'),
+
+		display: 'block',
+		width: '20px',
+		height: '20px',
+		backgroundColor: '#fff',
+		boxShadow: '0 2px 10px rgba(0, 0, 0, 0.07)',
+		borderRadius: '10px',
+		cursor: 'pointer',
+		// opacity: 0.5,
+		color: '#fff',
+		transition: 'transform 0.2s cubic-bezier(0.4,0,0.2,1)',
 		...theme.fn.focusStyles(),
 
-		ref: getRef('timelineSlider__PlayHead'),
-		position: 'absolute',
-		height: '16px',
-		width: '16px',
-		borderRadius: '50%',
-		backgroundColor: theme.white,
-		transform: 'translateX(-50%)',
-		transition: 'transform 0.2s cubic-bezier(0.4,0,0.2,1)',
-		zIndex: 1,
-		cursor: 'grab',
+		'&[data-disabled]': {
+			cursor: 'not-allowed',
+		},
+	},
+
+	sliderThumb: {
+		display: 'block',
+		width: '20px',
+		height: '20px',
+		backgroundColor: '#fff',
+		boxShadow: '0 2px 10px rgba(0, 0, 0, 0.07)',
+		borderRadius: '10px',
+		cursor: 'pointer',
+		// opacity: 0.5,
+		color: '#fff',
+
+		'&[data-disabled]': {
+			cursor: 'not-allowed',
+		},
 	},
 
 	timelineSlider__VerticalBar__Hover: {

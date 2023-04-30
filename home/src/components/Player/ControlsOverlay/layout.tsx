@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useLimeplayStore } from '@limeplay/core/src/store';
 // import PlaybackButton from '../PlaybackButton';
-import { PlaybackButton, SeekButton, VolumeButton } from '@limeplay/core';
-import PresentationTimeline from '@limeplay/core/src/components/PresentationTimeline';
+import {
+	PlaybackButton,
+	SeekButton,
+	VolumeButton,
+	useVolume,
+} from '@limeplay/core';
+import { usePlayback } from '@limeplay/core/src/hooks';
 import useStyles from './styles';
 // import { VolumeControl } from '../VolumeButton';
 // import SettingsButton from '../SettingsButton';
@@ -23,6 +28,7 @@ import {
 // import SeekControl from '../SeekControl';
 // import PipButton from '../PipButton';
 import { VolumeSlider } from '../Volume/Slider';
+import { TimelineSlider } from '../Timeline/Timeline';
 
 export function ControlsTopPanel() {
 	const { classes } = useStyles();
@@ -182,6 +188,8 @@ export function ControlsBottomPanel() {
 	const playback = useLimeplayStore((state) => state.playback);
 	const isPlaying = useLimeplayStore((state) => state.isPlaying);
 	const isLoading = useLimeplayStore((state) => state.isLoading);
+	usePlayback();
+	useVolume();
 
 	const togglePlayback = useCallback(() => {
 		if (isLoading) return;
@@ -206,7 +214,7 @@ export function ControlsBottomPanel() {
 
 	return (
 		<div className={classes.controlsBottomPanelWrapper}>
-			<PresentationTimeline />
+			<TimelineSlider />
 			<div className={classes.controlsBottomPanel}>
 				<div className={classes.controlsLeftContainer}>
 					<PlaybackButton
