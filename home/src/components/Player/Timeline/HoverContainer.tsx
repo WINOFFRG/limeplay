@@ -1,14 +1,8 @@
 import { memo, useEffect, useRef } from 'react';
-import { shallow } from 'zustand/shallow';
 
-import {
-	getChangeValue,
-	buildTimeString,
-	getClientPosition,
-} from './utils/index';
-
+import { useLimeplayStore } from '@limeplay/core/src/store';
+import { buildTimeString, getChangeValue, getClientPosition } from './utils';
 import useStyles from './styles';
-import { useLimeplayStore } from '../../store';
 
 interface HoverContainerProps extends LimeplayRequiredProps {
 	forwardRef: React.MutableRefObject<HTMLDivElement | undefined>;
@@ -25,8 +19,7 @@ function HoverContainer({ forwardRef }: HoverContainerProps) {
 			duration: state.duration,
 			isLive: state.isLive,
 			seekRange: state.seekRange,
-		}),
-		shallow
+		})
 	);
 
 	useEffect(() => {
