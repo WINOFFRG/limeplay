@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, memo, useMemo } from 'react';
 import { useLimeplayStore } from '@limeplay/core/src/store';
 // import PlaybackButton from '../PlaybackButton';
 import {
@@ -90,10 +90,8 @@ export function ControlsMiddlePanel() {
 	const [playAnim, setPlayAnim] = useState(false);
 	const [pauseAnim, setPauseAnim] = useState(false);
 
-	const { isPlaying, playback } = useLimeplayStore((state) => ({
-		isPlaying: state.isPlaying,
-		playback: state.playback,
-	}));
+	const isPlaying = useLimeplayStore((state) => state.isPlaying);
+	const playback = useLimeplayStore((state) => state.playback);
 
 	useEffect(() => {
 		if (isPlaying) {
@@ -152,10 +150,7 @@ function VolumeIcon({ volume, muted }) {
 
 function SeekControls() {
 	const { classes } = useStyles();
-	const { playback, seekRange } = useLimeplayStore((state) => ({
-		playback: state.playback,
-		seekRange: state.seekRange,
-	}));
+	const playback = useLimeplayStore((state) => state.playback);
 
 	return (
 		<>
@@ -172,7 +167,7 @@ function SeekControls() {
 				className={classes.controlButton}
 				seekType="forward"
 				onClick={() => {
-					playback.currentTime += 10;
+					// playback.currentTime += 10;
 				}}
 			>
 				<Forward10 />
@@ -183,8 +178,6 @@ function SeekControls() {
 
 export function ControlsBottomPanel() {
 	const { classes } = useStyles();
-	const volume = useLimeplayStore((state) => state.volume);
-	const muted = useLimeplayStore((state) => state.muted);
 	const playback = useLimeplayStore((state) => state.playback);
 	const isPlaying = useLimeplayStore((state) => state.isPlaying);
 	const isLoading = useLimeplayStore((state) => state.isLoading);
@@ -198,6 +191,8 @@ export function ControlsBottomPanel() {
 	}, [isLoading, playback]);
 
 	useEffect(() => {
+		console.log('useEffect in ControlsBottomPanel');
+
 		const spacePlayback = (e) => {
 			if (e.code === 'Space' && playback) {
 				togglePlayback();
@@ -225,17 +220,30 @@ export function ControlsBottomPanel() {
 						{isPlaying ? <PauseIcon /> : <PlayIcon />}
 					</PlaybackButton>
 					<SeekControls />
-					<VolumeButton
-						className={classes.controlButton}
-						onClick={() => {
-							playback.muted = !playback.muted;
-						}}
-					>
-						<VolumeIcon volume={volume} muted={muted} />
-					</VolumeButton>
-					<VolumeSlider />
+					<VolumeControls />
 				</div>
 			</div>
 		</div>
+	);
+}
+
+function VolumeControls() {
+	const { classes } = useStyles();
+	const volume = useLimeplayStore((state) => state.volume);
+	const muted = useLimeplayStore((state) => state.muted);
+	const playback = useLimeplayStore((state) => state.playback);
+
+	return (
+		<>
+			<VolumeButton
+				className={classes.controlButton}
+				onClick={() => {
+					playback.muted = !playback.muted;
+				}}
+			>
+				<VolumeIcon volume={volume} muted={muted} />
+			</VolumeButton>
+			<VolumeSlider />
+		</>
 	);
 }

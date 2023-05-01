@@ -12,9 +12,8 @@ const VideoWrapper = forwardRef<HTMLMediaElement>((props, ref) => {
 					playsInline
 					ref={ref as React.RefObject<HTMLVideoElement>}
 					className={classes.videoElement}
-				>
-					<track kind="captions" />
-				</video>
+					crossOrigin="anonymous"
+				/>
 			</div>
 		</div>
 	);

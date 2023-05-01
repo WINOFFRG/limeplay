@@ -33,12 +33,12 @@ export function createLimeplayStore({ mediaElementRef }: InitialProps) {
 		},
 	});
 
-	// player.load(
-	// 	'https://storage.googleapis.com/nodejs-streaming.appspot.com/uploads/f6b7c492-e78f-4b26-b95f-81ea8ca21a18/1642708128072/manifest.mpd'
-	// );
 	player.load(
-		'https://bpprod6linear.akamaized.net/bpk-tv/irdeto_com_Channel_637/output/manifest.mpd'
+		'https://storage.googleapis.com/nodejs-streaming.appspot.com/uploads/f6b7c492-e78f-4b26-b95f-81ea8ca21a18/1642708128072/manifest.mpd'
 	);
+	// player.load(
+	// 	'https://bpprod6linear.akamaized.net/bpk-tv/irdeto_com_Channel_637/output/manifest.mpd'
+	// );
 
 	const store = createStore<InitialStore & StoreSlice>()(
 		logger(

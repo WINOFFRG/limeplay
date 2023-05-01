@@ -41,34 +41,19 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 	const UPDATE_WHILE_SEEKING = false;
 	const PAUSE_WHILE_SEEKING = false;
 
-	const {
-		playback,
-		player,
-		seekRange: storeSeekRange,
-		getIsSeeking,
-		setSeekRange,
-		setCurrentTime,
-		setDuration,
-		setIsLive,
-		setCurrentProgress,
-		setLiveLatency,
-		getIsLive,
-	} = useLimeplayStore(
-		(state) => ({
-			playback: state.playback,
-			player: state.player,
-			seekRange: state.seekRange,
-			getIsSeeking: state._getIsSeeking,
-			setSeekRange: state._setSeekRange,
-			setCurrentTime: state._setCurrentTime,
-			setDuration: state._setDuration,
-			setIsLive: state._setIsLive,
-			setCurrentProgress: state._setCurrentProgress,
-			setLiveLatency: state._setLiveLatency,
-			getIsLive: state._getIsLive,
-		}),
-		shallow
+	const playback = useLimeplayStore((state) => state.playback);
+	const player = useLimeplayStore((state) => state.player);
+	const storeSeekRange = useLimeplayStore((state) => state.seekRange);
+	const getIsSeeking = useLimeplayStore((state) => state._getIsSeeking);
+	const setSeekRange = useLimeplayStore((state) => state._setSeekRange);
+	const setCurrentTime = useLimeplayStore((state) => state._setCurrentTime);
+	const setDuration = useLimeplayStore((state) => state._setDuration);
+	const setIsLive = useLimeplayStore((state) => state._setIsLive);
+	const setCurrentProgress = useLimeplayStore(
+		(state) => state._setCurrentProgress
 	);
+	const setLiveLatency = useLimeplayStore((state) => state._setLiveLatency);
+	const getIsLive = useLimeplayStore((state) => state._getIsLive);
 
 	const store = useLimeplayStoreAPI();
 
