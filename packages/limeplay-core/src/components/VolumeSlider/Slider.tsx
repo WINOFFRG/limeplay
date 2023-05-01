@@ -1,6 +1,6 @@
 import { createContext, forwardRef, useContext, useMemo, useRef } from 'react';
 import { clamp } from 'lodash';
-import { useComposedRefs } from '../../hooks/compose-refs';
+import { useComposedRefs } from '../../utils/composeRefs';
 
 type Direction = 'ltr' | 'rtl';
 type Side = 'top' | 'right' | 'bottom' | 'left';

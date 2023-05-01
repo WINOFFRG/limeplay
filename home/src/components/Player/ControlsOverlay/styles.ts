@@ -155,6 +155,7 @@ const useStyles = createStyles((theme) => ({
 		transition: 'opacity 0.1s ease-in-out',
 		backgroundColor: 'transparent',
 		border: 'none',
+		borderRadius: '4px',
 		...theme.fn.focusStyles(),
 
 		'&:hover': {

@@ -19,29 +19,18 @@ export function TimelineSlider() {
 	const elementRef = useRef<HTMLDivElement>(null);
 	useTimeline();
 
-	const {
-		playback,
-		player,
-		seekRange,
-		duration,
-		currentTime,
-		currentProgress,
-		liveLatency,
-		isLive,
-		setCurrentProgress,
-		setIsSeeking,
-	} = useLimeplayStore((state) => ({
-		playback: state.playback,
-		player: state.player,
-		seekRange: state.seekRange,
-		currentTime: state.currentTime,
-		duration: state.duration,
-		currentProgress: state.currentProgress,
-		liveLatency: state.liveLatency,
-		isLive: state.isLive,
-		setCurrentProgress: state._setCurrentProgress,
-		setIsSeeking: state._setIsSeeking,
-	}));
+	const playback = useLimeplayStore((state) => state.playback);
+	const player = useLimeplayStore((state) => state.player);
+	const seekRange = useLimeplayStore((state) => state.seekRange);
+	const duration = useLimeplayStore((state) => state.duration);
+	// const currentTime = useLimeplayStore((state) => state.currentTime);
+	const currentProgress = useLimeplayStore((state) => state.currentProgress);
+	const liveLatency = useLimeplayStore((state) => state.liveLatency);
+	// const isLive = useLimeplayStore((state) => state.isLive);
+	const setIsSeeking = useLimeplayStore((state) => state._setIsSeeking);
+	const setCurrentProgress = useLimeplayStore(
+		(state) => state._setCurrentProgress
+	);
 
 	const config: OnSliderHandlerProps = {
 		min: 0,
@@ -145,10 +134,6 @@ export function TimelineSlider() {
 						// 	width: `${currentProgress}%`,
 						// }}
 					/>
-					{/* <MemoizedBufferRangeBar
-				video={video}
-				shakaPlayer={shakaPlayer}
-			/> */}
 				</SliderTrack>
 				<SliderThumb
 					aria-label="Seek Time Scrubber"

@@ -13,10 +13,8 @@ import useStyles from './styles';
 
 export function VolumeSlider() {
 	const { classes } = useStyles();
-	const { volume, playback } = useLimeplayStore((state) => ({
-		volume: state.volume,
-		playback: state.playback,
-	}));
+	const volume = useLimeplayStore((state) => state.volume);
+	const playback = useLimeplayStore((state) => state.playback);
 
 	const configProps: OnSliderHandlerProps = {
 		min: 0,
