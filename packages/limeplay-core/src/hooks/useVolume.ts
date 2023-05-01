@@ -29,14 +29,10 @@ export function useVolume({
 	syncMuteState = true,
 }: UseVolumeConfig = {}) {
 	const { getState } = useLimeplayStoreAPI();
-	const { playback, setVolume, setMuted, setLastVolume } = useLimeplayStore(
-		(state) => ({
-			playback: state.playback,
-			setVolume: state._setVolume,
-			setMuted: state._setMuted,
-			setLastVolume: state._setLastVolume,
-		})
-	);
+	const playback = useLimeplayStore((state) => state.playback);
+	const setVolume = useLimeplayStore((state) => state._setVolume);
+	const setMuted = useLimeplayStore((state) => state._setMuted);
+	const setLastVolume = useLimeplayStore((state) => state._setLastVolume);
 
 	useEffect(() => {
 		const volumeEventHandler = () => {
