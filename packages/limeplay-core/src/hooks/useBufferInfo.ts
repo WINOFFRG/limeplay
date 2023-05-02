@@ -1,17 +1,31 @@
 // @ts-nocheck
 import { useCallback, useEffect } from 'react';
+import { StateCreator } from 'zustand';
 import { useInterval } from '../utils/use-interval';
 import { getPercentage } from '../utils';
 import { useLimeplayStore } from '../store';
 
-interface BufferInfoProps {
+export interface UseBufferConfig {
 	updateInterval?: number;
 }
 
-export default function useBufferInfo() {
+type Buffer = {
+	start: number;
+	end: number;
+	width: number;
+	startPosition: number;
+};
+
+export interface BufferSlice {
+	bufferInfo: Buffer[];
+	setBufferInfo: (bufferInfo: Buffer[]) => void;
+}
+
+export function useBufferInfo() {
 	const UPDATE_INTERVAL = 2000;
 
-	const { setBufferInfo, shakaPlayer: player } = useLimeplayStore.getState();
+	const player = useLimeplayStore((state) => state.player);
+	const setBufferInfo = useLimeplayStore((state) => state.setBufferInfo);
 
 	const callbackFn = useCallback(() => {
 		const { total: buffer } = player.getBufferedInfo();
@@ -49,6 +63,9 @@ export default function useBufferInfo() {
 			stop();
 		};
 	}, []);
-
-	return {};
 }
+
+export const createBufferSlice: StateCreator<BufferSlice> = (set) => ({
+	bufferInfo: [],
+	setBufferInfo: (bufferInfo: Buffer[]) => set({ bufferInfo }),
+});

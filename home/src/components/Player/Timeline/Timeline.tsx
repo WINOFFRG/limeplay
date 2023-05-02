@@ -13,6 +13,7 @@ import { FullGestureState, useDrag } from '@use-gesture/react';
 import { buildTimeString } from './utils';
 import useStyles from './styles';
 import MemoizedHoverContainer from './HoverContainer';
+import { BufferRangeBar } from './Buffer';
 
 export function TimelineSlider() {
 	const { classes } = useStyles();
@@ -134,6 +135,7 @@ export function TimelineSlider() {
 						// 	width: `${currentProgress}%`,
 						// }}
 					/>
+					<BufferRangeBar />
 				</SliderTrack>
 				<SliderThumb
 					aria-label="Seek Time Scrubber"

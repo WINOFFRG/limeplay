@@ -5,17 +5,17 @@ const VideoWrapper = forwardRef<HTMLMediaElement>((props, ref) => {
 	const { classes } = useStyles();
 
 	return (
-		<div className={classes.playerWrapper}>
-			<div className={classes.playerNode}>
-				<video
-					controls={false}
-					playsInline
-					ref={ref as React.RefObject<HTMLVideoElement>}
-					className={classes.videoElement}
-					crossOrigin="anonymous"
-				/>
-			</div>
-		</div>
+		// <div className={classes.playerWrapper}>
+		// 	<div className={classes.playerNode}>
+		<video
+			controls={false}
+			playsInline
+			ref={ref as React.RefObject<HTMLVideoElement>}
+			className={classes.videoElement}
+			crossOrigin="anonymous"
+		/>
+		// 	</div>
+		// </div>
 	);
 });
 
