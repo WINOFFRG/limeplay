@@ -12,7 +12,7 @@ const useStyles = createStyles((theme) => ({
 		position: 'relative',
 		width: 2 * px(theme.spacing.md),
 		height: 2 * px(theme.spacing.md),
-		opacity: 0.7,
+		// opacity: 0.7,
 		transition: 'opacity 150ms ease, transform 150ms ease',
 		willChange: 'opacity, transform',
 		...theme.fn.focusStyles(),
