@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import clamp from 'lodash/clamp';
-import { useGesture } from '@use-gesture/react';
-import { shallow } from 'zustand/shallow';
 import { StateCreator } from 'zustand';
 import { useLimeplayStore, useLimeplayStoreAPI } from '../store';
 
@@ -41,34 +39,19 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 	const UPDATE_WHILE_SEEKING = false;
 	const PAUSE_WHILE_SEEKING = false;
 
-	const {
-		playback,
-		player,
-		seekRange: storeSeekRange,
-		getIsSeeking,
-		setSeekRange,
-		setCurrentTime,
-		setDuration,
-		setIsLive,
-		setCurrentProgress,
-		setLiveLatency,
-		getIsLive,
-	} = useLimeplayStore(
-		(state) => ({
-			playback: state.playback,
-			player: state.player,
-			seekRange: state.seekRange,
-			getIsSeeking: state._getIsSeeking,
-			setSeekRange: state._setSeekRange,
-			setCurrentTime: state._setCurrentTime,
-			setDuration: state._setDuration,
-			setIsLive: state._setIsLive,
-			setCurrentProgress: state._setCurrentProgress,
-			setLiveLatency: state._setLiveLatency,
-			getIsLive: state._getIsLive,
-		}),
-		shallow
+	const playback = useLimeplayStore((state) => state.playback);
+	const player = useLimeplayStore((state) => state.player);
+	const storeSeekRange = useLimeplayStore((state) => state.seekRange);
+	const getIsSeeking = useLimeplayStore((state) => state._getIsSeeking);
+	const setSeekRange = useLimeplayStore((state) => state._setSeekRange);
+	const setCurrentTime = useLimeplayStore((state) => state._setCurrentTime);
+	const setDuration = useLimeplayStore((state) => state._setDuration);
+	const setIsLive = useLimeplayStore((state) => state._setIsLive);
+	const setCurrentProgress = useLimeplayStore(
+		(state) => state._setCurrentProgress
 	);
+	const setLiveLatency = useLimeplayStore((state) => state._setLiveLatency);
+	const getIsLive = useLimeplayStore((state) => state._getIsLive);
 
 	const store = useLimeplayStoreAPI();
 
@@ -115,7 +98,7 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 
 					localProgress = clamp(localProgress, 0, 100);
 
-					localProgress = Number(localProgress.toFixed(precision));
+					// localProgress = Number(localProgress.toFixed(precision));
 
 					if (!getIsSeeking()) setCurrentProgress(localProgress);
 
@@ -123,7 +106,7 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 						setIsLive(player.isLive());
 					}
 				} else {
-					if (!store.getState().duration)
+					if (store.getState().duration !== playback.duration)
 						setDuration(playback.duration);
 
 					if (storeSeekRange.start === 0 && storeSeekRange.end === 0)
@@ -131,10 +114,10 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 
 					setCurrentTime(playback.currentTime);
 
-					let localProgress =
+					const localProgress =
 						(playback.currentTime / playback.duration) * 100;
 
-					localProgress = Number(localProgress.toFixed(precision));
+					// localProgress = Number(localProgress.toFixed(precision));
 
 					if (!store.getState().isSeeking)
 						setCurrentProgress(localProgress);
@@ -161,7 +144,7 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 			}
 			clearInterval(currentTimerId.current);
 		};
-	}, [playback]);
+	}, [playback, player]);
 }
 
 const hookName = '@limeplay/hooks/useTimeline';

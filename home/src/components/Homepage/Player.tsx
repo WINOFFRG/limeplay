@@ -3,8 +3,8 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { makeStyles } from '@/styles';
 import { PlayerControls } from './Controls';
-import { LimeplayPlayer } from './Limeplay';
 import { Stars } from './Stars';
+import { LimeplayWrapper } from './Limeplay';
 
 export function Player() {
 	const ref = useRef(null);
@@ -29,7 +29,7 @@ export function Player() {
 					<path pathLength={1} d="M220 777L220 1" />
 					<path pathLength={1} d="M538 777L538 128" />
 				</svg>
-				<LimeplayPlayer parentRef={ref} />
+				<LimeplayWrapper parentRef={ref} />
 			</div>
 			<PlayerControls />
 		</section>
