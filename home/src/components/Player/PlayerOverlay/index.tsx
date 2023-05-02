@@ -13,6 +13,8 @@ export default function PlayerOverlay() {
 	useLayoutEffect(() => {
 		if (!player) return;
 
+		console.log('Loading Content');
+
 		player.configure({
 			drm: {
 				clearKeys: {
