@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useShakaPlayer } from '@limeplay/shaka-player';
 import { createStyles } from '@mantine/styles';
 import { LimeplayProvider, OverlayOutlet } from '@limeplay/core';
@@ -22,12 +22,19 @@ export default function Player() {
 	const playbackRef = useRef<HTMLMediaElement>(null);
 	const { classes } = useStyles();
 	const player = useShakaPlayer(playbackRef);
+	const [isLoaded, setIsLoaded] = useState(false);
+
+	useEffect(() => {
+		setIsLoaded(true);
+	}, []);
 
 	return (
 		<LimeplayProvider>
-			<OverlayOutlet playback={playbackRef} player={player}>
-				<PlayerOverlay />
-			</OverlayOutlet>
+			{isLoaded && (
+				<OverlayOutlet playback={playbackRef} player={player}>
+					<PlayerOverlay />
+				</OverlayOutlet>
+			)}
 			<video
 				controls={false}
 				playsInline
