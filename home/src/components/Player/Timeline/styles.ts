@@ -11,6 +11,7 @@ const useStyles = createStyles((theme, _params) => ({
 		userSelect: 'none',
 		boxSizing: 'border-box',
 		position: 'relative',
+		padding: '0 12px',
 	},
 
 	timelineSlider__Container: {
@@ -55,30 +56,7 @@ const useStyles = createStyles((theme, _params) => ({
 		transition: 'height border-radius 0.2s ease-in-out',
 		flex: '1 1 auto',
 		backgroundColor: '#808080',
-
-		'&:before': {
-			content: '""',
-			position: 'absolute',
-			top: 0,
-			height: '100%',
-			width: '4px',
-			// zIndex: 1,
-			borderRadius: '2px 0 0 2px',
-			left: '-4px',
-			backgroundColor: theme.colors.blue[8],
-		},
-
-		'&:after': {
-			content: '""',
-			position: 'absolute',
-			top: 0,
-			height: '100%',
-			width: '4px',
-			// zIndex: 1,
-			borderRadius: '0 2px 2px 0',
-			right: '-4px',
-			backgroundColor: '#808080',
-		},
+		borderRadius: '4px',
 	},
 
 	timelineSlider__DurationBar: {

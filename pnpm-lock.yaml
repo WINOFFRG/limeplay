@@ -249,6 +249,9 @@ importers:
       '@limeplay/core':
         specifier: workspace:*
         version: link:../packages/limeplay-core
+      '@limeplay/shaka-player':
+        specifier: workspace:*
+        version: link:../packages/limeplay-shaka
       '@mantine/core':
         specifier: ^6.0.4
         version: 6.0.4(@emotion/react@11.10.5)(@mantine/hooks@6.0.4)(@types/react@18.0.33)(react-dom@18.2.0)(react@18.2.0)
@@ -331,9 +334,6 @@ importers:
       screenfull:
         specifier: ^6.0.2
         version: 6.0.2
-      shaka-player:
-        specifier: ^4.3.3
-        version: 4.3.3
       zustand:
         specifier: ^4.1.4
         version: 4.3.2(react@18.2.0)
@@ -4564,7 +4564,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@emotion/react': 11.10.5(@babel/core@7.21.4)(@types/react@18.0.26)(react@18.2.0)
+      '@emotion/react': 11.10.5(@babel/core@7.21.4)(@types/react@18.0.33)(react@18.2.0)
       clsx: 1.1.1
       csstype: 3.0.9
       react: 18.2.0
