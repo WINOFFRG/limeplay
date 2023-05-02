@@ -33,10 +33,16 @@ export function Header({ sticky = false, blur = true }: HeaderProps) {
 						<NavigationItem href="/" variant="default">
 							Limeplay
 						</NavigationItem>
-						<NavigationItem href="/features" variant="dimmed">
+						<NavigationItem
+							href={Config.DOCS_BASE}
+							variant="dimmed"
+						>
 							Features
 						</NavigationItem>
-						<NavigationItem href="/docs" variant="dimmed">
+						<NavigationItem
+							href={Config.DOCS_BASE}
+							variant="dimmed"
+						>
 							Documentation
 						</NavigationItem>
 						<div className={classes.spacer} />

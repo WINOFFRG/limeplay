@@ -3,7 +3,7 @@ export class Config {
 
 	public static GITHUB_URL = 'https://github.com/winoffrg/limeplay';
 
-	public static DOCS_BASE = 'https://docs.limeplay.me/pages';
+	public static DOCS_BASE = 'https://docs.limeplay.me/';
 
 	public static DISCORD_URL = 'https://discord.gg/ZjXFzqmqjn';
 
