@@ -1,23 +1,14 @@
 {
-	"name": "@limeplay/core",
-	"version": "0.2.4",
-	"description": "React Headless UI library for Shaka Player focused on usability, accessibility, performance and developer experience",
+	"name": "@limeplay/shaka-player",
+	"version": "0.1.0",
+	"description": "",
 	"main": "src/index.ts",
 	"files": [
 		"dist"
 	],
-	"sideEffects": false,
-	"publishConfig": {
-		"access": "public"
-	},
-	"dependencies": {
-		"lodash": "^4.17.21",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"screenfull": "^6.0.2",
-		"zustand": "^4.1.4"
-	},
 	"peerDependencies": {
+		"react": ">=16.8.0",
+		"react-dom": ">=16.8.0",
 		"shaka-player": "*"
 	},
 	"keywords": [
@@ -43,11 +34,7 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/winoffrg/limeplay",
-		"directory": "packages/limeplay-core"
-	},
-	"storybook": {
-		"title": "Limeplay UI",
-		"url": "https://storybook.limeplay.me"
+		"directory": "packages/limeplay-shaka"
 	},
 	"scripts": {
 		"build": "tsup src --dts --metafile",

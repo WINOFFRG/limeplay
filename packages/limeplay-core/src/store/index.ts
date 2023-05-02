@@ -2,42 +2,44 @@ import { RefObject, memo, useContext } from 'react';
 import { create, useStore } from 'zustand';
 import { createStore } from 'zustand/vanilla';
 import { devtools } from 'zustand/middleware';
-import shaka from 'shaka-player';
 import { LimeplayContext } from './context';
 import { logger } from './utils';
 import {
 	StoreSlice,
+	createBufferSlice,
 	createLoadingSlice,
 	createPlaybackSlice,
 	createTimelineSlice,
 	createVolumeSlice,
 } from '../hooks';
 
-interface InitialProps {
-	mediaElementRef: RefObject<HTMLMediaElement>;
-}
-
-export function createLimeplayStore({ mediaElementRef }: InitialProps) {
-	const element = mediaElementRef.current;
-
-	if (!element) return null;
-
-	const player = new shaka.Player(element);
-
-	player.load(
-		'https://storage.googleapis.com/nodejs-streaming.appspot.com/uploads/f6b7c492-e78f-4b26-b95f-81ea8ca21a18/1642708128072/manifest.mpd'
-	);
-
+export function createLimeplayStore() {
 	const store = createStore<InitialStore & StoreSlice>()(
 		logger(
 			devtools(
 				(set, get, storeApi) => ({
-					playback: element,
-					player,
+					playback: null,
+					setPlayback: (playback: HTMLMediaElement) =>
+						set({ playback }),
+					player: null,
+					resetPlayer: () =>
+						set({
+							player: null,
+							playback: null,
+							bufferInfo: null,
+							isLoading: false,
+							isSeeking: false,
+							isLive: false,
+							duration: null,
+							currentTime: null,
+							muted: false,
+						}),
+					setPlayer: (player: shaka.Player) => set({ player }),
 					...createPlaybackSlice(set, get, storeApi),
 					...createLoadingSlice(set, get, storeApi),
 					...createVolumeSlice(set, get, storeApi),
 					...createTimelineSlice(set, get, storeApi),
+					...createBufferSlice(set, get, storeApi),
 				}),
 				{
 					name: 'Limeplay Store',

@@ -68,13 +68,13 @@ export function Footer() {
 				</div>
 				<Section title="About">
 					<FooterLink href={Config.GITHUB_URL}>Contribute</FooterLink>
-					<FooterLink href={`${Config.DOCS_BASE}/about`}>
+					<FooterLink href={`${Config.DOCS_BASE}about`}>
 						About Limeplay
 					</FooterLink>
-					<FooterLink href={`${Config.DOCS_BASE}/about`}>
+					<FooterLink href={`${Config.DOCS_BASE}about`}>
 						Changelog
 					</FooterLink>
-					<FooterLink href={`${Config.DOCS_BASE}/about`}>
+					<FooterLink href={`${Config.DOCS_BASE}about`}>
 						Releases
 					</FooterLink>
 				</Section>

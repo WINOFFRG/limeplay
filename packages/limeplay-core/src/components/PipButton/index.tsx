@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { DefaultProps, useComponentDefaultProps } from '@mantine/styles';
 import { useLimeplayStore } from '../../store';
-import ControlButton from '../ControlButton';
 
-interface PipControlProps extends DefaultProps {
+interface PipControlProps {
 	onClick?: () => void;
 	pipEnterIcon?: React.ReactNode;
 	pipExitIcon?: React.ReactNode;
@@ -24,8 +22,7 @@ export default function PipButton(props: PipControlProps) {
 	const [isSupported, setIsSupported] = useState<boolean>(false);
 	const [isPip, setIsPip] = useState<boolean>(false);
 
-	const { pipEnterIcon, pipExitIcon, children, ...others } =
-		useComponentDefaultProps('PipControl', defaultProps, props);
+	const { pipEnterIcon, pipExitIcon, children, ...others } = props;
 
 	const togglePip = useCallback(async () => {
 		if (document.pictureInPictureElement) {
@@ -48,7 +45,7 @@ export default function PipButton(props: PipControlProps) {
 	}
 
 	return (
-		<ControlButton
+		<button
 			aria-label={
 				isPip ? 'Exit Picture-in-Picture' : 'Enter Picture-in-Picture'
 			}
@@ -57,7 +54,7 @@ export default function PipButton(props: PipControlProps) {
 		>
 			{isPip ? pipExitIcon : pipEnterIcon}
 			{children}
-		</ControlButton>
+		</button>
 	);
 }
 

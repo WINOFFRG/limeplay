@@ -1,7 +1,15 @@
 {
 	"extends": "../../tsconfig.json",
-	"include": ["./src", "../../@types"],
+	"include": [
+		"./src",
+		"../../@types",
+		"../../home/src/components/Player/Loader",
+		"../../home/src/components/Player/Timeline/styles.ts",
+		"../../home/src/components/Player/Timeline/HoverContainer.tsx",
+		"../../home/src/components/Player/Timeline/utils"
+	],
 	"compilerOptions": {
-		"typeRoots": ["./src/types"]
+		"typeRoots": ["./src/types"],
+		"module": "CommonJS"
 	}
 }
