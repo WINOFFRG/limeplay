@@ -6,9 +6,36 @@
 	"files": [
 		"dist"
 	],
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
+	"peerDependencies": {
+		"react": ">=16.8.0",
+		"react-dom": ">=16.8.0",
+		"shaka-player": "*"
+	},
+	"keywords": [
+		"player",
+		"react",
+		"ui",
+		"library",
+		"shaka",
+		"shaka-player",
+		"video",
+		"drm",
+		"dash",
+		"hls",
+		"accessible",
+		"design-system",
+		"components",
+		"headless",
+		"composible"
+	],
+	"author": "Rohan Gupta <rohangupta1528@gmail.com>",
+	"license": "MIT",
+	"homepage": "https://limeplay.me",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/winoffrg/limeplay",
+		"directory": "packages/limeplay-shaka"
+	},
 	"scripts": {
 		"build": "tsup src --dts --metafile",
 		"dev": "pnpm build:fast -- --watch",
@@ -17,11 +44,6 @@
 		"build:fast": "tsup src",
 		"prepack": "clean-package",
 		"postpack": "clean-package restore"
-	},
-	"peerDependencies": {
-		"react": ">=16.8.0",
-		"react-dom": ">=16.8.0",
-		"shaka-player": "*"
 	},
 	"clean-package": "../../clean-package.config.json",
 	"tsup": {
