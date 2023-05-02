@@ -167,7 +167,7 @@ function SeekControls() {
 				className={classes.controlButton}
 				seekType="forward"
 				onClick={() => {
-					// playback.currentTime += 10;
+					playback.currentTime += 10;
 				}}
 			>
 				<Forward10 />
@@ -191,8 +191,6 @@ export function ControlsBottomPanel() {
 	}, [isLoading, playback]);
 
 	useEffect(() => {
-		console.log('useEffect in ControlsBottomPanel');
-
 		const spacePlayback = (e) => {
 			if (e.code === 'Space' && playback) {
 				togglePlayback();

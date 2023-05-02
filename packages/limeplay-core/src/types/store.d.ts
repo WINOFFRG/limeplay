@@ -11,6 +11,8 @@ interface BufferInfo {
 }
 
 interface InitialStore {
-	playback: HTMLMediaElement;
-	player: shaka.Player;
+	playback: HTMLMediaElement | null;
+	setPlayback: (playback: HTMLMediaElement) => void;
+	player: shaka.Player | null;
+	setPlayer: (player: shaka.Player) => void;
 }

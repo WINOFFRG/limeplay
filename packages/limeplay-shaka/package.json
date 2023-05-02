@@ -1,0 +1,35 @@
+{
+	"name": "@limeplay/shaka-player",
+	"version": "0.1.0",
+	"description": "",
+	"main": "src/index.ts",
+	"files": [
+		"dist"
+	],
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"scripts": {
+		"build": "tsup src --dts --metafile",
+		"dev": "pnpm build:fast -- --watch",
+		"clean": "rimraf dist .turbo",
+		"typecheck": "tsc --noEmit",
+		"build:fast": "tsup src",
+		"prepack": "clean-package",
+		"postpack": "clean-package restore"
+	},
+	"peerDependencies": {
+		"react": ">=16.8.0",
+		"react-dom": ">=16.8.0",
+		"shaka-player": "*"
+	},
+	"clean-package": "../../clean-package.config.json",
+	"tsup": {
+		"clean": true,
+		"target": "es2019",
+		"format": [
+			"cjs",
+			"esm"
+		]
+	}
+}
