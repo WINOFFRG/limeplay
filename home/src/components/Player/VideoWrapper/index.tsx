@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 import { forwardRef } from 'react';
 import useStyles from './styles';
 

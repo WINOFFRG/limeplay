@@ -6,7 +6,7 @@ import {
 	useLimeplayStore,
 } from '../../store';
 
-export function LimeplayProvider({ children }) {
+export function LimeplayProvider({ children }: { children: React.ReactNode }) {
 	const store = createLimeplayStore();
 
 	return (
@@ -44,7 +44,6 @@ export function OverlayOutlet({
 		return () => {
 			if (playback.current) {
 				setIsLoaded(false);
-				console.log('Ending OverlayOutlet');
 			}
 		};
 	}, [isLoaded, playback, player]);

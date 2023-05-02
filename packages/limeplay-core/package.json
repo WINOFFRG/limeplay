@@ -17,6 +17,9 @@
 		"screenfull": "^6.0.2",
 		"zustand": "^4.1.4"
 	},
+	"peerDependencies": {
+		"shaka-player": "*"
+	},
 	"keywords": [
 		"player",
 		"react",
