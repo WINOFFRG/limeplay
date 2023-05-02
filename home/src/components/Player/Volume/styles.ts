@@ -14,7 +14,7 @@ const useStyles = createStyles((theme) => ({
 
 		'&[data-orientation="horizontal"]': {
 			height: '40px',
-			width: '200px',
+			width: '100px',
 		},
 
 		'&[data-orientation="vertical"]': {

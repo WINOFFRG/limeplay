@@ -15,7 +15,6 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"screenfull": "^6.0.2",
-		"shaka-player": "^4.3.3",
 		"zustand": "^4.1.4"
 	},
 	"keywords": [

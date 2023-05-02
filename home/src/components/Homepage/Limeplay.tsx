@@ -12,7 +12,15 @@ function _LimeplayPlayer({
 	parentRef: React.RefObject<HTMLDivElement>;
 }) {
 	const inView = useInView(ref, { amount: 0.6, once: true });
-	return inView && <LimeplayPlayer />;
+	return (
+		<div
+			style={{
+				position: 'relative',
+			}}
+		>
+			{inView && <LimeplayPlayer />}
+		</div>
+	);
 }
 
 export const LimeplayWrapper = memo(_LimeplayPlayer);
