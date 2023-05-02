@@ -97,7 +97,7 @@ const useStyles = createStyles((theme, _params) => ({
 		height: '100%',
 		// borderRadius: '2px',
 		backgroundColor: theme.colors.gray[5],
-		zIndex: 2,
+		// zIndex: 2,
 		transition: 'width 0.2s ease-in-out',
 	},
 

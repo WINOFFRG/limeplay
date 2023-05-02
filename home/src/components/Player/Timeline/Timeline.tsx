@@ -156,7 +156,7 @@ export function TimelineSlider() {
 					/>
 					<BufferRangeBar />
 				</SliderTrack>
-				{/* <SliderThumb
+				<SliderThumb
 					aria-label="Seek Time Scrubber"
 					aria-valuemax={parsedDuration}
 					aria-valuemin={0}
@@ -170,7 +170,7 @@ export function TimelineSlider() {
 					// 	opacity: 1,
 					// }}
 					className={classes.timelineSlider__PlayHead}
-				/> */}
+				/>
 				<MemoizedHoverContainer
 					forwardRef={elementRef}
 					playback={playback}
