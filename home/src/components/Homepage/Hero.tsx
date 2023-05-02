@@ -30,7 +30,7 @@ export function Hero() {
 							commonClasses.textSelection
 						)}
 					>
-						Modern UI Library
+						Modern Headless UI Library
 						<br /> for Media Player in React
 					</h1>
 					<h5

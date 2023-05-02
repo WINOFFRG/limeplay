@@ -142,7 +142,7 @@ export function ControlsMiddlePanel() {
 	);
 }
 
-function VolumeIcon({ volume, muted }) {
+function VolumeIcon({ volume, muted }: { volume: number; muted: boolean }) {
 	if (volume === 0 || muted) return <MuteIcon />;
 	if (volume < 0.5) return <VolumeHalf />;
 	return <UnmuteIcon />;
@@ -194,7 +194,7 @@ export function ControlsBottomPanel() {
 		const spacePlayback = (e) => {
 			if (e.code === 'Space' && playback) {
 				togglePlayback();
-				return e.preventDefault();
+				e.preventDefault();
 			}
 		};
 

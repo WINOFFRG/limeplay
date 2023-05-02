@@ -14,6 +14,7 @@ import { buildTimeString } from './utils';
 import useStyles from './styles';
 import MemoizedHoverContainer from './HoverContainer';
 import { BufferRangeBar } from './Buffer';
+import ControlButton from '../ControlButton';
 
 export function TimelineSlider() {
 	const { classes } = useStyles();
@@ -24,10 +25,10 @@ export function TimelineSlider() {
 	const player = useLimeplayStore((state) => state.player);
 	const seekRange = useLimeplayStore((state) => state.seekRange);
 	const duration = useLimeplayStore((state) => state.duration);
-	// const currentTime = useLimeplayStore((state) => state.currentTime);
+	const currentTime = useLimeplayStore((state) => state.currentTime);
 	const currentProgress = useLimeplayStore((state) => state.currentProgress);
 	const liveLatency = useLimeplayStore((state) => state.liveLatency);
-	// const isLive = useLimeplayStore((state) => state.isLive);
+	const isLive = useLimeplayStore((state) => state.isLive);
 	const setIsSeeking = useLimeplayStore((state) => state._setIsSeeking);
 	const setCurrentProgress = useLimeplayStore(
 		(state) => state._setCurrentProgress
@@ -58,9 +59,10 @@ export function TimelineSlider() {
 		// setCurrentProgress(clammpedValue);
 
 		if (event.type === 'pointermove' || event.type === 'pointerdown') {
+			// @ts-ignore
 			const newTime = onSlideHandler(event, config);
 			playback.currentTime = seekRange.start + newTime * duration;
-			return setCurrentProgress(newTime * 100);
+			setCurrentProgress(newTime * 100);
 		}
 
 		// if (event.type === 'keydown') {
@@ -116,6 +118,26 @@ export function TimelineSlider() {
 
 	return (
 		<div className={classes.timelineWrrapper}>
+			<span>
+				{!isLive && buildTimeString(currentTime, duration > 3600)}
+				{isLive && (
+					<ControlButton
+						onClick={() => {
+							player.goToLive();
+						}}
+						style={{
+							width: 'auto',
+						}}
+					>
+						{seekRange.end - playback.currentTime > 5
+							? `-${buildTimeString(
+									seekRange.end - playback.currentTime,
+									duration > 3600
+							  )}`
+							: 'LIVE'}
+					</ControlButton>
+				)}
+			</span>
 			<SliderRoot
 				className={classes.timelineSlider__Container}
 				ref={elementRef}
@@ -131,13 +153,10 @@ export function TimelineSlider() {
 				<SliderTrack className={classes.timelineSlider__ProgressBar}>
 					<SliderRange
 						className={classes.timelineSlider__DurationBar}
-						// style={{
-						// 	width: `${currentProgress}%`,
-						// }}
 					/>
 					<BufferRangeBar />
 				</SliderTrack>
-				<SliderThumb
+				{/* <SliderThumb
 					aria-label="Seek Time Scrubber"
 					aria-valuemax={parsedDuration}
 					aria-valuemin={0}
@@ -151,7 +170,7 @@ export function TimelineSlider() {
 					// 	opacity: 1,
 					// }}
 					className={classes.timelineSlider__PlayHead}
-				/>
+				/> */}
 				<MemoizedHoverContainer
 					forwardRef={elementRef}
 					playback={playback}
