@@ -31,22 +31,26 @@ export function OverlayOutlet({
 
 	useLayoutEffect(() => {
 		if (playback.current) {
+			console.log('Playback Element is Found');
 			setPlayback(playback.current);
 
 			if (player) {
-				player.attach(playback.current);
-				setPlayer(player);
+				console.log('Player is Found');
+				player.attach(playback.current).then(() => {
+					setPlayer(player);
+					setIsLoaded(true);
+					console.log('Player is Attached and Loaded');
+				});
 			}
 
-			setIsLoaded(true);
+			return () => {
+				console.log('Playback is Unloaded');
+				setPlayback(null);
+				setPlayer(null);
+			};
 		}
-
-		return () => {
-			if (playback.current) {
-				setIsLoaded(false);
-			}
-		};
-	}, [isLoaded, playback, player]);
+		console.log('Playback is not loaded');
+	}, [player, playback, setPlayback, setPlayer]);
 
 	return <>{isLoaded && children}</>;
 }
