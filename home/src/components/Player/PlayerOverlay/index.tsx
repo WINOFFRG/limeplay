@@ -13,7 +13,7 @@ export default function PlayerOverlay() {
 	useLayoutEffect(() => {
 		if (!player) return;
 
-		console.log('Loading Content');
+		console.log('Loading Content in Player');
 
 		player.configure({
 			drm: {
@@ -34,7 +34,7 @@ export default function PlayerOverlay() {
 		// player.load(
 		// 	'https://storage.googleapis.com/nodejs-streaming.appspot.com/uploads/f6b7c492-e78f-4b26-b95f-81ea8ca21a18/1642708128072/manifest.mpd'
 		// );
-	}, [player]);
+	}, [player, playback]);
 
 	if (!playback) return null;
 
