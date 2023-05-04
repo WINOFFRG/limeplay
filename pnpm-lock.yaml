@@ -273,6 +273,9 @@ importers:
       '@radix-ui/react-separator':
         specifier: ^1.0.2
         version: 1.0.2(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-slider':
+        specifier: ^1.1.1
+        version: 1.1.1(react-dom@18.2.0)(react@18.2.0)
       '@use-gesture/react':
         specifier: ^10.2.25
         version: 10.2.25(react@18.2.0)
@@ -4567,7 +4570,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@emotion/react': 11.10.5(@babel/core@7.21.4)(@types/react@18.0.26)(react@18.2.0)
+      '@emotion/react': 11.10.5(@babel/core@7.21.4)(@types/react@18.0.33)(react@18.2.0)
       clsx: 1.1.1
       csstype: 3.0.9
       react: 18.2.0
@@ -5482,6 +5485,28 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
+  /@radix-ui/react-slider@1.1.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-0aswLpUKZIraPEOcXfwW25N1KPfLA6Mvm1TxogUChGsbLbys2ihd7uk9XAKsol9ZQPucxh2/mybwdRtAKrs/MQ==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    dependencies:
+      '@babel/runtime': 7.20.13
+      '@radix-ui/number': 1.0.0
+      '@radix-ui/primitive': 1.0.0
+      '@radix-ui/react-collection': 1.0.2(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-compose-refs': 1.0.0(react@18.2.0)
+      '@radix-ui/react-context': 1.0.0(react@18.2.0)
+      '@radix-ui/react-direction': 1.0.0(react@18.2.0)
+      '@radix-ui/react-primitive': 1.0.2(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-use-controllable-state': 1.0.0(react@18.2.0)
+      '@radix-ui/react-use-layout-effect': 1.0.0(react@18.2.0)
+      '@radix-ui/react-use-previous': 1.0.0(react@18.2.0)
+      '@radix-ui/react-use-size': 1.0.0(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /@radix-ui/react-slot@1.0.1(react@18.2.0):
     resolution: {integrity: sha512-avutXAFL1ehGvAXtPquu0YK5oz6ctS474iM3vNGQIkswrVhdrS52e3uoMQBzZhNRAIE0jBnUyXWNmSjGHhCFcw==}
     peerDependencies:
@@ -5536,6 +5561,16 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0
     dependencies:
       '@babel/runtime': 7.20.13
+      react: 18.2.0
+    dev: false
+
+  /@radix-ui/react-use-size@1.0.0(react@18.2.0):
+    resolution: {integrity: sha512-imZ3aYcoYCKhhgNpkNDh/aTiU05qw9hX+HHI1QDBTyIlcFjgeFlKKySNGMwTp7nYFLQg/j0VA2FmCY4WPDDHMg==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0
+    dependencies:
+      '@babel/runtime': 7.20.13
+      '@radix-ui/react-use-layout-effect': 1.0.0(react@18.2.0)
       react: 18.2.0
     dev: false
 
