@@ -1,10 +1,12 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { LimeplayContext } from '../../store/context';
 import {
 	LimeplayStore,
 	createLimeplayStore,
 	useLimeplayStore,
 } from '../../store';
+import { CreatePlayer } from '../../types/limeplay';
+import { useComposedRefs } from '../../utils/composeRefs';
 
 export function LimeplayProvider({ children }: { children: React.ReactNode }) {
 	const store = createLimeplayStore();
@@ -18,39 +20,70 @@ export function LimeplayProvider({ children }: { children: React.ReactNode }) {
 
 export function OverlayOutlet({
 	children,
-	playback,
-	player,
+	createPlayer,
 }: {
 	children: React.ReactNode;
-	playback: React.RefObject<HTMLMediaElement>;
-	player?: shaka.Player;
+	createPlayer?: CreatePlayer;
 }) {
-	const setPlayback = useLimeplayStore((state) => state.setPlayback);
+	const playback = useLimeplayStore((state) => state.playback);
 	const setPlayer = useLimeplayStore((state) => state.setPlayer);
 	const [isLoaded, setIsLoaded] = useState(false);
+	const withPlayer = typeof createPlayer === 'function';
 
 	useLayoutEffect(() => {
-		if (playback.current) {
-			console.log('Playback Element is Found');
-			setPlayback(playback.current);
-
-			if (player) {
-				console.log('Player is Found');
-				player.attach(playback.current).then(() => {
-					setPlayer(player);
-					setIsLoaded(true);
-					console.log('Player is Attached and Loaded');
+		if (playback) {
+			if (createPlayer) {
+				const shakaInstance = createPlayer({
+					mediaElement: playback,
 				});
+				setPlayer(shakaInstance);
+				setIsLoaded(true);
+			}
+		} else {
+			console.warn(
+				'Did you forgot to use <MediaOutlet /> component? You must pass a HTMLMediaElement'
+			);
+		}
+
+		return () => {
+			setPlayer(null);
+			setIsLoaded(false);
+		};
+	}, [createPlayer, playback, setPlayer]);
+
+	if (!playback || (withPlayer && !isLoaded)) return null;
+
+	return <div>{children}</div>;
+}
+
+export const MediaOutlet = React.forwardRef(
+	({ children }: { children: React.ReactNode }, forwardedRef) => {
+		const setPlayback = useLimeplayStore((state) => state.setPlayback);
+		const playbackRef = useRef<HTMLMediaElement>(null);
+		const composedRefs = useComposedRefs(forwardedRef, playbackRef);
+
+		useEffect(() => {
+			if (React.Children.count(children) !== 1) {
+				throw new Error(
+					'MediaOutlet must have a single child as HTMLMediaElement'
+				);
+			}
+
+			if (playbackRef.current) {
+				setPlayback(playbackRef.current);
 			}
 
 			return () => {
-				console.log('Playback is Unloaded');
 				setPlayback(null);
-				setPlayer(null);
 			};
-		}
-		console.log('Playback is not loaded');
-	}, [player, playback, setPlayback, setPlayer]);
+		}, [children, setPlayback]);
 
-	return <>{isLoaded && children}</>;
-}
+		return (
+			<>
+				{React.cloneElement(children as React.ReactElement, {
+					ref: composedRefs,
+				})}
+			</>
+		);
+	}
+);
