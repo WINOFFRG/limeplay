@@ -108,6 +108,8 @@ export function TimelineSlider() {
 
 	const bind: any = useDrag(cbFunction);
 
+	if (!playback || !player) return null;
+
 	const parsedCurrentTime = Number(
 		(player.isLive()
 			? duration - liveLatency

@@ -1,42 +1,43 @@
-import { useLimeplayStore } from '@limeplay/core/src/store';
-import { useLayoutEffect } from 'react';
+import {
+	useLimeplayStore,
+	useLimeplayStoreAPI,
+} from '@limeplay/core/src/store';
+import { useEffect } from 'react';
+import { useSafeLoad } from '@limeplay/core/src/hooks';
 import ControlsOverlay from '../ControlsOverlay';
 import useStyles from './styles';
 import PlayerLoader from '../Loader';
 
 export default function PlayerOverlay() {
+	useSafeLoad();
 	const { classes } = useStyles();
-
 	const playback = useLimeplayStore((state) => state.playback);
 	const player = useLimeplayStore((state) => state.player);
+	const isSafeLoad = useLimeplayStore((state) => state.isSafeLoad);
+	const { getState } = useLimeplayStoreAPI();
 
-	useLayoutEffect(() => {
-		if (!player) return;
+	useEffect(() => {
+		if (player && getState().isSafeLoad && player.getLoadMode() === 1) {
+			const playerConfig = player.getConfiguration();
 
-		console.log('Loading Content in Player');
+			playerConfig.drm.clearKeys = {
+				'31f563ec4d055f04a7077e638b046de4':
+					'695248391f00f7395e51f0e13201ed00',
+			};
 
-		player.configure({
-			drm: {
-				clearKeys: {
-					'31f563ec4d055f04a7077e638b046de4':
-						'695248391f00f7395e51f0e13201ed00',
-				},
-			},
-			streaming: {
-				bufferingGoal: 180,
-			},
-		});
+			playerConfig.streaming.bufferingGoal = 180;
 
-		player.load(
-			'https://bpprod6linear.akamaized.net/bpk-tv/irdeto_com_Channel_637/output/manifest.mpd'
-		);
+			player.configure(playerConfig);
 
-		// player.load(
-		// 	'https://storage.googleapis.com/nodejs-streaming.appspot.com/uploads/f6b7c492-e78f-4b26-b95f-81ea8ca21a18/1642708128072/manifest.mpd'
-		// );
-	}, [player, playback]);
+			player.load(
+				'https://bpprod6linear.akamaized.net/bpk-tv/irdeto_com_Channel_637/output/manifest.mpd'
+			);
 
-	if (!playback) return null;
+			// player.load(
+			// 	'https://storage.googleapis.com/nodejs-streaming.appspot.com/uploads/f6b7c492-e78f-4b26-b95f-81ea8ca21a18/1642708128072/manifest.mpd'
+			// );
+		}
+	}, [player, playback, isSafeLoad]);
 
 	return (
 		<div className={classes.overlayWrapper}>
