@@ -33,21 +33,37 @@ import {
 	createBufferSlice,
 } from './useBufferInfo';
 
+import {
+	UseSafeLoadConfig,
+	useSafeLoad,
+	SafeLoadSlice,
+	createSafeLoadSlice,
+} from './useSafeLoad';
+
 export {
 	createPlaybackSlice,
 	createLoadingSlice,
 	createVolumeSlice,
 	createTimelineSlice,
 	createBufferSlice,
+	createSafeLoadSlice,
 };
 
 type StoreSlice = PlaybackSlice &
 	LoadingSlice &
 	VolumeSlice &
 	TimelineSlice &
-	BufferSlice;
+	BufferSlice &
+	SafeLoadSlice;
 
-export { usePlayback, useLoading, useVolume, useTimeline, useBufferInfo };
+export {
+	usePlayback,
+	useLoading,
+	useVolume,
+	useTimeline,
+	useBufferInfo,
+	useSafeLoad,
+};
 
 export type {
 	StoreSlice,
@@ -61,4 +77,6 @@ export type {
 	UseTimelineConfig,
 	BufferSlice,
 	UseBufferConfig,
+	SafeLoadSlice,
+	UseSafeLoadConfig,
 };

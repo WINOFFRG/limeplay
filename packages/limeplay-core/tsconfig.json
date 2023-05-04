@@ -3,6 +3,7 @@
 	"include": [
 		"./src",
 		"../../@types",
+		"./src/types/**/*",
 		"../../home/src/components/Player/Loader",
 		"../../home/src/components/Player/Timeline/styles.ts",
 		"../../home/src/components/Player/Timeline/HoverContainer.tsx",

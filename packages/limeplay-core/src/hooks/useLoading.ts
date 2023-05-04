@@ -12,7 +12,6 @@ export interface UseLoadingConfig {
 
 export function useLoading({ events }: UseLoadingConfig = {}) {
 	const player = useLimeplayStore((state) => state.player);
-	const playback = useLimeplayStore((state) => state.playback);
 	const setIsLoading = useLimeplayStore((state) => state._setIsLoading);
 
 	useEffect(() => {

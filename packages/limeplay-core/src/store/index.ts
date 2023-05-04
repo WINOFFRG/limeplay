@@ -9,6 +9,7 @@ import {
 	createBufferSlice,
 	createLoadingSlice,
 	createPlaybackSlice,
+	createSafeLoadSlice,
 	createTimelineSlice,
 	createVolumeSlice,
 } from '../hooks';
@@ -40,6 +41,7 @@ export function createLimeplayStore() {
 					...createVolumeSlice(set, get, storeApi),
 					...createTimelineSlice(set, get, storeApi),
 					...createBufferSlice(set, get, storeApi),
+					...createSafeLoadSlice(set, get, storeApi),
 				}),
 				{
 					name: 'Limeplay Store',

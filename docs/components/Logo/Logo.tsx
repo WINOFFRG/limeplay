@@ -17,10 +17,10 @@ export function Logo() {
 				}}
 			>
 				<Image
-					src="/tint.png"
+					src="/lemon.png"
 					alt="Mantine Logo"
-					width={30}
-					height={30}
+					width={50}
+					height={50}
 					style={{
 						borderRadius: '50%',
 					}}
