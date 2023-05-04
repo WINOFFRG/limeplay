@@ -49,6 +49,7 @@ export default function PipButton(props: PipControlProps) {
 			aria-label={
 				isPip ? 'Exit Picture-in-Picture' : 'Enter Picture-in-Picture'
 			}
+			type="button"
 			onClick={togglePip}
 			{...others}
 		>

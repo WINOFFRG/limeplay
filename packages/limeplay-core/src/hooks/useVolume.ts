@@ -83,6 +83,8 @@ export function useVolume({
 			playback.addEventListener(event, volumeEventHandler);
 		});
 
+		console.log('Initial Volume: ', playback.volume);
+
 		playback.volume = playback.muted ? 0 : initialVolume || playback.volume;
 
 		volumeEventHandler();

@@ -32,7 +32,6 @@ export default function Player() {
 					playsInline
 					className={classes.videoElement}
 					autoPlay
-					volume={0.2}
 				/>
 			</MediaOutlet>
 		</LimeplayProvider>
