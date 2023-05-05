@@ -16,6 +16,7 @@ function _LimeplayPlayer({
 		<div
 			style={{
 				position: 'relative',
+				padding: '1px 1px 0 0',
 			}}
 		>
 			{inView && <LimeplayPlayer />}

@@ -19,6 +19,10 @@ export function Player() {
 				aria-hidden="true"
 				className={cx(classes.asset, ...(inView ? ['visible'] : []))}
 				ref={ref}
+				style={{
+					borderRadius: '10px',
+					overflow: 'hidden',
+				}}
 			>
 				<div className={classes.backgroundColor} />
 				<Stars parentRef={ref} />
