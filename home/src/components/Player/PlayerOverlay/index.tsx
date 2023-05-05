@@ -15,6 +15,8 @@ export default function PlayerOverlay() {
 	const player = useLimeplayStore((state) => state.player);
 	const isSafeLoad = useLimeplayStore((state) => state.isSafeLoad);
 	const { getState } = useLimeplayStoreAPI();
+	const demoPlabackUrl =
+		'https://storage.googleapis.com/nodejs-streaming.appspot.com/uploads/f6b7c492-e78f-4b26-b95f-81ea8ca21a18/1642708128072/manifest.mpd';
 
 	useEffect(() => {
 		if (player && getState().isSafeLoad && player.getLoadMode() === 1) {
@@ -29,13 +31,7 @@ export default function PlayerOverlay() {
 
 			player.configure(playerConfig);
 
-			player.load(
-				'https://bpprod6linear.akamaized.net/bpk-tv/irdeto_com_Channel_637/output/manifest.mpd'
-			);
-
-			// player.load(
-			// 	'https://storage.googleapis.com/nodejs-streaming.appspot.com/uploads/f6b7c492-e78f-4b26-b95f-81ea8ca21a18/1642708128072/manifest.mpd'
-			// );
+			player.load(process.env.NEXT_PUBLIC_PLAYBACK_URL || demoPlabackUrl);
 		}
 	}, [player, playback, isSafeLoad]);
 

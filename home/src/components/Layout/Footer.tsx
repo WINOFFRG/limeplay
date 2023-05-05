@@ -65,6 +65,22 @@ export function Footer() {
 							these awesome people
 						</VariantLink>
 					</div>
+					<div
+						className={classes.logoWrapper}
+						style={{
+							display: 'inline-block',
+						}}
+					>
+						This website is heavily inspired by{' '}
+						<VariantLink href="https://linear.app">
+							Linear{' '}
+						</VariantLink>
+						<br />
+						Thanks to them for such great designs!
+						<br />
+						As I am a developer and not a designer I had to do this
+						:)
+					</div>
 				</div>
 				<Section title="About">
 					<FooterLink href={Config.GITHUB_URL}>Contribute</FooterLink>
@@ -123,8 +139,9 @@ const useStyles = makeStyles()((theme) => ({
 	leftContainer: {
 		display: 'flex',
 		flexDirection: 'column',
-		justifyContent: 'space-between',
+		justifyContent: 'flex-start',
 		marginRight: 'auto',
+		gap: '3rem',
 
 		[theme.breakpoints.max.laptop]: {
 			width: '100%',

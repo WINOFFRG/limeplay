@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import corePackageJson from '@limeplay/core/package.json';
 import { makeStyles } from '@/styles';
 import { useCommonStyles } from '@/styles/common';
 import { Pill } from './Pill';
@@ -6,6 +7,7 @@ import { fadeDown } from '@/styles/animation';
 import { CTA } from './Button';
 import { ChevronRightIcon } from '@/assets/icons/ChevronRightIcon';
 import { Player } from './Player';
+import { Config } from '../../../config';
 
 export function Hero() {
 	const { classes, cx } = useStyles();
@@ -15,9 +17,13 @@ export function Hero() {
 		<div className={classes.heroWrapper}>
 			<div className={commonClasses.layoutContent}>
 				<div className={classes.heroIntro}>
-					<Link href="/" tabIndex={-1}>
+					<Link
+						href={Config.GITHUB_URL}
+						tabIndex={-1}
+						target="_blank"
+					>
 						<Pill className={classes.releasedPill}>
-							<span>v0.1.1</span>
+							<span>v{corePackageJson.version}</span>
 							<div>
 								This Library is in Active Development
 							</div>{' '}
