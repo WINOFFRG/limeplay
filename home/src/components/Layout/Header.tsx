@@ -37,12 +37,6 @@ export function Header({ sticky = false, blur = true }: HeaderProps) {
 							href={Config.DOCS_BASE}
 							variant="dimmed"
 						>
-							Features
-						</NavigationItem>
-						<NavigationItem
-							href={Config.DOCS_BASE}
-							variant="dimmed"
-						>
 							Documentation
 						</NavigationItem>
 						<div className={classes.spacer} />
