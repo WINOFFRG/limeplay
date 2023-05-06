@@ -1,32 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import screenfull from 'screenfull';
+import o9n from 'o9n';
+import { StateCreator } from 'zustand';
+import { useLimeplayStore } from '../store';
 
-interface UseFullScreenProps {
+export interface UseFullScreenConfig {
+	elementRef?: React.RefObject<HTMLElement>;
 	toggleOrientation?: boolean;
 	onError?: (event: Event) => void;
 	onOrientationChangeError?: (error: Error) => void;
 }
 
-interface UseFullScreenReturn {
-	isFullscreen: boolean;
-	toggleFullscreen: () => void;
-	orientation: string;
+export interface FullScreenSlice {
+	isFullScreen: null | boolean;
+	_setIsFullScreen: (isFullScreen: boolean) => void;
+	orientation: OrientationType;
+	_setOrientation: (orientation: string) => void;
 }
 
-export default function useFullScreen(
-	elementRef: React.RefObject<HTMLElement>,
-	{
-		toggleOrientation = true,
-		onError,
-		onOrientationChangeError,
-	}: UseFullScreenProps = {}
-) {
-	const [isFullscreen, setIsFullscreen] = useState(
-		(screenfull.isEnabled && screenfull.isFullscreen) || false
-	);
-	const [orientation, setOrientation] = useState<string>(
-		window.screen.orientation.type
-	);
+export function useFullScreen({
+	elementRef,
+	toggleOrientation = true,
+	onError,
+	onOrientationChangeError,
+}: UseFullScreenConfig = {}) {
+	const setIsFullScreen = useLimeplayStore((state) => state._setIsFullScreen);
+	const setOrientation = useLimeplayStore((state) => state._setOrientation);
 
 	const orientationError = (error: Error) => {
 		if (
@@ -37,39 +36,13 @@ export default function useFullScreen(
 		}
 	};
 
-	const toggleFullscreen = () => {
-		if (!elementRef.current) return;
-
-		if (screenfull.isEnabled) {
-			if (isFullscreen) {
-				screenfull.exit();
-			} else {
-				screenfull.request(elementRef.current).then(() => {
-					if (!toggleOrientation) return;
-
-					if (orientation === 'landscape-primary') {
-						window.screen.orientation
-							.lock('portrait')
-							.catch(orientationError);
-					} else {
-						window.screen.orientation
-							.lock('landscape')
-							.catch(orientationError);
-					}
-				});
-			}
-		}
-
-		// Missing iOS Mobile Support https://github.com/sindresorhus/screenfull#support
-	};
-
 	useEffect(() => {
 		const fullscreenEventHandler = () => {
-			setIsFullscreen(screenfull.isFullscreen);
+			setIsFullScreen(screenfull.isFullscreen);
 		};
 
 		const orientationEventHandler = () => {
-			setOrientation(window.screen.orientation.type);
+			setOrientation(o9n.orientation.type as OrientationType);
 		};
 
 		if (screenfull.isEnabled) {
@@ -80,12 +53,7 @@ export default function useFullScreen(
 			}
 		}
 
-		if (toggleOrientation) {
-			window.addEventListener(
-				'orientationchange',
-				orientationEventHandler
-			);
-		}
+		o9n.orientation.addEventListener('change', orientationEventHandler);
 
 		return () => {
 			if (screenfull.isEnabled) {
@@ -96,18 +64,18 @@ export default function useFullScreen(
 				}
 			}
 
-			if (toggleOrientation) {
-				window.removeEventListener(
-					'orientationchange',
-					orientationEventHandler
-				);
-			}
+			o9n.orientation.removeEventListener(
+				'change',
+				orientationEventHandler
+			);
 		};
 	}, [elementRef, onError, toggleOrientation]);
-
-	return {
-		isFullscreen,
-		toggleFullscreen,
-		orientation,
-	} as UseFullScreenReturn;
 }
+
+export const createFullScreenSlice: StateCreator<FullScreenSlice> = (set) => ({
+	isFullScreen: null,
+	_setIsFullScreen: (isFullScreen: boolean) => set({ isFullScreen }),
+	orientation: o9n.orientation.type,
+	_setOrientation: (orientation: string) =>
+		set({ orientation: orientation as OrientationType }),
+});
