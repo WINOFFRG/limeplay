@@ -229,6 +229,7 @@ const SliderThumb = forwardRef<HTMLSpanElement, SliderThumbProps>(
 					position: 'absolute',
 					transform: 'var(--volume-slider_thumb-transform)',
 					[startEdge]: 'var(--volume-slider-progress)',
+					zIndex: 10,
 				}}
 			>
 				<span

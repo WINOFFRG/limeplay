@@ -3,12 +3,12 @@ import React from 'react';
 import { IconChevronDown, IconExternalLink } from '@tabler/icons';
 import { Code, Menu, UnstyledButton, Text } from '@mantine/core';
 import { useSpotlight } from '@mantine/spotlight';
-import corePackageJson from '../../../package.json';
 import { Logo } from '../../Logo/Logo';
 import { useDirectionContext } from '../DirectionContext';
 import useStyles from './HeaderDesktop.styles';
 import { HeaderControls } from './HeaderControls';
 import siteConfig from '@/settings/site-config.json';
+import corePackageJson from '../../../../packages/limeplay-core/package.json';
 
 interface Version {
 	v: string;

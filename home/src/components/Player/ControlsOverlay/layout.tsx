@@ -2,12 +2,14 @@ import { useEffect, useRef, useState, useCallback, memo, useMemo } from 'react';
 import { useLimeplayStore } from '@limeplay/core/src/store';
 // import PlaybackButton from '../PlaybackButton';
 import {
+	FullScreenButton,
 	PlaybackButton,
 	SeekButton,
 	VolumeButton,
 	useVolume,
 } from '@limeplay/core';
-import { usePlayback } from '@limeplay/core/src/hooks';
+import { useFullScreen, usePlayback } from '@limeplay/core/src/hooks';
+import screenfull from 'screenfull';
 import useStyles from './styles';
 // import { VolumeControl } from '../VolumeButton';
 // import SettingsButton from '../SettingsButton';
@@ -16,6 +18,8 @@ import AnimationContainer from './AnimationContainer';
 import PlaybackNotification from './PlaybackNotification';
 import {
 	Forward10,
+	FullscreenEnter,
+	FullscreenExit,
 	MuteIcon,
 	PauseIcon,
 	PipEnter,
@@ -32,14 +36,44 @@ import { TimelineSlider } from '../Timeline/Timeline';
 
 export function ControlsTopPanel() {
 	const { classes } = useStyles();
+	useFullScreen();
+	const isFullScreen = useLimeplayStore((state) => state.isFullScreen);
+	const elementRef = document.getElementById('limeplay-player');
+
+	const toggleFullscreen = () => {
+		console.log('toggleFullscreen');
+		if (screenfull.isEnabled) {
+			if (isFullScreen) {
+				screenfull.exit();
+			} else {
+				screenfull.request(elementRef).then(() => {
+					// if (!toggleOrientation) return;
+					// if (orientation === 'landscape-primary') {
+					// 	window.screen.orientation
+					// 		.lock('portrait')
+					// 		.catch(orientationError);
+					// } else {
+					// 	window.screen.orientation
+					// 		.lock('landscape')
+					// 		.catch(orientationError);
+					// }
+				});
+			}
+		}
+
+		// Missing iOS Mobile Support https://github.com/sindresorhus/screenfull#support
+	};
 
 	return (
 		<div className={classes.controlsTopPanel} role="none">
 			<div className={classes.topRightSection}>
-				{/* <PipButton
-					pipEnterIcon={<PipEnter />}
-					pipExitIcon={<PipExit />}
-				/> */}
+				<FullScreenButton
+					isFullScreen={isFullScreen}
+					className={classes.controlButton}
+					onClick={toggleFullscreen}
+				>
+					{isFullScreen ? <FullscreenExit /> : <FullscreenEnter />}
+				</FullScreenButton>
 			</div>
 		</div>
 	);
