@@ -7,6 +7,7 @@ import { logger } from './utils';
 import {
 	StoreSlice,
 	createBufferSlice,
+	createFullScreenSlice,
 	createLoadingSlice,
 	createPlaybackSlice,
 	createSafeLoadSlice,
@@ -42,6 +43,7 @@ export function createLimeplayStore() {
 					...createTimelineSlice(set, get, storeApi),
 					...createBufferSlice(set, get, storeApi),
 					...createSafeLoadSlice(set, get, storeApi),
+					...createFullScreenSlice(set, get, storeApi),
 				}),
 				{
 					name: 'Limeplay Store',

@@ -11,6 +11,7 @@ export default function Player() {
 				width: '100vw',
 				height: '100vh',
 			}}
+			id="limeplay-player"
 		>
 			<LimeplayPlayer />
 		</div>

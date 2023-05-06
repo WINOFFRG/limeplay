@@ -40,6 +40,13 @@ import {
 	createSafeLoadSlice,
 } from './useSafeLoad';
 
+import {
+	UseFullScreenConfig,
+	useFullScreen,
+	FullScreenSlice,
+	createFullScreenSlice,
+} from './useFullScreen';
+
 export {
 	createPlaybackSlice,
 	createLoadingSlice,
@@ -47,6 +54,7 @@ export {
 	createTimelineSlice,
 	createBufferSlice,
 	createSafeLoadSlice,
+	createFullScreenSlice,
 };
 
 type StoreSlice = PlaybackSlice &
@@ -54,7 +62,8 @@ type StoreSlice = PlaybackSlice &
 	VolumeSlice &
 	TimelineSlice &
 	BufferSlice &
-	SafeLoadSlice;
+	SafeLoadSlice &
+	FullScreenSlice;
 
 export {
 	usePlayback,
@@ -63,6 +72,7 @@ export {
 	useTimeline,
 	useBufferInfo,
 	useSafeLoad,
+	useFullScreen,
 };
 
 export type {
@@ -79,4 +89,6 @@ export type {
 	UseBufferConfig,
 	SafeLoadSlice,
 	UseSafeLoadConfig,
+	FullScreenSlice,
+	UseFullScreenConfig,
 };
