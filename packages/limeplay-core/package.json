@@ -14,7 +14,8 @@
 		"lodash": "^4.17.21",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
-		"zustand": "^4.1.4"
+		"shaka-player": "^4.3.6",
+		"zustand": "^4.3.8"
 	},
 	"optionalDependencies": {
 		"o9n": "^2.1.1",
