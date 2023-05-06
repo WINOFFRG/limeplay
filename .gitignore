@@ -34,3 +34,4 @@ dist/**
 .vercel
 shaka-player
 .turbo
+.env

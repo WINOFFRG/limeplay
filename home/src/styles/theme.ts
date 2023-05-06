@@ -51,11 +51,11 @@ const themes = {
 export { themes };
 export type { GlobalTheme };
 
-const cache = createCache({
+export const emotionCache = createCache({
 	key: 'tss',
 });
 
 export const { makeStyles, withStyles, useStyles } = createMakeAndWithStyles({
 	useTheme: () => themes.glass,
-	cache,
+	cache: emotionCache,
 });

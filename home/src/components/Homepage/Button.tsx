@@ -58,7 +58,7 @@ const useStyles = makeStyles()((theme) => ({
 		textShadow: '0px 3px 8px rgba(0, 0, 0, 0.25)',
 
 		'&:hover': {
-			color: 'inherit',
+			color: 'white',
 			textShadow: '0 3px 12px rgba(0, 0, 0, 0.56)',
 			boxShadow: '0px 1px 40px rgba(80, 63, 205, 0.5)',
 		},

@@ -71,6 +71,7 @@ const useStyles = createStyles((theme, _params) => ({
 		position: 'absolute',
 		backgroundColor: '#1db954',
 		borderRadius: '2px',
+		zIndex: 2,
 
 		'&[data-orientation="horizontal"]': {
 			height: '100%',
@@ -88,7 +89,6 @@ const useStyles = createStyles((theme, _params) => ({
 		height: '100%',
 		backgroundColor: theme.colors.blue[8],
 		transition: 'transform 0.2s ease-in-out',
-		zIndex: 1,
 	},
 
 	timelineSlider__Buffer: {
@@ -97,7 +97,7 @@ const useStyles = createStyles((theme, _params) => ({
 		height: '100%',
 		// borderRadius: '2px',
 		backgroundColor: theme.colors.gray[5],
-		// zIndex: 2,
+		zIndex: 1,
 		transition: 'width 0.2s ease-in-out',
 	},
 
@@ -115,22 +115,7 @@ const useStyles = createStyles((theme, _params) => ({
 		color: '#fff',
 		transition: 'transform 0.2s cubic-bezier(0.4,0,0.2,1)',
 		...theme.fn.focusStyles(),
-
-		'&[data-disabled]': {
-			cursor: 'not-allowed',
-		},
-	},
-
-	sliderThumb: {
-		display: 'block',
-		width: '20px',
-		height: '20px',
-		backgroundColor: '#fff',
-		boxShadow: '0 2px 10px rgba(0, 0, 0, 0.07)',
-		borderRadius: '10px',
-		cursor: 'pointer',
-		// opacity: 0.5,
-		color: '#fff',
+		zIndex: 4,
 
 		'&[data-disabled]': {
 			cursor: 'not-allowed',

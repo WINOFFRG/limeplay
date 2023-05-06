@@ -31,7 +31,8 @@
 		"next": "13.3.0",
 		"next-transpile-modules": "^10.0.0",
 		"react": "18.2.0",
-		"react-dom": "18.2.0"
+		"react-dom": "18.2.0",
+		"screenfull": "^6.0.2"
 	},
 	"devDependencies": {
 		"@emotion/server": "^11.10.0",

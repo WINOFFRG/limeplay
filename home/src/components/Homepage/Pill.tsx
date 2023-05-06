@@ -79,12 +79,5 @@ export function Pill({
 }) {
 	const { classes, cx } = useStyles();
 
-	return (
-		<motion.div
-			className={cx(classes.pill, className)}
-			whileTap={{ scale: 0.9 }}
-		>
-			{children}
-		</motion.div>
-	);
+	return <div className={cx(classes.pill, className)}>{children}</div>;
 }
