@@ -167,10 +167,6 @@ export function TimelineSlider() {
 						0
 					)}`}
 					tabIndex={0}
-					// style={{
-					// 	left: `${currentProgress}%`,
-					// 	opacity: 1,
-					// }}
 					className={classes.timelineSlider__PlayHead}
 				/>
 				<MemoizedHoverContainer
