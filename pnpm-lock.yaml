@@ -360,8 +360,8 @@ importers:
         specifier: '>=16.8.0'
         version: 18.2.0(react@18.2.0)
       shaka-player:
-        specifier: '*'
-        version: 4.3.3
+        specifier: '>=3.0.0'
+        version: 4.3.6
 
 packages:
 
@@ -5095,7 +5095,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@emotion/react': 11.10.5(@babel/core@7.21.8)(@types/react@18.0.33)(react@18.2.0)
+      '@emotion/react': 11.10.5(@babel/core@7.21.8)(@types/react@18.0.26)(react@18.2.0)
       clsx: 1.1.1
       csstype: 3.0.9
       react: 18.2.0
@@ -14448,13 +14448,6 @@ packages:
   /setprototypeof@1.2.0:
     resolution: {integrity: sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==}
     dev: true
-
-  /shaka-player@4.3.3:
-    resolution: {integrity: sha512-UMaTwebmrpwYNFNnP8iRSR8cMdOvUMnisDa38Wkmmd63rWOQWbPq1DI1BIEu9oAUPIKXav6teelLRycdTnWKaQ==}
-    engines: {node: '>=14'}
-    dependencies:
-      eme-encryption-scheme-polyfill: 2.1.1
-    dev: false
 
   /shaka-player@4.3.6:
     resolution: {integrity: sha512-IX0rJY9NZyENcFH3MDf50cpOLOBsWWdaX8D3Fy0kSl7j1D1I+sXrzOQ2LxFgwmlqbIX3XrHzY9bxiWapV3ZjEg==}
