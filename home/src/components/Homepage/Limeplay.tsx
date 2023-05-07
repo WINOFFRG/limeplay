@@ -1,4 +1,4 @@
-import { useInView } from 'framer-motion';
+import { useInView, motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
 
@@ -11,17 +11,23 @@ function _LimeplayPlayer({
 }: {
 	parentRef: React.RefObject<HTMLDivElement>;
 }) {
-	const inView = useInView(ref, { amount: 0.6, once: true });
+	const inView = useInView(ref, { amount: 0.8, once: true });
 	return (
-		<div
+		<motion.div
 			style={{
 				position: 'relative',
 				padding: '1px 1px 0 0',
+				overflow: 'hidden',
+				borderRadius: '5px',
+				display: inView ? 'block' : 'none',
 			}}
 			id="limeplay-player"
+			initial={{ opacity: 0.4 }}
+			animate={{ opacity: 1 }}
+			transition={{ duration: 3, ease: 'easeInOut' }}
 		>
 			{inView && <LimeplayPlayer />}
-		</div>
+		</motion.div>
 	);
 }
 

@@ -19,10 +19,6 @@ export function Player() {
 				aria-hidden="true"
 				className={cx(classes.asset, ...(inView ? ['visible'] : []))}
 				ref={ref}
-				style={{
-					borderRadius: '10px',
-					overflow: 'hidden',
-				}}
 			>
 				<div className={classes.backgroundColor} />
 				<Stars parentRef={ref} />
@@ -35,7 +31,7 @@ export function Player() {
 				</svg>
 				<LimeplayWrapper parentRef={ref} />
 			</div>
-			<PlayerControls />
+			{/* <PlayerControls /> */}
 		</section>
 	);
 }
@@ -66,8 +62,9 @@ const useStyles = makeStyles<{ visible: boolean }>()((theme, { visible }) => ({
 		transition: 'transform 400ms ease-out',
 		marginTop: '128px',
 		transform: 'rotateX(25deg)',
+		borderRadius: '5px',
 		// pointerEvents: 'none',
-		// userSelect: 'none',
+		userSelect: 'none',
 
 		...(visible && {
 			animation: `${pressAndPop} 1400ms forwards`,
