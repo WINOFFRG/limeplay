@@ -21,9 +21,6 @@
 		"o9n": "^2.1.1",
 		"screenfull": "^6.0.2"
 	},
-	"peerDependencies": {
-		"shaka-player": "*"
-	},
 	"keywords": [
 		"player",
 		"react",
