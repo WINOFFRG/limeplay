@@ -31,7 +31,7 @@ export default function Player() {
 					controls={false}
 					playsInline
 					className={classes.videoElement}
-					autoPlay
+					autoPlay={false}
 				/>
 			</MediaOutlet>
 		</LimeplayProvider>
