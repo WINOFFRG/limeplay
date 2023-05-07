@@ -18,7 +18,6 @@ export default function Meta() {
 						commonClasses.textSelection
 					)}
 				>
-					{/* ?less than sign */}
 					&lt; Limeplay / &gt;
 				</h1>
 				<h5
