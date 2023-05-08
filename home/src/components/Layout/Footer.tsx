@@ -147,7 +147,8 @@ const useStyles = makeStyles()((theme) => ({
 
 		[theme.breakpoints.max.laptop]: {
 			width: '100%',
-			flexDirection: 'row',
+			flexDirection: 'column',
+			alignItems: 'center',
 		},
 	},
 

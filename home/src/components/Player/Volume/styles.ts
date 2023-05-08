@@ -1,4 +1,9 @@
-import { createStyles, getStylesRef as getRef } from '@mantine/styles';
+import {
+	createStyles,
+	em,
+	getBreakpointValue,
+	getStylesRef as getRef,
+} from '@mantine/styles';
 
 const useStyles = createStyles((theme) => ({
 	sliderRoot: {
@@ -85,6 +90,12 @@ const useStyles = createStyles((theme) => ({
 		'&[data-disabled]': {
 			cursor: 'not-allowed',
 		},
+
+		[`@media (max-width: ${em(getBreakpointValue(theme.breakpoints.md))})`]:
+			{
+				width: '16px',
+				height: '16px',
+			},
 	},
 }));
 
