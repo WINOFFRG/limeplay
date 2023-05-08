@@ -1,4 +1,5 @@
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
+import Image from 'next/image';
 import { useCommonStyles } from '@/styles/common';
 import NavigationItem from './Navigation';
 import { GitHubIcon } from '@/assets/icons/GitHubIcon';
@@ -6,6 +7,7 @@ import { DiscordIcon } from '@/assets/icons/DiscordIcon';
 import { makeStyles } from '@/styles';
 import { Config } from '../../../config';
 import { TwitterIcon } from '@/assets/icons/TwitterIcon';
+import { moreHitArea } from '@/styles/mixins';
 
 export type HeaderProps = {
 	/** Whether the header should be sticky when scrolling. */
@@ -31,6 +33,14 @@ export function Header({ sticky = false, blur = true }: HeaderProps) {
 					className={classes.menuList}
 				>
 					<ul className={commonClasses.layoutContent}>
+						<div className={classes.brandLogo}>
+							<Image
+								alt="Limeplay Logo"
+								width={25}
+								height={25}
+								src="/brand/logo_white.png"
+							/>
+						</div>
 						<NavigationItem href="/" variant="default">
 							Limeplay
 						</NavigationItem>
@@ -62,7 +72,7 @@ export function Header({ sticky = false, blur = true }: HeaderProps) {
 
 const useStyles = makeStyles<HeaderProps>()((theme, { blur, sticky }) => ({
 	header: {
-		position: sticky ? 'relative' : 'fixed',
+		position: sticky ? 'relative' : 'absolute',
 		top: 0,
 		background: !blur ? theme.color.pageBg : 'initial',
 		display: 'flex',
@@ -133,5 +143,12 @@ const useStyles = makeStyles<HeaderProps>()((theme, { blur, sticky }) => ({
 
 	spacer: {
 		flexGrow: 1,
+	},
+
+	brandLogo: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		padding: '0 12px 0 0',
 	},
 }));
