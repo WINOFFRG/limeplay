@@ -1,5 +1,12 @@
 [
 	{
+		"id": 29,
+		"url": "https://github.com/WINOFFRG/limeplay/pull/29",
+		"body": "---\ntitle: Version 1.0.0\ndescription: Limeplay Changelog\nreleaseUrl: https://github.com/WINOFFRG/limeplay/pull/29\nreleaseDate: May 8, 2023\nversion: 1.0.0\n---\n\n\n\n## @limeplay/core@1.0.0\n\n### Major Changes\n\n-   [#25](https://github.com/WINOFFRG/limeplay/pull/25) [`871de12`](https://github.com/WINOFFRG/limeplay/commit/871de12094ab517536500c35240680a5e9e582c5) Thanks [@WINOFFRG](https://github.com/WINOFFRG)! - Initial Release, Added Outlets, Providers, Made Headless\n\n### Patch Changes\n\n-   [`55f3bda`](https://github.com/WINOFFRG/limeplay/commit/55f3bdae8b3e4b924f1c5782f26f0969feb5bb68) Thanks [@WINOFFRG](https://github.com/WINOFFRG)! - Migrated to Headless, Added More Buttons, Cleaner\n\n-   [#27](https://github.com/WINOFFRG/limeplay/pull/27) [`9eb794a`](https://github.com/WINOFFRG/limeplay/commit/9eb794ab697ec20f7bc3966047c20d4414a72377) Thanks [@WINOFFRG](https://github.com/WINOFFRG)! - Patching for Module Cleanup\n\n-   [#27](https://github.com/WINOFFRG/limeplay/pull/27) [`9eb794a`](https://github.com/WINOFFRG/limeplay/commit/9eb794ab697ec20f7bc3966047c20d4414a72377) Thanks [@WINOFFRG](https://github.com/WINOFFRG)! - Added Cleanups\n\n-   [#20](https://github.com/WINOFFRG/limeplay/pull/20) [`ff79c49`](https://github.com/WINOFFRG/limeplay/commit/ff79c492bb29319b9a1d2c6f016ef3d54fa0af00) Thanks [@WINOFFRG](https://github.com/WINOFFRG)! - Bump patch, Package Readme\n\n## @limeplay/shaka-player@1.0.0\n\n### Major Changes\n\n-   [#25](https://github.com/WINOFFRG/limeplay/pull/25) [`871de12`](https://github.com/WINOFFRG/limeplay/commit/871de12094ab517536500c35240680a5e9e582c5) Thanks [@WINOFFRG](https://github.com/WINOFFRG)! - Initial Release, Added Outlets, Providers, Made Headless\n\n### Patch Changes\n\n-   [`8cd3ecd`](https://github.com/WINOFFRG/limeplay/commit/8cd3ecd2c1f6ca0ed480132e137c288e3c1e0b7f) Thanks [@WINOFFRG](https://github.com/WINOFFRG)! - Testin\n",
+		"date": "May 8, 2023",
+		"version": "1.0.0"
+	},
+	{
 		"id": 19,
 		"url": "https://github.com/WINOFFRG/limeplay/pull/19",
 		"body": "---\ntitle: Version 0.2.4\ndescription: Limeplay Changelog\nreleaseUrl: https://github.com/WINOFFRG/limeplay/pull/19\nreleaseDate: April 5, 2023\nversion: 0.2.4\n---\n\n\n\n## @limeplay/core@0.2.4\n\n### Patch Changes\n\n-   30ca032: Rolling back version\n-   30ca032: Patch: Added Readme\n",
