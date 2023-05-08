@@ -33,6 +33,7 @@ export default function Meta() {
 	);
 }
 
+// Meta
 // radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.3), #6c79ff)
 
 const useStyles = makeStyles()((theme) => ({
