@@ -30,6 +30,10 @@ const useStyles = createStyles((theme) => ({
 		[`&:hover .${getRef('sliderRange')}`]: {
 			backgroundColor: '#1db954',
 		},
+
+		[`&:hover .${getRef('sliderThumb')}`]: {
+			display: 'block',
+		},
 	},
 
 	sliderTrack: {
@@ -66,15 +70,17 @@ const useStyles = createStyles((theme) => ({
 	},
 
 	sliderThumb: {
-		display: 'block',
+		ref: getRef('sliderThumb'),
+		display: 'none',
 		width: '20px',
 		height: '20px',
 		backgroundColor: '#fff',
 		boxShadow: '0 2px 10px rgba(0, 0, 0, 0.07)',
 		borderRadius: '10px',
 		cursor: 'pointer',
-		// opacity: 0.5,
 		color: '#fff',
+		transition:
+			'display .8s cubic-bezier(0.4,0,0.2,1) ,transform .2s cubic-bezier(0.4,0,0.2,1)',
 
 		'&[data-disabled]': {
 			cursor: 'not-allowed',

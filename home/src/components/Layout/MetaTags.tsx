@@ -48,7 +48,7 @@ export function MetaTags(props: MetaTagsProps) {
 		children,
 	} = props;
 
-	const title = localTitle || 'Limeplay';
+	const title = localTitle || 'Limeplay UI';
 	const image =
 		localImage === false
 			? null

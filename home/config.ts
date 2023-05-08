@@ -9,5 +9,7 @@ export class Config {
 
 	public static AUTHOR_GITHUB = 'https://github.com/winoffrg';
 
+	public static AUTHOR_TWITTER = 'https://twitter.com/winoffrg';
+
 	public static NPM_URL = 'https://www.npmjs.com/org/limeplay';
 }

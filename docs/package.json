@@ -1,5 +1,5 @@
 {
-	"name": "@limeplay/docs",
+	"name": "docs",
 	"version": "1.0.1",
 	"private": true,
 	"scripts": {
