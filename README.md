@@ -1,11 +1,5 @@
-<p align="center">
-  <a href="https://github.com/winoffrg/limeplay">
-    <!-- <img src="https://raw.githubusercontent.com/limeplay/limeplay/main/media/logo-colored@2x.png?raw=true" alt="Limeplay logo" width="300" /> -->
-  </a>
-</p>
 
 <h1 align="center">🔰 Build Bullet Proof & Stunning Media Players at Ease</h1>
-<br />
 
 <p align="center">
   <img alt="Bundle Size" src="https://badgen.net/bundlephobia/minzip/@limeplay/core"/>
@@ -19,9 +13,13 @@
   </a>
 </p>
 
-<br />
+<p align="center">
+  <a href="https://github.com/winoffrg/limeplay">
+    <img src="https://limeplay.me/og/default.jpg" alt="Limeplay logo"/>
+  </a>
+</p>
 
-Limeplay is a React based component UI library build on top of [Shaka Player](
+Limeplay is a React based Headless UI library made to work with HTML5 & [Shaka Player](
     https://github.com/shaka-project/shaka-player) that allows you to build stunning, accessible and modern looking Media Players with ease. It exposes several hooks and highly configurable components using which you can build any functional Media Player like Netflix, Youtube, Hulu, Hotstar, without having to worry about the underlying player logic while adhering to accessibility best practices.
 
 <h2 align="center"> 🚧 <b>This project is still in its early stages and is looking for contributors</b> 🚧 </h2>
@@ -43,11 +41,11 @@ Limeplay is a React based component UI library build on top of [Shaka Player](
 
 👉 It's the https://docs.limeplay.me website for the latest version of Limeplay.
 
-## Features
+<!-- ## Features
 - To be Added
 - To be Added
 - To be Added
-- To be Added
+- To be Added -->
 
 ## Installation
 
@@ -55,49 +53,75 @@ To use Limeplay UI components, all you need to do is install the
 `@limeplay/core` package and its peer dependencies:
 
 ```sh
-$ yarn add @limeplay/core @emotion/react@^11 @emotion/styled@^11
+$ yarn add @limeplay/core @limeplay/shaka-player
 
 # or
 
-$ npm i @limeplay/react @emotion/react@^11 @emotion/styled@^11 framer-motion@^6
+$ npm i @limeplay/core @limeplay/shaka-player
 ```
 
 ## Usage
 
 To start using the components, please follow these steps:
 
-1. Wrap your application with the `LimeplayProvider` provided by
-   **@limeplay/core**.
+1. Player Setup
 
 ```jsx
-import { LimeplayProvider } from "@limeplay/core"
+import { useShakaPlayer } from '@limeplay/shaka-player';
+import { LimeplayProvider, OverlayOutlet, MediaOutlet } from '@limeplay/core';
 
-// Do this at the root of your application
-function App({ children }) {
-  return <LimeplayProvider>{children}</LimeplayProvider>
+
+export default function Player() {
+	const createPlayer = useShakaPlayer();
+
+	return (
+		<LimeplayProvider>
+			<OverlayOutlet createPlayer={createPlayer}>
+				<PlayerOverlay />	{/* Your custom overlay component */}
+			</OverlayOutlet>
+			<MediaOutlet>
+				<video
+					controls={false}
+					playsInline
+					autoPlay={false}
+				/>
+			</MediaOutlet>
+		</LimeplayProvider>
+	);
 }
+
 ```
 
-2. Import the components you want to use from **@limeplay/core** and wrap them
-   with the `PlayerWrapper` component.
+2. Configure Playback and Controls Overlay
 
 ```jsx
-import { PlayerWrapper, VideoWrapper, ControlsOverlay, PlaybackControl, VolumeControl } from "@limeplay/core"
+import {
+	useLimeplayStore,
+	useLimeplayStoreAPI,
+} from '@limeplay/core';
+import { useEffect } from 'react';
 
-function MyFullscreenPlayer() {
-    return (
-        <PlayerWrapper withShaka>
-            <ControlsOverlay>
-                <PlaybackControl />
-                <VolumeControl />
-            </ControlsOverlay>
-            <VideoWrapper
-                src="https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd"
-                volume={0.5}
-            />
-        </PlayerWrapper>
-    )
+export default function PlayerOverlay() {
+	const playback = useLimeplayStore((state) => state.playback);
+	const player = useLimeplayStore((state) => state.player);
+	const demoPlabackUrl =
+		'https://storage.googleapis.com/nodejs-streaming.appspot.com/uploads/f6b7c492-e78f-4b26-b95f-81ea8ca21a18/1642708128072/manifest.mpd';
+
+	useEffect(() => {
+		if (player && player.getLoadMode() === 1) {
+			const playerConfig = player.getConfiguration();
+
+			player.load(demoPlabackUrl);
+		}
+	}, [player, playback]);
+
+	return (
+		<div className={classes.overlayWrapper}>
+			<ControlsOverlay />	{/* Your custom controls component */}
+		</div>
+	);
 }
+
 ```
 
 ## Support & Discussion

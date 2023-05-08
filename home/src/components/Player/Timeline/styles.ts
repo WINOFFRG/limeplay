@@ -55,7 +55,7 @@ const useStyles = createStyles((theme, _params) => ({
 		// borderRadius: '2px',
 		transition: 'height border-radius 0.2s ease-in-out',
 		flex: '1 1 auto',
-		backgroundColor: '#808080',
+		backgroundColor: '#333333',
 		borderRadius: '4px',
 	},
 
@@ -96,7 +96,7 @@ const useStyles = createStyles((theme, _params) => ({
 		position: 'relative',
 		height: '100%',
 		// borderRadius: '2px',
-		backgroundColor: theme.colors.gray[5],
+		backgroundColor: '#717171',
 		zIndex: 1,
 		transition: 'width 0.2s ease-in-out',
 	},

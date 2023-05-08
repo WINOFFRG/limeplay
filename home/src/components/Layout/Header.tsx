@@ -5,6 +5,7 @@ import { GitHubIcon } from '@/assets/icons/GitHubIcon';
 import { DiscordIcon } from '@/assets/icons/DiscordIcon';
 import { makeStyles } from '@/styles';
 import { Config } from '../../../config';
+import { TwitterIcon } from '@/assets/icons/TwitterIcon';
 
 export type HeaderProps = {
 	/** Whether the header should be sticky when scrolling. */
@@ -45,6 +46,12 @@ export function Header({ sticky = false, blur = true }: HeaderProps) {
 						</NavigationItem>
 						<NavigationItem href={Config.DISCORD_URL} type="icon">
 							<DiscordIcon size={24} />
+						</NavigationItem>
+						<NavigationItem
+							href={Config.AUTHOR_TWITTER}
+							type="icon"
+						>
+							<TwitterIcon size={24} />
 						</NavigationItem>
 					</ul>
 				</NavigationMenu.List>
