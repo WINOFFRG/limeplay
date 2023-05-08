@@ -65,8 +65,8 @@ const useStyles = createStyles((theme, _params) => ({
 		// borderRadius: '2px',
 		transition: 'height border-radius 0.2s ease-in-out',
 		flex: '1 1 auto',
-		backgroundColor: '#333333',
-		borderRadius: '4px',
+		backgroundColor: 'gray',
+		borderRadius: '8px',
 	},
 
 	timelineSlider__DurationBar: {
@@ -80,7 +80,7 @@ const useStyles = createStyles((theme, _params) => ({
 
 		position: 'absolute',
 		backgroundColor: '#1db954',
-		borderRadius: '2px',
+		borderRadius: '8px',
 		zIndex: 2,
 
 		'&[data-orientation="horizontal"]': {
@@ -106,7 +106,7 @@ const useStyles = createStyles((theme, _params) => ({
 		position: 'relative',
 		height: '100%',
 		// borderRadius: '2px',
-		backgroundColor: '#717171',
+		backgroundColor: 'lightgray',
 		zIndex: 1,
 		transition: 'width 0.2s ease-in-out',
 	},
@@ -115,8 +115,8 @@ const useStyles = createStyles((theme, _params) => ({
 		ref: getRef('timelineSlider__PlayHead'),
 
 		display: 'block',
-		width: '20px',
-		height: '20px',
+		width: '18px',
+		height: '18px',
 		backgroundColor: '#fff',
 		boxShadow: '0 2px 10px rgba(0, 0, 0, 0.07)',
 		borderRadius: '10px',

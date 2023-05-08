@@ -102,11 +102,6 @@ export function MetaTags(props: MetaTagsProps) {
 					name="theme-color"
 					content={themeColor ?? theme.color.pageBg ?? '#060606'}
 				/>
-				<link
-					key="manifest"
-					rel="manifest"
-					href="/static/pwa.webmanifest?v=3"
-				/>
 
 				{/* Favicons */}
 				<link

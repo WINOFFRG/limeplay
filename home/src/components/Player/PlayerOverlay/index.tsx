@@ -21,16 +21,7 @@ export default function PlayerOverlay() {
 	useEffect(() => {
 		if (player && getState().isSafeLoad && player.getLoadMode() === 1) {
 			const playerConfig = player.getConfiguration();
-
-			playerConfig.drm.clearKeys = {
-				'31f563ec4d055f04a7077e638b046de4':
-					'695248391f00f7395e51f0e13201ed00',
-			};
-
-			playerConfig.streaming.bufferingGoal = 180;
-
 			player.configure(playerConfig);
-
 			player.load(process.env.NEXT_PUBLIC_PLAYBACK_URL || demoPlabackUrl);
 		}
 	}, [player, playback, isSafeLoad]);
