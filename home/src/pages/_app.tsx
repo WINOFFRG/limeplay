@@ -3,8 +3,9 @@ import { createEmotionSsrAdvancedApproach } from 'tss-react/next/pagesDir';
 import AppStyles from '@/styles/AppStyles';
 import { MetaTags } from '@/components/Layout/MetaTags';
 
-const { augmentDocumentWithEmotionCache, withAppEmotionCache } =
-	createEmotionSsrAdvancedApproach({ key: 'tss' });
+const { augmentDocumentWithEmotionCache } = createEmotionSsrAdvancedApproach({
+	key: 'tss',
+});
 
 export { augmentDocumentWithEmotionCache };
 

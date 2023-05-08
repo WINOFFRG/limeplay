@@ -27,7 +27,7 @@ function globalCss(theme: GlobalTheme): CSSObject {
 			'--font-monospace':
 				'"SFMono Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace',
 			'--font-regular':
-				'"Linear", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
+				'"UncutSans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
 			'--font-emoji':
 				'"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Segoe UI", "Twemoji Mozilla", "Noto Color Emoji", "Android Emoji"',
 
