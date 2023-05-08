@@ -77,8 +77,8 @@ const useStyles = createStyles((theme) => ({
 	sliderThumb: {
 		ref: getRef('sliderThumb'),
 		display: 'none',
-		width: '20px',
-		height: '20px',
+		width: '18px',
+		height: '18px',
 		backgroundColor: '#fff',
 		boxShadow: '0 2px 10px rgba(0, 0, 0, 0.07)',
 		borderRadius: '10px',
