@@ -1,4 +1,9 @@
-import { createStyles, getStylesRef as getRef } from '@mantine/styles';
+import {
+	createStyles,
+	em,
+	getBreakpointValue,
+	getStylesRef as getRef,
+} from '@mantine/styles';
 
 const useStyles = createStyles((theme, _params) => ({
 	timelineWrrapper: {
@@ -12,6 +17,11 @@ const useStyles = createStyles((theme, _params) => ({
 		boxSizing: 'border-box',
 		position: 'relative',
 		padding: '0 12px',
+
+		[`@media (max-width: ${em(getBreakpointValue(theme.breakpoints.md))})`]:
+			{
+				padding: '0 8px',
+			},
 	},
 
 	timelineSlider__Container: {
@@ -120,6 +130,12 @@ const useStyles = createStyles((theme, _params) => ({
 		'&[data-disabled]': {
 			cursor: 'not-allowed',
 		},
+
+		[`@media (max-width: ${em(getBreakpointValue(theme.breakpoints.md))})`]:
+			{
+				width: '16px',
+				height: '16px',
+			},
 	},
 
 	timelineSlider__VerticalBar__Hover: {

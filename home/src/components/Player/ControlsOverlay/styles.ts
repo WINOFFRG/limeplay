@@ -1,4 +1,9 @@
-import { createStyles, getStylesRef as getRef } from '@mantine/styles';
+import {
+	createStyles,
+	em,
+	getBreakpointValue,
+	getStylesRef as getRef,
+} from '@mantine/styles';
 
 const useStyles = createStyles((theme) => ({
 	skinControls: {
@@ -179,6 +184,12 @@ const useStyles = createStyles((theme) => ({
 			cursor: 'not-allowed',
 			transform: 'none',
 		},
+
+		[`@media (max-width: ${em(getBreakpointValue(theme.breakpoints.md))})`]:
+			{
+				width: '28px',
+				height: '28px',
+			},
 	},
 
 	iconStyle: {
