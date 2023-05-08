@@ -26,7 +26,7 @@ jobs:
         uses: ./.github/composite-actions/install
 
       - name: Build
-        run: pnpm build
+        run: pnpm build:package
 
       # - name: Generate docs
       #   run: pnpm build:prop-docs

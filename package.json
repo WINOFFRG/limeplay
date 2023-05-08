@@ -12,7 +12,7 @@
 		"limeplay:dev": "cd packages/limetree && pnpm run dev",
 		"lint": "eslint .",
 		"docgen": "esno ./scripts/docgen.ts",
-		"build": "turbo run build --filter=!./docs",
+		"build:package": "cd packages && turbo run build",
 		"build:fast": "turbo run build:fast",
 		"clean": "pnpm -r --parallel exec rimraf dist .turbo *.log",
 		"changelog:latest": "tsx scripts/changelog.ts --latest",
