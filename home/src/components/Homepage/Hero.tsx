@@ -25,7 +25,7 @@ export function Hero() {
 						<Pill className={classes.releasedPill}>
 							<span>v{corePackageJson.version}</span>
 							<div>
-								This Library is in Active Development
+								This Library is under active development
 							</div>{' '}
 							&nbsp; &rarr;
 						</Pill>

@@ -28,6 +28,7 @@ export default function Player() {
 			</OverlayOutlet>
 			<MediaOutlet>
 				<video
+					poster="https://initiate.alphacoders.com/images/104/cropped-1920-1080-1041829.jpg?91"
 					controls={false}
 					playsInline
 					className={classes.videoElement}

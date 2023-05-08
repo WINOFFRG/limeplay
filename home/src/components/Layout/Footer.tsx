@@ -65,22 +65,21 @@ export function Footer() {
 							these awesome people
 						</VariantLink>
 					</div>
-					{/* <div
+					<div
 						className={classes.logoWrapper}
 						style={{
 							display: 'inline-block',
+							fontWeight: 400,
+							marginTop: '1rem',
 						}}
 					>
-						This website is heavily inspired by{' '}
+						This website is heavily inspired from{' '}
 						<VariantLink href="https://linear.app">
 							Linear{' '}
 						</VariantLink>
 						<br />
-						Thanks to them for such great designs!
-						<br />
-						As I am a developer and not a designer I had to do this
-						:)
-					</div> */}
+						&#10084; I am Developer <s>Designer</s> :)
+					</div>
 				</div>
 				<Section title="About">
 					<FooterLink href={Config.GITHUB_URL}>Contribute</FooterLink>
@@ -100,6 +99,9 @@ export function Footer() {
 					</FooterLink>
 					<FooterLink href={Config.AUTHOR_GITHUB}>
 						Follow on Github
+					</FooterLink>
+					<FooterLink href={Config.AUTHOR_TWITTER}>
+						Follow on Twitter
 					</FooterLink>
 					<FooterLink href={`${Config.GITHUB_URL}/issues`}>
 						GitHub discussions
