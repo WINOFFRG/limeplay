@@ -65,7 +65,7 @@ export function Footer() {
 							these awesome people
 						</VariantLink>
 					</div>
-					<div
+					{/* <div
 						className={classes.logoWrapper}
 						style={{
 							display: 'inline-block',
@@ -80,7 +80,7 @@ export function Footer() {
 						<br />
 						As I am a developer and not a designer I had to do this
 						:)
-					</div>
+					</div> */}
 				</div>
 				<Section title="About">
 					<FooterLink href={Config.GITHUB_URL}>Contribute</FooterLink>
