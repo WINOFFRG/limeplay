@@ -52,7 +52,7 @@ export function MetaTags(props: MetaTagsProps) {
 	const image =
 		localImage === false
 			? null
-			: localImage || 'https://limeplay.me/og/default.png';
+			: localImage || 'https://limeplay.me/og/default.jpg';
 	// Twitter has a max of 420 characters for image alt text
 	const imageAlt = localImageAlt
 		? truncate(localImageAlt, { length: 420, omission: '…' })
@@ -65,7 +65,8 @@ export function MetaTags(props: MetaTagsProps) {
 	};
 
 	const description =
-		localDesc || 'Modern Headless UI Library for Media Player in React';
+		localDesc ||
+		'Modern Headless UI Library for Media Player in React (Supports HTML5 & Shaka Player). Use with any skin - Netflix, Youtube, Spotify, Hulu, Disney+ ...';
 
 	return (
 		<>
@@ -171,6 +172,8 @@ export function MetaTags(props: MetaTagsProps) {
 							property="og:image"
 							content={image}
 						/>
+						<meta property="og:image:width" content="1200" />
+						<meta property="og:image:height" content="630" />
 					</>
 				)}
 
