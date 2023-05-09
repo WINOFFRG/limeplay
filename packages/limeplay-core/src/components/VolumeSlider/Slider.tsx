@@ -117,12 +117,23 @@ const SliderRoot = forwardRef<HTMLDivElement, SliderProps>(
 				max,
 				disabled,
 				orientation,
+				inverted,
 				value,
 				startEdge,
 				size,
 				dir,
 			}),
-			[min, max, disabled, orientation, inverted, value, dir]
+			[
+				min,
+				max,
+				disabled,
+				orientation,
+				inverted,
+				value,
+				startEdge,
+				size,
+				dir,
+			]
 		);
 
 		return (
