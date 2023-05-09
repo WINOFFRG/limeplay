@@ -19,10 +19,25 @@ export default function PlayerOverlay() {
 		'https://storage.googleapis.com/nodejs-streaming.appspot.com/uploads/f6b7c492-e78f-4b26-b95f-81ea8ca21a18/1642708128072/manifest.mpd';
 
 	useEffect(() => {
-		if (player && getState().isSafeLoad && player.getLoadMode() === 1) {
-			const playerConfig = player.getConfiguration();
-			player.configure(playerConfig);
-			player.load(process.env.NEXT_PUBLIC_PLAYBACK_URL || demoPlabackUrl);
+		try {
+			if (player && getState().isSafeLoad && player.getLoadMode() === 1) {
+				let playerConfig =
+					process.env.NEXT_PUBLIC_SHAKA_CONFIG ||
+					player.getConfiguration();
+
+				if (process.env.NEXT_PUBLIC_SHAKA_CONFIG) {
+					playerConfig = JSON.parse(
+						process.env.NEXT_PUBLIC_SHAKA_CONFIG
+					);
+				}
+
+				player.configure(playerConfig);
+				player.load(
+					process.env.NEXT_PUBLIC_PLAYBACK_URL || demoPlabackUrl
+				);
+			}
+		} catch (error) {
+			console.log(error);
 		}
 	}, [player, playback, isSafeLoad]);
 

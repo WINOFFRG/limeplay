@@ -97,9 +97,6 @@ export function useVolume({
 	}, [playback, events, syncMuteState, initialVolume]);
 }
 
-const hookName = '@limeplay/hooks/useVolume';
-useVolume.displayName = hookName;
-
 export const createVolumeSlice: StateCreator<VolumeSlice> = (set) => ({
 	volume: 0,
 	_setVolume: (volume: number) => set({ volume }),
