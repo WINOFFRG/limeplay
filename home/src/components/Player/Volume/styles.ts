@@ -39,6 +39,11 @@ const useStyles = createStyles((theme) => ({
 		[`&:hover .${getRef('sliderThumb')}`]: {
 			display: 'block',
 		},
+
+		[`@media (max-width: ${em(getBreakpointValue(theme.breakpoints.sm))})`]:
+			{
+				display: 'none',
+			},
 	},
 
 	sliderTrack: {
