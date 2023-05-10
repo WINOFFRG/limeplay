@@ -6,6 +6,7 @@ export * from './components/FullScreenButton';
 export * from './components/LimeplayProvider/Provider';
 export * from './components/MediaOutlet/MediaOutlet';
 export * from './components/OverlayOutlet/OverlayOutlet';
+export * from './components/PipButton';
 
 export {
 	useVolume,
