@@ -80,10 +80,6 @@ export default function Meta() {
 const useStyles = makeStyles()((theme) => ({
 	heroWrapper: {
 		overflowX: 'hidden',
-		// paddingTop: 'var(--header-height)',
-		// paddingLeft: 'var(--page-padding-left)',
-		// paddingRight: 'var(--page-padding-right)',
-		// marginBottom: '-164px',
 		width: '1200px',
 		height: '630px',
 
