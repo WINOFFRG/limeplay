@@ -62,7 +62,7 @@ export default function NavbarDocsCategory({
 				[classes.categoryCollapsed]: collapsed,
 			})}
 		>
-			<button
+			{/* <button
 				style={{
 					display: 'none',
 				}}
@@ -84,7 +84,7 @@ export default function NavbarDocsCategory({
 						[classes.iconCollapsed]: collapsed,
 					})}
 				/>
-			</button>
+			</button> */}
 			<div className={classes.linkWrapper}>
 				<div className={classes.rootWrapper}>
 					{!collapsed &&

@@ -138,7 +138,7 @@ export default createStyles((theme, collapsed: boolean) => ({
 	rootWrapper: {
 		position: 'relative',
 		// paddingLeft: '0.75rem',
-		marginLeft: '0.25rem',
+		// marginLeft: '0.25rem',
 		display: 'flex',
 		// gap: theme.spacing.xs,
 		flexDirection: 'column',
@@ -156,7 +156,6 @@ export default createStyles((theme, collapsed: boolean) => ({
 
 	listWrapper: {
 		position: 'relative',
-		// paddingLeft: '0.75rem',
 		marginLeft: '0.25rem',
 		display: 'flex',
 		gap: theme.spacing.xs,
@@ -164,6 +163,7 @@ export default createStyles((theme, collapsed: boolean) => ({
 
 		'&:before': {
 			content: '""',
+			marginLeft: '0.50rem',
 			backgroundColor: 'rgba(38,38,38,1)',
 			position: 'absolute',
 			top: 0,
@@ -179,7 +179,6 @@ export default createStyles((theme, collapsed: boolean) => ({
 			theme.colorScheme === 'dark'
 				? 'hsl(204deg 100% 50%/.1)'
 				: theme.colors.blue[0],
-		// color: theme.colorScheme === 'dark' ? 'white' : theme.colors.blue[8],
 		fontWeight: 500,
 		color: 'hsl(204deg 100% 45%/1)',
 
