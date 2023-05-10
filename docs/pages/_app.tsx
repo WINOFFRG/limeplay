@@ -2,7 +2,6 @@
 import type { AppProps } from 'next/app';
 import { DefaultSeo } from 'next-seo';
 import Head from 'next/head';
-import FontFace from 'components/font-face';
 import { getSeo } from 'utils/seo';
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -16,22 +15,45 @@ export default function App({ Component, pageProps }: AppProps) {
 					content="width=device-width, initial-scale=1"
 					name="viewport"
 				/>
-				<link
-					rel="icon"
-					type="image/png"
-					sizes="96x96"
-					href="/favicon.png"
-				/>
 				<link rel="preconnect" href="https://fonts.googleapis.com" />
 				<link
 					rel="preconnect"
 					href="https://static.cloudflareinsights.com"
 				/>
-				<meta name="theme-color" content="#319795" />
+				<link
+					rel="icon"
+					type="image/x-icon"
+					href="https://limeplay.me/favicon/favicon.ico"
+				/>
+				<link
+					rel="icon"
+					type="image/png"
+					sizes="16x16"
+					href="https://limeplay.me/favicon/favicon-16x16.png"
+				/>
+				<link
+					rel="icon"
+					type="image/png"
+					sizes="32x32"
+					href="https://limeplay.me/favicon/favicon-32x32.png"
+				/>
+				<link
+					rel="apple-touch-icon"
+					sizes="180x180"
+					href="https://limeplay.me/favicon/apple-touch-icon.png"
+				/>
+				<link
+					rel="apple-touch-icon"
+					sizes="180x180"
+					href="https://limeplay.me/favicon/apple-touch-icon.png"
+				/>
+				<link
+					rel="manifest"
+					href="https://limeplay.me/favicon/site.webmanifest"
+				/>
 			</Head>
 			<DefaultSeo {...seo} />
 			<Component {...pageProps} />
-			<FontFace />
 		</>
 	);
 }

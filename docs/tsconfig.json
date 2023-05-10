@@ -1,5 +1,5 @@
 {
-  "compilerOptions": {
+	"compilerOptions": {
 		"target": "es6",
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": true,
@@ -17,14 +17,10 @@
 		"incremental": true,
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["./*"]
+			"@/*": ["./*"],
+			"contentlayer/generated": ["./.contentlayer/generated"]
 		}
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".contentlayer/generated"
-  ],
-  "exclude": ["node_modules"]
+	},
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".contentlayer"],
+	"exclude": ["node_modules"]
 }

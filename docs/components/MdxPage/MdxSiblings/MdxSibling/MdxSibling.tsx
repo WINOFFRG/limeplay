@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { Text } from '@mantine/core';
 import { upperFirst } from '@mantine/hooks';
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons';
+import { DocumentTypes } from 'contentlayer/generated';
 import useStyles from './MdxSibling.styles';
-import { DocumentTypes } from '@/.contentlayer/generated';
 
 interface MdxSiblingProps {
 	data: DocumentTypes;

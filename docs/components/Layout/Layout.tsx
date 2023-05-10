@@ -8,8 +8,15 @@ import {
 } from '@mantine/core';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
 import rtlPlugin from 'stylis-plugin-rtl';
+import { Inter } from 'next/font/google';
 import { LayoutInner } from './LayoutInner';
 import { DirectionContext } from './DirectionContext';
+
+export const inter = Inter({
+	subsets: ['latin'],
+	display: 'swap',
+	variable: '--font-inter',
+});
 
 const THEME_KEY = 'limeplay-color-scheme';
 
@@ -68,6 +75,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 										? theme.colors.dark[1]
 										: theme.colors.gray[8],
 								fontSize: 15,
+								fontFamily: `"var(--font-inter)", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif`,
 							},
 						})}
 					/>
