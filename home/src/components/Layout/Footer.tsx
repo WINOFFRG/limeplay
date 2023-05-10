@@ -145,7 +145,7 @@ const useStyles = makeStyles()((theme) => ({
 		marginRight: 'auto',
 		gap: '3rem',
 
-		[theme.breakpoints.max.laptop]: {
+		[theme.breakpoints.max.tablet]: {
 			width: '100%',
 			flexDirection: 'column',
 			alignItems: 'center',
@@ -165,7 +165,7 @@ const useStyles = makeStyles()((theme) => ({
 	styledSection: {
 		minWidth: 'min(180px, 100%)',
 
-		[theme.breakpoints.max.laptop]: {
+		[theme.breakpoints.max.tablet]: {
 			minWidth: '50%',
 			marginTop: '40px',
 			flex: 1,

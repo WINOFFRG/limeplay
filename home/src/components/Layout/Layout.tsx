@@ -21,7 +21,7 @@ const useStyles = makeStyles()({
 	},
 
 	content: {
-		minHeight: '100vh',
+		minHeight: '50vh',
 
 		'header ~ &': {
 			paddingTop: 'var(--header-height)',

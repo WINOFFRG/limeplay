@@ -35,6 +35,7 @@ const useStyles = createStyles((theme) => ({
 		display: 'flex',
 		justifyContent: 'flex-end',
 		alignItems: 'center',
+		gap: theme.spacing.xs,
 	},
 
 	controlsMiddlePanel: {
@@ -158,7 +159,7 @@ const useStyles = createStyles((theme) => ({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		gap: theme.spacing.sm,
+		gap: theme.spacing.xs,
 	},
 
 	controlButton: {
