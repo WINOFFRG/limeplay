@@ -11,6 +11,7 @@ import {
 import { useFullScreen, usePlayback } from '@limeplay/core/src/hooks';
 import screenfull from 'screenfull';
 import { useRouter } from 'next/router';
+import PipButton from '@limeplay/core/src/components/PipButton';
 import useStyles from './styles';
 // import { VolumeControl } from '../VolumeButton';
 // import SettingsButton from '../SettingsButton';
@@ -98,6 +99,11 @@ export function ControlsTopPanel() {
 	return (
 		<div className={classes.controlsTopPanel} role="none">
 			<div className={classes.topRightSection}>
+				<PipButton
+					pipEnterIcon={<PipEnter />}
+					pipExitIcon={<PipExit />}
+					className={classes.controlButton}
+				/>
 				<FullScreenButton
 					isFullScreen={isFullScreen}
 					className={classes.controlButton}
