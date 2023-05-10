@@ -20,8 +20,8 @@ export default createStyles((theme) => ({
 				? theme.colors.dark[1]
 				: theme.colors.gray[6],
 		fontSize: theme.fontSizes.sm,
-		paddingTop: rem(3),
-		paddingBottom: rem(3),
+		paddingTop: rem(5),
+		paddingBottom: rem(5),
 
 		'&:hover': {
 			textDecoration: 'underline',
