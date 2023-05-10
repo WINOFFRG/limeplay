@@ -4,7 +4,7 @@ const useStyles = createStyles((theme) => ({
 	iconStyle: {
 		width: '24px',
 		height: '24px',
-		margin: 'auto',
+		margin: '0 auto',
 		pointerEvents: 'none',
 
 		[`@media (max-width: ${em(getBreakpointValue(theme.breakpoints.sm))})`]:
