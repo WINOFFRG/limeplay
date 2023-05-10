@@ -5,7 +5,7 @@ const handleRedirects = async () => [
 	{
 		source: '/',
 		destination: '/pages/getting-started',
-		permanent: false,
+		permanent: true,
 	},
 ];
 
@@ -17,6 +17,9 @@ const nextConfig = {
 		ignoreDuringBuilds: true,
 	},
 	redirects: handleRedirects,
+	images: {
+		domains: ['limeplay.me'],
+	},
 };
 
 module.exports = withContentlayer(nextConfig);

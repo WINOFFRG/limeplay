@@ -5,6 +5,7 @@ import { MdxPageBase } from '../MdxPageBase/MdxPageBase';
 import { MdxSiblings } from '../MdxSiblings/MdxSiblings';
 import { MdxPageProps } from '../../../types';
 import useStyles from './MdxRawContent.styles';
+import { components } from '../MdxProvider/MdxProvider';
 
 const codePrefix = `
 if (typeof process === 'undefined') {
@@ -14,13 +15,13 @@ if (typeof process === 'undefined') {
 
 export function MdxRawContent({ data }: MdxPageProps) {
 	const { classes } = useStyles({ withToc: !data.hideToc });
-	const Component = useMDXComponent(codePrefix + data.body.code);
+	const Component = useMDXComponent(data.body.code);
 
 	return (
 		<MdxPageBase>
 			<div className={classes.wrapper}>
 				<div className={classes.container}>
-					<Component>{data.body}</Component>
+					<Component components={components}>{data.body}</Component>
 					{!data.hideToc && <MdxSiblings type="Guide" />}
 				</div>
 

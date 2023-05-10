@@ -75,10 +75,9 @@ export function LayoutInner({ children }: { children: React.ReactNode }) {
 				name: randomId(),
 				autoComplete: 'nope',
 			}}
-			transition={{
-				in: { transform: 'translateY(0)', opacity: 1 },
-				out: { transform: 'translateY(-20px)', opacity: 0 },
-				transitionProperty: 'transform, opacity',
+			transitionProps={{
+				transition: 'fade',
+				duration: 200,
 			}}
 		>
 			<div

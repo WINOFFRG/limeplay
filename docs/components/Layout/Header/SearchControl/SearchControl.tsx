@@ -13,11 +13,11 @@ interface SearchControlProps
 export function SearchControl({ className, ...others }: SearchControlProps) {
 	const { classes, cx } = useStyles();
 	const [isHydrated, setIsHydrated] = useState(false);
-	const os = useOs();
+	// const os = useOs();
 
-	useEffect(() => {
-		setIsHydrated(true);
-	}, []);
+	// useEffect(() => {
+	// 	setIsHydrated(true);
+	// }, []);
 
 	return (
 		<UnstyledButton {...others} className={cx(classes.root, className)}>
@@ -28,7 +28,7 @@ export function SearchControl({ className, ...others }: SearchControlProps) {
 				</Text>
 				{isHydrated && (
 					<Text weight={700} className={classes.shortcut}>
-						{os === 'undetermined' || os === 'macos' ? '⌘' : 'Ctrl'}{' '}
+						{/* {os === 'undetermined' || os === 'macos' ? '⌘' : 'Ctrl'}{' '} */}
 						+ K
 					</Text>
 				)}
