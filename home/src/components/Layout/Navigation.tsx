@@ -11,6 +11,7 @@ interface NavigationItemProps {
 	children: React.ReactNode;
 	type?: 'link' | 'icon';
 	variant?: 'default' | 'dimmed';
+	target?: HTMLAnchorElement['target'];
 }
 
 const useStyles = makeStyles<NavigationItemProps>()(
@@ -87,6 +88,7 @@ function NavigationItem({
 	children,
 	type = 'link',
 	variant = 'default',
+	target,
 }: NavigationItemProps) {
 	const router = useRouter();
 	const isActive = active ?? router.asPath.startsWith(href);
@@ -120,7 +122,7 @@ function NavigationItem({
 				>
 					<a
 						href={href}
-						target="_blank"
+						target={target ?? '_blank'}
 						data-text={
 							typeof children === 'string' ? children : undefined
 						}
