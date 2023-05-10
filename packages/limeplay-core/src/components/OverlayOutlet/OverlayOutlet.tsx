@@ -34,7 +34,7 @@ export function OverlayOutlet({
 		};
 	}, [createPlayer, playback, setPlayer]);
 
-	if (!playback || (withPlayer && !isLoaded)) return null;
+	if (!isLoaded) return null;
 
 	return <div>{children}</div>;
 }
