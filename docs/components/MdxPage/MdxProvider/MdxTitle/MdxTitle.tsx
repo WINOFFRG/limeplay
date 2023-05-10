@@ -15,14 +15,7 @@ export default function MdxTitle({
 	const { classes } = useStyles();
 
 	if (order === 1) {
-		return (
-			<Title
-				className={classes.title}
-				sx={{ fontWeight: 900, fontSize: 44 }}
-			>
-				{children}
-			</Title>
-		);
+		return <Title className={classes.title}>{children}</Title>;
 	}
 
 	return (

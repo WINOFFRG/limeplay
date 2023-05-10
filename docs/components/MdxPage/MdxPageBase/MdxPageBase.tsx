@@ -3,16 +3,16 @@ import { Footer } from '../../Footer/Footer';
 import useStyles from './MdxPageBase.styles';
 
 interface MdxPageBaseProps {
-    children: React.ReactNode;
+	children: React.ReactNode;
 }
 
 export function MdxPageBase({ children }: MdxPageBaseProps) {
-    const { classes } = useStyles();
+	const { classes } = useStyles();
 
-    return (
-        <>
-            <div className={classes.content}>{children}</div>
-            <Footer withNavbar />
-        </>
-    );
+	return (
+		<>
+			<div className={classes.content}>{children}</div>
+			<Footer withNavbar />
+		</>
+	);
 }

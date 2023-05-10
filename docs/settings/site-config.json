@@ -13,17 +13,29 @@
 		"blobUrl": "https://github.com/winoffrg/limeplay/blob/main"
   },
   "seo": {
-    "title": "Limeplay",
-    "titleTemplate": "%s - Limeplay",
-    "description": "Simple, Modular and Accessible UI Components for your Video Player.",
-    "siteUrl": "https://limeplay.me",
-    "openGraph": {
-		"type": "website",
-		"locale": "en_US",
-		"url": "https://limeplay.me",
-		"title": "Limeplay UI",
+		"title": "Limeplay",
+		"titleTemplate": "%s - Limeplay",
 		"description": "Simple, Modular and Accessible UI Components for your Video Player.",
-		"site_name": "Limeplay: Simple, Modular and Accessible UI Components for your Video Player."
-	}
+		"siteUrl": "https://limeplay.me",
+		"twitter": {
+			"handle": "@winoffrg",
+			"site": "@winoffrg",
+			"cardType": "summary_large_image"
+		},
+		"openGraph": {
+			"type": "website",
+			"locale": "en_US",
+			"url": "https://limeplay.me",
+			"title": "Limeplay UI",
+			"description": "Modern Headless UI Library for Media Player in React (Supports HTML5 & Shaka Player). Use with any skin - Netflix, Youtube, Spotify, Hulu, Disney+ ...",
+			"images": [
+				{
+					"url": "https://limeplay.me/og-image.png",
+					"width": 1200,
+					"height": 630,
+					"alt": "Limeplay UI"
+				}
+			]
+		}
   }
 }

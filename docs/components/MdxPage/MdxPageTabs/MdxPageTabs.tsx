@@ -35,31 +35,31 @@ export function MdxPageTabs({ data: frontmatter }: MdxPageProps) {
 
 	const propsTables = hasProps
 		? frontmatter.props.map((component) => {
-			const prefix = frontmatter.componentPrefix;
-			// eslint-disable-next-line no-nested-ternary
-			const componentName = prefix
-				? prefix === component
-					? component
-					: `${prefix}.${component.replace(prefix, '')}`
-				: component;
-			return (
-				<div key={component}>
-					<Title
-						order={2}
-						sx={{ fontWeight: 600 }}
-						mb={20}
-						className={classes.title}
-					>
-						{componentName} component props
-					</Title>
-					<PropsTable
-						key={component}
-						component={component}
-						query={query}
-					/>
-				</div>
-			);
-		})
+				const prefix = frontmatter.componentPrefix;
+				// eslint-disable-next-line no-nested-ternary
+				const componentName = prefix
+					? prefix === component
+						? component
+						: `${prefix}.${component.replace(prefix, '')}`
+					: component;
+				return (
+					<div key={component}>
+						<Title
+							order={2}
+							sx={{ fontWeight: 600 }}
+							mb={20}
+							className={classes.title}
+						>
+							{componentName} component props
+						</Title>
+						<PropsTable
+							key={component}
+							component={component}
+							query={query}
+						/>
+					</div>
+				);
+		  })
 		: null;
 
 	const tabStyle = {

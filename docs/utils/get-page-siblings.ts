@@ -1,4 +1,4 @@
-import { DocumentTypeMap } from '@/.contentlayer/generated';
+import { DocumentTypeMap } from 'contentlayer/generated';
 import { getDocumentsByType } from './get-docs-by-type';
 
 export function getPageSiblings(type: keyof DocumentTypeMap, pathname: string) {

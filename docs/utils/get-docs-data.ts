@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon2fa } from '@tabler/icons';
-import { allDocuments, type DocumentTypes } from '@/.contentlayer/generated';
+import { allDocuments, type DocumentTypes } from 'contentlayer/generated';
 import { CATEGORIZED } from '../settings';
 import { Frontmatter } from '../types';
 

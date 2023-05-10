@@ -89,8 +89,9 @@ export default function NavbarDocsCategory({
 				<div className={classes.rootWrapper}>
 					{!collapsed &&
 						Array.isArray(group.groups) &&
-						group.groups.map((part) => (
+						group.groups.map((part, index) => (
 							<CategoryLinks
+								key={`${part.category}-${index}`}
 								part={part}
 								onLinkClick={onLinkClick}
 								itemRefs={itemRefs}

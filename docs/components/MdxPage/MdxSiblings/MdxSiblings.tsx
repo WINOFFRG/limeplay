@@ -1,7 +1,7 @@
 import React from 'react';
 import { SimpleGrid } from '@mantine/core';
+import { DocumentTypeMap } from 'contentlayer/generated';
 import { MdxSibling } from './MdxSibling/MdxSibling';
-import { DocumentTypeMap } from '@/.contentlayer/generated';
 import { getPageSiblings } from '@/utils/get-page-siblings';
 import useRawPath from '@/hooks/use-raw-path';
 

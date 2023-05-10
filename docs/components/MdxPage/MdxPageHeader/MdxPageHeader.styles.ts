@@ -39,7 +39,7 @@ export default createStyles((theme) => ({
 	title: {
 		fontSize: rem(44),
 		marginBottom: `calc(${theme.spacing.xs} / 2)`,
-		fontWeight: 900,
+		fontWeight: 600,
 		color: theme.colorScheme === 'dark' ? theme.white : theme.black,
 		display: 'flex',
 		alignItems: 'center',

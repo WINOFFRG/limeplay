@@ -55,10 +55,10 @@ export function Footer({ withNavbar }: FooterProps) {
 								<DiscordButton
 									className={classes.socialButton}
 								/>
-								{/* <TwitterButton
-                                    className={classes.socialButton}
-                                    ml="md"
-                                /> */}
+								<TwitterButton
+									className={classes.socialButton}
+									ml="md"
+								/>
 							</div>
 						</Group>
 					</div>

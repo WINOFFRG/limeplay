@@ -8,7 +8,7 @@ export function Logo() {
 	const { classes } = useStyles();
 
 	return (
-		<Link href="/" className={classes.logo} aria-label="Mantine">
+		<Link href="/" className={classes.logo} aria-label="Limeplay">
 			<Text
 				style={{
 					fontSize: '1.2rem',
@@ -17,10 +17,10 @@ export function Logo() {
 				}}
 			>
 				<Image
-					src="/lemon.png"
+					src="https://limeplay.me/brand/logo_colored.png"
 					alt="Mantine Logo"
-					width={50}
-					height={50}
+					width={35}
+					height={35}
 					style={{
 						borderRadius: '50%',
 					}}
