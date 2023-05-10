@@ -40,6 +40,10 @@ const useStyles = createStyles((theme) => ({
 			display: 'block',
 		},
 
+		[`&:focus-visible .${getRef('sliderThumb')}`]: {
+			display: 'block',
+		},
+
 		[`@media (max-width: ${em(getBreakpointValue(theme.breakpoints.sm))})`]:
 			{
 				display: 'none',

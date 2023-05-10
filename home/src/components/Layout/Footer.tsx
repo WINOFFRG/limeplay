@@ -86,10 +86,10 @@ export function Footer() {
 					<FooterLink href={`${Config.DOCS_BASE}about`}>
 						About Limeplay
 					</FooterLink>
-					<FooterLink href={`${Config.DOCS_BASE}about`}>
+					<FooterLink href="https://github.com/WINOFFRG/limeplay/blob/main/CHANGELOG.md">
 						Changelog
 					</FooterLink>
-					<FooterLink href={`${Config.DOCS_BASE}about`}>
+					<FooterLink href="https://github.com/WINOFFRG/limeplay/releases">
 						Releases
 					</FooterLink>
 				</Section>
