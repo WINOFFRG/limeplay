@@ -12,6 +12,7 @@ const useStyles = createStyles((theme) => ({
 		left: 0,
 		width: '100%',
 		height: '100%',
+		userSelect: 'none',
 	},
 
 	controlsWrapper: {
@@ -167,6 +168,7 @@ const useStyles = createStyles((theme) => ({
 		alignItems: 'center',
 		width: '44px',
 		height: '44px',
+		padding: 0,
 		opacity: 0.7,
 		transition: 'opacity 0.1s ease-in-out',
 		backgroundColor: 'transparent',
