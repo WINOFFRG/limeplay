@@ -10,6 +10,7 @@ import {
 } from '@limeplay/core';
 import { useFullScreen, usePlayback } from '@limeplay/core/src/hooks';
 import screenfull from 'screenfull';
+import { useRouter } from 'next/router';
 import useStyles from './styles';
 // import { VolumeControl } from '../VolumeButton';
 // import SettingsButton from '../SettingsButton';
@@ -20,6 +21,8 @@ import {
 	Forward10,
 	FullscreenEnter,
 	FullscreenExit,
+	MaximizeIcon,
+	MinimizeIcon,
 	MuteIcon,
 	PauseIcon,
 	PipEnter,
@@ -34,6 +37,35 @@ import {
 import { VolumeSlider } from '../Volume/Slider';
 import { TimelineSlider } from '../Timeline/Timeline';
 
+function ResizeButton() {
+	const isFullScreen = useLimeplayStore((state) => state.isFullScreen);
+	const { classes } = useStyles();
+	const router = useRouter();
+	const isHomePage = useMemo(
+		() => router.pathname === '/',
+		[router.pathname]
+	);
+
+	const togglePage = () => {
+		if (!isHomePage) {
+			router.push('/');
+		} else {
+			router.push('/player');
+		}
+	};
+
+	return (
+		<button
+			type="button"
+			aria-label={isFullScreen ? 'Pause' : 'Play'}
+			className={classes.controlButton}
+			onClick={togglePage}
+		>
+			{isHomePage ? <MaximizeIcon /> : <MinimizeIcon />}
+		</button>
+	);
+}
+
 export function ControlsTopPanel() {
 	const { classes } = useStyles();
 	useFullScreen();
@@ -41,7 +73,6 @@ export function ControlsTopPanel() {
 	const elementRef = document.getElementById('limeplay-player');
 
 	const toggleFullscreen = () => {
-		console.log('toggleFullscreen');
 		if (screenfull.isEnabled) {
 			if (isFullScreen) {
 				screenfull.exit();
@@ -74,6 +105,7 @@ export function ControlsTopPanel() {
 				>
 					{isFullScreen ? <FullscreenExit /> : <FullscreenEnter />}
 				</FullScreenButton>
+				<ResizeButton />
 			</div>
 		</div>
 	);

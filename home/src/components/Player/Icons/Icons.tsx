@@ -320,6 +320,70 @@ function _SettingsIcon() {
 	);
 }
 
+function _Maximize() {
+	const { classes } = useStyles();
+
+	return (
+		<svg
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			className={classes.iconStyle}
+			style={{
+				width: '2rem',
+				height: '2rem',
+				margin: '0',
+			}}
+		>
+			<g
+				stroke="#FFF"
+				fill="none"
+				strokeWidth={2}
+				fillRule="evenodd"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			>
+				<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+				<path d="M3 16m0 1a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1z" />
+				<path d="M4 12v-6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-6" />
+				<path d="M12 8h4v4" />
+				<path d="M16 8l-5 5" />
+			</g>
+		</svg>
+	);
+}
+
+function _Minimize() {
+	const { classes } = useStyles();
+
+	return (
+		<svg
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			className={classes.iconStyle}
+			style={{
+				width: '2rem',
+				height: '2rem',
+				margin: '0',
+			}}
+		>
+			<g
+				stroke="#FFF"
+				fill="none"
+				strokeWidth={2}
+				fillRule="evenodd"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			>
+				<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+				<path d="M3 16m0 1a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1z" />
+				<path d="M4 12v-6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-6" />
+				<path d="M15 13h-4v-4" />
+				<path d="M11 13l5 -5" />
+			</g>
+		</svg>
+	);
+}
+
 export const UnmuteIcon = memo(_UnmuteIcon);
 export const MuteIcon = memo(_MuteIcon);
 export const VolumeHalf = memo(_VolumeHalf);
@@ -332,3 +396,5 @@ export const PipEnter = memo(_PipEnter);
 export const FullscreenExit = memo(_FullscreenExit);
 export const FullscreenEnter = memo(_FullscreenEnter);
 export const SettingsIcon = memo(_SettingsIcon);
+export const MaximizeIcon = memo(_Maximize);
+export const MinimizeIcon = memo(_Minimize);

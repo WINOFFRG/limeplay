@@ -7,7 +7,7 @@ const useStyles = createStyles((theme) => ({
 		margin: 'auto',
 		pointerEvents: 'none',
 
-		[`@media (max-width: ${em(getBreakpointValue(theme.breakpoints.md))})`]:
+		[`@media (max-width: ${em(getBreakpointValue(theme.breakpoints.sm))})`]:
 			{
 				width: '20px',
 				height: '20px',
