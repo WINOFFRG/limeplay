@@ -62,11 +62,11 @@ const useStyles = createStyles((theme, _params) => ({
 		position: 'relative',
 		height: '4px',
 		width: '100%',
-		// borderRadius: '2px',
 		transition: 'height border-radius 0.2s ease-in-out',
 		flex: '1 1 auto',
 		backgroundColor: 'gray',
 		borderRadius: '8px',
+		overflow: 'hidden',
 	},
 
 	timelineSlider__DurationBar: {
