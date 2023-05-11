@@ -46,12 +46,21 @@ function ResizeButton() {
 		() => router.pathname === '/',
 		[router.pathname]
 	);
+	const playback = useLimeplayStore((state) => state.playback);
 
 	const togglePage = () => {
+		const time = playback.currentTime;
+
 		if (!isHomePage) {
-			router.push('/');
+			router.push({
+				pathname: '/',
+				query: { t: time },
+			});
 		} else {
-			router.push('/player');
+			router.push({
+				pathname: '/player',
+				query: { t: time },
+			});
 		}
 	};
 

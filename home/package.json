@@ -30,6 +30,7 @@
 		"@vercel/analytics": "^1.0.1",
 		"framer-motion": "^10.12.4",
 		"lodash": "^4.17.21",
+		"mux.js": "^6.3.0",
 		"next": "13.3.0",
 		"next-transpile-modules": "^10.0.0",
 		"react": "18.2.0",

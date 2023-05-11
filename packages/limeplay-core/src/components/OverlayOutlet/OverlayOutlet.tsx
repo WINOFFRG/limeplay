@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLimeplayStore } from '../../store';
 
 export function OverlayOutlet({
@@ -13,7 +13,7 @@ export function OverlayOutlet({
 	const [isLoaded, setIsLoaded] = useState(false);
 	const withPlayer = typeof createPlayer === 'function';
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (playback) {
 			if (createPlayer) {
 				const shakaInstance = createPlayer({
@@ -29,8 +29,8 @@ export function OverlayOutlet({
 		}
 
 		return () => {
-			setPlayer(null);
 			setIsLoaded(false);
+			setPlayer(null);
 		};
 	}, [createPlayer, playback, setPlayer]);
 
