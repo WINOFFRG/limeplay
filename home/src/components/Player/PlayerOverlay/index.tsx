@@ -52,6 +52,7 @@ export default function PlayerOverlay() {
 					) as shaka.extern.PlayerConfiguration;
 				}
 
+				// @ts-ignore
 				playerConfig.abr.enabled = true;
 
 				player.configure(playerConfig);
