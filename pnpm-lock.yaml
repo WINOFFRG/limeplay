@@ -285,6 +285,9 @@ importers:
       '@use-gesture/react':
         specifier: ^10.2.25
         version: 10.2.25(react@18.2.0)
+      '@vercel/analytics':
+        specifier: ^1.0.1
+        version: 1.0.1
       framer-motion:
         specifier: ^10.12.4
         version: 10.12.4(react-dom@18.2.0)(react@18.2.0)
@@ -8002,6 +8005,10 @@ packages:
     dependencies:
       '@use-gesture/core': 10.2.25
       react: 18.2.0
+    dev: false
+
+  /@vercel/analytics@1.0.1:
+    resolution: {integrity: sha512-Ux0c9qUfkcPqng3vrR0GTrlQdqNJ2JREn/2ydrVuKwM3RtMfF2mWX31Ijqo1opSjNAq6rK76PwtANw6kl6TAow==}
     dev: false
 
   /@webassemblyjs/ast@1.11.5:

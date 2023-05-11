@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app';
 import { createEmotionSsrAdvancedApproach } from 'tss-react/next/pagesDir';
+import { Analytics } from '@vercel/analytics/react';
 import AppStyles from '@/styles/AppStyles';
 import { MetaTags } from '@/components/Layout/MetaTags';
 
@@ -15,6 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
 			<MetaTags />
 			<AppStyles />
 			<Component {...pageProps} />
+			<Analytics />
 		</>
 	);
 }
