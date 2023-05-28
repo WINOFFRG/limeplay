@@ -1,5 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable @typescript-eslint/no-var-requires */
 const { withContentlayer } = require('next-contentlayer');
+const { withPlaiceholder } = require('@plaiceholder/next');
 
 const handleRedirects = async () => [
 	{
@@ -22,4 +23,5 @@ const nextConfig = {
 	},
 };
 
-module.exports = withContentlayer(nextConfig);
+const config = withContentlayer(nextConfig);
+module.exports = withPlaiceholder(config);

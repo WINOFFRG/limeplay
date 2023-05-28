@@ -5,6 +5,8 @@ import { KeyboardEventsTable } from './KeyboardEventsTable/KeyboardEventsTable';
 import NextLink from './NextLink/NextLink';
 import DataTable from './DataTable/DataTable';
 import MdxTitle from './MdxTitle/MdxTitle';
+import { Dev, Heading } from '@/pages/dev';
+import Test from '@/components/Test';
 
 const h = (order: 1 | 2 | 3 | 4 | 5 | 6) =>
 	function (props: any) {
@@ -12,6 +14,9 @@ const h = (order: 1 | 2 | 3 | 4 | 5 | 6) =>
 	};
 
 export const components = {
+	Dev,
+	Heading,
+	Test,
 	NextLink,
 	DataTable,
 	KeyboardEventsTable,
