@@ -1,10 +1,12 @@
 import React, { Suspense } from 'react';
 import { GetStaticProps } from 'next';
 import { allDocuments, type DocumentTypes } from 'contentlayer/generated';
+import { getPlaiceholder } from 'plaiceholder';
 import { MdxPage } from '../components/MdxPage/MdxPage';
 import Layout from '@/components/Layout/Layout';
 import { MdxErrorPage } from '@/components/MdxPage/MdxErrorPage/MdxErrorPage';
 import SEO from '@/components/seo';
+import { getImagesByPath } from '@/utils/get-all-images';
 
 export default function DocPage({
 	mdx,
@@ -44,6 +46,18 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 		return pathAsked === post.slug;
 	});
+
+	const imagePaths = getImagesByPath(document.images);
+	const images = await Promise.all(
+		imagePaths.map(async (src) => getPlaiceholder(src))
+	).then((values) =>
+		values.map((value) => ({
+			img: value.img,
+			blurhash: value.blurhash,
+		}))
+	);
+
+	console.log(images);
 
 	if (document) {
 		return {
