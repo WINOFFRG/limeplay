@@ -43,7 +43,6 @@ const useStyles = makeStyles<{ visible: boolean }>()((theme, { visible }) => ({
 		},
 		width: 'min(var(--page-max-width), 100%)',
 		perspective: '2000px',
-		paddingBottom: '420px',
 
 		[theme.breakpoints.max.tablet]: {
 			paddingBottom: '256px',
@@ -85,16 +84,24 @@ const useStyles = makeStyles<{ visible: boolean }>()((theme, { visible }) => ({
 	},
 
 	backgroundColor: {
-		opacity: 0,
-		background:
-			'conic-gradient(from 230.29deg at 51.63% 52.16%, #2400ff 0deg, #0087ff 67.5deg, #6c279d 198.75deg, #1826a3 251.25deg, #3667c4 301.88deg, #691eff 360deg)',
-		filter: 'blur(160px)',
-		transform: 'translateZ(0)',
+		// opacity: 0,
+		':after': {
+			content: '""',
+			position: 'absolute',
+			top: 0,
+			left: 0,
+			width: '100%',
+			height: '100%',
+			background:
+				'conic-gradient(from 230.29deg at 51.63% 52.16%, #2400ff 0deg, #0087ff 67.5deg, #6c279d 198.75deg, #1826a3 251.25deg, #3667c4 301.88deg, #691eff 360deg)',
+			filter: 'blur(160px)',
+			transform: 'translateZ(0)',
 
-		...(visible && {
-			animation: `${colorFlash} 4.1s ease-out forwards`,
-			animationDelay: 'calc(var(--base-delay) + 600ms)',
-		}),
+			...(visible && {
+				animation: `${colorFlash} 4.1s ease-out forwards`,
+				animationDelay: 'calc(var(--base-delay) + 600ms)',
+			}),
+		},
 	},
 
 	svg: {

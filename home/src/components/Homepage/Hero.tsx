@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import corePackageJson from '@limeplay/core/package.json';
+import { Text, Title, createStyles, em } from '@mantine/core';
 import { makeStyles } from '@/styles';
 import { useCommonStyles } from '@/styles/common';
 import { Pill } from './Pill';
@@ -24,13 +25,14 @@ export function Hero() {
 					>
 						<Pill className={classes.releasedPill}>
 							<span>v{corePackageJson.version}</span>
-							<div>
+							<Text>
 								This Library is under active development
-							</div>{' '}
+							</Text>{' '}
 							&nbsp; &rarr;
 						</Pill>
 					</Link>
-					<h1
+					<Title
+						order={1}
 						className={cx(
 							classes.heroTitle,
 							commonClasses.textSelection
@@ -38,8 +40,9 @@ export function Hero() {
 					>
 						Modern Headless UI Library
 						<br /> for Media Player in React
-					</h1>
-					<h5
+					</Title>
+					<Title
+						order={5}
 						className={cx(
 							classes.heroSubtitle,
 							commonClasses.textSelection
@@ -48,7 +51,7 @@ export function Hero() {
 						Build modular, accessible, compatible & modern web media
 						player at ease
 						<br /> Supports Shaka Player and HTML5 Media
-					</h5>
+					</Title>
 				</div>
 			</div>
 			<CTA>
@@ -60,14 +63,15 @@ export function Hero() {
 	);
 }
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = createStyles((theme) => ({
 	heroWrapper: {
-		overflowX: 'hidden',
 		marginTop: 'calc(-1 * var(--header-height))',
 		paddingTop: 'var(--header-height)',
 		paddingLeft: 'var(--page-padding-left)',
 		paddingRight: 'var(--page-padding-right)',
-		marginBottom: '-164px',
+
+		// To merge flow of hero and player
+		paddingBottom: em(16),
 
 		display: 'flex',
 		flexDirection: 'column',
@@ -77,9 +81,9 @@ const useStyles = makeStyles()((theme) => ({
 		background:
 			'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.3), var(--transparent))',
 
-		[theme.breakpoints.max.tablet]: {
-			marginBottom: '-92px',
-		},
+		// [theme.breakpoints.max.tablet]: {
+		// 	marginBottom: '-92px',
+		// },
 	},
 
 	heroIntro: {
@@ -99,7 +103,7 @@ const useStyles = makeStyles()((theme) => ({
 		fontSize: '5rem',
 		lineHeight: '1',
 		letterSpacing: '-0.02em',
-		fontWeight: '500',
+		fontWeight: 500,
 		textAlign: 'center',
 		marginTop: '24px',
 		marginBottom: '24px',
@@ -119,8 +123,17 @@ const useStyles = makeStyles()((theme) => ({
 			marginBottom: '-0.13em',
 		},
 
-		[theme.breakpoints.max.mobile]: {
-			fontSize: '2.2rem',
+		[theme.fn.smallerThan('lg')]: {
+			fontSize: em(64),
+			letterSpacing: '-0.01em',
+
+			'& br': {
+				display: 'none',
+			},
+		},
+
+		[theme.fn.smallerThan('md')]: {
+			fontSize: em(48),
 			letterSpacing: '-0.01em',
 
 			'& br': {
@@ -130,7 +143,7 @@ const useStyles = makeStyles()((theme) => ({
 	},
 
 	heroSubtitle: {
-		fontSize: '1.5rem',
+		fontSize: em(24),
 		lineHeight: 1.3,
 		fontWeight: 400,
 		margin: '0 0 48px 0',
@@ -139,9 +152,9 @@ const useStyles = makeStyles()((theme) => ({
 		animation: `${fadeDown(10)} 1200ms backwards`,
 		animationDelay: '400ms',
 
-		[theme.breakpoints.max.mobile]: {
+		[theme.fn.smallerThan('lg')]: {
 			letterSpacing: '0.02em',
-			fontSize: '1rem',
+			fontSize: em(18),
 
 			'& br': {
 				display: 'none',
