@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { createGetInitialProps } from '@mantine/next';
 
 import createEmotionServer from '@emotion/server/create-instance';
 import Document, {

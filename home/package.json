@@ -20,6 +20,7 @@
 		"@mantine/carousel": "^6.0.4",
 		"@mantine/core": "^6.0.4",
 		"@mantine/hooks": "^6.0.4",
+		"@mantine/next": "^6.0.4",
 		"@mantine/styles": "^6.0.4",
 		"@radix-ui/react-collapsible": "^1.0.2",
 		"@radix-ui/react-label": "^2.0.1",
