@@ -1,6 +1,5 @@
 import { Text, Title, createStyles, em } from '@mantine/core';
 import LayoutContent from '../Layout/LayoutContent';
-import { fadeDown } from '@/styles/animation';
 
 const useStyles = createStyles((theme) => ({
 	titleWrapper: {
@@ -15,9 +14,6 @@ const useStyles = createStyles((theme) => ({
 		padding: em(32),
 		marginLeft: 'calc(-1 * var(--page-padding-left))',
 		marginRight: 'calc(-1 * var(--page-padding-right))',
-
-		// temo
-		marginBottom: em(72),
 
 		':before': {
 			content: '""',
@@ -35,6 +31,7 @@ const useStyles = createStyles((theme) => ({
 			filter: 'blur(80px)',
 			overflow: 'visible',
 			animation: 'gradient 800ms 800ms both',
+			zIndex: 1,
 		},
 	},
 }));
@@ -81,9 +78,9 @@ export default function Themes() {
 					lts="-0.014px"
 					style={{ fontSize: '18px' }}
 				>
-					Enhance your Linear experience with a wide variety of
-					add-ons and integrations
-					<br /> From everyday essentials to powerful pro workflows.
+					Create stunning Video Player with highly customizable
+					Components & Hooks
+					<br /> Completly Accessible, Compatible & Modern
 				</Text>
 			</div>
 		</LayoutContent>
