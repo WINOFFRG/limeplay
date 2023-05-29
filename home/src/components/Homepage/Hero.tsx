@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import corePackageJson from '@limeplay/core/package.json';
 import { Text, Title, createStyles, em } from '@mantine/core';
-import { makeStyles } from '@/styles';
 import { useCommonStyles } from '@/styles/common';
 import { Pill } from './Pill';
 import { fadeDown } from '@/styles/animation';

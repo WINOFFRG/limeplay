@@ -1,4 +1,4 @@
-import { makeStyles } from '@/styles';
+import { createStyles } from '@mantine/styles';
 import { Header } from './Header';
 import { Footer } from './Footer';
 
@@ -12,7 +12,7 @@ export type LayoutProps = {
 	className?: string;
 };
 
-const useStyles = makeStyles()({
+const useStyles = createStyles({
 	container: {
 		display: 'flex',
 		flexDirection: 'column',
