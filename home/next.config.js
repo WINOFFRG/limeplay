@@ -7,6 +7,13 @@ const nextConfig = {
 	compiler: {
 		emotion: true,
 	},
+	images: {
+		domains: [
+			'cdn.sanity.io',
+			'limetree-docs-f4bwnrbm1-winoffrg.vercel.app',
+		],
+	},
+
 	transpilePackages: ['@limeplay/core'],
 };
 

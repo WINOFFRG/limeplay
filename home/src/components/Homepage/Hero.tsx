@@ -100,7 +100,7 @@ const useStyles = createStyles((theme) => ({
 	},
 
 	heroTitle: {
-		fontSize: '5rem',
+		fontSize: em(80),
 		lineHeight: '1',
 		letterSpacing: '-0.02em',
 		fontWeight: 500,
@@ -143,7 +143,7 @@ const useStyles = createStyles((theme) => ({
 	},
 
 	heroSubtitle: {
-		fontSize: em(24),
+		fontSize: em(22),
 		lineHeight: 1.3,
 		fontWeight: 400,
 		margin: '0 0 48px 0',

@@ -270,9 +270,15 @@ importers:
       '@limeplay/shaka-player':
         specifier: workspace:*
         version: link:../packages/limeplay-shaka
+      '@mantine/carousel':
+        specifier: ^6.0.4
+        version: 6.0.4(@mantine/core@6.0.4)(@mantine/hooks@6.0.4)(embla-carousel-react@7.1.0)(react@18.2.0)
       '@mantine/core':
         specifier: ^6.0.4
         version: 6.0.4(@emotion/react@11.10.5)(@mantine/hooks@6.0.4)(@types/react@18.0.33)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks':
+        specifier: ^6.0.4
+        version: 6.0.4(react@18.2.0)
       '@mantine/styles':
         specifier: ^6.0.4
         version: 6.0.4(@emotion/react@11.10.5)(react-dom@18.2.0)(react@18.2.0)
@@ -5003,7 +5009,7 @@ packages:
       embla-carousel-react: ^7.0.0
       react: '>=16.8.0'
     dependencies:
-      '@mantine/core': 6.0.4(@emotion/react@11.10.5)(@mantine/hooks@6.0.4)(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/core': 6.0.4(@emotion/react@11.10.5)(@mantine/hooks@6.0.4)(@types/react@18.0.33)(react-dom@18.2.0)(react@18.2.0)
       '@mantine/hooks': 6.0.4(react@18.2.0)
       '@mantine/utils': 6.0.4(react@18.2.0)
       embla-carousel-react: 7.1.0(react@18.2.0)
@@ -5146,7 +5152,7 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@emotion/react': 11.10.5(@babel/core@7.21.8)(@types/react@18.0.26)(react@18.2.0)
+      '@emotion/react': 11.10.5(@babel/core@7.21.8)(@types/react@18.0.33)(react@18.2.0)
       clsx: 1.1.1
       csstype: 3.0.9
       react: 18.2.0
