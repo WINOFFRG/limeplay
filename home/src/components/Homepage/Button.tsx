@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { makeStyles } from '@/styles';
+import { createStyles } from '@mantine/styles';
 import { fadeDown } from '@/styles/animation';
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = createStyles((theme) => ({
 	heroButton: {
 		appearance: 'none',
 		cursor: 'pointer',

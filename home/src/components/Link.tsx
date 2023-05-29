@@ -1,5 +1,6 @@
 import NextLink, { LinkProps as NextLinkProps } from 'next/link';
 import { forwardRef } from 'react';
+import { createStyles } from '@mantine/styles';
 import { makeStyles } from '@/styles';
 
 export type LinkKind = 'primary' | 'dimmed';
@@ -36,40 +37,48 @@ export const VariantLink = forwardRef<HTMLAnchorElement, LinkProps>(
 	}
 );
 
-const useStyles = makeStyles<{
-	kind: LinkKind;
-	active: boolean;
-}>()((theme, { kind, active }) => ({
-	anchorLink: {
-		textDecoration: 'none',
-		color: 'inherit',
-		outline: 'none',
-		cursor: 'pointer',
+const useStyles = createStyles(
+	(
+		theme,
+		{
+			kind,
+			active,
+		}: {
+			kind: LinkKind;
+			active: boolean;
+		}
+	) => ({
+		anchorLink: {
+			textDecoration: 'none',
+			color: 'inherit',
+			outline: 'none',
+			cursor: 'pointer',
 
-		'&.focus-visible': {
-			outlineStyle: 'solid',
-			outlineColor: theme.color.labelLink,
-			outlineWidth: 'thin',
-			outlineOffset: '4px',
-			boxShadow: 'none',
+			'&.focus-visible': {
+				outlineStyle: 'solid',
+				outlineColor: theme.color.labelLink,
+				outlineWidth: 'thin',
+				outlineOffset: '4px',
+				boxShadow: 'none',
+			},
+
+			...(kind === 'primary' && {
+				fontWeight: 500,
+				color: theme.color.labelLink,
+				transition: 'color var(--speed-quickTransition)',
+
+				'&:hover': {
+					color: theme.color.labelLinkHover,
+				},
+			}),
+
+			...(kind === 'dimmed' && {
+				color: active ? theme.color.labelTitle : theme.color.labelMuted,
+				transition: 'color var(--speed-quickTransition)',
+				'&:hover': {
+					color: theme.color.labelTitle,
+				},
+			}),
 		},
-
-		...(kind === 'primary' && {
-			fontWeight: 500,
-			color: theme.color.labelLink,
-			transition: 'color var(--speed-quickTransition)',
-
-			'&:hover': {
-				color: theme.color.labelLinkHover,
-			},
-		}),
-
-		...(kind === 'dimmed' && {
-			color: active ? theme.color.labelTitle : theme.color.labelMuted,
-			transition: 'color var(--speed-quickTransition)',
-			'&:hover': {
-				color: theme.color.labelTitle,
-			},
-		}),
-	},
-}));
+	})
+);

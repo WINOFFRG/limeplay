@@ -1,7 +1,7 @@
+import { createStyles } from '@mantine/styles';
 import { ColorToolsLegacy } from './ColorToolsLegacy';
-import { makeStyles } from './theme';
 
-export const useCommonStyles = makeStyles()((theme) => ({
+export const useCommonStyles = createStyles((theme) => ({
 	layoutContent: {
 		paddingLeft: 'var(--page-padding-left)',
 		paddingRight: 'var(--page-padding-right)',

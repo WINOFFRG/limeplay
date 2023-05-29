@@ -1,10 +1,10 @@
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import Image from 'next/image';
+import { createStyles } from '@mantine/styles';
 import { useCommonStyles } from '@/styles/common';
 import NavigationItem from './Navigation';
 import { GitHubIcon } from '@/assets/icons/GitHubIcon';
 import { DiscordIcon } from '@/assets/icons/DiscordIcon';
-import { makeStyles } from '@/styles';
 import { Config } from '../../../config';
 import { TwitterIcon } from '@/assets/icons/TwitterIcon';
 import { moreHitArea } from '@/styles/mixins';
@@ -74,7 +74,7 @@ export function Header({ sticky = false, blur = true }: HeaderProps) {
 	);
 }
 
-const useStyles = makeStyles<HeaderProps>()((theme, { blur, sticky }) => ({
+const useStyles = createStyles((theme, { blur, sticky }: HeaderProps) => ({
 	header: {
 		position: sticky ? 'relative' : 'absolute',
 		top: 0,
@@ -85,7 +85,7 @@ const useStyles = makeStyles<HeaderProps>()((theme, { blur, sticky }) => ({
 		right: 0,
 		alignItems: 'center',
 		height: 'var(--header-height)',
-		zIndex: 'var(--layer-header)',
+		zIndex: Number('var(--layer-header)'),
 		transition: 'background 400ms',
 		marginBottom: sticky ? 'initial' : `calc(-1 * var(--header-height))`,
 		marginRight:
@@ -127,9 +127,9 @@ const useStyles = makeStyles<HeaderProps>()((theme, { blur, sticky }) => ({
 		'& > li + li': {
 			marginLeft: '24px',
 
-			[theme.breakpoints.max.mobile]: {
-				marginLeft: '16px',
-			},
+			// [theme.breakpoints.max.mobile]: {
+			// 	marginLeft: '16px',
+			// },
 		},
 
 		'&::after': {

@@ -2,6 +2,7 @@ import { useInView, useReducedMotion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { random, uniqueId } from 'lodash';
 import { keyframes } from 'tss-react';
+import { createStyles } from '@mantine/styles';
 import { makeStyles } from '@/styles';
 import { fadeIn } from '@/styles/animation';
 import { gradientBorder } from '@/styles/mixins';
@@ -73,7 +74,7 @@ export function Stars({
 	);
 }
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = createStyles((theme) => ({
 	placeholder: {
 		height: '600px',
 

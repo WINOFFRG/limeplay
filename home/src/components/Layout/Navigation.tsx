@@ -2,7 +2,7 @@ import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
-import { makeStyles } from '@/styles';
+import { createStyles } from '@mantine/styles';
 import { moreHitArea } from '@/styles/mixins';
 
 interface NavigationItemProps {
@@ -14,8 +14,8 @@ interface NavigationItemProps {
 	target?: HTMLAnchorElement['target'];
 }
 
-const useStyles = makeStyles<NavigationItemProps>()(
-	(theme, { active, variant }) => ({
+const useStyles = createStyles(
+	(theme, { active, variant }: NavigationItemProps) => ({
 		menuItem: {
 			listStyleType: 'none',
 			display: 'flex',

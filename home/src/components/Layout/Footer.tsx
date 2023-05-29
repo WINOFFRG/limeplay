@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { createStyles } from '@mantine/styles';
 import { makeStyles } from '@/styles';
 import { useCommonStyles } from '@/styles/common';
 import { VariantLink } from '../Link';
@@ -121,7 +122,7 @@ export function Footer() {
 	);
 }
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = createStyles((theme) => ({
 	footerWrapper: {
 		position: 'relative',
 		maxWidth: '100%',

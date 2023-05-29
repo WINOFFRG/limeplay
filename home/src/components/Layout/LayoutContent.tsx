@@ -1,6 +1,6 @@
-import { makeStyles } from '@/styles';
+import { createStyles } from '@mantine/styles';
 
-const useStyles = makeStyles()({
+const useStyles = createStyles({
 	wrapper: {
 		paddingLeft: 'var(--page-padding-left)',
 		paddingRight: 'var(--page-padding-right)',
