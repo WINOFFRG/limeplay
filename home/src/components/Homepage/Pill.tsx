@@ -1,7 +1,6 @@
-import { motion } from 'framer-motion';
-import { makeStyles } from '@/styles';
+import { createStyles } from '@mantine/styles';
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = createStyles((theme) => ({
 	pill: {
 		display: 'flex',
 		alignItems: 'center',

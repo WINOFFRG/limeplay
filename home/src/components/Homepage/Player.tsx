@@ -1,6 +1,7 @@
 import { keyframes } from 'tss-react';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { createStyles } from '@mantine/styles';
 import { makeStyles } from '@/styles';
 import { PlayerControls } from './Controls';
 import { Stars } from './Stars';
@@ -36,7 +37,7 @@ export function Player() {
 	);
 }
 
-const useStyles = makeStyles<{ visible: boolean }>()((theme, { visible }) => ({
+const useStyles = createStyles((theme, { visible }: { visible: boolean }) => ({
 	playerWrapper: {
 		':root': {
 			'--base-delay': '0s',
