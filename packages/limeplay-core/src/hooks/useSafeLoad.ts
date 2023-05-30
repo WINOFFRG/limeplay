@@ -14,6 +14,8 @@ export function useSafeLoad() {
 	const setIsSafeLoad = useLimeplayStore((state) => state._setIsSafeLoad);
 
 	useEffect(() => {
+		if (!player) return null;
+
 		const handleSafeLoad = (event) => {
 			const isSafeLoad = event.type === 'loaded';
 			setIsSafeLoad(isSafeLoad);
