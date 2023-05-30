@@ -49,6 +49,8 @@ export type GlobalTheme = typeof glassGlobalTheme;
 export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<MantineProvider
+			withGlobalStyles
+			withNormalizeCSS
 			theme={{
 				other: glassGlobalTheme,
 				globalStyles: (theme) => ({
@@ -116,12 +118,12 @@ export default function App({ Component, pageProps }: AppProps) {
 						// Disable optical sizing until we're ready…
 						'--font-variations': 'opsz auto',
 						fontVariationSettings: 'var(--font-variations)',
+						scrollBehavior: 'smooth',
 					},
 
 					html: {
 						fontSize: '16px',
 						scrollPaddingTop: 'calc(var(--header-height) + 36px)',
-						scrollBehavior: 'smooth',
 					},
 
 					body: {
