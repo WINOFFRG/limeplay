@@ -1,4 +1,4 @@
-import { CSSObject } from 'tss-react';
+import { CSSObject } from '@mantine/styles';
 
 export function moreHitArea(
 	pixelsOrTop: number,
@@ -6,8 +6,8 @@ export function moreHitArea(
 	bottom?: number,
 	left?: number,
 	addPositioning = true
-): CSSObject {
-	return {
+): any {
+	const css: CSSObject = {
 		position: addPositioning ? 'relative' : 'initial',
 		'&::before': {
 			position: 'absolute',
@@ -18,10 +18,11 @@ export function moreHitArea(
 			bottom: `-${bottom ?? pixelsOrTop}px`,
 		},
 	};
+	return css;
 }
 
-export function gradientBorder(size: number, gradient: string): CSSObject {
-	return {
+export function gradientBorder(size: number, gradient: string): any {
+	const css: CSSObject = {
 		position: 'relative',
 
 		'&::before': {
@@ -42,4 +43,5 @@ export function gradientBorder(size: number, gradient: string): CSSObject {
 			maskComposite: 'exclude',
 		},
 	};
+	return css;
 }

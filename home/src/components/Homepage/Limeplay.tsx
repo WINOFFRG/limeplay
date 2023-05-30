@@ -11,7 +11,7 @@ function _LimeplayPlayer({
 }: {
 	parentRef: React.RefObject<HTMLDivElement>;
 }) {
-	const inView = useInView(ref, { amount: 0.8, once: true });
+	const inView = useInView(ref, { amount: 0.7, once: true });
 	return (
 		<motion.div
 			style={{

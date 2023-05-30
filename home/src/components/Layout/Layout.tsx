@@ -1,4 +1,5 @@
-import { createStyles } from '@mantine/styles';
+import { createStyles, em } from '@mantine/styles';
+import { Flex } from '@mantine/core';
 import { Header } from './Header';
 import { Footer } from './Footer';
 
@@ -13,13 +14,6 @@ export type LayoutProps = {
 };
 
 const useStyles = createStyles({
-	container: {
-		display: 'flex',
-		flexDirection: 'column',
-		width: '100%',
-		lineHeight: '1.53em',
-	},
-
 	content: {
 		minHeight: '100vh',
 
@@ -38,10 +32,10 @@ export function Layout({
 	const { classes } = useStyles();
 
 	return (
-		<div {...others} className={classes.container}>
+		<Flex direction="column" w="100%" {...others}>
 			{header}
 			<main className={classes.content}>{children}</main>
 			{footer}
-		</div>
+		</Flex>
 	);
 }

@@ -78,14 +78,14 @@ const useStyles = createStyles((theme, { blur, sticky }: HeaderProps) => ({
 	header: {
 		position: sticky ? 'relative' : 'absolute',
 		top: 0,
-		background: !blur ? theme.color.pageBg : 'initial',
+		background: !blur ? theme.other.color.pageBg : 'initial',
 		display: 'flex',
 		flexDirection: 'column',
 		left: 0,
 		right: 0,
 		alignItems: 'center',
 		height: 'var(--header-height)',
-		zIndex: Number('var(--layer-header)'),
+		// zIndex: 'var(--layer-header)',
 		transition: 'background 400ms',
 		marginBottom: sticky ? 'initial' : `calc(-1 * var(--header-height))`,
 		marginRight:
@@ -127,9 +127,9 @@ const useStyles = createStyles((theme, { blur, sticky }: HeaderProps) => ({
 		'& > li + li': {
 			marginLeft: '24px',
 
-			// [theme.breakpoints.max.mobile]: {
-			// 	marginLeft: '16px',
-			// },
+			[theme.fn.smallerThan('lg')]: {
+				marginLeft: '16px',
+			},
 		},
 
 		'&::after': {
