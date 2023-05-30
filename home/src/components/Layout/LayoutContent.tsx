@@ -1,18 +1,18 @@
-import { createStyles } from '@mantine/styles';
-
-const useStyles = createStyles({
-	wrapper: {
-		paddingLeft: 'var(--page-padding-left)',
-		paddingRight: 'var(--page-padding-right)',
-	},
-});
+import { Box } from '@mantine/core';
 
 export default function LayoutContent({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	const { classes } = useStyles();
-
-	return <div className={classes.wrapper}>{children}</div>;
+	return (
+		<Box
+			pl="var(--page-padding-left)"
+			pr="var(--page-padding-right)"
+			maw="var(--page-max-width)"
+			mx="auto"
+		>
+			{children}
+		</Box>
+	);
 }

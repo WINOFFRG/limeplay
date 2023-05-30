@@ -31,15 +31,16 @@ const useStyles = createStyles(
 			height: 'var(--header-height)',
 			color:
 				variant === 'default'
-					? theme.color.labelBase
-					: theme.color.labelMuted,
+					? theme.other.color.labelBase
+					: theme.other.color.labelMuted,
 			fontWeight: active ? 600 : 500,
 			textAlign: 'center',
 			textShadow:
 				'1px 1px 4px rgba(0, 0, 0, 0.3), 2px 2px 4px rgba(0, 0, 0, 0.1)',
+			...theme.fn.focusStyles(),
 
 			'&:hover, &:focus-visible': {
-				color: theme.color.labelBase,
+				color: theme.other.color.labelBase,
 			},
 
 			/* We reserve space for making the font-weight 600, which changes width */
@@ -55,28 +56,29 @@ const useStyles = createStyles(
 				overflow: 'hidden',
 			},
 
-			[theme.breakpoints.max.mobile]: {
-				fontSize: '0.8rem',
-			},
+			// TODO: Breakpoints
+			// [theme.breakpoints.max.mobile]: {
+			// 	fontSize: '0.8rem',
+			// },
 		},
 
 		anchorIcon: {
 			display: 'flex',
-			color: theme.color.labelMuted,
+			color: theme.other.color.labelMuted,
 			transition: 'color 80ms',
 			...moreHitArea(8),
 
 			/* Fighting the global rule for > a svg path */
 			'& svg path': {
-				color: theme.color.labelMuted,
+				color: theme.other.color.labelMuted,
 			},
 
 			'&:hover, &:hover svg path': {
-				color: theme.color.labelBase,
+				color: theme.other.color.labelBase,
 			},
 
 			'&:focus-visible, &:focus-visible svg path': {
-				color: theme.color.labelBase,
+				color: theme.other.color.labelBase,
 			},
 		},
 	})

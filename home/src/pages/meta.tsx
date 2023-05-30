@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { makeStyles } from '@/styles';
+import { createStyles } from '@mantine/styles';
 import { useCommonStyles } from '@/styles/common';
 import { fadeDown } from '@/styles/animation';
 import { Config } from '../../config';
@@ -54,22 +54,8 @@ export default function Meta() {
 			/>
 			<div className={classes.heroIntro}>
 				<Link href={Config.GITHUB_URL} tabIndex={-1} target="_blank" />
-				<h1
-					className={cx(
-						classes.heroTitle,
-						commonClasses.textSelection
-					)}
-				>
-					{/* &lt;  */}
-					Limeplay
-					{/* / &gt; */}
-				</h1>
-				<h5
-					className={cx(
-						classes.heroSubtitle,
-						commonClasses.textSelection
-					)}
-				>
+				<h1 className={classes.heroTitle}>Limeplay</h1>
+				<h5 className={classes.heroSubtitle}>
 					Modern Headless UI Library for Media Player in React
 				</h5>
 			</div>
@@ -77,7 +63,7 @@ export default function Meta() {
 	);
 }
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = createStyles((theme) => ({
 	heroWrapper: {
 		overflowX: 'hidden',
 		width: '1200px',
@@ -93,9 +79,9 @@ const useStyles = makeStyles()((theme) => ({
 		// background:
 		// 	'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.3), var(--transparent))',
 
-		[theme.breakpoints.max.tablet]: {
-			marginBottom: '-92px',
-		},
+		// [theme.breakpoints.max.tablet]: {
+		// 	marginBottom: '-92px',
+		// },
 	},
 
 	heroIntro: {
@@ -118,7 +104,7 @@ const useStyles = makeStyles()((theme) => ({
 		fontSize: '9rem',
 		lineHeight: '1',
 		letterSpacing: '-0.02em',
-		fontWeight: '500',
+		fontWeight: 500,
 		textAlign: 'center',
 		// marginTop: '24px',
 		// marginBottom: '24px',
@@ -138,14 +124,14 @@ const useStyles = makeStyles()((theme) => ({
 			marginBottom: '-0.13em',
 		},
 
-		[theme.breakpoints.max.mobile]: {
-			fontSize: '2.2rem',
-			letterSpacing: '-0.01em',
+		// [theme.breakpoints.max.mobile]: {
+		// 	fontSize: '2.2rem',
+		// 	letterSpacing: '-0.01em',
 
-			'& br': {
-				display: 'none',
-			},
-		},
+		// 	'& br': {
+		// 		display: 'none',
+		// 	},
+		// },
 	},
 
 	heroSubtitle: {
@@ -158,13 +144,13 @@ const useStyles = makeStyles()((theme) => ({
 		animation: `${fadeDown(10)} 1200ms backwards`,
 		animationDelay: '400ms',
 
-		[theme.breakpoints.max.mobile]: {
-			letterSpacing: '0.02em',
-			fontSize: '1rem',
+		// [theme.breakpoints.max.mobile]: {
+		// 	letterSpacing: '0.02em',
+		// 	fontSize: '1rem',
 
-			'& br': {
-				display: 'none',
-			},
-		},
+		// 	'& br': {
+		// 		display: 'none',
+		// 	},
+		// },
 	},
 }));

@@ -2,7 +2,7 @@ import * as Collapsible from '@radix-ui/react-collapsible';
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { makeStyles } from '@/styles';
+import { createStyles } from '@mantine/styles';
 import { ChevronRightIcon } from '@/assets/icons/ChevronRightIcon';
 import { ChevronDownIcon } from '@/assets/icons/ChevronDownIcon';
 import { CTA, DimmedButton } from './Button';
@@ -109,19 +109,19 @@ export function PlayerControls() {
 	);
 }
 
-const useStyles = makeStyles<ContainerProps>()((theme, { isHighlighted }) => ({
+const useStyles = createStyles((theme, { isHighlighted }: ContainerProps) => ({
 	collapsibleRoot: {
 		margin: '18px 0',
 		borderRadius: '6px',
 		overflow: 'hidden',
-		backgroundColor: theme.color.bgShade,
+		backgroundColor: theme.other.color.bgShade,
 		width: '100%',
 		cursor: 'pointer',
 		display: 'block',
 		padding: '16px',
 		border: '1px solid',
 		borderColor: isHighlighted
-			? theme.color.controlBaseHighlight
+			? theme.other.color.controlBaseHighlight
 			: 'transparent',
 		boxShadow: isHighlighted
 			? '0px 0px 0px 3px rgba(94, 106, 210, 0.2)'
@@ -130,7 +130,7 @@ const useStyles = makeStyles<ContainerProps>()((theme, { isHighlighted }) => ({
 		fontWeight: 600,
 		fontSize: '16px',
 		lineHeight: 1.5,
-		color: theme.color.labelTitle,
+		color: theme.other.color.labelTitle,
 
 		'.permalink-icon': {
 			width: '12px',
@@ -145,7 +145,7 @@ const useStyles = makeStyles<ContainerProps>()((theme, { isHighlighted }) => ({
 			appearance: 'none',
 			border: 'none',
 			cursor: 'pointer',
-			color: theme.color.labelMuted,
+			color: theme.other.color.labelMuted,
 
 			svg: {
 				width: '100%',
@@ -153,12 +153,12 @@ const useStyles = makeStyles<ContainerProps>()((theme, { isHighlighted }) => ({
 			},
 
 			'&:hover': {
-				color: theme.color.labelTitle,
+				color: theme.other.color.labelTitle,
 			},
 		},
 
 		'&:hover': {
-			backgroundColor: theme.color.bgSub,
+			backgroundColor: theme.other.color.bgSub,
 			'.permalink-icon': {
 				opacity: 1,
 				visibility: 'visible',
@@ -178,9 +178,9 @@ const useStyles = makeStyles<ContainerProps>()((theme, { isHighlighted }) => ({
 		display: 'flex',
 		width: '100%',
 		alignItems: 'center',
-		backgroundColor: theme.color.bgSub,
-		border: `1px solid ${theme.color.bgBorder}`,
-		color: theme.color.labelMuted,
+		backgroundColor: theme.other.color.bgSub,
+		border: `1px solid ${theme.other.color.bgBorder}`,
+		color: theme.other.color.labelMuted,
 		borderRadius: '6px',
 		position: 'relative',
 		height: '48px',
@@ -198,9 +198,9 @@ const useStyles = makeStyles<ContainerProps>()((theme, { isHighlighted }) => ({
 		},
 
 		'&:hover': {
-			borderColor: theme.color.bgBorderSolid,
-			backgroundColor: theme.color.bgBase,
-			color: theme.color.labelTitle,
+			borderColor: theme.other.color.bgBorderSolid,
+			backgroundColor: theme.other.color.bgBase,
+			color: theme.other.color.labelTitle,
 		},
 	},
 }));

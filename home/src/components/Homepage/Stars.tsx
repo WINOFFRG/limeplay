@@ -1,9 +1,7 @@
 import { useInView, useReducedMotion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { random, uniqueId } from 'lodash';
-import { keyframes } from 'tss-react';
-import { createStyles } from '@mantine/styles';
-import { makeStyles } from '@/styles';
+import { createStyles, keyframes } from '@mantine/styles';
 import { fadeIn } from '@/styles/animation';
 import { gradientBorder } from '@/styles/mixins';
 
@@ -76,7 +74,7 @@ export function Stars({
 
 const useStyles = createStyles((theme) => ({
 	placeholder: {
-		height: '600px',
+		// height: '600px',
 
 		position: 'relative',
 		overflow: 'hidden',
@@ -97,10 +95,7 @@ const useStyles = createStyles((theme) => ({
 			inset: 0,
 			opacity: 0,
 			transition: 'opacity 480ms',
-
-			':root': {
-				'--alpha': '0.3',
-			},
+			'--alpha': '0.3',
 
 			backgroundImage:
 				'radial-gradient(ellipse 50px 20px at 46% 0%, rgba(74, 101, 199, var(--alpha)), var(--transparent)), ' +

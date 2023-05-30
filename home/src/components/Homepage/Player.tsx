@@ -1,15 +1,13 @@
-import { keyframes } from 'tss-react';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { createStyles } from '@mantine/styles';
-import { makeStyles } from '@/styles';
+import { createStyles, keyframes } from '@mantine/styles';
 import { PlayerControls } from './Controls';
 import { Stars } from './Stars';
 import { LimeplayWrapper } from './Limeplay';
 
 export function Player() {
 	const ref = useRef(null);
-	const inView = useInView(ref, { amount: 0.6, once: true });
+	const inView = useInView(ref, { amount: 0.7, once: true });
 	const { classes, cx } = useStyles({
 		visible: inView,
 	});
@@ -39,21 +37,13 @@ export function Player() {
 
 const useStyles = createStyles((theme, { visible }: { visible: boolean }) => ({
 	playerWrapper: {
-		':root': {
-			'--base-delay': '0s',
-		},
+		'--base-delay': '0s',
 		width: 'min(var(--page-max-width), 100%)',
 		perspective: '2000px',
-
-		[theme.breakpoints.max.tablet]: {
-			paddingBottom: '256px',
-		},
 	},
 
 	asset: {
-		':root': {
-			'--radius': '8px',
-		},
+		'--radius': '8px',
 		width: '100%',
 		minHeight: '600px',
 		display: 'grid',
@@ -77,10 +67,9 @@ const useStyles = createStyles((theme, { visible }: { visible: boolean }) => ({
 		},
 
 		'@media (max-width: 768px)': {
-			':root': {
-				'--radius': '2px',
-			},
+			'--radius': '2px',
 			marginTop: '72px',
+			minHeight: '100px',
 		},
 	},
 

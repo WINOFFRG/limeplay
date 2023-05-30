@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
-import { createStyles } from '@mantine/styles';
-import { makeStyles } from '@/styles';
+import { createStyles, rem } from '@mantine/styles';
+import { Flex, Title } from '@mantine/core';
 import { useCommonStyles } from '@/styles/common';
 import { VariantLink } from '../Link';
 import { Config } from '../../../config';
@@ -16,7 +16,9 @@ function Section({
 
 	return (
 		<div className={classes.styledSection}>
-			<h3 className={classes.sectionTitle}>{title}</h3>
+			<Title order={3} className={classes.sectionTitle}>
+				{title}
+			</Title>
 			<ul className={classes.sectionList}>{children}</ul>
 		</div>
 	);
@@ -53,7 +55,13 @@ export function Footer() {
 	return (
 		<footer className={classes.footerWrapper}>
 			<div className={cx(classes.inner, commonClasses.layoutContent)}>
-				<div className={classes.leftContainer}>
+				<Flex
+					justify="flex-start"
+					direction="column"
+					className={classes.leftContainer}
+					gap={rem(3)}
+					mr="auto"
+				>
 					<div className={classes.logoWrapper}>
 						Built by{' '}
 						<VariantLink href={Config.AUTHOR_GITHUB}>
@@ -81,7 +89,7 @@ export function Footer() {
 						<br />
 						&#10084; I am Developer <s>Designer</s> :)
 					</div>
-				</div>
+				</Flex>
 				<Section title="About">
 					<FooterLink href={Config.GITHUB_URL}>Contribute</FooterLink>
 					<FooterLink href={`${Config.DOCS_BASE}about`}>
@@ -126,9 +134,9 @@ const useStyles = createStyles((theme) => ({
 	footerWrapper: {
 		position: 'relative',
 		maxWidth: '100%',
-		zIndex: 'var(--layer-footer)',
+		zIndex: Number('var(--layer-footer)'),
 		backdropFilter: 'blur(5px)',
-		background: theme.color.pageBg,
+		background: theme.other.color.pageBg,
 		borderTop: '1px solid rgba(255, 255, 255, 0.1)',
 	},
 
@@ -140,13 +148,7 @@ const useStyles = createStyles((theme) => ({
 	},
 
 	leftContainer: {
-		display: 'flex',
-		flexDirection: 'column',
-		justifyContent: 'flex-start',
-		marginRight: 'auto',
-		gap: '3rem',
-
-		[theme.breakpoints.max.tablet]: {
+		[theme.fn.smallerThan('lg')]: {
 			width: '100%',
 			flexDirection: 'column',
 			alignItems: 'center',
@@ -157,7 +159,7 @@ const useStyles = createStyles((theme) => ({
 		display: 'flex',
 		alignItems: 'center',
 		whiteSpace: 'pre',
-		color: theme.color.labelBase,
+		color: theme.other.color.labelBase,
 		fontSize: '14px',
 		fontWeight: 500,
 		lineHeight: '24px',
@@ -166,7 +168,7 @@ const useStyles = createStyles((theme) => ({
 	styledSection: {
 		minWidth: 'min(180px, 100%)',
 
-		[theme.breakpoints.max.tablet]: {
+		[theme.fn.smallerThan('lg')]: {
 			minWidth: '50%',
 			marginTop: '40px',
 			flex: 1,
@@ -177,7 +179,7 @@ const useStyles = createStyles((theme) => ({
 		fontSize: '14px',
 		fontWeight: 500,
 		lineHeight: '24px',
-		color: theme.color.labelBase,
+		color: theme.other.color.labelBase,
 		marginBottom: '14px',
 	},
 

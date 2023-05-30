@@ -5,7 +5,6 @@ const useStyles = createStyles((theme) => ({
 	titleWrapper: {
 		userSelect: 'none',
 		position: 'relative',
-		minWidth: '100%',
 		display: 'flex',
 		alignItems: 'center',
 		flexDirection: 'column',

@@ -1,13 +1,16 @@
-import { createStyles, keyframes } from '@mantine/styles';
-import { Carousel } from '@mantine/carousel';
+import { createStyles, em, keyframes } from '@mantine/styles';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { useMediaQuery, getHotkeyHandler } from '@mantine/hooks';
-import { Flex, Text, UnstyledButton } from '@mantine/core';
+import { Box, Flex, Text, UnstyledButton } from '@mantine/core';
 import Image from 'next/image';
-import css from 'styled-jsx/css';
 import { useToggleClassname } from '@/hooks/useToggleClassname';
 import { ChevronRightIcon } from '@/assets/icons/ChevronRightIcon';
+
+interface CarouselSlideProps {
+	active?: boolean;
+	bg?: string;
+}
 
 const slidesData = [
 	{
@@ -44,19 +47,49 @@ const slidesData = [
 	},
 	{
 		title: 'Prime Video',
-		bg: 'conic-gradient(from 180deg at 50% 50%, rgb(255, 255, 255) -48.75deg, rgb(226, 238, 253) 35.62deg, rgb(66, 107, 246) 153.75deg, rgb(131, 194, 233) 232.5deg, rgb(255, 255, 255) 311.25deg, rgb(226, 238, 253) 395.63deg)',
+		bg: `conic-gradient(
+			from 45deg at 50% 50%,
+			#2888b9 0deg,
+			#2170a6 45deg,
+			#1a588d 90deg,
+			#134074 135deg,
+			#1a588d 180deg,
+			#2170a6 225deg,
+			#2888b9 270deg,
+			#2170a6 315deg
+		);`,
 		image: '/themes/prime_new_player.png',
 		icon: '/themes/prime_icon.svg',
 	},
 	{
 		title: 'Hulu',
-		bg: 'conic-gradient(from 180deg at 50% 50%, rgb(255, 255, 255) -48.75deg, rgb(226, 238, 253) 35.62deg, rgb(66, 107, 246) 153.75deg, rgb(131, 194, 233) 232.5deg, rgb(255, 255, 255) 311.25deg, rgb(226, 238, 253) 395.63deg)',
+		bg: `conic-gradient(
+			from 45deg at 50% 50%,
+			#15ce65 0deg,
+			#00a858 45deg,
+			#007b47 90deg,
+			#004e36 135deg,
+			#007b47 180deg,
+			#00a858 225deg,
+			#15ce65 270deg,
+			#00a858 315deg
+		);`,
 		image: '/themes/hulu_new_player.png',
 		icon: '/themes/hulu_icon.svg',
 	},
 	{
 		title: 'Youtube',
-		bg: 'conic-gradient(from 180deg at 50% 50%, rgb(255, 255, 255) -48.75deg, rgb(226, 238, 253) 35.62deg, rgb(66, 107, 246) 153.75deg, rgb(131, 194, 233) 232.5deg, rgb(255, 255, 255) 311.25deg, rgb(226, 238, 253) 395.63deg)',
+		bg: `conic-gradient(
+			from 45deg at 50% 50%,
+			#d90a19 0deg,
+			#d90a19 45deg,
+			#d90a19 90deg,
+			#d90a19 135deg,
+			#d90a19 180deg,
+			#d90a19 225deg,
+			#d90a19 270deg,
+			#d90a19 315deg
+		);`,
 		image: '/themes/youtubeo_player.png',
 		icon: '/themes/youtube_icon.svg',
 	},
@@ -82,10 +115,11 @@ function Buttons({ slides, slideIndex, setIndex }: ButtonProps) {
 	const [ref, toggle] = useToggleClassname<HTMLButtonElement>('animate');
 	const [ref2, toggle2] = useToggleClassname<HTMLButtonElement>('animate');
 	const { classes, cx } = useStyles({});
+	const largeScreen = useMediaQuery('(min-width: 60em)');
 
 	return (
-		<Flex align="center" justify="space-between" w="100%" pb="xs">
-			<Flex gap={24} align="center">
+		<Flex align="center" justify="space-between" w="100%" pt="1px" pb="1px">
+			<Flex gap={largeScreen ? 24 : 18} align="center">
 				{slides.map((slide, index) => (
 					<UnstyledButton
 						className={cx(
@@ -96,11 +130,18 @@ function Buttons({ slides, slideIndex, setIndex }: ButtonProps) {
 						onClick={() => setIndex(index)}
 					>
 						{slide.icon && (
-							<Image src={slide.icon} height={36} width={36} />
+							<Image
+								src={slide.icon}
+								height={36}
+								width={36}
+								alt={slide.title}
+							/>
 						)}
-						<Text size="md" fw={500}>
-							{slide.title}
-						</Text>
+						{largeScreen && (
+							<Text size="md" fw={500}>
+								{slide.title}
+							</Text>
+						)}
 					</UnstyledButton>
 				))}
 			</Flex>
@@ -144,17 +185,14 @@ export function Featured() {
 	});
 
 	return (
-		<>
-			<div className={classes.fadedSeparator} />
-			<div className={classes.featuredWrapper}>
-				<div className={classes.wrapperBackground} />
-				<ThemeCarousel
-					slideIndex={index}
-					setIndex={setIndex}
-					slides={slidesData}
-				/>
-			</div>
-		</>
+		<Box pos="relative" py="xl">
+			<div className={classes.wrapperBackground} />
+			<ThemeCarousel
+				slideIndex={index}
+				setIndex={setIndex}
+				slides={slidesData}
+			/>
+		</Box>
 	);
 }
 
@@ -174,24 +212,27 @@ function Pane({ active, slide, activate }: PaneProps) {
 						activate?.();
 					}
 				}}
+				role="button"
+				tabIndex={active ? 0 : -1}
+				onKeyDown={(e) => {
+					if (e.key === 'Enter') {
+						activate?.();
+					}
+				}}
 			>
 				<div className={classes.paneBackground} />
 				<div className={classes.paneImage}>
 					<div className={classes.paneLayer}>
 						<Image
 							src={slide.image}
-							height={480}
-							width={960}
+							fill
 							alt={slide.title}
-							style={
-								{
-									// objectFit: 'fill',
-								}
-							}
+							style={{
+								objectFit: 'fill',
+							}}
 						/>
 					</div>
 				</div>
-				{/* <div className={classes.paneOverlayBackground} /> */}
 			</div>
 		</div>
 	);
@@ -238,7 +279,7 @@ export default function ThemeCarousel({
 	}
 
 	return (
-		<div className={classes.carouselWrapper}>
+		<Box w="100%" pos="relative">
 			<div className={classes.carouselPane} aria-live="polite">
 				<div
 					className={classes.carouselPaneInner}
@@ -259,67 +300,43 @@ export default function ThemeCarousel({
 			</div>
 			<div className={classes.controlsWrapper}>
 				<Buttons
-					setIndex={setIndex}
+					setIndex={(index: number) => {
+						handleSetIndex(index);
+					}}
 					slideIndex={slideIndex}
 					slides={slides}
 				/>
 			</div>
-		</div>
+		</Box>
 	);
 }
 
-const useStyles = createStyles(
-	(
-		theme,
-		{
-			active,
-			bg,
-		}: {
-			active?: boolean;
-			bg?: string;
-		}
-	) => ({
-		fadedSeparator: {
-			background:
-				'linear-gradient(var(--direction), transparent, rgba(255, 255, 255, 0.1) 50%, transparent)',
-		},
+const useStyles = createStyles((theme, { active, bg }: CarouselSlideProps) => ({
+	wrapperBackground: {
+		pointerEvents: 'none',
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		overflow: 'hidden',
+		transition: 'opacity 0.3s ease-in-out',
 
-		featuredWrapper: {
-			position: 'relative',
-			padding: '64px 0',
-		},
-
-		carouselWrapper: {
-			width: '100%',
-			position: 'relative',
-			overflow: 'hidden',
-		},
-
-		wrapperBackground: {
-			pointerEvents: 'none',
+		'&::before': {
+			willChange: 'transform',
+			content: '""',
 			position: 'absolute',
-			top: 0,
-			left: 0,
-			right: 0,
-			bottom: 0,
-			overflow: 'hidden',
-			transition: 'opacity 0.3s ease-in-out',
-
-			'&::before': {
-				willChange: 'transform',
-				content: '""',
-				position: 'absolute',
-				top: '20%',
-				left: 0,
-				right: 0,
-				height: '100%',
-				width: '100%',
-				// transform: 'translateX(-50%)',
-				opacity: 0.15,
-				filter: 'blur(60px)',
-				background:
-					bg ??
-					`conic-gradient(
+			top: '15%',
+			left: '10%',
+			right: '10%',
+			height: '100%',
+			width: '100%',
+			// transform: 'translateX(-50%)',
+			opacity: 0.15,
+			filter: 'blur(60px)',
+			background:
+				bg ??
+				`conic-gradient(
       from 180deg at 58.33% 50%,
       #6d54e1 0deg,
       #ac8eff 7.5deg,
@@ -327,137 +344,143 @@ const useStyles = createStyles(
       #1ac8fc 243.75deg,
       #6d54e1 360deg
     )`,
-			},
-
-			'&::after': {
-				content: '""',
-				position: 'absolute',
-				left: 0,
-				right: 0,
-				bottom: 0,
-				top: '60%',
-				background: `linear-gradient(to top, #000212, transparent)`,
-			},
 		},
 
-		carouselPane: {
-			willChange: 'scroll-position',
-			width: '100%',
-			height: '100%',
-			marginTop: '40px',
-			marginBottom: '56px',
-		},
-
-		carouselPaneInner: {
-			position: 'relative',
-			willChange: 'transform',
-			display: 'flex',
-			alignItems: 'flex-start',
-			flexWrap: 'nowrap',
-			width: '100%',
-			'--pane-width': 'min(calc(100vw - 48px), 960px)',
-
-			'--page-left': 'calc(50vw - (var(--pane-width) / 2))',
-			left: 'calc(var(--page-left, 0px))',
-			'--index-offset':
-				'calc(-1 * var(--index) * (var(--pane-width) + 32px))',
-
-			transform: 'translateX(var(--index-offset, 0px))',
-			transition: 'transform 600ms',
-
-			'& > * + *': {
-				marginLeft: '32px',
-			},
-
-			'@media (max-width: 700px)': {
-				left: '0',
-				transform: 'none',
-				'& > * + *': {
-					marginLeft: '0',
-				},
-				overflowX: 'auto',
-				overscrollBehaviorX: 'contain',
-				scrollSnapType: 'x mandatory',
-				'&::after': {
-					content: '""',
-					minWidth: 'var(--page-padding-right)',
-					minHeight: '1px',
-				},
-			},
-		},
-
-		paneContiner: {
-			perspective: '2880px',
-			transformStyle: 'preserve-3d',
-			display: 'flex',
-			transition: '600ms',
-			transitionProperty: 'transform',
-
-			'&:hover': {
-				transform: `scale(${active ? '1.02' : '1'})`,
-			},
-
-			'@media (max-width: 700px)': {
-				transform: 'none',
-				scrollSnapAlign: 'center',
-				margin: '0 24px',
-			},
-		},
-
-		paneStyling: {
-			position: 'relative',
-			cursor: 'pointer',
-			userSelect: 'none',
-			overflow: 'hidden',
-			width: 'var(--pane-width)',
-			height: 'calc(var(--pane-width) * 0.5)',
-			flexShrink: 0,
-			background: '#0f1012',
-			borderRadius: 'calc(var(--pane-width) * 0.025)',
-			border: '0.5px solid rgba(255, 255, 255, 0.15)',
-			boxShadow: '0px 7px 32px rgba(0, 0, 0, 0.35)',
-
-			willChange: 'transform',
-
-			'--scale': active ? 1 : 0.9,
-			opacity: active ? 1 : 0.3,
-			'--pane-duration': '600ms',
-			transform:
-				'scale(var(--scale, 1)) rotateX(var(--x, 0deg)) rotateY(var(--y, 0deg))',
-			transition: 'var(--pane-duration)',
-			transitionProperty: 'transform, opacity',
-
-			'&:hover': {
-				'--pane-duration': '200ms',
-			},
-
-			'&:focus.focus-visible': {
-				// boxShadow: `0 0 0 1px ${theme.color.controlBase}`,
-			},
-
-			'@media (max-width: 700px)': {
-				height: '30vh',
-				opacity: 1,
-				'--scale': 1,
-			},
-		},
-
-		paneBackground: {
-			transform: 'translateZ(0)',
-			zIndex: -1,
-
-			pointerEvents: 'none',
+		'&::after': {
+			content: '""',
 			position: 'absolute',
-			top: 0,
 			left: 0,
 			right: 0,
 			bottom: 0,
-			filter: 'blur(60px)',
-			opacity: 0.5,
+			top: '60%',
+			background: `linear-gradient(to top, #000212, transparent)`,
+		},
+	},
 
-			background:
-				bg ??
-				`conic-gradient(
+	carouselPane: {
+		willChange: 'scroll-position',
+		width: '100%',
+		height: '100%',
+		marginTop: theme.spacing.xl,
+		marginBottom: theme.spacing.xl,
+
+		[theme.fn.smallerThan('md')]: {
+			marginTop: theme.spacing.xs,
+			marginBottom: theme.spacing.xs,
+		},
+	},
+
+	carouselPaneInner: {
+		position: 'relative',
+		willChange: 'transform',
+		display: 'flex',
+		alignItems: 'flex-start',
+		flexWrap: 'nowrap',
+		width: '100%',
+		'--pane-width': 'min(calc(100vw - 48px), 960px)',
+
+		'--page-left': 'calc(50vw - (var(--pane-width) / 2))',
+		left: 'calc(var(--page-left, 0px))',
+		'--index-offset':
+			'calc(-1 * var(--index) * (var(--pane-width) + 32px))',
+
+		transform: 'translateX(var(--index-offset, 0px))',
+		transition: 'transform 600ms',
+
+		'& > * + *': {
+			marginLeft: '32px',
+		},
+
+		[theme.fn.smallerThan('md')]: {
+			left: '0',
+			paddingBottom: theme.spacing.xs,
+			paddingTop: theme.spacing.xs,
+
+			transform: 'none',
+			'& > * + *': {
+				marginLeft: '0',
+			},
+
+			overflowX: 'auto',
+			overscrollBehaviorX: 'contain',
+			scrollSnapType: 'x mandatory',
+
+			'&::after': {
+				content: '""',
+				minWidth: 'var(--page-padding-right)',
+				minHeight: '1px',
+			},
+		},
+	},
+
+	paneContiner: {
+		perspective: '2880px',
+		transformStyle: 'preserve-3d',
+		display: 'flex',
+		transition: '600ms',
+		transitionProperty: 'transform',
+
+		'&:hover': {
+			transform: `scale(${active ? '1.02' : '1'})`,
+		},
+
+		'@media (max-width: 700px)': {
+			transform: 'none',
+			scrollSnapAlign: 'center',
+			margin: '0 24px',
+		},
+	},
+
+	paneStyling: {
+		position: 'relative',
+		cursor: 'pointer',
+		userSelect: 'none',
+		overflow: 'hidden',
+		width: 'var(--pane-width)',
+		height: 'calc(var(--pane-width) * 0.5)',
+		flexShrink: 0,
+		background: '#0f1012',
+		borderRadius: 'calc(var(--pane-width) * 0.025)',
+		border: '0.5px solid rgba(255, 255, 255, 0.15)',
+		boxShadow: '0px 7px 32px rgba(0, 0, 0, 0.35)',
+		willChange: 'transform',
+		...theme.fn.focusStyles(),
+
+		'--scale': active ? 1 : 0.9,
+		opacity: active ? 1 : 0.3,
+		'--pane-duration': '600ms',
+		transform:
+			'scale(var(--scale, 1)) rotateX(var(--x, 0deg)) rotateY(var(--y, 0deg))',
+		transition: 'var(--pane-duration)',
+		transitionProperty: 'transform, opacity',
+
+		'&:hover': {
+			'--pane-duration': '200ms',
+		},
+
+		'@media (max-width: 700px)': {
+			height: '25vh',
+			opacity: 1,
+			'--scale': 1,
+		},
+	},
+
+	paneBackground: {
+		transform: 'translateZ(0)',
+		zIndex: -1,
+
+		pointerEvents: 'none',
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+		filter: 'blur(60px)',
+		opacity: 0.5,
+
+		background:
+			bg ??
+			`conic-gradient(
     from 180deg at 58.33% 50%,
     #6d54e1 0deg,
     #ac8eff 7.5deg,
@@ -465,156 +488,123 @@ const useStyles = createStyles(
     #1ac8fc 243.75deg,
     #6d54e1 360deg
   )`,
+	},
+
+	paneImage: {
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		transform: 'translate(-50%, -50%)',
+		width: '100%',
+		height: '100%',
+		// maxWidth: '80%',
+		// maxHeight: '80%',
+		pointerEvents: 'none',
+
+		[theme.fn.smallerThan('md')]: {
+			transform: 'translate(-50%, 0)',
+			top: '0',
+		},
+	},
+
+	paneLayer: {
+		width: '100%',
+		height: '100%',
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		position: 'relative',
+	},
+
+	controlsWrapper: {
+		maxWidth: '1008px',
+		margin: '0 auto',
+		padding: '0 24px',
+		position: 'relative',
+		display: 'flex',
+		alignItems: 'flex-start',
+		flexDirection: 'column',
+		overflow: 'hidden',
+	},
+
+	carouselButton: {
+		borderRadius: theme.radius.xl,
+		background: theme.other.color.bgBorder,
+		width: em(32),
+		height: em(32),
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		color: theme.other.color.labelMuted,
+		transition: 'background 120ms',
+		'--fill-color': theme.other.color.labelTitle,
+
+		'&:hover': {
+			background: theme.other.color.bgBorderSolid,
 		},
 
-		paneImage: {
-			position: 'absolute',
-			top: '50%',
-			left: '50%',
-			transform: 'translate(-50%, -50%)',
-			width: '100%',
-			height: '100%',
-			// maxWidth: '80%',
-			// maxHeight: '80%',
-			pointerEvents: 'none',
-
-			'@media (max-width: 700px)': {
-				transform: 'translate(-50%, 0)',
-				top: '5%',
+		'&:first-child': {
+			svg: {
+				'--transform': 'rotate(180deg)',
 			},
 		},
 
-		paneLayer: {
-			width: '100%',
-			height: '100%',
-
-			display: 'flex',
-			alignItems: 'center',
-			justifyContent: 'center',
-
-			'& img': {
-				maxWidth: '120%',
-				maxHeight: '120%',
-			},
-
-			transformStyle: 'preserve-3d',
-			position: 'relative',
-			transition: 'transform var(--pane-duration)',
-		},
-
-		paneOverlayBackground: {
-			pointerEvents: 'none',
-			position: 'absolute',
-			borderRadius: 'inherit',
-			top: 0,
-			bottom: 0,
-			left: 0,
-			right: 0,
-			transition: 'opacity var(--pane-duration)',
-			background:
-				'linear-gradient(to top, rgba(0, 0, 0, 0.7) 20%, rgba(0, 0, 0, 0.5) 40%, transparent 100%)',
-
-			'@media (max-width: 700px)': {
-				background:
-					'linear-gradient(to top, rgba(0, 0, 0, 0.8) 20%, rgba(0, 0, 0, 0.6) 40%, transparent 100%)',
-			},
-		},
-		controlsWrapper: {
-			width: '100%',
-			maxWidth: '1008px',
-			margin: '0 auto',
-			padding: '0 24px',
-			position: 'relative',
-			display: 'flex',
-			alignItems: 'flex-start',
-			flexDirection: 'column',
-		},
-
-		buttonsWrapper: {
-			display: 'flex',
-			alignItems: 'center',
-			justifyContent: 'space-between',
-			width: '100%',
-		},
-
-		carouselButton: {
-			borderRadius: '50%',
-			background: '#2c2d3c',
-			width: '32px',
-			height: '32px',
-			display: 'flex',
-			alignItems: 'center',
-			justifyContent: 'center',
-			color: '#858699',
-			transition: 'background 120ms',
-			'--fill-color': '#EEEFFC',
-			'&:hover': {
-				background: '#313248',
+		'&.animate': {
+			svg: {
+				animation: `${carouselButton} ease-in-out 250ms`,
 			},
 			'&:first-child': {
-				svg: {
-					'--transform': 'rotate(180deg)',
-				},
+				'--transform-new': 'translateX(-2px) rotate(180deg)',
 			},
-			'&.animate': {
-				svg: {
-					animation: `${carouselButton} ease-in-out 250ms`,
-				},
-				'&:first-child': {
-					'--transform-new': 'translateX(-2px) rotate(180deg)',
-				},
-				'&:last-child': {
-					'--transform-new': 'translateX(2px)',
-				},
-			},
-			'& svg': {
-				transform: 'var(--transform, none)',
-				transition: '120ms',
-				transitionProperty: 'fill',
-				fill: 'currentColor',
+			'&:last-child': {
+				'--transform-new': 'translateX(2px)',
 			},
 		},
 
-		textButton: {
-			color: 'rgb(208, 214, 224)',
-			userSelect: 'none',
-			cursor: 'pointer',
-			display: 'flex',
-			alignItems: 'center',
-			opacity: 0.6,
-			transition: 'opacity 250ms',
-			willChange: 'opacity',
-			position: 'relative',
-			gap: '4px',
+		'& svg': {
+			transform: 'var(--transform, none)',
+			transition: '120ms',
+			transitionProperty: 'fill',
+			fill: 'currentColor',
+		},
 
-			'&:hover': {
-				opacity: 0.8,
-			},
+		[theme.fn.smallerThan('md')]: {
+			width: em(24),
+			height: em(24),
+		},
+	},
 
-			'&.active': {
-				opacity: 1,
-			},
+	textButton: {
+		color: 'rgb(208, 214, 224)',
+		userSelect: 'none',
+		display: 'flex',
+		alignItems: 'center',
+		opacity: 0.6,
+		transition: 'opacity 250ms',
+		willChange: 'opacity',
+		position: 'relative',
+		gap: '4px',
+		padding: em(4),
+		borderRadius: em(4),
 
-			'& img': {
-				width: '24px',
-			},
+		'&:hover': {
+			opacity: 0.8,
+		},
+
+		'&.active': {
+			opacity: 1,
+		},
+
+		'& img': {
+			width: '24px',
 			height: '24x',
-
-			'& span': {
-				marginLeft: '6px',
-			},
-
-			'@media (max-width: 700px)': {
-				'&:not(:first-child)': {
-					marginLeft: '16px',
-				},
-				'& span': {
-					display: 'none',
-				},
-			},
 		},
-	})
-);
+
+		'& span': {
+			marginLeft: '6px',
+		},
+	},
+}));
 
 const carouselButton = keyframes`
   from, to {

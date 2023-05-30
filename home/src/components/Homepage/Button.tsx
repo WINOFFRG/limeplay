@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { createStyles } from '@mantine/styles';
+import { UnstyledButton } from '@mantine/core';
 import { fadeDown } from '@/styles/animation';
 
 const useStyles = createStyles((theme) => ({
@@ -17,12 +18,12 @@ const useStyles = createStyles((theme) => ({
 		whiteSpace: 'nowrap',
 		userSelect: 'none',
 		maxWidth: '100%',
-		flexShrink: '0',
+		flexShrink: 0,
 
 		margin: '0',
 		background: 'none',
 		border: 'none',
-		color: theme.color.labelBase,
+		color: theme.other.color.labelBase,
 		font: 'inherit',
 
 		'& > svg': {
@@ -43,12 +44,14 @@ const useStyles = createStyles((theme) => ({
 		transitionProperty:
 			'border, background-color, color, box-shadow, opacity',
 
-		[theme.breakpoints.max.tablet]: {
-			fontSize: '16px',
-			height: '40px',
-			// borderRadius: 'var(--rounded-full)',
-			padding: '0 24px',
-		},
+		// TODO: Breakpoints
+
+		// [theme.breakpoints.max.tablet]: {
+		// 	fontSize: '16px',
+		// 	height: '40px',
+		// 	// borderRadius: 'var(--rounded-full)',
+		// 	padding: '0 24px',
+		// },
 	},
 
 	primary: {
@@ -83,12 +86,9 @@ export function CTA({ children }: { children: React.ReactNode }) {
 
 	return (
 		<Link href="https://docs.limeplay.me" target="_blank" tabIndex={-1}>
-			<button
-				type="button"
-				className={cx(classes.heroButton, classes.primary)}
-			>
+			<UnstyledButton className={cx(classes.heroButton, classes.primary)}>
 				{children}
-			</button>
+			</UnstyledButton>
 		</Link>
 	);
 }
@@ -97,11 +97,8 @@ export function DimmedButton({ children }: { children: React.ReactNode }) {
 	const { classes, cx } = useStyles();
 
 	return (
-		<button
-			type="button"
-			className={cx(classes.heroButton, classes.dimmed)}
-		>
+		<UnstyledButton className={cx(classes.heroButton, classes.dimmed)}>
 			{children}
-		</button>
+		</UnstyledButton>
 	);
 }

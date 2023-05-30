@@ -1,7 +1,6 @@
 import NextLink, { LinkProps as NextLinkProps } from 'next/link';
 import { forwardRef } from 'react';
 import { createStyles } from '@mantine/styles';
-import { makeStyles } from '@/styles';
 
 export type LinkKind = 'primary' | 'dimmed';
 
@@ -53,10 +52,11 @@ const useStyles = createStyles(
 			color: 'inherit',
 			outline: 'none',
 			cursor: 'pointer',
+			...theme.fn.focusStyles(),
 
 			'&.focus-visible': {
 				outlineStyle: 'solid',
-				outlineColor: theme.color.labelLink,
+				outlineColor: theme.other.color.labelLink,
 				outlineWidth: 'thin',
 				outlineOffset: '4px',
 				boxShadow: 'none',
@@ -64,19 +64,21 @@ const useStyles = createStyles(
 
 			...(kind === 'primary' && {
 				fontWeight: 500,
-				color: theme.color.labelLink,
+				color: theme.other.color.labelLink,
 				transition: 'color var(--speed-quickTransition)',
 
 				'&:hover': {
-					color: theme.color.labelLinkHover,
+					color: theme.other.color.labelLinkHover,
 				},
 			}),
 
 			...(kind === 'dimmed' && {
-				color: active ? theme.color.labelTitle : theme.color.labelMuted,
+				color: active
+					? theme.other.color.labelTitle
+					: theme.other.color.labelMuted,
 				transition: 'color var(--speed-quickTransition)',
 				'&:hover': {
-					color: theme.color.labelTitle,
+					color: theme.other.color.labelTitle,
 				},
 			}),
 		},

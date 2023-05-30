@@ -1,6 +1,4 @@
-import { keyframes } from 'tss-react';
-
-// Keyframe generation for common CSS animations
+import { keyframes } from '@mantine/styles';
 
 /** Fade in from 0 → 1 opacity and move upwards by {amount} */
 export const fadeUp = (amount = 10) => keyframes`
