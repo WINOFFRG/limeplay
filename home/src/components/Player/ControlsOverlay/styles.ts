@@ -22,14 +22,21 @@ const useStyles = createStyles((theme) => ({
 		padding: `0 ${theme.spacing.md}`,
 		transition:
 			'opacity .5s cubic-bezier(0.4,0,0.2,1) ,transform .2s cubic-bezier(0.4,0,0.2,1)',
+
+		[theme.fn.smallerThan('md')]: {
+			padding: `0 ${theme.spacing.xs}`,
+		},
 	},
 
 	controlsTopPanel: {
 		height: 'auto',
 		width: '100%',
-		padding: theme.spacing.xl,
 		paddingTop: theme.spacing.md,
 		flex: `0 1 auto`,
+
+		[theme.fn.smallerThan('md')]: {
+			paddingTop: theme.spacing.xs,
+		},
 	},
 
 	topRightSection: {
@@ -75,6 +82,10 @@ const useStyles = createStyles((theme) => ({
 		flex: `0 1 auto`,
 		// backgroundImage: `linear-gradient(180deg,rgba(0,0,0,.0001),rgba(0,0,0,.0156863) 8.62%,rgba(0,0,0,.0509804) 16.56%,rgba(0,0,0,.113725) 23.93%,rgba(0,0,0,.188235) 30.85%,rgba(0,0,0,.278431) 37.42%,rgba(0,0,0,.372549) 43.77%,rgba(0,0,0,.47451) 50%,rgba(0,0,0,.576471) 56.23%,rgba(0,0,0,.67451) 62.58%,rgba(0,0,0,.760784) 69.15%,rgba(0,0,0,.839216) 76.07%,rgba(0,0,0,.898039) 83.44%,rgba(0,0,0,.937255) 91.38%,rgba(0,0,0,.94902))`,
 		// marginTop: '-400px',
+
+		[theme.fn.smallerThan('md')]: {
+			paddingBottom: theme.spacing.xs,
+		},
 	},
 
 	centrePlaybackIcon: {

@@ -1,5 +1,5 @@
 import * as RadixSeparator from '@radix-ui/react-separator';
-import { makeStyles } from '@/styles';
+import { createStyles } from '@mantine/styles';
 
 export type SeparatorProps = RadixSeparator.SeparatorProps & {
 	/** The visual style of this separator */
@@ -14,9 +14,9 @@ export function Separator({ kind, margin }: SeparatorProps) {
 	return <RadixSeparator.Root className={classes.separator} />;
 }
 
-const useStyles = makeStyles<SeparatorProps>()((theme, { kind, margin }) => ({
+const useStyles = createStyles((theme, { kind, margin }: SeparatorProps) => ({
 	separator: {
-		background: theme.color.bgBorder,
+		background: theme.other.color.bgBorder,
 		margin: margin ?? 0,
 
 		'&[data-orientation="horizontal"]': {

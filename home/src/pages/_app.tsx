@@ -1,14 +1,7 @@
 import type { AppProps } from 'next/app';
-import { createEmotionSsrAdvancedApproach } from 'tss-react/next/pagesDir';
 import { Analytics } from '@vercel/analytics/react';
 import { MantineProvider } from '@mantine/styles';
 import { MetaTags } from '@/components/Layout/MetaTags';
-
-const { augmentDocumentWithEmotionCache } = createEmotionSsrAdvancedApproach({
-	key: 'tss',
-});
-
-export { augmentDocumentWithEmotionCache };
 
 export const fontFamily = (fontType: 'regular' | 'monospace' | 'emoji') =>
 	`var(--font-${fontType})`;
@@ -59,9 +52,6 @@ export default function App({ Component, pageProps }: AppProps) {
 			theme={{
 				other: glassGlobalTheme,
 				globalStyles: (theme) => ({
-					'*, *::before, *::after': {
-						boxSizing: 'border-box',
-					},
 					':root': {
 						'--header-height': '56px',
 						'--page-padding-default': '32px',
@@ -84,55 +74,31 @@ export default function App({ Component, pageProps }: AppProps) {
 						'--font-emoji':
 							'"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Segoe UI", "Twemoji Mozilla", "Noto Color Emoji", "Android Emoji"',
 
-						/* Font weights */
-						'--font-weight-regular': 410,
-						'--font-weight-medium': 510,
-						'--font-weight-semibold': 560,
-						'--font-weight-bold': 660,
-
-						/* Transition tokens */
 						'--speed-highlightFadeIn': '0s',
 						'--speed-highlightFadeOut': '0.15s',
 						'--speed-quickTransition': '0.1s',
 						'--speed-regularTransition': '0.25s',
+					},
 
-						/* Masks */
-						'--mask-visible': 'black',
-						'--mask-invisible': 'transparent',
+					'&::selection, & *::selection': {
+						background: theme.fn.rgba('#666be2', 0.6),
+					},
 
-						/* Misc */
-						'--rounded-full': '9999px',
-						'--transparent': 'rgba(255, 255, 255, 0)',
-						'--min-tap-size': '44px',
-
-						/* Viewport units fallback (see @supports blocks below) */
-						'--dvh': '1vh',
-
-						/* Scrollbar */
-						'--scrollbar-color': 'rgba(255, 255, 255, 0.2)',
-						'--scrollbar-color-active': 'rgba(255, 255, 255, 0.4)',
-
-						'@supports (height: 1dvh)': {
-							':root': {
-								'--dvh': '1dvh',
-							},
+					'@supports (height: 1dvh)': {
+						':root': {
+							'--dvh': '1dvh',
 						},
+					},
 
-						'@media (max-width: 700px)': {
-							':root': {
-								'--page-padding-y': '48px',
-							},
+					'@media (max-width: 700px)': {
+						':root': {
+							'--page-padding-y': '48px',
 						},
+					},
 
-						'@media (max-width: 600px)': {
-							':root': {
-								'--page-padding-default': '24px',
-							},
-						},
-
-						'::selection': {
-							color: theme.other.color.controlLabel,
-							background: '#4f52b4',
+					'@media (max-width: 600px)': {
+						':root': {
+							'--page-padding-default': '24px',
 						},
 					},
 
@@ -161,23 +127,7 @@ export default function App({ Component, pageProps }: AppProps) {
 					body: {
 						color: theme.other.color.labelTitle,
 						lineHeight: '1.5',
-
-						MozOsxFontSmoothing: 'grayscale',
-						WebkitFontSmoothing: 'antialiased',
-						textRendering: 'optimizeLegibility',
-
-						msTextSizeAdjust: 'none',
-						WebkitTextSizeAdjust: 'none',
-
 						overflowX: 'hidden',
-					},
-
-					'svg.logotype': {
-						height: 'auto',
-
-						'& > *': {
-							fill: 'inherit',
-						},
 					},
 
 					'body, html, button, input, optgroup, select, textarea': {
@@ -194,6 +144,12 @@ export default function App({ Component, pageProps }: AppProps) {
 						},
 					},
 				}),
+				focusRingStyles: {
+					styles: (theme) => ({
+						outline: 'none',
+						boxShadow: `0 0 0 1px ${theme.other.color.focusColor}`,
+					}),
+				},
 			}}
 		>
 			<MetaTags />

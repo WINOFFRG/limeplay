@@ -4,6 +4,7 @@ import {
 } from '@limeplay/core/src/store';
 import { useEffect } from 'react';
 import { useSafeLoad } from '@limeplay/core/src/hooks';
+// @ts-ignore
 import mux from 'mux.js';
 import { useRouter } from 'next/router';
 import ControlsOverlay from '../ControlsOverlay';

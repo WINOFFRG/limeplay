@@ -1,14 +1,13 @@
+import { Flex } from '@mantine/core';
 import { createStyles } from '@mantine/styles';
 
 const useStyles = createStyles((theme) => ({
 	pill: {
-		display: 'flex',
-		alignItems: 'center',
 		height: '28px',
 		padding: '0 12px',
 		background: 'rgba(255, 255, 255, 0.1)',
 		border: '1px solid rgba(255, 255, 255, 0.05)',
-		borderRadius: 'var(--rounded-full)',
+		borderRadius: theme.radius.xl,
 		backdropFilter: 'blur(12px)',
 		fontSize: '13px',
 		fontWeight: 500,
@@ -16,7 +15,8 @@ const useStyles = createStyles((theme) => ({
 		whiteSpace: 'nowrap',
 		transition: '260ms',
 		transitionProperty: 'background, width',
-		color: theme.color.labelBase,
+		color: theme.other.color.labelBase,
+		...theme.fn.focusStyles(),
 
 		'& > svg': {
 			'&:first-of-type': {
@@ -46,7 +46,7 @@ const useStyles = createStyles((theme) => ({
 
 			display: 'flex',
 			alignItems: 'center',
-			borderRadius: 'var(--rounded-full)',
+			borderRadius: theme.radius.xl,
 		},
 
 		'&:hover': {
@@ -78,5 +78,13 @@ export function Pill({
 }) {
 	const { classes, cx } = useStyles();
 
-	return <div className={cx(classes.pill, className)}>{children}</div>;
+	return (
+		<Flex
+			align="center"
+			className={cx(classes.pill, className)}
+			tabIndex={0}
+		>
+			{children}
+		</Flex>
+	);
 }

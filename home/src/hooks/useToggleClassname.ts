@@ -12,6 +12,7 @@ export const useToggleClassname = <T extends HTMLElement>(
 	const trigger = React.useCallback(() => {
 		if (ref.current) {
 			ref.current.classList.remove(className);
+			// eslint-disable-next-line no-void
 			void ref.current.offsetWidth;
 			ref.current.classList.add(className);
 		}

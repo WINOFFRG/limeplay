@@ -1,4 +1,4 @@
-import { makeStyles } from '@/styles';
+import { createStyles } from '@mantine/styles';
 
 export function Separator({ children }: { children: React.ReactNode }) {
 	const { classes } = useStyles();
@@ -10,7 +10,7 @@ export function Separator({ children }: { children: React.ReactNode }) {
 	);
 }
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = createStyles((theme) => ({
 	starWrapper: {
 		'--color': '#b254eb',
 		'pointer-events': 'none',
