@@ -60,7 +60,7 @@ const useStyles = createStyles((theme) => ({
 		justifyContent: 'center',
 
 		background:
-			'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.3), var(--transparent))',
+			'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.3), transparent)',
 
 		// [theme.breakpoints.max.tablet]: {
 		// 	marginBottom: '-92px',
