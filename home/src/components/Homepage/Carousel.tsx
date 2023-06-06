@@ -7,6 +7,12 @@ import Image from 'next/image';
 import { useToggleClassname } from '@/hooks/useToggleClassname';
 import { ChevronRightIcon } from '@/assets/icons/ChevronRightIcon';
 
+import netflixPlayer from '../../../public/themes/netflix_player_2.png';
+import hotstarPlayer from '../../../public/themes/hotstar_player.png';
+import primePlayer from '../../../public/themes/prime_new_player.png';
+import huluPlayer from '../../../public/themes/hulu_new_player.png';
+import youtubePlayer from '../../../public/themes/youtubeo_player.png';
+
 interface CarouselSlideProps {
 	active?: boolean;
 	bg?: string;
@@ -26,7 +32,7 @@ const slidesData = [
 			#FF0000 270deg,
 			#804040 315deg
 		  );`,
-		image: '/themes/netflix_player_2.png',
+		image: netflixPlayer,
 		icon: '/themes/netflix_icon.svg',
 	},
 	{
@@ -42,7 +48,7 @@ const slidesData = [
 			#365899 270deg,
 			#365899 315deg
 		  );`,
-		image: '/themes/hotstar_player.png',
+		image: hotstarPlayer,
 		icon: '/themes/hotstar_icon.svg',
 	},
 	{
@@ -58,7 +64,7 @@ const slidesData = [
 			#2888b9 270deg,
 			#2170a6 315deg
 		);`,
-		image: '/themes/prime_new_player.png',
+		image: primePlayer,
 		icon: '/themes/prime_icon.svg',
 	},
 	{
@@ -74,7 +80,7 @@ const slidesData = [
 			#15ce65 270deg,
 			#00a858 315deg
 		);`,
-		image: '/themes/hulu_new_player.png',
+		image: huluPlayer,
 		icon: '/themes/hulu_icon.svg',
 	},
 	{
@@ -90,7 +96,7 @@ const slidesData = [
 			#d90a19 270deg,
 			#d90a19 315deg
 		);`,
-		image: '/themes/youtubeo_player.png',
+		image: youtubePlayer,
 		icon: '/themes/youtube_icon.svg',
 	},
 ];
@@ -105,6 +111,7 @@ type PaneProps = {
 	active?: boolean;
 	activate?: () => void;
 	slide: (typeof slidesData)[0];
+	ariaLabel?: string;
 };
 
 type ButtonProps = Pick<CarouselProps, 'slideIndex' | 'setIndex'> & {
@@ -196,14 +203,18 @@ export function Featured() {
 	);
 }
 
-function Pane({ active, slide, activate }: PaneProps) {
+function Pane({ active, slide, activate, ariaLabel }: PaneProps) {
 	const { classes } = useStyles({
 		bg: slide.bg,
 		active,
 	});
 
 	return (
-		<div className={classes.paneContiner}>
+		<div
+			className={classes.paneContiner}
+			aria-label={ariaLabel}
+			data-active={active || undefined}
+		>
 			<div
 				className={classes.paneStyling}
 				onClick={(e) => {
@@ -225,10 +236,10 @@ function Pane({ active, slide, activate }: PaneProps) {
 					<div className={classes.paneLayer}>
 						<Image
 							src={slide.image}
-							fill
 							alt={slide.title}
+							fill
 							style={{
-								objectFit: 'fill',
+								objectFit: 'contain',
 							}}
 						/>
 					</div>
@@ -293,7 +304,7 @@ export default function ThemeCarousel({
 							active={slideIndex === index}
 							slide={slide}
 							activate={() => handleSetIndex(index)}
-							aria-label={`${index + 1} of ${slides.length}`}
+							ariaLabel={`${index + 1} of ${slides.length}`}
 						/>
 					))}
 				</div>
@@ -391,12 +402,12 @@ const useStyles = createStyles((theme, { active, bg }: CarouselSlideProps) => ({
 			marginLeft: '32px',
 		},
 
-		[theme.fn.smallerThan('md')]: {
+		[`@media (max-width: ${em(700)})`]: {
 			left: '0',
 			paddingBottom: theme.spacing.xs,
 			paddingTop: theme.spacing.xs,
-
 			transform: 'none',
+
 			'& > * + *': {
 				marginLeft: '0',
 			},
@@ -409,6 +420,14 @@ const useStyles = createStyles((theme, { active, bg }: CarouselSlideProps) => ({
 				content: '""',
 				minWidth: 'var(--page-padding-right)',
 				minHeight: '1px',
+			},
+
+			'-ms-overflow-style': 'none', // IE 10+
+			overflow: '-moz-scrollbars-none', // Firefox
+			scrollbarWidth: 'none', // Firefox
+
+			'&::-webkit-scrollbar': {
+				display: 'none',
 			},
 		},
 	},
@@ -459,7 +478,7 @@ const useStyles = createStyles((theme, { active, bg }: CarouselSlideProps) => ({
 		},
 
 		'@media (max-width: 700px)': {
-			height: '25vh',
+			// height: '25vh', Commented bcoz started using Aspect Ratio
 			opacity: 1,
 			'--scale': 1,
 		},
@@ -514,6 +533,8 @@ const useStyles = createStyles((theme, { active, bg }: CarouselSlideProps) => ({
 		alignItems: 'center',
 		justifyContent: 'center',
 		position: 'relative',
+		aspectRatio: '16 / 9',
+		background: 'transparent',
 	},
 
 	controlsWrapper: {
