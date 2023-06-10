@@ -14,6 +14,7 @@ export {
 	usePlayback,
 	useTimeline,
 	useBufferInfo,
+	useOrientation,
 } from './hooks';
 
 export {

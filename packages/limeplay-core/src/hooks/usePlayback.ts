@@ -1,6 +1,4 @@
-import { useEffect } from 'react';
-import { StateCreator } from 'zustand';
-import { useLimeplayStore } from '../store';
+import { useEffect, useState } from 'react';
 
 export interface UsePlaybackConfig {
 	/**
@@ -8,57 +6,46 @@ export interface UsePlaybackConfig {
 	 * @default Events - ['play', 'pause', 'waiting', 'seeking', 'seeked']
 	 */
 	events?: HTMLMediaElementEvents;
+
+	playback?: HTMLMediaElement;
+
+	disabled?: boolean;
 }
 
-export interface PlaybackSlice {
-	isPlaybackHookInjected: boolean;
-	_setIsPlaybackHookInjected: (isPlaybackHookInjected: boolean) => void;
-	isPlaying: boolean;
-	_setIsPlaying: (isPlaying: boolean) => void;
-}
+export function usePlayback({
+	playback,
+	disabled,
+	events = ['play', 'pause', 'waiting', 'seeking', 'seeked'],
+}: UsePlaybackConfig) {
+	const [isPlaying, setIsPlaying] = useState(false);
 
-export function usePlayback({ events }: UsePlaybackConfig = {}) {
-	const playback = useLimeplayStore((state) => state.playback);
-	const setIsPlaying = useLimeplayStore((state) => state._setIsPlaying);
-	const setIsPlaybackHookInjected = useLimeplayStore(
-		(state) => state._setIsPlaybackHookInjected
-	);
+	const togglePlayback = () => {
+		if (!playback.duration || disabled) return;
+
+		if (playback.paused) playback.play();
+		else playback.pause();
+	};
 
 	useEffect(() => {
 		const playbackEventHandler = () => setIsPlaying(!playback.paused);
 
-		const hookEvents: HTMLMediaElementEvents = events || [
-			'play',
-			'pause',
-			'waiting',
-			'seeking',
-			'seeked',
-		];
-
-		hookEvents.forEach((event) => {
+		events.forEach((event) => {
 			playback.addEventListener(event, playbackEventHandler);
 		});
 
 		playbackEventHandler();
-		setIsPlaybackHookInjected(true);
 
 		return () => {
 			if (playback) {
-				hookEvents.forEach((event) => {
+				events.forEach((event) => {
 					playback.removeEventListener(event, playbackEventHandler);
 				});
 			}
 		};
 	}, [playback, events]);
+
+	return {
+		isPlaying,
+		togglePlayback,
+	};
 }
-
-const hookName = '@limeplay/hooks/usePlayback';
-usePlayback.displayName = hookName;
-
-export const createPlaybackSlice: StateCreator<PlaybackSlice> = (set) => ({
-	isPlaybackHookInjected: false,
-	_setIsPlaybackHookInjected: (isPlaybackHookInjected: boolean) =>
-		set({ isPlaybackHookInjected }),
-	isPlaying: false,
-	_setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
-});

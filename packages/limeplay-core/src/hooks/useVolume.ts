@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
-import { StateCreator } from 'zustand';
-import { useLimeplayStore, useLimeplayStoreAPI } from '../store';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useStateRef } from '../utils';
 
 export interface UseVolumeConfig {
 	/**
@@ -12,40 +11,46 @@ export interface UseVolumeConfig {
 	initialVolume?: number;
 
 	syncMuteState?: boolean;
-}
 
-export interface VolumeSlice {
-	volume: number;
-	_setVolume: (volume: number) => void;
-	muted: boolean;
-	_setMuted: (muted: boolean) => void;
-	lastVolume: number;
-	_setLastVolume: (lastVolume: number) => void;
+	playback?: HTMLMediaElement;
+
+	disabled?: boolean;
 }
 
 export function useVolume({
 	initialVolume = 1,
-	events,
+	events = ['volumechange'],
+	playback,
+	disabled,
 	syncMuteState = true,
 }: UseVolumeConfig = {}) {
-	const { getState } = useLimeplayStoreAPI();
-	const playback = useLimeplayStore((state) => state.playback);
-	const setVolume = useLimeplayStore((state) => state._setVolume);
-	const setMuted = useLimeplayStore((state) => state._setMuted);
-	const setLastVolume = useLimeplayStore((state) => state._setLastVolume);
+	const [volume, setVolume, volumeRef] = useStateRef(initialVolume);
+	const [muted, setMuted, mutedRef] = useStateRef(playback.muted);
+	const [lastVolume, setLastVolume, lastVolumeRef] =
+		useStateRef(initialVolume);
+
+	const toggleMute = () => {
+		if (disabled) return;
+		playback.muted = !playback.muted;
+	};
 
 	useEffect(() => {
 		const volumeEventHandler = () => {
+			if (disabled) return;
+
 			if (syncMuteState) {
-				if (playback.muted !== getState().muted) {
+				// Volume Toggle Case - Muted
+				if (playback.muted !== mutedRef.current) {
 					setMuted(playback.muted);
 
 					if (playback.muted === true) {
 						setVolume(0);
 					} else {
-						setVolume(getState().lastVolume);
+						setVolume(lastVolumeRef.current);
 					}
-				} else if (playback.muted === true && playback.volume > 0) {
+				}
+				// Volume Slide Change Case
+				else if (playback.muted === true && playback.volume > 0) {
 					playback.muted = false;
 					setMuted(false);
 					setVolume(playback.volume);
@@ -57,11 +62,11 @@ export function useVolume({
 					setVolume(playback.volume);
 				}
 			} else if (!syncMuteState) {
-				if (playback.muted !== getState().muted) {
+				if (playback.muted !== mutedRef.current) {
 					setMuted(playback.muted);
 
-					if (playback.muted === false && getState().volume === 0) {
-						setVolume(getState().lastVolume);
+					if (playback.muted === false && playback.volume === 0) {
+						setVolume(lastVolumeRef.current);
 					}
 				} else {
 					setVolume(playback.volume);
@@ -77,31 +82,27 @@ export function useVolume({
 			}
 		};
 
-		const hookEvents: HTMLMediaElementEvents = events || ['volumechange'];
-
-		hookEvents.forEach((event) => {
+		events.forEach((event) => {
 			playback.addEventListener(event, volumeEventHandler);
 		});
 
-		playback.volume = playback.muted ? 0 : initialVolume || playback.volume;
-
-		volumeEventHandler();
-
 		return () => {
 			if (playback) {
-				hookEvents.forEach((event) => {
+				events.forEach((event) => {
 					playback.removeEventListener(event, volumeEventHandler);
 				});
 			}
 		};
-	}, [playback, events, syncMuteState, initialVolume]);
-}
+	}, [playback, events, syncMuteState, events]);
 
-export const createVolumeSlice: StateCreator<VolumeSlice> = (set) => ({
-	volume: 0,
-	_setVolume: (volume: number) => set({ volume }),
-	muted: false,
-	_setMuted: (muted: boolean) => set({ muted }),
-	lastVolume: 1,
-	_setLastVolume: (lastVolume: number) => set({ lastVolume }),
-});
+	useEffect(() => {
+		playback.volume = playback.muted ? 0 : initialVolume || playback.volume;
+	}, [initialVolume, playback]);
+
+	return {
+		volume,
+		muted,
+		lastVolume,
+		toggleMute,
+	};
+}
