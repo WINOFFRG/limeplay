@@ -8,13 +8,18 @@ import {
 	SliderTrack,
 	onSlideHandler,
 } from '@limeplay/core';
-import { useLimeplayStore } from '@limeplay/core/src/store';
 import useStyles from './styles';
 
-export function VolumeSlider() {
+export function VolumeSlider({
+	playback,
+	muted,
+	volume,
+}: {
+	playback: HTMLMediaElement;
+	muted: boolean;
+	volume: number;
+}) {
 	const { classes } = useStyles();
-	const volume = useLimeplayStore((state) => state.volume);
-	const playback = useLimeplayStore((state) => state.playback);
 
 	const configProps: OnSliderHandlerProps = {
 		min: 0,

@@ -1,6 +1,4 @@
-import { useEffect } from 'react';
-import { StateCreator } from 'zustand';
-import { useLimeplayStore } from '../store';
+import { useEffect, useState } from 'react';
 
 export interface UseLoadingConfig {
 	/**
@@ -8,11 +6,15 @@ export interface UseLoadingConfig {
 	 * @default Events - ['buffering', 'loading']
 	 */
 	events?: ShakaPlayerEvents;
+
+	player?: shaka.Player;
 }
 
-export function useLoading({ events }: UseLoadingConfig = {}) {
-	const player = useLimeplayStore((state) => state.player);
-	const setIsLoading = useLimeplayStore((state) => state._setIsLoading);
+export function useLoading({
+	events = ['buffering', 'loading'],
+	player,
+}: UseLoadingConfig = {}) {
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		const loadingEventHandler = () => {
@@ -23,31 +25,20 @@ export function useLoading({ events }: UseLoadingConfig = {}) {
 			// else if (playback.paused && !isBuffering) playback.play();
 		};
 
-		const hookEvents: ShakaPlayerEvents = events || [
-			'buffering',
-			'loading',
-		];
-
-		hookEvents.forEach((event) => {
+		events.forEach((event) => {
 			player.addEventListener(event, loadingEventHandler);
 		});
 
 		return () => {
 			if (player) {
-				hookEvents.forEach((event) => {
+				events.forEach((event) => {
 					player.removeEventListener(event, loadingEventHandler);
 				});
 			}
 		};
-	}, [player]);
-}
+	}, [player, events]);
 
-export interface LoadingSlice {
-	isLoading: boolean;
-	_setIsLoading: (state: boolean) => void;
+	return {
+		isLoading,
+	};
 }
-
-export const createLoadingSlice: StateCreator<LoadingSlice> = (set) => ({
-	isLoading: false,
-	_setIsLoading: (state) => set({ isLoading: state }),
-});
