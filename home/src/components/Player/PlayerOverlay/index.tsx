@@ -12,7 +12,7 @@ import useStyles from './styles';
 import PlayerLoader from '../Loader';
 
 export default function PlayerOverlay() {
-	useSafeLoad();
+	// useSafeLoad();
 	const { classes } = useStyles();
 	const playback = useLimeplayStore((state) => state.playback);
 	const player = useLimeplayStore((state) => state.player);
@@ -43,14 +43,17 @@ export default function PlayerOverlay() {
 			}
 
 			if (player && getState().isSafeLoad && player.getLoadMode() === 1) {
-				let playerConfig =
-					process.env.NEXT_PUBLIC_SHAKA_CONFIG ||
-					player.getConfiguration();
+				let playerConfig = player.getConfiguration();
 
 				if (process.env.NEXT_PUBLIC_SHAKA_CONFIG) {
-					playerConfig = JSON.parse(
+					const localConfig = JSON.parse(
 						process.env.NEXT_PUBLIC_SHAKA_CONFIG
 					) as shaka.extern.PlayerConfiguration;
+
+					playerConfig = {
+						...playerConfig,
+						...localConfig,
+					};
 				}
 
 				// @ts-ignore
@@ -83,7 +86,7 @@ export default function PlayerOverlay() {
 		}
 	}, [player, playback, isSafeLoad, router]);
 
-	if (!playback) return null;
+	if (!playback || !player) return null;
 
 	return (
 		<div className={classes.overlayWrapper}>

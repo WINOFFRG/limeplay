@@ -8,7 +8,11 @@ import {
 	VolumeButton,
 	useVolume,
 } from '@limeplay/core';
-import { useFullScreen, usePlayback } from '@limeplay/core/src/hooks';
+import {
+	useFullScreen,
+	useOrientation,
+	usePlayback,
+} from '@limeplay/core/src/hooks';
 import screenfull from 'screenfull';
 import { useRouter } from 'next/router';
 import PipButton from '@limeplay/core/src/components/PipButton';
@@ -78,32 +82,18 @@ function ResizeButton() {
 
 export function ControlsTopPanel() {
 	const { classes } = useStyles();
-	useFullScreen();
-	const isFullScreen = useLimeplayStore((state) => state.isFullScreen);
-	const elementRef = document.getElementById('limeplay-player');
+	const element = document.getElementById('limeplay-player');
+	const elementRef = useRef(element);
 
-	const toggleFullscreen = () => {
-		if (screenfull.isEnabled) {
-			if (isFullScreen) {
-				screenfull.exit();
-			} else {
-				screenfull.request(elementRef).then(() => {
-					// if (!toggleOrientation) return;
-					// if (orientation === 'landscape-primary') {
-					// 	window.screen.orientation
-					// 		.lock('portrait')
-					// 		.catch(orientationError);
-					// } else {
-					// 	window.screen.orientation
-					// 		.lock('landscape')
-					// 		.catch(orientationError);
-					// }
-				});
-			}
-		}
+	const { lockOrientation, unlockOrientation } = useOrientation({
+		onError: (error) => {
+			console.error(error);
+		},
+	});
 
-		// Missing iOS Mobile Support https://github.com/sindresorhus/screenfull#support
-	};
+	const { isFullScreen, api } = useFullScreen({
+		elementRef,
+	});
 
 	return (
 		<div className={classes.controlsTopPanel} role="none">
@@ -116,7 +106,16 @@ export function ControlsTopPanel() {
 				<FullScreenButton
 					isFullScreen={isFullScreen}
 					className={classes.controlButton}
-					onClick={toggleFullscreen}
+					onClick={() => {
+						if (!isFullScreen) {
+							api.request(element).then(() => {
+								lockOrientation('landscape');
+							});
+						} else {
+							api.exit();
+							unlockOrientation();
+						}
+					}}
 				>
 					{isFullScreen ? <FullscreenExit /> : <FullscreenEnter />}
 				</FullScreenButton>
@@ -260,16 +259,9 @@ function SeekControls() {
 export function ControlsBottomPanel() {
 	const { classes } = useStyles();
 	const playback = useLimeplayStore((state) => state.playback);
-	const isPlaying = useLimeplayStore((state) => state.isPlaying);
-	const isLoading = useLimeplayStore((state) => state.isLoading);
-	usePlayback();
-	useVolume();
-
-	const togglePlayback = useCallback(() => {
-		if (isLoading) return;
-		if (playback.paused) playback.play();
-		else playback.pause();
-	}, [isLoading, playback]);
+	const { isPlaying, togglePlayback } = usePlayback({
+		playback,
+	});
 
 	useEffect(() => {
 		const spacePlayback = (e) => {
@@ -308,21 +300,20 @@ export function ControlsBottomPanel() {
 
 function VolumeControls() {
 	const { classes } = useStyles();
-	const volume = useLimeplayStore((state) => state.volume);
-	const muted = useLimeplayStore((state) => state.muted);
 	const playback = useLimeplayStore((state) => state.playback);
+	const { muted, volume, toggleMute } = useVolume({
+		playback,
+	});
 
 	return (
 		<>
 			<VolumeButton
 				className={classes.controlButton}
-				onClick={() => {
-					playback.muted = !playback.muted;
-				}}
+				onClick={toggleMute}
 			>
 				<VolumeIcon volume={volume} muted={muted} />
 			</VolumeButton>
-			<VolumeSlider />
+			<VolumeSlider playback={playback} muted={muted} volume={volume} />
 		</>
 	);
 }

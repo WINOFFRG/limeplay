@@ -47,6 +47,8 @@ import {
 	createFullScreenSlice,
 } from './useFullScreen';
 
+import { useOrientation, UseOrientationConfig } from './useOrientation';
+
 export {
 	createPlaybackSlice,
 	createLoadingSlice,
@@ -73,6 +75,7 @@ export {
 	useBufferInfo,
 	useSafeLoad,
 	useFullScreen,
+	useOrientation,
 };
 
 export type {

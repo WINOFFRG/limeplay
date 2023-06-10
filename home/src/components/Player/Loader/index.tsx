@@ -4,8 +4,10 @@ import useStyles from './styles';
 
 export default function PlayerLoader() {
 	const { classes } = useStyles();
-	const isLoading = useLimeplayStore((state) => state.isLoading);
-	useLoading();
+	const player = useLimeplayStore((state) => state.player);
+	const { isLoading } = useLoading({
+		player,
+	});
 
 	return isLoading ? <div className={classes.playerLoader} /> : null;
 }

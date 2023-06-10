@@ -12,6 +12,7 @@ export function OverlayOutlet({
 	const setPlayer = useLimeplayStore((state) => state.setPlayer);
 	const [isLoaded, setIsLoaded] = useState(false);
 	const withPlayer = typeof createPlayer === 'function';
+	const [player, setStatePlayer] = useState<shaka.Player | null>(null);
 
 	useEffect(() => {
 		if (playback) {
@@ -21,6 +22,7 @@ export function OverlayOutlet({
 				});
 				setPlayer(shakaInstance);
 				setIsLoaded(true);
+				setStatePlayer(shakaInstance);
 			}
 		} else {
 			console.warn(
