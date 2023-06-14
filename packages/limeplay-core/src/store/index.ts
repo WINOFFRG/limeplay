@@ -1,18 +1,9 @@
-import { RefObject, memo, useContext } from 'react';
-import { create, useStore } from 'zustand';
+import { useContext } from 'react';
+import { useStore } from 'zustand';
 import { createStore } from 'zustand/vanilla';
-import { devtools } from 'zustand/middleware';
 import { LimeplayContext } from './context';
 import { logger } from './utils';
-import {
-	StoreSlice,
-	createBufferSlice,
-	createFullScreenSlice,
-	createLoadingSlice,
-	createSafeLoadSlice,
-	createTimelineSlice,
-	createVolumeSlice,
-} from '../hooks';
+import { StoreSlice, createBufferSlice, createSafeLoadSlice } from '../hooks';
 
 export function createLimeplayStore() {
 	const store = createStore<InitialStore & StoreSlice>()(
@@ -23,7 +14,6 @@ export function createLimeplayStore() {
 				setPlayback: (playback: HTMLMediaElement) => set({ playback }),
 				player: null,
 				setPlayer: (player: shaka.Player) => set({ player }),
-				...createTimelineSlice(set, get, storeApi),
 				...createBufferSlice(set, get, storeApi),
 				...createSafeLoadSlice(set, get, storeApi),
 			})

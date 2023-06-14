@@ -32,9 +32,8 @@ export default function Player() {
 					controls={false}
 					playsInline
 					className={classes.videoElement}
-					autoPlay
 					style={{
-						opacity: 0,
+						opacity: 0.1,
 					}}
 				/>
 			</MediaOutlet>

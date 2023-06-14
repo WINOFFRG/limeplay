@@ -19,20 +19,23 @@ import ControlButton from '../ControlButton';
 export function TimelineSlider() {
 	const { classes } = useStyles();
 	const elementRef = useRef<HTMLDivElement>(null);
-	useTimeline();
 
 	const playback = useLimeplayStore((state) => state.playback);
 	const player = useLimeplayStore((state) => state.player);
-	const seekRange = useLimeplayStore((state) => state.seekRange);
-	const duration = useLimeplayStore((state) => state.duration);
-	const currentTime = useLimeplayStore((state) => state.currentTime);
-	const currentProgress = useLimeplayStore((state) => state.currentProgress);
-	const liveLatency = useLimeplayStore((state) => state.liveLatency);
-	const isLive = useLimeplayStore((state) => state.isLive);
-	const setIsSeeking = useLimeplayStore((state) => state._setIsSeeking);
-	const setCurrentProgress = useLimeplayStore(
-		(state) => state._setCurrentProgress
-	);
+	const {
+		seekRange,
+		duration,
+		currentTime,
+		currentProgress,
+		liveLatency,
+		isLive,
+		isSeeking,
+		setCurrentProgress,
+		setIsSeeking,
+	} = useTimeline({
+		playback,
+		player,
+	});
 
 	const config: OnSliderHandlerProps = {
 		min: 0,
@@ -104,8 +107,6 @@ export function TimelineSlider() {
 		event.preventDefault();
 	};
 
-	//  need to set for false seeking as well
-
 	const bind: any = useDrag(cbFunction);
 
 	if (!playback || !player) return null;
@@ -169,11 +170,11 @@ export function TimelineSlider() {
 					tabIndex={0}
 					className={classes.timelineSlider__PlayHead}
 				/>
-				<MemoizedHoverContainer
+				{/* <MemoizedHoverContainer
 					forwardRef={elementRef}
 					playback={playback}
 					player={player}
-				/>
+				/> */}
 			</SliderRoot>
 			<span>{buildTimeString(duration, duration > 3600)}</span>
 		</div>
