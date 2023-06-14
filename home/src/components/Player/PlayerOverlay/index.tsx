@@ -68,17 +68,10 @@ export default function PlayerOverlay() {
 					startTime = parseInt(tParam as string, 10);
 				}
 
-				// console.log({ startTime });
-
 				player.load(
 					process.env.NEXT_PUBLIC_PLAYBACK_URL || demoPlabackUrl,
 					startTime
 				);
-
-				// if (startTime > 0) {
-				// 	removeQueryParam('t');
-				// 	playback.play();
-				// }
 			}
 		} catch (error) {
 			console.log(error);
