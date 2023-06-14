@@ -3,17 +3,19 @@ import o9n from 'o9n';
 
 export interface UseOrientationConfig {
 	onError?: (error: Error) => void;
-}
-
-interface O9nOrientation {
-	type: ScreenOrientation;
-	angle: 0 | 90 | 180 | 270;
-	onChange: (event: Event) => void;
+	onLock?: () => void;
+	onUnlock?: () => void;
+	onChange?: (event: Event) => void;
 }
 
 // Refer: https://github.com/chmanie/o9n#api
-export function useOrientation({ onError }: UseOrientationConfig = {}) {
-	const [orientation, setOrientation] = useState<O9nOrientation>(
+export function useOrientation({
+	onError,
+	onLock,
+	onUnlock,
+	onChange,
+}: UseOrientationConfig = {}) {
+	const [orientation, setOrientation] = useState<ScreenOrientation>(
 		o9n.orientation
 	);
 
@@ -24,11 +26,22 @@ export function useOrientation({ onError }: UseOrientationConfig = {}) {
 	};
 
 	const lockOrientation = (type: OrientationLockType) => {
-		o9n.orientation.lock(type).catch(orientationError);
+		o9n.orientation
+			.lock(type)
+			.then(() => {
+				if (onLock && typeof onLock === 'function') {
+					onLock();
+				}
+			})
+			.catch(orientationError);
 	};
 
 	const unlockOrientation = () => {
 		o9n.orientation.unlock();
+
+		if (onUnlock && typeof onUnlock === 'function') {
+			onUnlock();
+		}
 	};
 
 	const toggleOrientation = () => {
@@ -40,8 +53,12 @@ export function useOrientation({ onError }: UseOrientationConfig = {}) {
 	};
 
 	useEffect(() => {
-		const orientationEventHandler = () => {
+		const orientationEventHandler = (_event: Event) => {
 			setOrientation(o9n.orientation);
+
+			if (onChange && typeof onChange === 'function') {
+				onChange(_event);
+			}
 		};
 
 		o9n.orientation.addEventListener('change', orientationEventHandler);
@@ -52,7 +69,7 @@ export function useOrientation({ onError }: UseOrientationConfig = {}) {
 				orientationEventHandler
 			);
 		};
-	}, []);
+	}, [onChange]);
 
 	return {
 		orientation,

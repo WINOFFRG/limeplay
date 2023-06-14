@@ -31,3 +31,13 @@ interface CreateShakaPlayerProps {
 }
 
 type CreatePlayer = (props: CreateShakaPlayerProps) => shaka.Player;
+
+declare module 'o9n' {
+	export let orientation: ScreenOrientation;
+}
+
+interface HTMLVideoElement {
+	webkitExitFullscreen(): void;
+	webkitEnterFullscreen(): void;
+	webkitSupportsFullscreen: boolean;
+}

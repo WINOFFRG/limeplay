@@ -84,15 +84,42 @@ export function ControlsTopPanel() {
 	const { classes } = useStyles();
 	const element = document.getElementById('limeplay-player');
 	const elementRef = useRef(element);
+	const playback = useLimeplayStore((state) => state.playback);
 
-	const { lockOrientation, unlockOrientation } = useOrientation({
+	const { lockOrientation, unlockOrientation, orientation } = useOrientation({
 		onError: (error) => {
 			console.error(error);
 		},
+		onChange: (event) => {
+			if (
+				!playback ||
+				playback.readyState === 0 ||
+				!isFullScreenSupported()
+			) {
+				return;
+			}
+
+			if (orientation.type.includes('landscape') && !isFullScreen) {
+				enterFullScreen();
+			} else if (orientation.type.includes('portrait') && isFullScreen) {
+				exitFullScreen();
+			}
+		},
 	});
 
-	const { isFullScreen, api } = useFullScreen({
+	const {
+		isFullScreen,
+		toggleFullScreen,
+		isFullScreenSupported,
+		enterFullScreen,
+		exitFullScreen,
+	} = useFullScreen({
 		elementRef,
+		playback,
+		onEnter: () => {
+			lockOrientation('landscape');
+		},
+		onExit: unlockOrientation,
 	});
 
 	return (
@@ -104,18 +131,10 @@ export function ControlsTopPanel() {
 					className={classes.controlButton}
 				/>
 				<FullScreenButton
+					// disabled={!api.isEnabled}
 					isFullScreen={isFullScreen}
 					className={classes.controlButton}
-					onClick={() => {
-						if (!isFullScreen) {
-							api.request(element).then(() => {
-								lockOrientation('landscape');
-							});
-						} else {
-							api.exit();
-							unlockOrientation();
-						}
-					}}
+					onClick={toggleFullScreen}
 				>
 					{isFullScreen ? <FullscreenExit /> : <FullscreenEnter />}
 				</FullScreenButton>
