@@ -7,13 +7,9 @@ export interface UseVolumeConfig {
 	 * @default Events - ['volumechange']
 	 */
 	events?: HTMLMediaElementEvents;
-
 	initialVolume?: number;
-
 	syncMuteState?: boolean;
-
 	playback?: HTMLMediaElement;
-
 	disabled?: boolean;
 }
 
@@ -24,7 +20,7 @@ export function useVolume({
 	disabled,
 	syncMuteState = true,
 }: UseVolumeConfig = {}) {
-	const [volume, setVolume, volumeRef] = useStateRef(initialVolume);
+	const [volume, setVolume] = useState(initialVolume);
 	const [muted, setMuted, mutedRef] = useStateRef(playback.muted);
 	const [lastVolume, setLastVolume, lastVolumeRef] =
 		useStateRef(initialVolume);

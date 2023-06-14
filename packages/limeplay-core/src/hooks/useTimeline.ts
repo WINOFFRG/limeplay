@@ -1,61 +1,39 @@
 import { useEffect, useRef, useState } from 'react';
 import clamp from 'lodash/clamp';
-import { StateCreator } from 'zustand';
-import { useLimeplayStore, useLimeplayStoreAPI } from '../store';
+import { useStateRef } from '../utils';
 
 export interface UseTimelineConfig {
 	/**
 	 * HTMLMediaElement events to listen to
-	 * @default Events - ['volumechange']
+	 * @default Events - ['trackschanged', 'manifestparsed']
 	 */
 	events?: ShakaPlayerEvents;
+	playback?: HTMLMediaElement;
+	player?: shaka.Player;
+	updateInterval?: number;
 }
 
-export interface TimelineSlice {
-	isTimelineHookInjected: boolean;
-	_setIsTimelineHookInjected: (isVolumeHookInjected: boolean) => void;
-	currentTime: number;
-	_setCurrentTime: (currentTime: number) => void;
-	duration: number;
-	_setDuration: (duration: number) => void;
-	isLive: boolean;
-	_setIsLive: (isLive: boolean) => void;
-	_getIsLive: () => boolean;
-	currentProgress: number;
-	_setCurrentProgress: (currentProgress: number) => void;
-	seekRange: SeekRange;
-	_setSeekRange: (seekRange: SeekRange) => void;
-	liveLatency: number;
-	_setLiveLatency: (liveLatency: number) => void;
-	isSeeking: boolean;
-	_setIsSeeking: (isSeeking: boolean) => void;
-	_getIsSeeking: () => boolean;
-}
+const SEEK_ALLOWED = true;
+const UPDATE_WHILE_SEEKING = false;
+const PAUSE_WHILE_SEEKING = false;
 
-export function useTimeline({ events }: UseTimelineConfig = {}) {
-	const precision = 3;
-	const UPDATE_INTERVAL = 500;
-	const SEEK_ALLOWED = true;
-	const UPDATE_WHILE_SEEKING = false;
-	const PAUSE_WHILE_SEEKING = false;
-
-	const playback = useLimeplayStore((state) => state.playback);
-	const player = useLimeplayStore((state) => state.player);
-	const storeSeekRange = useLimeplayStore((state) => state.seekRange);
-	const getIsSeeking = useLimeplayStore((state) => state._getIsSeeking);
-	const setSeekRange = useLimeplayStore((state) => state._setSeekRange);
-	const setCurrentTime = useLimeplayStore((state) => state._setCurrentTime);
-	const setDuration = useLimeplayStore((state) => state._setDuration);
-	const setIsLive = useLimeplayStore((state) => state._setIsLive);
-	const setCurrentProgress = useLimeplayStore(
-		(state) => state._setCurrentProgress
-	);
-	const setLiveLatency = useLimeplayStore((state) => state._setLiveLatency);
-	const getIsLive = useLimeplayStore((state) => state._getIsLive);
-
-	const store = useLimeplayStoreAPI();
-
+export function useTimeline({
+	playback,
+	player,
+	updateInterval = 500,
+	events = ['trackschanged', 'manifestparsed'],
+}: UseTimelineConfig = {}) {
 	const currentTimerId = useRef<number>(-1);
+	const [isLive, setIsLive, isLiveRef] = useStateRef(false);
+	const [currentTime, setCurrentTime] = useState(0);
+	const [duration, setDuration, durationRef] = useStateRef(0);
+	const [isSeeking, setIsSeeking, isSeekingRef] = useStateRef(false);
+	const [liveLatency, setLiveLatency] = useState(0);
+	const [currentProgress, setCurrentProgress] = useState(0);
+	const [seekRange, setSeekRange, seekRangeRef] = useStateRef<SeekRange>({
+		start: 0,
+		end: 0,
+	});
 
 	useEffect(() => {
 		const updateSeekHandler = () => {
@@ -65,51 +43,45 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 			currentTimerId.current = window.setInterval(() => {
 				if (playback.readyState === 0) return;
 
-				const seekRange = player.seekRange();
+				const currentSeekRange = player.seekRange();
 
 				if (player.isLive()) {
-					setSeekRange(seekRange);
+					setSeekRange(currentSeekRange);
 
 					setCurrentTime(
-						Number(
-							(playback.currentTime - seekRange.start).toFixed(
-								precision
-							)
-						)
+						playback.currentTime - currentSeekRange.start
 					);
 
-					const duration = seekRange.end - seekRange.start;
+					const currentDuration =
+						currentSeekRange.end - currentSeekRange.start;
 
-					if (store.getState().duration !== duration)
-						setDuration(duration);
+					if (durationRef.current !== currentDuration)
+						setDuration(currentDuration);
 
-					setLiveLatency(
-						Number(
-							(seekRange.end - playback.currentTime).toFixed(
-								precision
-							)
-						)
-					);
+					setLiveLatency(currentSeekRange.end - playback.currentTime);
 
 					let localProgress =
 						100 -
-						((seekRange.end - playback.currentTime) / duration) *
+						((currentSeekRange.end - playback.currentTime) /
+							currentDuration) *
 							100;
 
 					localProgress = clamp(localProgress, 0, 100);
 
-					// localProgress = Number(localProgress.toFixed(precision));
+					if (!isSeekingRef.current)
+						setCurrentProgress(localProgress);
 
-					if (!getIsSeeking()) setCurrentProgress(localProgress);
-
-					if (getIsLive() !== player.isLive()) {
+					if (isLiveRef.current !== player.isLive()) {
 						setIsLive(player.isLive());
 					}
 				} else {
-					if (store.getState().duration !== playback.duration)
+					if (durationRef.current !== playback.duration)
 						setDuration(playback.duration);
 
-					if (storeSeekRange.start === 0 && storeSeekRange.end === 0)
+					if (
+						seekRangeRef.current.start === 0 &&
+						seekRangeRef.current.end === 0
+					)
 						setSeekRange(player.seekRange());
 
 					setCurrentTime(playback.currentTime);
@@ -117,20 +89,13 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 					const localProgress =
 						(playback.currentTime / playback.duration) * 100;
 
-					// localProgress = Number(localProgress.toFixed(precision));
-
-					if (!store.getState().isSeeking)
+					if (!isSeekingRef.current)
 						setCurrentProgress(localProgress);
 				}
-			}, UPDATE_INTERVAL);
+			}, updateInterval);
 		};
 
-		const hookEvents: ShakaPlayerEvents = events || [
-			'trackschanged',
-			'manifestparsed',
-		];
-
-		hookEvents.forEach((event) => {
+		events.forEach((event) => {
 			playback.addEventListener(event, updateSeekHandler);
 		});
 
@@ -138,36 +103,23 @@ export function useTimeline({ events }: UseTimelineConfig = {}) {
 
 		return () => {
 			if (playback) {
-				hookEvents.forEach((event) => {
+				events.forEach((event) => {
 					playback.removeEventListener(event, updateSeekHandler);
 				});
 			}
 			clearInterval(currentTimerId.current);
 		};
-	}, [playback, player]);
+	}, [playback, player, events, updateInterval]);
+
+	return {
+		isLive,
+		currentTime,
+		duration,
+		isSeeking,
+		liveLatency,
+		currentProgress,
+		seekRange,
+		setIsSeeking,
+		setCurrentProgress,
+	};
 }
-
-const hookName = '@limeplay/hooks/useTimeline';
-useTimeline.displayName = hookName;
-
-export const createTimelineSlice: StateCreator<TimelineSlice> = (set, get) => ({
-	isTimelineHookInjected: false,
-	_setIsTimelineHookInjected: (isTimelineHookInjected: boolean) =>
-		set({ isTimelineHookInjected }),
-	currentTime: 0,
-	_setCurrentTime: (currentTime: number) => set({ currentTime }),
-	duration: 0,
-	_setDuration: (duration: number) => set({ duration }),
-	isLive: false,
-	_setIsLive: (isLive: boolean) => set({ isLive }),
-	_getIsLive: () => get().isLive,
-	currentProgress: 0,
-	_setCurrentProgress: (currentProgress: number) => set({ currentProgress }),
-	seekRange: { start: 0, end: 0 },
-	_setSeekRange: (seekRange: SeekRange) => set({ seekRange }),
-	liveLatency: -1,
-	_setLiveLatency: (liveLatency: number) => set({ liveLatency }),
-	isSeeking: false,
-	_setIsSeeking: (isSeeking: boolean) => set({ isSeeking }),
-	_getIsSeeking: () => get().isSeeking,
-});
