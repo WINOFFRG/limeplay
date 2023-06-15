@@ -22,16 +22,7 @@ export function useFullScreen({
 	onChange,
 }: UseFullScreenConfig = {}) {
 	const [isFullScreen, setIsFullScreen] = useState(screenfull.isFullscreen);
-
-	function isFullScreenSupported() {
-		if (screenfull.isEnabled) {
-			return true;
-		}
-		if (playback && playback.webkitSupportsFullscreen) {
-			return true;
-		}
-		return false;
-	}
+	const [isFullScreenSupported, setIsFullScreenSupported] = useState(false);
 
 	async function enterFullScreen() {
 		try {
@@ -77,6 +68,34 @@ export function useFullScreen({
 			enterFullScreen();
 		}
 	}
+
+	useEffect(() => {
+		function checkFullScreenSupport() {
+			if (screenfull.isEnabled) {
+				return true;
+			}
+			if (playback && playback.webkitSupportsFullscreen) {
+				return true;
+			}
+			return false;
+		}
+
+		setIsFullScreenSupported(checkFullScreenSupport());
+
+		function checkSupport_() {
+			setIsFullScreenSupported(checkFullScreenSupport());
+		}
+
+		// https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1628805-webkitsupportsfullscreen
+		// On iOS, Native Video Fullscreen support can only be detected after the video has loaded.
+		playback.addEventListener('loadedmetadata', checkSupport_);
+		playback.addEventListener('loadeddata', checkSupport_);
+
+		return () => {
+			playback.removeEventListener('loadedmetadata', checkSupport_);
+			playback.removeEventListener('loadeddata', checkSupport_);
+		};
+	}, [playback]);
 
 	useEffect(() => {
 		const fullscreenEventHandler = (_event: Event) => {

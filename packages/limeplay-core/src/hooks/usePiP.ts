@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useStateRef } from '../utils';
 
 export interface UsePiPConfig {
 	playback: HTMLVideoElement;
+	player?: shaka.Player;
 	events?: HTMLVideoElementEvents;
 	onError?: (event: Event) => void;
 	onExit?: () => void;
@@ -12,6 +14,7 @@ export interface UsePiPConfig {
 
 export function usePiP({
 	playback,
+	player,
 	events = ['enterpictureinpicture', 'leavepictureinpicture'],
 	onError,
 	onExit,
@@ -19,8 +22,9 @@ export function usePiP({
 	onChange,
 	onResize,
 }: UsePiPConfig) {
-	const [isPiPActive, setIsPiPActive] = useState(false);
-	const [isPiPSupported, setIsPiPSupported] = useState(true);
+	const [isPiPActive, setIsPiPActive, isPiPActiveRef] = useStateRef(false);
+	const [isPiPSupported, setIsPiPSupported] = useState(false);
+	const [isPiPAllowed, setIsPiPAllowed] = useState(false);
 	const [pipWindow, setPipWindow] = useState<PictureInPictureWindow | null>(
 		null
 	);
@@ -31,7 +35,7 @@ export function usePiP({
 		}
 	};
 
-	const togglePiP = () => {
+	const togglePiP = async () => {
 		if (!document.pictureInPictureElement) {
 			playback
 				.requestPictureInPicture()
@@ -66,7 +70,11 @@ export function usePiP({
 	useEffect(() => {
 		if (!document.pictureInPictureEnabled) {
 			setIsPiPSupported(false);
-			return null;
+			return undefined;
+		}
+
+		if (!playback.disablePictureInPicture) {
+			setIsPiPAllowed(true);
 		}
 
 		setIsPiPSupported(true);
@@ -91,9 +99,19 @@ export function usePiP({
 			}
 		};
 
+		const trackChangeHandler = async () => {
+			if (player.isAudioOnly() && isPiPActiveRef.current) {
+				await togglePiP();
+			}
+		};
+
 		events.forEach((event) => {
 			playback.addEventListener(event, pipEventHandler);
 		});
+
+		if (player) {
+			player.addEventListener('trackschanged', trackChangeHandler);
+		}
 
 		return () => {
 			if (playback) {
@@ -101,12 +119,17 @@ export function usePiP({
 					playback.removeEventListener(event, pipEventHandler);
 				});
 			}
+
+			if (player) {
+				player.removeEventListener('trackschanged', trackChangeHandler);
+			}
 		};
-	}, [playback, events, onChange, onResize]);
+	}, [playback, player, events, onChange, onResize]);
 
 	return {
 		isPiPActive,
 		isPiPSupported,
+		isPiPAllowed,
 		pipWindow,
 		togglePiP,
 	};

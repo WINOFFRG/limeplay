@@ -22,17 +22,26 @@ type UseStateRef = {
 	];
 };
 
-const useStateRef: UseStateRef = <S>(initialState?: S | (() => S)) => {
-	const [state, setState] = useState(initialState);
-	const ref = useRef(state);
+const useStateRef: UseStateRef = <S>(
+	initialState?: S | (() => S)
+): [
+	S | undefined,
+	Dispatch<SetStateAction<S | undefined>>,
+	ReadOnlyRefObject<S | undefined>
+] => {
+	const [state, setState] = useState<S | undefined>(initialState);
+	const ref = useRef<S | undefined>(state);
 
-	const dispatch: typeof setState = useCallback((setStateAction: any) => {
-		ref.current = isFunction(setStateAction)
-			? setStateAction(ref.current)
-			: setStateAction;
+	const dispatch: Dispatch<SetStateAction<S | undefined>> = useCallback(
+		(setStateAction: SetStateAction<S | undefined>) => {
+			ref.current = isFunction(setStateAction)
+				? setStateAction(ref.current)
+				: setStateAction;
 
-		setState(ref.current);
-	}, []);
+			setState(ref.current);
+		},
+		[]
+	);
 
 	return [state, dispatch, ref];
 };
