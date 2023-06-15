@@ -31,10 +31,11 @@ export default function Player() {
 					poster="/video-poster.jpg"
 					controls={false}
 					playsInline
+					autoPlay
 					className={classes.videoElement}
-					style={{
-						opacity: 0.1,
-					}}
+					// style={{
+					// 	opacity: 0.1,
+					// }}
 				/>
 			</MediaOutlet>
 		</LimeplayProvider>
