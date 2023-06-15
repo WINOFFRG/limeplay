@@ -31,7 +31,7 @@ export default function Player() {
 					poster="/video-poster.jpg"
 					controls={false}
 					playsInline
-					autoPlay
+					// autoPlay
 					className={classes.videoElement}
 					// style={{
 					// 	opacity: 0.1,
