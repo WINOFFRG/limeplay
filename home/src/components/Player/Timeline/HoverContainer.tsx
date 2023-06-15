@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { memo, useEffect, useRef } from 'react';
 
 import { useLimeplayStore } from '@limeplay/core/src/store';

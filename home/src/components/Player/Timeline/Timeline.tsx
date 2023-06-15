@@ -3,11 +3,8 @@ import { useRef } from 'react';
 import { useLimeplayStore } from '@limeplay/core/src/store';
 import { FullGestureState, useDrag } from '@use-gesture/react';
 import * as Slider from '@radix-ui/react-slider';
-import { clamp } from 'lodash';
 import { buildTimeString } from './utils';
 import useStyles from './styles';
-import MemoizedHoverContainer from './HoverContainer';
-import { BufferRangeBar } from './Buffer';
 import ControlButton from '../ControlButton';
 
 export function TimelineSlider() {
@@ -100,15 +97,7 @@ export function TimelineSlider() {
 				onValueChange={(e) => {
 					// setIsSeeking(active);
 					// playback.currentTime = seekRange.start + e[0] * duration;
-					console.log(
-						seekRange.start + (e[0] / 100) * duration,
-						duration,
-						e[0]
-					);
-
-					console.log(e[0], seekRange);
-
-					playback.currentTime = e[0];
+					[playback.currentTime] = e;
 				}}
 			>
 				<Slider.Track className={classes.timelineSlider__ProgressBar}>
