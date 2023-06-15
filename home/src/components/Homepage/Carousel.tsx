@@ -422,7 +422,7 @@ const useStyles = createStyles((theme, { active, bg }: CarouselSlideProps) => ({
 				minHeight: '1px',
 			},
 
-			'-ms-overflow-style': 'none', // IE 10+
+			msOverflowStyle: 'none', // IE 10+
 			overflow: '-moz-scrollbars-none', // Firefox
 			scrollbarWidth: 'none', // Firefox
 
