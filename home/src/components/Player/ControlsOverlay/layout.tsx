@@ -93,14 +93,6 @@ export function ControlsTopPanel() {
 			console.error(error);
 		},
 		onChange: (event) => {
-			if (
-				!playback ||
-				playback.readyState === 0 ||
-				!isFullScreenSupported
-			) {
-				return;
-			}
-
 			if (orientation.type.includes('landscape') && !isFullScreen) {
 				enterFullScreen();
 			} else if (orientation.type.includes('portrait') && isFullScreen) {
@@ -122,6 +114,9 @@ export function ControlsTopPanel() {
 			lockOrientation('landscape');
 		},
 		onExit: unlockOrientation,
+		onError: (error) => {
+			console.error('Hook: ', error);
+		},
 	});
 
 	const { isPiPActive, isPiPAllowed, togglePiP } = usePiP({
@@ -283,7 +278,7 @@ function VolumeControls() {
 			>
 				<VolumeIcon volume={volume} muted={muted} />
 			</VolumeButton>
-			<VolumeSlider playback={playback} />
+			<VolumeSlider playback={playback} volume={volume} />
 		</>
 	);
 }

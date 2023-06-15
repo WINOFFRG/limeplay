@@ -83,20 +83,12 @@ export function TimelineSlider() {
 				)}
 			</span>
 			<Slider.Root
+				// value={[currentTime]}
 				className={classes.timelineSlider__Container}
 				ref={elementRef}
-				aria-orientation="horizontal"
-				aria-valuemax={parsedDuration}
-				aria-valuemin={0}
-				aria-valuenow={parsedCurrentTime}
-				role="slider"
 				min={seekRange.start}
 				max={seekRange.end}
-				// step: 10,
-				// value={[currentProgress / 100]}
 				onValueChange={(e) => {
-					// setIsSeeking(active);
-					// playback.currentTime = seekRange.start + e[0] * duration;
 					[playback.currentTime] = e;
 				}}
 			>
