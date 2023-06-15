@@ -42,4 +42,5 @@ interface HTMLVideoElement {
 	webkitExitFullscreen(): void;
 	webkitEnterFullscreen(): void;
 	webkitSupportsFullscreen: boolean;
+	webkitDisplayingFullscreen: boolean;
 }

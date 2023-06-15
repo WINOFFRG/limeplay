@@ -17,7 +17,6 @@ export function useVolume({
 	initialVolume = 1,
 	events = ['volumechange'],
 	playback,
-	disabled,
 	syncMuteState = true,
 }: UseVolumeConfig = {}) {
 	const [volume, setVolume] = useState(initialVolume);
@@ -26,14 +25,11 @@ export function useVolume({
 		useStateRef(initialVolume);
 
 	const toggleMute = () => {
-		if (disabled) return;
 		playback.muted = !playback.muted;
 	};
 
 	useEffect(() => {
 		const volumeEventHandler = () => {
-			if (disabled) return;
-
 			if (syncMuteState) {
 				// Volume Toggle Case - Muted
 				if (playback.muted !== mutedRef.current) {

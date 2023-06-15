@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import screenfull from 'screenfull';
+import { useStateRef } from '../utils';
 
 // Missing iOS Mobile Support https://github.com/sindresorhus/screenfull#support
 export interface UseFullScreenConfig {
 	elementRef?: React.RefObject<HTMLElement>;
-	disabled?: boolean;
 	playback?: HTMLVideoElement;
 	onError?: (event: Event) => void;
 	onExit?: () => void;
@@ -14,23 +14,22 @@ export interface UseFullScreenConfig {
 
 export function useFullScreen({
 	elementRef,
-	disabled,
 	playback,
 	onError,
 	onExit,
 	onEnter,
 	onChange,
 }: UseFullScreenConfig = {}) {
-	const [isFullScreen, setIsFullScreen] = useState(screenfull.isFullscreen);
+	const [isFullScreen, setIsFullScreen, isFullScreenRef] = useStateRef(false);
 	const [isFullScreenSupported, setIsFullScreenSupported] = useState(false);
 
 	async function enterFullScreen() {
 		try {
-			if (screenfull.isEnabled) {
-				if (document.pictureInPictureElement) {
-					await document.exitPictureInPicture();
-				}
+			if (document.pictureInPictureElement) {
+				await document.exitPictureInPicture();
+			}
 
+			if (screenfull.isEnabled) {
 				await screenfull.request(elementRef.current, {
 					navigationUI: 'hide',
 				});
@@ -62,12 +61,27 @@ export function useFullScreen({
 	}
 
 	function toggleFullScreen() {
-		if (isFullScreen) {
+		if (isFullScreenRef.current) {
 			exitFullScreen();
 		} else {
 			enterFullScreen();
 		}
 	}
+
+	const fullscreenEventHandler = useCallback(
+		(_event: Event) => {
+			if (screenfull.isEnabled) {
+				setIsFullScreen(screenfull.isFullscreen ?? false);
+			} else if (playback && playback.webkitSupportsFullscreen) {
+				setIsFullScreen(playback.webkitDisplayingFullscreen);
+			}
+
+			if (onChange && typeof onChange === 'function') {
+				onChange(_event);
+			}
+		},
+		[playback, onChange]
+	);
 
 	useEffect(() => {
 		function checkFullScreenSupport() {
@@ -91,6 +105,8 @@ export function useFullScreen({
 		playback.addEventListener('loadedmetadata', checkSupport_);
 		playback.addEventListener('loadeddata', checkSupport_);
 
+		fullscreenEventHandler({} as Event);
+
 		return () => {
 			playback.removeEventListener('loadedmetadata', checkSupport_);
 			playback.removeEventListener('loadeddata', checkSupport_);
@@ -98,15 +114,7 @@ export function useFullScreen({
 	}, [playback]);
 
 	useEffect(() => {
-		const fullscreenEventHandler = (_event: Event) => {
-			setIsFullScreen(screenfull.isFullscreen);
-
-			if (onChange && typeof onChange === 'function') {
-				onChange(_event);
-			}
-		};
-
-		if (screenfull.isEnabled && !disabled) {
+		if (screenfull.isEnabled) {
 			screenfull.on('change', fullscreenEventHandler);
 
 			if (onError && typeof onError === 'function') {
@@ -122,7 +130,7 @@ export function useFullScreen({
 		}
 
 		return () => {
-			if (screenfull.isEnabled && !disabled) {
+			if (screenfull.isEnabled) {
 				screenfull.off('change', fullscreenEventHandler);
 
 				if (onError && typeof onError === 'function') {
@@ -137,7 +145,7 @@ export function useFullScreen({
 				);
 			}
 		};
-	}, [elementRef, onError, disabled, playback, onChange]);
+	}, [elementRef, onError, playback, onChange, fullscreenEventHandler]);
 
 	return {
 		isFullScreen,
