@@ -1,92 +1,26 @@
+import * as Slider from '@radix-ui/react-slider';
 import { clamp } from 'lodash';
-import { useDrag } from '@use-gesture/react';
-import {
-	OnSliderHandlerProps,
-	SliderRange,
-	SliderRoot,
-	SliderThumb,
-	SliderTrack,
-	onSlideHandler,
-} from '@limeplay/core';
 import useStyles from './styles';
 
-export function VolumeSlider({
-	playback,
-	muted,
-	volume,
-}: {
-	playback: HTMLMediaElement;
-	muted: boolean;
-	volume: number;
-}) {
+export function VolumeSlider({ playback }: { playback: HTMLMediaElement }) {
 	const { classes } = useStyles();
 
-	const configProps: OnSliderHandlerProps = {
-		min: 0,
-		max: 1,
-		step: 0.05,
-		orientation: 'horizontal',
-		disabled: false,
-		dir: 'ltr',
-		inverted: false,
-	};
-
-	const volumeChangeHandler = ({
-		event,
-	}: {
-		event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
-	}) => {
-		let newVolume = null;
-		const step = 0.05;
-
-		switch (event.type) {
-			case 'pointermove':
-			case 'pointerdown': {
-				newVolume = onSlideHandler(
-					event as React.MouseEvent<HTMLElement>,
-					configProps
-				);
-				break;
-			}
-			case 'keydown':
-				// @ts-ignore
-				switch (event.key) {
-					case 'ArrowUp':
-					case 'ArrowRight':
-						newVolume = playback.volume + step;
-						break;
-					case 'ArrowDown':
-					case 'ArrowLeft':
-						newVolume = playback.volume - step;
-						break;
-					default:
-						break;
-				}
-				break;
-			default:
-				break;
-		}
-
-		if (newVolume !== null) {
-			playback.volume = clamp(newVolume, 0, 1);
-			if (event.defaultPrevented) event.preventDefault();
-		}
-	};
-
-	const events: any = useDrag(volumeChangeHandler);
-
 	return (
-		<SliderRoot
-			tabIndex={0}
-			value={volume}
+		<Slider.Root
 			className={classes.sliderRoot}
-			{...events()}
-			{...configProps}
+			onValueChange={(e) => {
+				playback.volume = clamp(e[0], 0, 1);
+			}}
+			defaultValue={[50]}
+			min={0}
+			max={1}
+			step={0.05}
+			dir="ltr"
 		>
-			<SliderTrack className={classes.sliderTrack}>
-				<SliderRange className={classes.sliderRange} />
-			</SliderTrack>
-			<SliderThumb className={classes.sliderThumb} />
-		</SliderRoot>
+			<Slider.Track className={classes.sliderTrack}>
+				<Slider.Range className={classes.sliderRange} />
+			</Slider.Track>
+			<Slider.Thumb className={classes.sliderThumb} />
+		</Slider.Root>
 	);
 }

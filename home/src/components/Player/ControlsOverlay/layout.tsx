@@ -11,11 +11,11 @@ import {
 import {
 	useFullScreen,
 	useOrientation,
+	usePiP,
 	usePlayback,
 } from '@limeplay/core/src/hooks';
 import screenfull from 'screenfull';
 import { useRouter } from 'next/router';
-import PipButton from '@limeplay/core/src/components/PipButton';
 import useStyles from './styles';
 // import { VolumeControl } from '../VolumeButton';
 // import SettingsButton from '../SettingsButton';
@@ -117,21 +117,28 @@ export function ControlsTopPanel() {
 		exitFullScreen,
 	} = useFullScreen({
 		elementRef,
-		playback,
+		playback: playback as HTMLVideoElement,
 		onEnter: () => {
 			lockOrientation('landscape');
 		},
 		onExit: unlockOrientation,
 	});
 
+	const { isPiPActive, isPiPSupported, togglePiP } = usePiP({
+		playback: playback as HTMLVideoElement,
+	});
+
 	return (
 		<div className={classes.controlsTopPanel} role="none">
 			<div className={classes.topRightSection}>
-				<PipButton
-					pipEnterIcon={<PipEnter />}
-					pipExitIcon={<PipExit />}
+				<button
+					type="button"
 					className={classes.controlButton}
-				/>
+					onClick={togglePiP}
+					disabled={!isPiPSupported}
+				>
+					{isPiPActive ? <PipExit /> : <PipEnter />}
+				</button>
 				<FullScreenButton
 					disabled={!isFullScreenSupported()}
 					isFullScreen={isFullScreen}

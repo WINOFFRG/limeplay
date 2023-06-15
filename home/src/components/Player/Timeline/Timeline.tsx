@@ -1,15 +1,9 @@
-import {
-	OnSliderHandlerProps,
-	SliderRange,
-	SliderRoot,
-	SliderThumb,
-	SliderTrack,
-	onSlideHandler,
-} from '@limeplay/core';
 import { useTimeline } from '@limeplay/core/src/hooks';
 import { useRef } from 'react';
 import { useLimeplayStore } from '@limeplay/core/src/store';
 import { FullGestureState, useDrag } from '@use-gesture/react';
+import * as Slider from '@radix-ui/react-slider';
+import { clamp } from 'lodash';
 import { buildTimeString } from './utils';
 import useStyles from './styles';
 import MemoizedHoverContainer from './HoverContainer';
@@ -37,16 +31,6 @@ export function TimelineSlider() {
 		player,
 	});
 
-	const config: OnSliderHandlerProps = {
-		min: 0,
-		max: 1,
-		step: 10,
-		orientation: 'horizontal',
-		disabled: false,
-		dir: 'ltr',
-		inverted: false,
-	};
-
 	const cbFunction = ({
 		event,
 		elapsedTime,
@@ -63,51 +47,11 @@ export function TimelineSlider() {
 
 		if (event.type === 'pointermove' || event.type === 'pointerdown') {
 			// @ts-ignore
-			const newTime = onSlideHandler(event, config);
-			playback.currentTime = seekRange.start + newTime * duration;
-			setCurrentProgress(newTime * 100);
+			// const newTime = onSlideHandler(event, config);
+			// playback.currentTime = seekRange.start + newTime * duration;
+			// setCurrentProgress(newTime * 100);
 		}
-
-		// if (event.type === 'keydown') {
-		// 	const { key } = event;
-
-		// 	if (key === 'ArrowUp' || key === 'ArrowRight') {
-		// 		const lClammpedValue = clamp(
-		// 			playback.currentTime + step,
-		// 			seekRange.start,
-		// 			seekRange.end
-		// 		).toFixed(2);
-
-		// 		const progress =
-		// 			((playback.currentTime - seekRange.start) /
-		// 				(seekRange.end - seekRange.start)) *
-		// 			100;
-
-		// 		playback.currentTime = Number(lClammpedValue);
-
-		// 		setCurrentProgress(progress);
-		// 	} else if (key === 'ArrowDown' || key === 'ArrowLeft') {
-		// 		const lClammpedValue = clamp(
-		// 			playback.currentTime - step,
-		// 			seekRange.start,
-		// 			seekRange.end
-		// 		).toFixed(2);
-
-		// 		const progress =
-		// 			((playback.currentTime - seekRange.start) /
-		// 				(seekRange.end - seekRange.start)) *
-		// 			100;
-
-		// 		playback.currentTime = Number(lClammpedValue);
-
-		// 		setCurrentProgress(progress);
-		// 	}
-		// }
-
-		event.preventDefault();
 	};
-
-	const bind: any = useDrag(cbFunction);
 
 	if (!playback || !player) return null;
 
@@ -141,25 +85,39 @@ export function TimelineSlider() {
 					</ControlButton>
 				)}
 			</span>
-			<SliderRoot
+			<Slider.Root
 				className={classes.timelineSlider__Container}
 				ref={elementRef}
-				// aria-orientation="horizontal"
-				// aria-valuemax={parsedDuration}
-				// aria-valuemin={0}
-				// aria-valuenow={parsedCurrentTime}
-				// role="slider"
-				{...bind()}
-				{...config}
-				value={currentProgress / 100}
+				aria-orientation="horizontal"
+				aria-valuemax={parsedDuration}
+				aria-valuemin={0}
+				aria-valuenow={parsedCurrentTime}
+				role="slider"
+				min={seekRange.start}
+				max={seekRange.end}
+				// step: 10,
+				// value={[currentProgress / 100]}
+				onValueChange={(e) => {
+					// setIsSeeking(active);
+					// playback.currentTime = seekRange.start + e[0] * duration;
+					console.log(
+						seekRange.start + (e[0] / 100) * duration,
+						duration,
+						e[0]
+					);
+
+					console.log(e[0], seekRange);
+
+					playback.currentTime = e[0];
+				}}
 			>
-				<SliderTrack className={classes.timelineSlider__ProgressBar}>
-					<SliderRange
+				<Slider.Track className={classes.timelineSlider__ProgressBar}>
+					<Slider.Range
 						className={classes.timelineSlider__DurationBar}
 					/>
-					<BufferRangeBar />
-				</SliderTrack>
-				<SliderThumb
+					{/* <BufferRangeBar /> */}
+				</Slider.Track>
+				<Slider.Thumb
 					aria-label="Seek Time Scrubber"
 					aria-valuemax={parsedDuration}
 					aria-valuemin={0}
@@ -175,7 +133,7 @@ export function TimelineSlider() {
 					playback={playback}
 					player={player}
 				/> */}
-			</SliderRoot>
+			</Slider.Root>
 			<span>{buildTimeString(duration, duration > 3600)}</span>
 		</div>
 	);
