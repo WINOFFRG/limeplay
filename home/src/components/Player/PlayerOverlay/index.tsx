@@ -72,6 +72,9 @@ export default function PlayerOverlay() {
 					process.env.NEXT_PUBLIC_PLAYBACK_URL || demoPlabackUrl,
 					startTime
 				);
+
+				// @ts-ignore
+				window.player = player;
 			}
 		} catch (error) {
 			console.log(error);

@@ -44,8 +44,7 @@ import {
 import { VolumeSlider } from '../Volume/Slider';
 import { TimelineSlider } from '../Timeline/Timeline';
 
-function ResizeButton() {
-	const isFullScreen = useLimeplayStore((state) => state.isFullScreen);
+function ResizeButton({ isFullScreen }: { isFullScreen: boolean }) {
 	const { classes } = useStyles();
 	const router = useRouter();
 	const isHomePage = useMemo(
@@ -87,6 +86,7 @@ export function ControlsTopPanel() {
 	const element = document.getElementById('limeplay-player');
 	const elementRef = useRef(element);
 	const playback = useLimeplayStore((state) => state.playback);
+	const player = useLimeplayStore((state) => state.player);
 
 	const { lockOrientation, unlockOrientation, orientation } = useOrientation({
 		onError: (error) => {
@@ -96,7 +96,7 @@ export function ControlsTopPanel() {
 			if (
 				!playback ||
 				playback.readyState === 0 ||
-				!isFullScreenSupported()
+				!isFullScreenSupported
 			) {
 				return;
 			}
@@ -140,14 +140,14 @@ export function ControlsTopPanel() {
 					{isPiPActive ? <PipExit /> : <PipEnter />}
 				</button>
 				<FullScreenButton
-					disabled={!isFullScreenSupported()}
+					disabled={!isFullScreenSupported}
 					isFullScreen={isFullScreen}
 					className={classes.controlButton}
 					onClick={toggleFullScreen}
 				>
 					{isFullScreen ? <FullscreenExit /> : <FullscreenEnter />}
 				</FullScreenButton>
-				<ResizeButton />
+				<ResizeButton isFullScreen={isFullScreen} />
 			</div>
 		</div>
 	);
@@ -160,27 +160,7 @@ export function ControlsMiddlePanel() {
 	const [playAnim, setPlayAnim] = useState(false);
 	const [pauseAnim, setPauseAnim] = useState(false);
 
-	const isPlaying = useLimeplayStore((state) => state.isPlaying);
 	const playback = useLimeplayStore((state) => state.playback);
-
-	useEffect(() => {
-		if (isPlaying) {
-			setPlayAnim(true);
-			window.setTimeout(() => {
-				setPlayAnim(false);
-			}, 500);
-		}
-		if (!isPlaying) {
-			setPauseAnim(true);
-			window.setTimeout(() => {
-				setPauseAnim(false);
-			}, 500);
-		}
-
-		return () => {
-			clearTimeout(timeout.current);
-		};
-	}, [isPlaying]);
 
 	return (
 		<div
@@ -266,7 +246,7 @@ export function ControlsBottomPanel() {
 		return () => {
 			document.removeEventListener('keydown', spacePlayback);
 		};
-	}, [playback]);
+	}, [playback, togglePlayback]);
 
 	return (
 		<div className={classes.controlsBottomPanelWrapper}>
@@ -303,7 +283,7 @@ function VolumeControls() {
 			>
 				<VolumeIcon volume={volume} muted={muted} />
 			</VolumeButton>
-			<VolumeSlider playback={playback} muted={muted} volume={volume} />
+			<VolumeSlider playback={playback} />
 		</>
 	);
 }
