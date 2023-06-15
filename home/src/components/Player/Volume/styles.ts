@@ -95,6 +95,7 @@ const useStyles = createStyles((theme) => ({
 		color: '#fff',
 		transition:
 			'display .8s cubic-bezier(0.4,0,0.2,1) ,transform .2s cubic-bezier(0.4,0,0.2,1)',
+		...theme.fn.focusStyles(),
 
 		'&[data-disabled]': {
 			cursor: 'not-allowed',
