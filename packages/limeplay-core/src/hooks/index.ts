@@ -1,30 +1,12 @@
-import {
-	UsePlaybackConfig,
-	usePlayback,
-	PlaybackSlice,
-	createPlaybackSlice,
-} from './usePlayback';
+import { UsePlaybackConfig, usePlayback } from './usePlayback';
 
-import {
-	UseLoadingConfig,
-	useLoading,
-	LoadingSlice,
-	createLoadingSlice,
-} from './useLoading';
+import { UseLoadingConfig, useLoading } from './useLoading';
 
-import {
-	UseVolumeConfig,
-	useVolume,
-	VolumeSlice,
-	createVolumeSlice,
-} from './useVolume';
+import { UseVolumeConfig, useVolume } from './useVolume';
 
-import {
-	UseTimelineConfig,
-	useTimeline,
-	TimelineSlice,
-	createTimelineSlice,
-} from './useTimeline';
+import { UseTimelineConfig, useTimeline } from './useTimeline';
+
+import { UsePiPConfig, usePiP } from './usePiP';
 
 import {
 	UseBufferConfig,
@@ -40,32 +22,13 @@ import {
 	createSafeLoadSlice,
 } from './useSafeLoad';
 
-import {
-	UseFullScreenConfig,
-	useFullScreen,
-	FullScreenSlice,
-	createFullScreenSlice,
-} from './useFullScreen';
+import { UseFullScreenConfig, useFullScreen } from './useFullScreen';
 
 import { useOrientation, UseOrientationConfig } from './useOrientation';
 
-export {
-	createPlaybackSlice,
-	createLoadingSlice,
-	createVolumeSlice,
-	createTimelineSlice,
-	createBufferSlice,
-	createSafeLoadSlice,
-	createFullScreenSlice,
-};
+export { createBufferSlice, createSafeLoadSlice };
 
-type StoreSlice = PlaybackSlice &
-	LoadingSlice &
-	VolumeSlice &
-	TimelineSlice &
-	BufferSlice &
-	SafeLoadSlice &
-	FullScreenSlice;
+type StoreSlice = BufferSlice & SafeLoadSlice;
 
 export {
 	usePlayback,
@@ -76,22 +39,19 @@ export {
 	useSafeLoad,
 	useFullScreen,
 	useOrientation,
+	usePiP,
 };
 
 export type {
 	StoreSlice,
-	PlaybackSlice,
 	UsePlaybackConfig,
-	LoadingSlice,
 	UseLoadingConfig,
-	VolumeSlice,
 	UseVolumeConfig,
-	TimelineSlice,
 	UseTimelineConfig,
 	BufferSlice,
 	UseBufferConfig,
 	SafeLoadSlice,
 	UseSafeLoadConfig,
-	FullScreenSlice,
 	UseFullScreenConfig,
+	UsePiPConfig,
 };

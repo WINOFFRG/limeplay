@@ -20,6 +20,8 @@ interface HookProps {
 
 type HTMLMediaElementEvents = Array<keyof HTMLMediaElementEventMap>;
 
+type HTMLVideoElementEvents = Array<keyof HTMLVideoElementEventMap>;
+
 type ShakaPlayerEvents = Array<
 	'loading' | 'buffering' | 'trackschanged' | 'manifestparsed' | 'loaded'
 >;

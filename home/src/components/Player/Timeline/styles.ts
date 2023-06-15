@@ -81,7 +81,7 @@ const useStyles = createStyles((theme, _params) => ({
 		position: 'absolute',
 		backgroundColor: '#1db954',
 		borderRadius: '8px',
-		zIndex: 2,
+		zIndex: 0,
 
 		'&[data-orientation="horizontal"]': {
 			height: '100%',
