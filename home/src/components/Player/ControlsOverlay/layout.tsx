@@ -124,7 +124,7 @@ export function ControlsTopPanel() {
 		onExit: unlockOrientation,
 	});
 
-	const { isPiPActive, isPiPSupported, togglePiP } = usePiP({
+	const { isPiPActive, isPiPAllowed, togglePiP } = usePiP({
 		playback: playback as HTMLVideoElement,
 	});
 
@@ -135,7 +135,7 @@ export function ControlsTopPanel() {
 					type="button"
 					className={classes.controlButton}
 					onClick={togglePiP}
-					disabled={!isPiPSupported}
+					disabled={!isPiPAllowed}
 				>
 					{isPiPActive ? <PipExit /> : <PipEnter />}
 				</button>
