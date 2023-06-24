@@ -10,6 +10,8 @@ import { UsePiPConfig, usePiP } from './usePiP';
 
 import { UseQualityConfig, useQuality } from './useQuality';
 
+import { UseLiveConfig, useLive } from './useLive';
+
 import {
 	UseBufferConfig,
 	useBufferInfo,
@@ -43,6 +45,7 @@ export {
 	useOrientation,
 	usePiP,
 	useQuality,
+	useLive,
 };
 
 export type {
@@ -58,4 +61,5 @@ export type {
 	UseFullScreenConfig,
 	UsePiPConfig,
 	UseQualityConfig,
+	UseLiveConfig,
 };

@@ -56,9 +56,6 @@ export default function PlayerOverlay() {
 					};
 				}
 
-				// @ts-ignore
-				playerConfig.abr.enabled = true;
-
 				player.configure(playerConfig);
 
 				const tParam = router.query.t;

@@ -1,4 +1,4 @@
-import { useTimeline } from '@limeplay/core/src/hooks';
+import { useLive, useTimeline } from '@limeplay/core/src/hooks';
 import { useRef, useCallback } from 'react';
 import { useLimeplayStore } from '@limeplay/core/src/store';
 import { FullGestureState, useDrag, useMove } from '@use-gesture/react';
@@ -55,8 +55,6 @@ export function TimelineSlider() {
 		duration,
 		currentTime,
 		currentProgress,
-		liveLatency,
-		isLive,
 		isSeeking,
 		setCurrentProgress,
 		setIsSeeking,
@@ -64,8 +62,13 @@ export function TimelineSlider() {
 	} = useTimeline({
 		playback,
 		player,
-		updateInterval: 250,
+		updateInterval: 750,
 	});
+
+	// const { isLive, liveLatency } = useLive({
+	// 	playback,
+	// 	player,
+	// });
 
 	const config: OnSliderHandlerProps = {
 		min: seekRange.start,
@@ -102,12 +105,21 @@ export function TimelineSlider() {
 
 	if (!playback || !player) return null;
 
+	console.log({
+		// liveLatency,
+		currentProgress,
+		currentTime,
+		duration,
+		// isLive,
+		seekRange,
+	});
+
 	return (
 		<div className={classes.timelineWrrapper}>
 			<CurrentTime
 				currentTime={currentTime}
 				duration={duration}
-				isLive={isLive}
+				isLive
 				playback={playback}
 				player={player}
 				seekRange={seekRange}
@@ -116,12 +128,13 @@ export function TimelineSlider() {
 				value={[currentTime]}
 				className={classes.timelineSlider__Container}
 				ref={elementRef}
-				// {...events()}
+				{...events()}
 				{...config}
-				onValueChange={(value) => {
-					playback.currentTime = value[0];
-					setCurrentTime(value[0]);
-				}}
+				// onValueChange={(value) => {
+				// 	playback.currentTime = value[0];
+				// 	console.log({ time: value[0] });
+				// 	setCurrentTime(value[0]);
+				// }}
 			>
 				<Slider.Track className={classes.timelineSlider__ProgressBar}>
 					<Slider.Range
