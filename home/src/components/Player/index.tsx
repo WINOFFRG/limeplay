@@ -33,9 +33,9 @@ export default function Player() {
 					playsInline
 					autoPlay
 					className={classes.videoElement}
-					// style={{
-					// 	opacity: 0.1,
-					// }}
+					style={{
+						opacity: 0,
+					}}
 				/>
 			</MediaOutlet>
 		</LimeplayProvider>

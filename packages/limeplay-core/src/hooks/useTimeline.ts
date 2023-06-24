@@ -45,9 +45,7 @@ export function useTimeline({
 				if (player.isLive()) {
 					setSeekRange(currentSeekRange);
 
-					setCurrentTime(
-						playback.currentTime - currentSeekRange.start
-					);
+					setCurrentTime(playback.currentTime);
 
 					const currentDuration =
 						currentSeekRange.end - currentSeekRange.start;

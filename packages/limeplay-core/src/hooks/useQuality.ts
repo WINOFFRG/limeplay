@@ -102,7 +102,13 @@ export function useQuality({
 		setTracks(currTracks);
 	}, [player]);
 
-	useEffect(updateQualityHandler, [updateQualityHandler, loadMode.current]);
+	useEffect(() => {
+		if (player) {
+			const _config = player.getConfiguration();
+			updateQualityHandler();
+			setIsAuto(_config.abr.enabled);
+		}
+	}, [updateQualityHandler, loadMode.current]);
 
 	useEffect(() => {
 		events.forEach((event) => {
