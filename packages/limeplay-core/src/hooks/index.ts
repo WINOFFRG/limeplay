@@ -8,6 +8,8 @@ import { UseTimelineConfig, useTimeline } from './useTimeline';
 
 import { UsePiPConfig, usePiP } from './usePiP';
 
+import { UseQualityConfig, useQuality } from './useQuality';
+
 import {
 	UseBufferConfig,
 	useBufferInfo,
@@ -40,6 +42,7 @@ export {
 	useFullScreen,
 	useOrientation,
 	usePiP,
+	useQuality,
 };
 
 export type {
@@ -54,4 +57,5 @@ export type {
 	UseSafeLoadConfig,
 	UseFullScreenConfig,
 	UsePiPConfig,
+	UseQualityConfig,
 };

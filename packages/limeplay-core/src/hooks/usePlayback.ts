@@ -19,6 +19,10 @@ export function usePlayback({
 }: UsePlaybackConfig) {
 	const [isPlaying, setIsPlaying] = useState(false);
 
+	// TODO: Add more states
+	const [isEnded, setIsEnded] = useState(false);
+	const [isRepeat, setIsRepeat] = useState(false);
+
 	const togglePlayback = () => {
 		if (!playback.duration || disabled) return;
 

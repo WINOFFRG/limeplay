@@ -20,15 +20,13 @@ const PAUSE_WHILE_SEEKING = false;
 export function useTimeline({
 	playback,
 	player,
-	updateInterval = 500,
+	updateInterval = 250,
 	events = ['trackschanged', 'manifestparsed'],
 }: UseTimelineConfig = {}) {
 	const currentTimerId = useRef<number>(-1);
-	const [isLive, setIsLive, isLiveRef] = useStateRef(false);
 	const [currentTime, setCurrentTime] = useState(0);
 	const [duration, setDuration, durationRef] = useStateRef(0);
 	const [isSeeking, setIsSeeking, isSeekingRef] = useStateRef(false);
-	const [liveLatency, setLiveLatency] = useState(0);
 	const [currentProgress, setCurrentProgress] = useState(0);
 	const [seekRange, setSeekRange, seekRangeRef] = useStateRef<SeekRange>({
 		start: 0,
@@ -38,7 +36,6 @@ export function useTimeline({
 	useEffect(() => {
 		const updateSeekHandler = () => {
 			clearInterval(currentTimerId.current);
-			setIsLive(player.isLive());
 
 			currentTimerId.current = window.setInterval(() => {
 				if (playback.readyState === 0) return;
@@ -58,8 +55,6 @@ export function useTimeline({
 					if (durationRef.current !== currentDuration)
 						setDuration(currentDuration);
 
-					setLiveLatency(currentSeekRange.end - playback.currentTime);
-
 					let localProgress =
 						100 -
 						((currentSeekRange.end - playback.currentTime) /
@@ -70,10 +65,6 @@ export function useTimeline({
 
 					if (!isSeekingRef.current)
 						setCurrentProgress(localProgress);
-
-					if (isLiveRef.current !== player.isLive()) {
-						setIsLive(player.isLive());
-					}
 				} else {
 					if (durationRef.current !== playback.duration)
 						setDuration(playback.duration);
@@ -112,14 +103,13 @@ export function useTimeline({
 	}, [playback, player, events, updateInterval]);
 
 	return {
-		isLive,
 		currentTime,
 		duration,
 		isSeeking,
-		liveLatency,
 		currentProgress,
 		seekRange,
 		setIsSeeking,
 		setCurrentProgress,
+		setCurrentTime,
 	};
 }

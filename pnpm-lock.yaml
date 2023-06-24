@@ -301,6 +301,9 @@ importers:
       '@sentry/nextjs':
         specifier: ^7.51.2
         version: 7.51.2(next@13.4.5)(react@18.2.0)(webpack@5.80.0)
+      '@tabler/icons-react':
+        specifier: ^2.22.0
+        version: 2.22.0(react@18.2.0)
       '@use-gesture/react':
         specifier: ^10.2.25
         version: 10.2.25(react@18.2.0)
@@ -353,6 +356,9 @@ importers:
 
   packages/limeplay-core:
     dependencies:
+      '@use-gesture/react':
+        specifier: ^10.2.25
+        version: 10.2.25(react@18.2.0)
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -7664,6 +7670,16 @@ packages:
       tslib: 2.5.0
     dev: false
 
+  /@tabler/icons-react@2.22.0(react@18.2.0):
+    resolution: {integrity: sha512-9udRxrbsbWzUETur4jmbZQIZkH7jVA2GU7YnKYS7ZCUjdOHZZEhmsfJ/Gdbzz0gSRC3mU7SDMsKejun/IBjvpQ==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tabler/icons': 2.22.0
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
+
   /@tabler/icons@1.119.0(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-Fk3Qq4w2SXcTjc/n1cuL5bccPkylrOMo7cYpQIf/yw6zP76LQV9dtLcHQUjFiUnaYuswR645CnURIhlafyAh9g==}
     peerDependencies:
@@ -7677,6 +7693,10 @@ packages:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@tabler/icons@2.22.0:
+    resolution: {integrity: sha512-lOsGHqRPIKNARMWHHFkUUJH78C8ptQmUcDnumFBUI4YLRKFouKa7uAZL3ZfuH0HjDpOhsnWqUYZ7FhMCLcGpAQ==}
     dev: false
 
   /@types/acorn@4.0.6:

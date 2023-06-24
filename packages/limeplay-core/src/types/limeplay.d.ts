@@ -23,7 +23,15 @@ type HTMLMediaElementEvents = Array<keyof HTMLMediaElementEventMap>;
 type HTMLVideoElementEvents = Array<keyof HTMLVideoElementEventMap>;
 
 type ShakaPlayerEvents = Array<
-	'loading' | 'buffering' | 'trackschanged' | 'manifestparsed' | 'loaded'
+	| 'loading'
+	| 'buffering'
+	| 'trackschanged'
+	| 'manifestparsed'
+	| 'loaded'
+	| 'trackschanged'
+	| 'abrstatuschanged'
+	| 'variantchanged'
+	| 'adaptation'
 >;
 
 type UseGestureEvents = PointerEvent | MouseEvent | TouchEvent | KeyboardEvent;

@@ -52,6 +52,7 @@ export default function App({ Component, pageProps }: AppProps) {
 			withGlobalStyles
 			withNormalizeCSS
 			theme={{
+				colorScheme: 'dark',
 				other: glassGlobalTheme,
 				globalStyles: (theme) => ({
 					':root': {
