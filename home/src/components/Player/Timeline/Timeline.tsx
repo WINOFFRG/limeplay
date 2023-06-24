@@ -1,11 +1,48 @@
 import { useTimeline } from '@limeplay/core/src/hooks';
-import { useRef } from 'react';
+import { useRef, useCallback } from 'react';
 import { useLimeplayStore } from '@limeplay/core/src/store';
-import { FullGestureState, useDrag } from '@use-gesture/react';
+import { FullGestureState, useDrag, useMove } from '@use-gesture/react';
 import * as Slider from '@radix-ui/react-slider';
+import { clamp } from 'lodash';
 import { buildTimeString } from './utils';
 import useStyles from './styles';
-import ControlButton from '../ControlButton';
+import { CurrentTime } from './CurrentTime';
+
+type OnSliderHandlerProps = {
+	min: number;
+	max: number;
+	step: number;
+	orientation: React.AriaAttributes['aria-orientation'];
+	disabled: boolean;
+	dir: 'ltr' | 'rtl';
+	inverted: boolean;
+};
+
+function onSlideHandler(
+	event: React.MouseEvent<HTMLElement>,
+	props: OnSliderHandlerProps
+): number {
+	const { min, max, step, orientation: o9n, dir, inverted, disabled } = props;
+	if (disabled) return null;
+	const clientPosition = o9n === 'vertical' ? event.clientY : event.clientX;
+	const rect = event.currentTarget.getBoundingClientRect();
+
+	const sliderSize =
+		o9n === 'vertical'
+			? event.currentTarget.clientHeight
+			: event.currentTarget.clientWidth;
+
+	const sliderPosition = o9n === 'vertical' ? rect.top : rect.left;
+	const relativePosition = clientPosition - sliderPosition;
+	const percentage = relativePosition / sliderSize;
+	let newValue = percentage * (max - min) + min;
+	if (inverted || (dir === 'rtl' && o9n === 'horizontal'))
+		newValue = max - newValue + min;
+
+	newValue = clamp(newValue, min, max);
+
+	return newValue;
+}
 
 export function TimelineSlider() {
 	const { classes } = useStyles();
@@ -23,73 +60,67 @@ export function TimelineSlider() {
 		isSeeking,
 		setCurrentProgress,
 		setIsSeeking,
+		setCurrentTime,
 	} = useTimeline({
 		playback,
 		player,
+		updateInterval: 250,
 	});
 
-	const cbFunction = ({
-		event,
-		elapsedTime,
-		pressed,
-		buttons,
-		down,
-		dragging,
-		active,
-		ctrlKey,
-	}: FullGestureState<'drag' | 'move'>) => {
-		setIsSeeking(active);
-
-		// setCurrentProgress(clammpedValue);
-
-		if (event.type === 'pointermove' || event.type === 'pointerdown') {
-			// @ts-ignore
-			// const newTime = onSlideHandler(event, config);
-			// playback.currentTime = seekRange.start + newTime * duration;
-			// setCurrentProgress(newTime * 100);
-		}
+	const config: OnSliderHandlerProps = {
+		min: seekRange.start,
+		max: seekRange.end,
+		step: 0.05,
+		orientation: 'horizontal',
+		disabled: false,
+		dir: 'ltr',
+		inverted: false,
 	};
+
+	const cbFunction = useCallback(
+		({ event, active }: FullGestureState<'drag' | 'move'>) => {
+			setIsSeeking(active);
+
+			// setCurrentProgress(clammpedValue);
+
+			if (event.type === 'pointermove' || event.type === 'pointerdown') {
+				// @ts-ignore
+				const newTime = onSlideHandler(event, config);
+				const playbackTime = seekRange.start + newTime * duration;
+				console.log({ newTime });
+				playback.currentTime = newTime;
+				// setCurrentProgress(newTime * 100);
+				setCurrentTime(newTime);
+			}
+
+			event.preventDefault();
+		},
+		[playback, duration, seekRange]
+	);
+
+	const events: any = useDrag(cbFunction);
 
 	if (!playback || !player) return null;
 
-	const parsedCurrentTime = Number(
-		(player.isLive()
-			? duration - liveLatency
-			: playback.currentTime
-		).toFixed(0)
-	);
-	const parsedDuration = Number(duration.toFixed(0));
-
 	return (
 		<div className={classes.timelineWrrapper}>
-			<span>
-				{!isLive && buildTimeString(currentTime, duration > 3600)}
-				{isLive && (
-					<ControlButton
-						onClick={() => {
-							player.goToLive();
-						}}
-						style={{
-							width: 'auto',
-						}}
-					>
-						{seekRange.end - playback.currentTime > 5
-							? `-${buildTimeString(
-									seekRange.end - playback.currentTime,
-									duration > 3600
-							  )}`
-							: 'LIVE'}
-					</ControlButton>
-				)}
-			</span>
+			<CurrentTime
+				currentTime={currentTime}
+				duration={duration}
+				isLive={isLive}
+				playback={playback}
+				player={player}
+				seekRange={seekRange}
+			/>
 			<Slider.Root
-				// value={[currentTime]}
+				value={[currentTime]}
 				className={classes.timelineSlider__Container}
 				ref={elementRef}
-				min={seekRange.start}
-				max={seekRange.end}
-				onValueChange={(e) => {
-					[playback.currentTime] = e;
+				// {...events()}
+				{...config}
+				onValueChange={(value) => {
+					playback.currentTime = value[0];
+					setCurrentTime(value[0]);
 				}}
 			>
 				<Slider.Track className={classes.timelineSlider__ProgressBar}>
@@ -100,12 +131,6 @@ export function TimelineSlider() {
 				</Slider.Track>
 				<Slider.Thumb
 					aria-label="Seek Time Scrubber"
-					aria-valuemax={parsedDuration}
-					aria-valuemin={0}
-					aria-valuenow={parsedCurrentTime}
-					aria-valuetext={`${parsedCurrentTime} of ${duration.toFixed(
-						0
-					)}`}
 					tabIndex={0}
 					className={classes.timelineSlider__PlayHead}
 				/>

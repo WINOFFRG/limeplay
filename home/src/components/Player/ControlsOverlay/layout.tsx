@@ -13,9 +13,11 @@ import {
 	useOrientation,
 	usePiP,
 	usePlayback,
+	useQuality,
 } from '@limeplay/core/src/hooks';
 import screenfull from 'screenfull';
 import { useRouter } from 'next/router';
+import { Container, Flex } from '@mantine/core';
 import useStyles from './styles';
 // import { VolumeControl } from '../VolumeButton';
 // import SettingsButton from '../SettingsButton';
@@ -43,6 +45,7 @@ import {
 // import PipButton from '../PipButton';
 import { VolumeSlider } from '../Volume/Slider';
 import { TimelineSlider } from '../Timeline/Timeline';
+import { QualityMenu } from '../QualityMenu';
 
 function ResizeButton({ isFullScreen }: { isFullScreen: boolean }) {
 	const { classes } = useStyles();
@@ -224,6 +227,7 @@ function SeekControls() {
 export function ControlsBottomPanel() {
 	const { classes } = useStyles();
 	const playback = useLimeplayStore((state) => state.playback);
+	const player = useLimeplayStore((state) => state.player);
 	const { isPlaying, togglePlayback } = usePlayback({
 		playback,
 	});
@@ -258,6 +262,9 @@ export function ControlsBottomPanel() {
 					<SeekControls />
 					<VolumeControls />
 				</div>
+				<Flex mr="lg">
+					<QualityMenu player={player} />
+				</Flex>
 			</div>
 		</div>
 	);

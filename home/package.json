@@ -26,6 +26,7 @@
 		"@radix-ui/react-separator": "^1.0.2",
 		"@radix-ui/react-slider": "^1.1.2",
 		"@sentry/nextjs": "^7.51.2",
+		"@tabler/icons-react": "^2.22.0",
 		"@use-gesture/react": "^10.2.25",
 		"@vercel/analytics": "^1.0.1",
 		"framer-motion": "^10.12.4",
