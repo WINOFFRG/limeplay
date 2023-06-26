@@ -105,14 +105,14 @@ export function TimelineSlider() {
 
 	if (!playback || !player) return null;
 
-	console.log({
-		// liveLatency,
-		currentProgress,
-		currentTime,
-		duration,
-		// isLive,
-		seekRange,
-	});
+	// console.log({
+	// 	// liveLatency,
+	// 	currentProgress,
+	// 	currentTime,
+	// 	duration,
+	// 	// isLive,
+	// 	seekRange,
+	// });
 
 	return (
 		<div className={classes.timelineWrrapper}>

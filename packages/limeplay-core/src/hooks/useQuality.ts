@@ -25,7 +25,7 @@ export function useQuality({
 	const [tracks, setTracks] = useState<shaka.extern.Track[]>([]);
 	const [selectedTrack, setSelectedTrack, selectedTrackRef] =
 		useStateRef<shaka.extern.Track | null>(null);
-	const [isAuto, setIsAuto] = useState(false);
+	const [isAuto, setIsAuto, isAutoRef] = useStateRef(false);
 	const previousTrack = useRef<shaka.extern.Track | null>(null);
 
 	function setAutoMode() {
@@ -75,8 +75,13 @@ export function useQuality({
 	);
 
 	const updateQualityHandler = useCallback(() => {
+		const currConfig = player.getConfiguration();
 		let currTracks = player.getVariantTracks();
 		const currSelectedTrack = currTracks.find((track) => track.active);
+
+		if (currConfig.abr.enabled !== isAutoRef.current) {
+			setIsAuto(currConfig.abr.enabled);
+		}
 
 		if (currSelectedTrack) {
 			currTracks = currTracks.filter((track, idx) => {
@@ -108,7 +113,7 @@ export function useQuality({
 			updateQualityHandler();
 			setIsAuto(_config.abr.enabled);
 		}
-	}, [updateQualityHandler, loadMode.current]);
+	}, [player, updateQualityHandler, loadMode.current]);
 
 	useEffect(() => {
 		events.forEach((event) => {

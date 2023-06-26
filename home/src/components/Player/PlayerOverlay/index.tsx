@@ -72,6 +72,13 @@ export default function PlayerOverlay() {
 
 				// @ts-ignore
 				window.player = player;
+
+				return () => {
+					if (player) {
+						// player.unload();
+						// player.destroy();
+					}
+				};
 			}
 		} catch (error) {
 			console.log(error);
