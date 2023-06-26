@@ -37,7 +37,6 @@ export function QualityMenu({ player }: { player: shaka.Player }) {
 
 	return (
 		<Menu
-			opened
 			shadow="md"
 			width={160}
 			trigger="hover"
