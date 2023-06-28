@@ -30,7 +30,7 @@ export function QualityMenu({ player }: { player: shaka.Player }) {
 	const { isAuto, selectedTrack, tracks, selectTrack, setAutoMode } =
 		useQuality({
 			player,
-			clearBufferOnChange: true,
+			clearBufferOnChange: 'auto',
 		});
 
 	const { classes, cx } = useStyles();
