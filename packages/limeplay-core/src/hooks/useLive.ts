@@ -6,13 +6,15 @@ export interface UseLiveConfig {
 	player?: shaka.Player;
 	updateInterval?: number;
 	events?: ShakaPlayerEvents;
+	initialLive?: boolean;
 }
 
 export function useLive({
 	playback,
 	player,
 	updateInterval = 750,
-	events = ['trackschanged', 'manifestparsed'],
+	events,
+	initialLive = true,
 }: UseLiveConfig) {
 	const currentTimerId = useRef<number>(-1);
 	const [isLive, setIsLive, isLiveRef] = useStateRef(false);
@@ -39,6 +41,8 @@ export function useLive({
 			}, updateInterval);
 		};
 
+		events = events ?? ['trackschanged', 'manifestparsed'];
+
 		events.forEach((event) => {
 			playback.addEventListener(event, updateHandler);
 		});
@@ -53,7 +57,7 @@ export function useLive({
 			}
 			clearInterval(currentTimerId.current);
 		};
-	}, [playback, player, updateInterval]);
+	}, [playback, player, updateInterval, events]);
 
 	return {
 		isLive,

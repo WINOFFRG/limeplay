@@ -7,6 +7,7 @@ import { clamp } from 'lodash';
 import { buildTimeString } from './utils';
 import useStyles from './styles';
 import { CurrentTime } from './CurrentTime';
+import { BufferRangeBar } from './Buffer';
 
 type OnSliderHandlerProps = {
 	min: number;
@@ -50,6 +51,7 @@ export function TimelineSlider() {
 
 	const playback = useLimeplayStore((state) => state.playback);
 	const player = useLimeplayStore((state) => state.player);
+
 	const {
 		seekRange,
 		duration,
@@ -62,13 +64,14 @@ export function TimelineSlider() {
 	} = useTimeline({
 		playback,
 		player,
-		updateInterval: 750,
+		updateInterval: 500,
 	});
 
-	// const { isLive, liveLatency } = useLive({
-	// 	playback,
-	// 	player,
-	// });
+	const { isLive, liveLatency } = useLive({
+		playback,
+		player,
+		updateInterval: 500,
+	});
 
 	const config: OnSliderHandlerProps = {
 		min: seekRange.start,
@@ -106,11 +109,11 @@ export function TimelineSlider() {
 	if (!playback || !player) return null;
 
 	// console.log({
-	// 	// liveLatency,
+	// 	liveLatency,
 	// 	currentProgress,
 	// 	currentTime,
 	// 	duration,
-	// 	// isLive,
+	// 	isLive,
 	// 	seekRange,
 	// });
 
@@ -128,25 +131,25 @@ export function TimelineSlider() {
 				value={[currentTime]}
 				className={classes.timelineSlider__Container}
 				ref={elementRef}
-				{...events()}
+				// {...events()}
 				{...config}
-				// onValueChange={(value) => {
-				// 	playback.currentTime = value[0];
-				// 	console.log({ time: value[0] });
-				// 	setCurrentTime(value[0]);
-				// }}
+				step={10}
+				onValueChange={(value) => {
+					playback.currentTime = value[0];
+					setCurrentTime(value[0]);
+				}}
 			>
 				<Slider.Track className={classes.timelineSlider__ProgressBar}>
 					<Slider.Range
 						className={classes.timelineSlider__DurationBar}
 					/>
-					{/* <BufferRangeBar /> */}
+					<BufferRangeBar playback={playback} player={player} />
 				</Slider.Track>
-				<Slider.Thumb
+				{/* <Slider.Thumb
 					aria-label="Seek Time Scrubber"
 					tabIndex={0}
 					className={classes.timelineSlider__PlayHead}
-				/>
+				/> */}
 				{/* <MemoizedHoverContainer
 					forwardRef={elementRef}
 					playback={playback}
