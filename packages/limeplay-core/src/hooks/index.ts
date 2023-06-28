@@ -1,23 +1,13 @@
 import { UsePlaybackConfig, usePlayback } from './usePlayback';
-
 import { UseLoadingConfig, useLoading } from './useLoading';
-
 import { UseVolumeConfig, useVolume } from './useVolume';
-
 import { UseTimelineConfig, useTimeline } from './useTimeline';
-
 import { UsePiPConfig, usePiP } from './usePiP';
-
 import { UseQualityConfig, useQuality } from './useQuality';
-
 import { UseLiveConfig, useLive } from './useLive';
-
-import {
-	UseBufferConfig,
-	useBufferInfo,
-	BufferSlice,
-	createBufferSlice,
-} from './useBufferInfo';
+import { UseBufferConfig, useBufferInfo } from './useBufferInfo';
+import { UseFullScreenConfig, useFullScreen } from './useFullScreen';
+import { useOrientation, UseOrientationConfig } from './useOrientation';
 
 import {
 	UseSafeLoadConfig,
@@ -26,13 +16,9 @@ import {
 	createSafeLoadSlice,
 } from './useSafeLoad';
 
-import { UseFullScreenConfig, useFullScreen } from './useFullScreen';
+export { createSafeLoadSlice };
 
-import { useOrientation, UseOrientationConfig } from './useOrientation';
-
-export { createBufferSlice, createSafeLoadSlice };
-
-type StoreSlice = BufferSlice & SafeLoadSlice;
+type StoreSlice = SafeLoadSlice;
 
 export {
 	usePlayback,
@@ -54,11 +40,11 @@ export type {
 	UseLoadingConfig,
 	UseVolumeConfig,
 	UseTimelineConfig,
-	BufferSlice,
 	UseBufferConfig,
 	SafeLoadSlice,
 	UseSafeLoadConfig,
 	UseFullScreenConfig,
+	UseOrientationConfig,
 	UsePiPConfig,
 	UseQualityConfig,
 	UseLiveConfig,

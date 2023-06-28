@@ -3,7 +3,7 @@ import { useStore } from 'zustand';
 import { createStore } from 'zustand/vanilla';
 import { LimeplayContext } from './context';
 import { logger } from './utils';
-import { StoreSlice, createBufferSlice, createSafeLoadSlice } from '../hooks';
+import { StoreSlice, createSafeLoadSlice } from '../hooks';
 
 export function createLimeplayStore() {
 	const store = createStore<InitialStore & StoreSlice>()(
@@ -14,7 +14,6 @@ export function createLimeplayStore() {
 				setPlayback: (playback: HTMLMediaElement) => set({ playback }),
 				player: null,
 				setPlayer: (player: shaka.Player) => set({ player }),
-				...createBufferSlice(set, get, storeApi),
 				...createSafeLoadSlice(set, get, storeApi),
 			})
 			// 	{

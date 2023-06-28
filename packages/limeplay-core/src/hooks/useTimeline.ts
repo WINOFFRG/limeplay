@@ -21,7 +21,7 @@ export function useTimeline({
 	playback,
 	player,
 	updateInterval = 250,
-	events = ['trackschanged', 'manifestparsed'],
+	events,
 }: UseTimelineConfig = {}) {
 	const currentTimerId = useRef<number>(-1);
 	const [currentTime, setCurrentTime] = useState(0);
@@ -83,6 +83,9 @@ export function useTimeline({
 				}
 			}, updateInterval);
 		};
+
+		// FIX: Putting an object out of the scope of the useEffect hook can lead to useEffect running on each re-render
+		events = events ?? ['trackschanged', 'manifestparsed'];
 
 		events.forEach((event) => {
 			playback.addEventListener(event, updateSeekHandler);
