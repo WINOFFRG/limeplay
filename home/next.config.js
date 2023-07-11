@@ -12,6 +12,22 @@ const nextConfig = {
 	},
 
 	transpilePackages: ['@limeplay/core'],
+
+	async rewrites() {
+		const isVercel = !!process.env.VERCEL_ENV;
+		if (isVercel) {
+			return {
+				beforeFiles: [
+					{
+						source: '/:path*.map',
+						destination: '/404',
+					},
+				],
+			};
+		}
+
+		return [];
+	},
 };
 
 module.exports = nextConfig;
@@ -46,5 +62,7 @@ module.exports = withSentryConfig(
 
 		// Automatically tree-shake Sentry logger statements to reduce bundle size
 		disableLogger: true,
+
+		disableClientWebpackPlugin: true,
 	}
 );
