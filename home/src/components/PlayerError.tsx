@@ -5,10 +5,10 @@ export function PlayerError({ error }: { error: Error }) {
 		<Flex
 			align="center"
 			justify="center"
-			mih={600}
+			// mih={600}
+			h="100%"
 			bg="dark"
-			m={1}
-			p="lg"
+			px="xl"
 			sx={() => ({
 				flexDirection: 'row',
 
@@ -18,7 +18,7 @@ export function PlayerError({ error }: { error: Error }) {
 				},
 			})}
 		>
-			<Image alt="error" src="/waiting.png" />
+			<Image width={500} alt="Error Person Thinking" src="/waiting.png" />
 			<Stack>
 				<Title fw={600}>Something went wrong!</Title>
 				<Text color="gray" fw={400}>
