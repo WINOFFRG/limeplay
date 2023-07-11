@@ -8,6 +8,7 @@ export function PlayerError({ error }: { error: Error }) {
 			mih={600}
 			bg="dark"
 			m={1}
+			p="lg"
 			sx={() => ({
 				flexDirection: 'row',
 

@@ -25,36 +25,31 @@ export default function PlayerOverlay() {
 		'https://embed-cloudfront.wistia.com/deliveries/4a77e940176149046375a5036dbf2f7f01ce3a59.m3u8';
 
 	useEffect(() => {
-		try {
-			if (!window.muxjs) {
-				window.muxjs = mux;
+		if (!window.muxjs) {
+			window.muxjs = mux;
+		}
+
+		if (player && getState().isSafeLoad && player.getLoadMode() === 1) {
+			const playerConfig = merge(
+				player.getConfiguration(),
+				JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG ?? '{}')
+			);
+
+			player.configure(playerConfig);
+
+			const tParam = router.query.t;
+			let startTime = 0;
+
+			if (tParam) {
+				startTime = parseInt(tParam as string, 10);
 			}
 
-			if (player && getState().isSafeLoad && player.getLoadMode() === 1) {
-				const playerConfig = merge(
-					player.getConfiguration(),
-					JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG ?? '{}')
-				);
+			throw new Error('test');
 
-				player.configure(playerConfig);
-
-				const tParam = router.query.t;
-				let startTime = 0;
-
-				if (tParam) {
-					startTime = parseInt(tParam as string, 10);
-				}
-
-				player.load(
-					process.env.NEXT_PUBLIC_PLAYBACK_URL || demoPlabackUrl,
-					startTime
-				);
-
-				throw new Error('Player loaded');
-			}
-		} catch (error) {
-			console.log(error);
-			throw error;
+			player.load(
+				process.env.NEXT_PUBLIC_PLAYBACK_URL || demoPlabackUrl,
+				startTime
+			);
 		}
 	}, [player, playback, isSafeLoad, router]);
 
