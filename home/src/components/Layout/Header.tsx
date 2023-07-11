@@ -42,13 +42,6 @@ export function Header({ sticky = false, blur = true }: HeaderProps) {
 							/>
 						</div>
 						<NavigationItem
-							href="/"
-							variant="default"
-							target="_self"
-						>
-							Limeplay
-						</NavigationItem>
-						<NavigationItem
 							href={Config.DOCS_BASE}
 							variant="dimmed"
 						>
