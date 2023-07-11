@@ -44,8 +44,6 @@ export default function PlayerOverlay() {
 				startTime = parseInt(tParam as string, 10);
 			}
 
-			throw new Error('test');
-
 			player.load(
 				process.env.NEXT_PUBLIC_PLAYBACK_URL || demoPlabackUrl,
 				startTime
