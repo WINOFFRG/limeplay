@@ -2,7 +2,9 @@
 import { useShakaPlayer } from '@limeplay/shaka-player';
 import { createStyles } from '@mantine/styles';
 import { LimeplayProvider, OverlayOutlet, MediaOutlet } from '@limeplay/core';
+import { ErrorBoundary } from '@sentry/nextjs';
 import PlayerOverlay from '@/components/Player/PlayerOverlay';
+import { PlayerError } from '../PlayerError';
 
 const useStyles = createStyles((theme) => ({
 	videoElement: {
@@ -22,19 +24,27 @@ export default function Player() {
 	const createPlayer = useShakaPlayer();
 
 	return (
-		<LimeplayProvider>
-			<OverlayOutlet createPlayer={createPlayer}>
-				<PlayerOverlay />
-			</OverlayOutlet>
-			<MediaOutlet>
-				<video
-					poster="/video-poster.jpg"
-					controls={false}
-					playsInline
-					className={classes.videoElement}
-					autoPlay={false}
-				/>
-			</MediaOutlet>
-		</LimeplayProvider>
+		<ErrorBoundary
+			fallback={PlayerError}
+			onError={(error, componentStack) => {
+				console.log(error);
+				console.log(componentStack);
+			}}
+		>
+			<LimeplayProvider>
+				<OverlayOutlet createPlayer={createPlayer}>
+					<PlayerOverlay />
+				</OverlayOutlet>
+				<MediaOutlet>
+					<video
+						poster="/video-poster.jpg"
+						controls={false}
+						playsInline
+						className={classes.videoElement}
+						autoPlay={false}
+					/>
+				</MediaOutlet>
+			</LimeplayProvider>
+		</ErrorBoundary>
 	);
 }
