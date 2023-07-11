@@ -28,7 +28,6 @@ export default function Player() {
 			fallback={PlayerError}
 			onError={(error, componentStack) => {
 				console.log(error);
-				console.log(componentStack);
 			}}
 		>
 			<LimeplayProvider>

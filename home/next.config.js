@@ -8,18 +8,13 @@ const nextConfig = {
 		emotion: true,
 	},
 	images: {
-		domains: [
-			'cdn.sanity.io',
-			'limetree-docs-f4bwnrbm1-winoffrg.vercel.app',
-		],
+		domains: [],
 	},
 
 	transpilePackages: ['@limeplay/core'],
 };
 
 module.exports = nextConfig;
-
-// Injected content via Sentry wizard below
 
 module.exports = withSentryConfig(
 	module.exports,
