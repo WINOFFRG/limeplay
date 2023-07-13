@@ -8,18 +8,29 @@ const nextConfig = {
 		emotion: true,
 	},
 	images: {
-		domains: [
-			'cdn.sanity.io',
-			'limetree-docs-f4bwnrbm1-winoffrg.vercel.app',
-		],
+		domains: [],
 	},
 
 	transpilePackages: ['@limeplay/core'],
+
+	async rewrites() {
+		const isVercel = !!process.env.VERCEL_ENV;
+		if (isVercel) {
+			return {
+				beforeFiles: [
+					{
+						source: '/:path*.map',
+						destination: '/404',
+					},
+				],
+			};
+		}
+
+		return [];
+	},
 };
 
 module.exports = nextConfig;
-
-// Injected content via Sentry wizard below
 
 module.exports = withSentryConfig(
 	module.exports,
@@ -51,5 +62,7 @@ module.exports = withSentryConfig(
 
 		// Automatically tree-shake Sentry logger statements to reduce bundle size
 		disableLogger: true,
+
+		disableClientWebpackPlugin: true,
 	}
 );

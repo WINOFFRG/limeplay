@@ -15,8 +15,6 @@ export function BufferRangeBar({
 		player,
 	});
 
-	console.log(bufferInfo[0]);
-
 	return (
 		<div
 			style={{

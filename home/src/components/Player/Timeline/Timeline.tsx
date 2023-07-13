@@ -143,7 +143,7 @@ export function TimelineSlider() {
 					<Slider.Range
 						className={classes.timelineSlider__DurationBar}
 					/>
-					<BufferRangeBar playback={playback} player={player} />
+					{/* <BufferRangeBar playback={playback} player={player} /> */}
 				</Slider.Track>
 				{/* <Slider.Thumb
 					aria-label="Seek Time Scrubber"
