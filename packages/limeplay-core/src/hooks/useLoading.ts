@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { on } from '../utils';
 
 export interface UseLoadingConfig {
 	/**
@@ -24,6 +25,8 @@ export function useLoading({
 			// if (!playback.paused && isBuffering) playback.pause();
 			// else if (playback.paused && !isBuffering) playback.play();
 		};
+
+		// on(document, ['cl'], loadingEventHandler);
 
 		events.forEach((event) => {
 			player.addEventListener(event, loadingEventHandler);

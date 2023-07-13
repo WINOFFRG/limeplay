@@ -34,7 +34,7 @@ export function useBufferInfo({
 				const seekRange = player.seekRange();
 				const seekRangeSize = seekRange.end - seekRange.start;
 
-				if (player.getBufferFullness()) {
+				if (player.getBufferFullness() && buffer) {
 					const clampedBufferStart = Math.max(
 						buffer.start,
 						seekRange.start
