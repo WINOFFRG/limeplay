@@ -58,9 +58,7 @@ export function QualityMenu({ player }: { player: shaka.Player }) {
 		>
 			<Menu.Target>
 				<ActionIcon>
-					<ControlButton>
-						<VideoQuality />
-					</ControlButton>
+					<VideoQuality />
 				</ActionIcon>
 			</Menu.Target>
 			<Menu.Dropdown
