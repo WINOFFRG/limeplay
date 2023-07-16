@@ -1,26 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStateRef } from '../utils';
+import { useLimeplay } from '../components';
 
 export interface UseQualityConfig {
-	player?: shaka.Player;
-	playback?: HTMLMediaElement;
-	events?: ShakaPlayerEvents;
 	clearBufferOnChange?: 'auto' | boolean;
 	safeMargin?: number;
 }
 
 export function useQuality({
-	playback,
-	player,
-	events = [
-		'variantchanged',
-		'abrstatuschanged',
-		'trackschanged',
-		'adaptation',
-	],
 	clearBufferOnChange = 'auto',
 	safeMargin = 0,
 }: UseQualityConfig) {
+	const { playerRef } = useLimeplay();
+	const player = playerRef.current;
 	const loadMode = useRef(player?.getLoadMode());
 	const [tracks, setTracks] = useState<shaka.extern.Track[]>([]);
 	const [selectedTrack, setSelectedTrack, selectedTrackRef] =
@@ -71,7 +63,7 @@ export function useQuality({
 				);
 			}
 		},
-		[player, clearBufferOnChange, safeMargin]
+		[clearBufferOnChange, safeMargin]
 	);
 
 	const updateQualityHandler = useCallback(() => {
@@ -105,17 +97,25 @@ export function useQuality({
 			return currSelectedTrack || null;
 		});
 		setTracks(currTracks);
-	}, [player]);
+	}, []);
 
+	// FIXME: This will never trigger as Ref is not updated
 	useEffect(() => {
 		if (player) {
 			const _config = player.getConfiguration();
 			updateQualityHandler();
 			setIsAuto(_config.abr.enabled);
 		}
-	}, [player, updateQualityHandler, loadMode.current]);
+	}, [updateQualityHandler, loadMode.current]);
 
 	useEffect(() => {
+		const events = [
+			'variantchanged',
+			'abrstatuschanged',
+			'trackschanged',
+			'adaptation',
+		];
+
 		events.forEach((event) => {
 			player.addEventListener(event, updateQualityHandler);
 		});
@@ -127,7 +127,7 @@ export function useQuality({
 				});
 			}
 		};
-	}, [player, events, updateQualityHandler]);
+	}, [updateQualityHandler]);
 
 	return {
 		tracks,
@@ -135,5 +135,5 @@ export function useQuality({
 		isAuto,
 		selectTrack,
 		setAutoMode,
-	};
+	} as const;
 }

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { StateCreator } from 'zustand';
-import { useLimeplayStore } from '../store';
 
 export interface UseSafeLoadConfig {
 	/**
@@ -9,31 +8,32 @@ export interface UseSafeLoadConfig {
 	 */
 	events?: ShakaPlayerEvents;
 }
-export function useSafeLoad() {
-	const player = useLimeplayStore((state) => state.player);
-	const setIsSafeLoad = useLimeplayStore((state) => state._setIsSafeLoad);
 
-	useEffect(() => {
-		const handleSafeLoad = (event) => {
-			const isSafeLoad = event.type === 'loaded';
-			setIsSafeLoad(isSafeLoad);
-		};
+// export function useSafeLoad() {
+// 	const player = useLimeplayStore((state) => state.player);
+// 	const setIsSafeLoad = useLimeplayStore((state) => state._setIsSafeLoad);
 
-		const hookEvents: ShakaPlayerEvents = ['loaded', 'loading'];
+// 	useEffect(() => {
+// 		const handleSafeLoad = (event) => {
+// 			const isSafeLoad = event.type === 'loaded';
+// 			setIsSafeLoad(isSafeLoad);
+// 		};
 
-		hookEvents.forEach((event) => {
-			player.addEventListener(event, handleSafeLoad);
-		});
+// 		const hookEvents: ShakaPlayerEvents = ['loaded', 'loading'];
 
-		return () => {
-			if (player) {
-				hookEvents.forEach((event) => {
-					player.removeEventListener(event, handleSafeLoad);
-				});
-			}
-		};
-	}, [player]);
-}
+// 		hookEvents.forEach((event) => {
+// 			player.addEventListener(event, handleSafeLoad);
+// 		});
+
+// 		return () => {
+// 			if (player) {
+// 				hookEvents.forEach((event) => {
+// 					player.removeEventListener(event, handleSafeLoad);
+// 				});
+// 			}
+// 		};
+// 	}, [player]);
+// }
 
 export interface SafeLoadSlice {
 	isSafeLoad: boolean;
