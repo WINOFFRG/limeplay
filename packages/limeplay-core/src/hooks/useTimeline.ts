@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import clamp from 'lodash/clamp';
 import { useStateRef } from '../utils';
+import { useLimeplay } from '../components';
 
 export interface UseTimelineConfig {
 	/**
 	 * HTMLMediaElement events to listen to
 	 * @default Events - ['trackschanged', 'manifestparsed']
 	 */
-	events?: ShakaPlayerEvents;
-	playback?: HTMLMediaElement;
-	player?: shaka.Player;
 	updateInterval?: number;
 }
 
@@ -17,12 +15,10 @@ const SEEK_ALLOWED = true;
 const UPDATE_WHILE_SEEKING = false;
 const PAUSE_WHILE_SEEKING = false;
 
-export function useTimeline({
-	playback,
-	player,
-	updateInterval = 250,
-	events,
-}: UseTimelineConfig = {}) {
+export function useTimeline({ updateInterval = 250 }: UseTimelineConfig = {}) {
+	const { playbackRef, playerRef } = useLimeplay();
+	const playback = playbackRef.current;
+	const player = playerRef.current;
 	const currentTimerId = useRef<number>(-1);
 	const [currentTime, setCurrentTime] = useState(0);
 	const [duration, setDuration, durationRef] = useStateRef(0);
@@ -84,8 +80,7 @@ export function useTimeline({
 			}, updateInterval);
 		};
 
-		// FIX: Putting an object out of the scope of the useEffect hook can lead to useEffect running on each re-render
-		events = events ?? ['trackschanged', 'manifestparsed'];
+		const events = ['trackschanged', 'manifestparsed'];
 
 		events.forEach((event) => {
 			playback.addEventListener(event, updateSeekHandler);
@@ -101,7 +96,7 @@ export function useTimeline({
 			}
 			clearInterval(currentTimerId.current);
 		};
-	}, [playback, player, events, updateInterval]);
+	}, [updateInterval]);
 
 	return {
 		currentTime,
@@ -112,5 +107,5 @@ export function useTimeline({
 		setIsSeeking,
 		setCurrentProgress,
 		setCurrentTime,
-	};
+	} as const;
 }

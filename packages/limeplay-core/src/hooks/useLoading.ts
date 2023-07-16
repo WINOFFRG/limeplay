@@ -1,21 +1,10 @@
 import { useEffect, useState } from 'react';
-import { on } from '../utils';
+import { useLimeplay } from '../components/LimeplayProvider';
 
-export interface UseLoadingConfig {
-	/**
-	 * ShakaPlayer events to listen to
-	 * @default Events - ['buffering', 'loading']
-	 */
-	events?: ShakaPlayerEvents;
-
-	player?: shaka.Player;
-}
-
-export function useLoading({
-	events = ['buffering', 'loading'],
-	player,
-}: UseLoadingConfig = {}) {
+export function useLoading() {
 	const [isLoading, setIsLoading] = useState(false);
+	const { playerRef } = useLimeplay();
+	const player = playerRef.current;
 
 	useEffect(() => {
 		const loadingEventHandler = () => {
@@ -26,7 +15,7 @@ export function useLoading({
 			// else if (playback.paused && !isBuffering) playback.play();
 		};
 
-		// on(document, ['cl'], loadingEventHandler);
+		const events = ['buffering', 'loading'];
 
 		events.forEach((event) => {
 			player.addEventListener(event, loadingEventHandler);
@@ -39,9 +28,9 @@ export function useLoading({
 				});
 			}
 		};
-	}, [player, events]);
+	}, []);
 
 	return {
 		isLoading,
-	};
+	} as const;
 }

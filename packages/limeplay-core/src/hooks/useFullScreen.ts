@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import screenfull from 'screenfull';
 import { useStateRef } from '../utils';
+import { useLimeplay } from '../components';
 
 // Missing iOS Mobile Support https://github.com/sindresorhus/screenfull#support
 export interface UseFullScreenConfig {
 	elementRef?: React.RefObject<HTMLElement>;
-	playback?: HTMLVideoElement;
 	onError?: (event: Event) => void;
 	onExit?: () => void;
 	onEnter?: () => void;
@@ -14,12 +14,13 @@ export interface UseFullScreenConfig {
 
 export function useFullScreen({
 	elementRef,
-	playback,
 	onError,
 	onExit,
 	onEnter,
 	onChange,
 }: UseFullScreenConfig = {}) {
+	const { playbackRef } = useLimeplay();
+	const playback = playbackRef.current;
 	const [isFullScreen, setIsFullScreen, isFullScreenRef] = useStateRef(false);
 	const [isFullScreenSupported, setIsFullScreenSupported] = useState(false);
 
@@ -80,7 +81,7 @@ export function useFullScreen({
 				onChange(_event);
 			}
 		},
-		[playback, onChange]
+		[onChange]
 	);
 
 	useEffect(() => {
@@ -111,7 +112,7 @@ export function useFullScreen({
 			playback.removeEventListener('loadedmetadata', checkSupport_);
 			playback.removeEventListener('loadeddata', checkSupport_);
 		};
-	}, [playback]);
+	}, []);
 
 	useEffect(() => {
 		if (screenfull.isEnabled) {
@@ -145,7 +146,7 @@ export function useFullScreen({
 				);
 			}
 		};
-	}, [elementRef, onError, playback, onChange, fullscreenEventHandler]);
+	}, [onError, onChange, fullscreenEventHandler]);
 
 	return {
 		isFullScreen,
@@ -154,5 +155,5 @@ export function useFullScreen({
 		toggleFullScreen,
 		isFullScreenSupported,
 		api: screenfull,
-	};
+	} as const;
 }

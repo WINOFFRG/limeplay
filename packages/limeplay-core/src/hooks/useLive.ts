@@ -1,21 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import { useStateRef } from '../utils';
+import { useLimeplay } from '../components';
 
 export interface UseLiveConfig {
-	playback?: HTMLMediaElement;
-	player?: shaka.Player;
 	updateInterval?: number;
-	events?: ShakaPlayerEvents;
+	// TODO: Add initialLive player.goLive() support
 	initialLive?: boolean;
 }
 
-export function useLive({
-	playback,
-	player,
-	updateInterval = 750,
-	events,
-	initialLive = true,
-}: UseLiveConfig) {
+export function useLive({ updateInterval = 750 }: UseLiveConfig) {
+	const { playbackRef, playerRef } = useLimeplay();
+	const playback = playbackRef.current;
+	const player = playerRef.current;
 	const currentTimerId = useRef<number>(-1);
 	const [isLive, setIsLive, isLiveRef] = useStateRef(false);
 	const [liveLatency, setLiveLatency] = useState(0);
@@ -41,7 +37,7 @@ export function useLive({
 			}, updateInterval);
 		};
 
-		events = events ?? ['trackschanged', 'manifestparsed'];
+		const events = ['trackschanged', 'manifestparsed'];
 
 		events.forEach((event) => {
 			playback.addEventListener(event, updateHandler);
@@ -57,10 +53,10 @@ export function useLive({
 			}
 			clearInterval(currentTimerId.current);
 		};
-	}, [playback, player, updateInterval, events]);
+	}, [updateInterval]);
 
 	return {
 		isLive,
 		liveLatency,
-	};
+	} as const;
 }

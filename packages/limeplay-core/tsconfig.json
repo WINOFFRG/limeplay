@@ -9,8 +9,12 @@
 		"../../home/src/components/Player/Timeline/HoverContainer.tsx",
 		"../../home/src/components/Player/Timeline/utils"
 	],
+
 	"compilerOptions": {
 		"typeRoots": ["./src/types"],
-		"module": "CommonJS"
+		"module": "CommonJS",
+		"paths": {
+			// "shaka-player": ["../shaka-player"]
+		}
 	}
 }

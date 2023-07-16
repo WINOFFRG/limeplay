@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getPercentage } from '../utils';
+import { useLimeplay } from '../components';
 
 export interface UseBufferConfig {
 	events?: ShakaPlayerEvents;
-	playback?: HTMLMediaElement;
-	player?: shaka.Player;
 	updateInterval?: number;
 }
 
@@ -15,14 +14,12 @@ type Buffer = {
 	startPosition: number;
 };
 
-export function useBufferInfo({
-	events,
-	playback,
-	player,
-	updateInterval = 1000,
-}: UseBufferConfig = {}) {
+export function useBufferInfo({ updateInterval = 1000 }: UseBufferConfig = {}) {
 	const [bufferInfo, setBufferInfo] = useState<Buffer[]>([]);
 	const currentTimerId = useRef<number>(-1);
+	const { playbackRef, playerRef } = useLimeplay();
+	const player = playerRef.current;
+	const playback = playbackRef.current;
 
 	useEffect(() => {
 		const updateSeekHandler = () => {
@@ -72,7 +69,7 @@ export function useBufferInfo({
 			}, updateInterval);
 		};
 
-		events = events ?? ['trackschanged', 'manifestparsed'];
+		const events = ['trackschanged', 'manifestparsed'];
 
 		events.forEach((event) => {
 			playback.addEventListener(event, updateSeekHandler);
@@ -89,7 +86,7 @@ export function useBufferInfo({
 
 			clearInterval(currentTimerId.current);
 		};
-	}, [playback, player, updateInterval]);
+	}, [updateInterval]);
 
 	return {
 		bufferInfo,
