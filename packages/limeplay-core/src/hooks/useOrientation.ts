@@ -25,7 +25,8 @@ export function useOrientation({
 		}
 	};
 
-	const lockOrientation = (type: OrientationLockType) => {
+	// TODO: OritentationType can be used but it has few missing as compared to API Docs, Need to add later
+	const lockOrientation = (type: any) => {
 		o9n.orientation
 			.lock(type)
 			.then(() => {

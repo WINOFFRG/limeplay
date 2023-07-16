@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useStateRef } from '../utils';
+import { useLimeplay } from '../components';
 
 export interface UsePiPConfig {
-	playback: HTMLVideoElement;
-	player?: shaka.Player;
-	events?: HTMLVideoElementEvents;
 	onError?: (event: Event) => void;
 	onExit?: () => void;
 	onEnter?: () => void;
@@ -13,15 +11,15 @@ export interface UsePiPConfig {
 }
 
 export function usePiP({
-	playback,
-	player,
-	events = ['enterpictureinpicture', 'leavepictureinpicture'],
 	onError,
 	onExit,
 	onEnter,
 	onChange,
 	onResize,
 }: UsePiPConfig) {
+	const { playbackRef, playerRef } = useLimeplay();
+	const playback = playbackRef.current;
+	const player = playerRef.current;
 	const [isPiPActive, setIsPiPActive, isPiPActiveRef] = useStateRef(false);
 	const [isPiPSupported, setIsPiPSupported] = useState(false);
 	const [isPiPAllowed, setIsPiPAllowed] = useState(false);
@@ -105,6 +103,8 @@ export function usePiP({
 			}
 		};
 
+		const events = ['enterpictureinpicture', 'leavepictureinpicture'];
+
 		events.forEach((event) => {
 			playback.addEventListener(event, pipEventHandler);
 		});
@@ -124,7 +124,7 @@ export function usePiP({
 				player.removeEventListener('trackschanged', trackChangeHandler);
 			}
 		};
-	}, [playback, player, events, onChange, onResize]);
+	}, [onChange, onResize]);
 
 	return {
 		isPiPActive,
@@ -132,5 +132,5 @@ export function usePiP({
 		isPiPAllowed,
 		pipWindow,
 		togglePiP,
-	};
+	} as const;
 }

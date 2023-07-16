@@ -1,24 +1,22 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStateRef } from '../utils';
+import { useLimeplay } from '../components';
 
 export interface UseVolumeConfig {
 	/**
 	 * HTMLMediaElement events to listen to
 	 * @default Events - ['volumechange']
 	 */
-	events?: HTMLMediaElementEvents;
 	initialVolume?: number;
 	syncMuteState?: boolean;
-	playback?: HTMLMediaElement;
-	disabled?: boolean;
 }
 
 export function useVolume({
 	initialVolume = 1,
-	events = ['volumechange'],
-	playback,
 	syncMuteState = true,
 }: UseVolumeConfig = {}) {
+	const { playbackRef } = useLimeplay();
+	const playback = playbackRef.current;
 	const [volume, setVolume] = useState(initialVolume);
 	const [muted, setMuted, mutedRef] = useStateRef(playback.muted);
 	const [lastVolume, setLastVolume, lastVolumeRef] =
@@ -74,6 +72,8 @@ export function useVolume({
 			}
 		};
 
+		const events = ['volumechange'];
+
 		events.forEach((event) => {
 			playback.addEventListener(event, volumeEventHandler);
 		});
@@ -85,16 +85,16 @@ export function useVolume({
 				});
 			}
 		};
-	}, [playback, events, syncMuteState, events]);
+	}, [syncMuteState]);
 
 	useEffect(() => {
 		playback.volume = playback.muted ? 0 : initialVolume || playback.volume;
-	}, [initialVolume, playback]);
+	}, [initialVolume]);
 
 	return {
 		volume,
 		muted,
 		lastVolume,
 		toggleMute,
-	};
+	} as const;
 }

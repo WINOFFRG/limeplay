@@ -3,34 +3,48 @@ export { default as getPercentage } from './get-percentage';
 export { default as getDuration } from './get-duration';
 export { default as useStateRef } from './use-state-ref';
 
-export function on<E extends string, A extends readonly unknown[]>(
-	arg1:
-		| { addEventListener: (event: E, ...args: A) => void }
-		| readonly ({
-				addEventListener: (event: E, ...args: A) => void;
-		  } | null)[]
-		| null,
-	arg2: E | E[],
-	...args: A
-): void {
-	if (arg1 === null) return;
-	if ('addEventListener' in arg1) {
-		if (typeof arg2 === 'string') {
-			arg1.addEventListener(arg2, ...args);
-		} else {
-			for (const event of arg2) {
-				arg1.addEventListener(event, ...args);
-			}
-		}
+type EventMapFor<Target> = Target extends Window
+	? WindowEventMap
+	: Target extends Document
+	? DocumentEventMap
+	: Target extends HTMLElement
+	? HTMLElementEventMap
+	: Target extends EventTarget
+	? { [key: string]: Event }
+	: never;
+
+export const on = <
+	T extends Window | Document | HTMLElement | EventTarget,
+	K extends keyof EventMapFor<T> & string
+>(
+	target: T,
+	eventNames: K[] | K,
+	listener: EventListenerOrEventListenerObject,
+	options?: boolean | AddEventListenerOptions
+) => {
+	if (Array.isArray(eventNames)) {
+		eventNames.forEach((eventName) =>
+			target.addEventListener(eventName, listener, options)
+		);
 	} else {
-		for (const obj of arg1) {
-			if (typeof arg2 === 'string') {
-				obj?.addEventListener(arg2, ...args);
-			} else {
-				for (const event of arg2) {
-					obj?.addEventListener(event, ...args);
-				}
-			}
-		}
+		target.addEventListener(eventNames, listener, options);
 	}
-}
+};
+
+export const off = <
+	T extends Window | Document | HTMLElement | EventTarget,
+	K extends keyof EventMapFor<T> & string
+>(
+	target: T,
+	eventNames: K[] | K,
+	listener: EventListenerOrEventListenerObject,
+	options?: boolean | EventListenerOptions
+) => {
+	if (Array.isArray(eventNames)) {
+		eventNames.forEach((eventName) =>
+			target.removeEventListener(eventName, listener, options)
+		);
+	} else {
+		target.removeEventListener(eventNames, listener, options);
+	}
+};
