@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import clamp from 'lodash/clamp';
 import { useStateRef } from '../utils';
 import { useLimeplay } from '../components';
@@ -9,25 +9,37 @@ export interface UseTimelineConfig {
 	 * @default Events - ['trackschanged', 'manifestparsed']
 	 */
 	updateInterval?: number;
+	seekAllowed?: boolean;
+	updateWhileSliding?: boolean;
+	isSlidingRef?: React.MutableRefObject<boolean>;
 }
 
-const SEEK_ALLOWED = true;
-const UPDATE_WHILE_SEEKING = false;
-const PAUSE_WHILE_SEEKING = false;
-
-export function useTimeline({ updateInterval = 250 }: UseTimelineConfig = {}) {
+export function useTimeline({
+	updateInterval = 250,
+	isSlidingRef = React.createRef(),
+}: UseTimelineConfig = {}) {
 	const { playbackRef, playerRef } = useLimeplay();
 	const playback = playbackRef.current;
 	const player = playerRef.current;
 	const currentTimerId = useRef<number>(-1);
+
 	const [currentTime, setCurrentTime] = useState(0);
 	const [duration, setDuration, durationRef] = useStateRef(0);
-	const [isSeeking, setIsSeeking, isSeekingRef] = useStateRef(false);
 	const [currentProgress, setCurrentProgress] = useState(0);
+	const [isLive, setIsLive, isLiveRef] = useStateRef(false);
+	const [liveLatency, setLiveLatency] = useState(0);
 	const [seekRange, setSeekRange, seekRangeRef] = useStateRef<SeekRange>({
 		start: 0,
 		end: 0,
 	});
+
+	const updateCurrentTime = useCallback((time: number) => {
+		if (playback.readyState === 0 || Number.isNaN(time)) return;
+		const _seekRange = player.seekRange();
+		time = clamp(time, _seekRange.start, _seekRange.end);
+		// playback.currentTime = time;
+		setCurrentTime(time);
+	}, []);
 
 	useEffect(() => {
 		const updateSeekHandler = () => {
@@ -57,8 +69,10 @@ export function useTimeline({ updateInterval = 250 }: UseTimelineConfig = {}) {
 
 					localProgress = clamp(localProgress, 0, 100);
 
-					if (!isSeekingRef.current)
+					if (!isSlidingRef.current)
 						setCurrentProgress(localProgress);
+
+					setLiveLatency(currentSeekRange.end - playback.currentTime);
 				} else {
 					if (durationRef.current !== playback.duration)
 						setDuration(playback.duration);
@@ -66,16 +80,21 @@ export function useTimeline({ updateInterval = 250 }: UseTimelineConfig = {}) {
 					if (
 						seekRangeRef.current.start === 0 &&
 						seekRangeRef.current.end === 0
-					)
+					) {
 						setSeekRange(player.seekRange());
+					}
 
 					setCurrentTime(playback.currentTime);
 
 					const localProgress =
 						(playback.currentTime / playback.duration) * 100;
 
-					if (!isSeekingRef.current)
+					if (!isSlidingRef.current)
 						setCurrentProgress(localProgress);
+				}
+
+				if (isLiveRef.current !== player.isLive()) {
+					setIsLive(player.isLive());
 				}
 			}, updateInterval);
 		};
@@ -101,11 +120,10 @@ export function useTimeline({ updateInterval = 250 }: UseTimelineConfig = {}) {
 	return {
 		currentTime,
 		duration,
-		isSeeking,
 		currentProgress,
 		seekRange,
-		setIsSeeking,
-		setCurrentProgress,
-		setCurrentTime,
+		isLive,
+		liveLatency,
+		updateCurrentTime,
 	} as const;
 }
