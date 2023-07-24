@@ -10,7 +10,7 @@ const useStyles = createStyles((theme) => ({
 		width: '100%',
 		height: '100%',
 		backgroundColor: 'black',
-		// opacity: 0.1,
+		// opacity: 0.05,
 	},
 }));
 
@@ -26,9 +26,9 @@ export default function Player() {
 						poster="/video-poster.jpg"
 						controls={false}
 						playsInline
-						className={classes.videoElement}
-						autoPlay
 						muted
+						autoPlay
+						className={classes.videoElement}
 					/>
 				</MediaOutlet>
 			</ErrorBoundary>

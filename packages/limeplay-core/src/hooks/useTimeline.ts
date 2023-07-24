@@ -37,7 +37,7 @@ export function useTimeline({
 		if (playback.readyState === 0 || Number.isNaN(time)) return;
 		const _seekRange = player.seekRange();
 		time = clamp(time, _seekRange.start, _seekRange.end);
-		// playback.currentTime = time;
+		playback.currentTime = time;
 		setCurrentTime(time);
 	}, []);
 
