@@ -1,93 +1,141 @@
-import {
-	FullGestureState,
-	UserDragConfig,
-	useDrag,
-	useGesture,
-	useMove,
-} from '@use-gesture/react';
+import { FullGestureState, useDrag } from '@use-gesture/react';
 import { clamp } from 'lodash';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 interface SliderHandlerConfig {
 	min: number;
 	max: number;
-	step: number;
-	orientation: React.AriaAttributes['aria-orientation'];
-	disabled: boolean;
-	dir: 'ltr' | 'rtl';
-	inverted: boolean;
+	orientation?: React.AriaAttributes['aria-orientation'];
+	disabled?: boolean;
+	dir?: 'ltr' | 'rtl';
+	inverted?: boolean;
+	step?: number;
+	skipStep?: number;
 }
 
 interface UseTimelineSliderConfig {
 	sliderHandlerConfig: SliderHandlerConfig;
-	onValueChange?: (value: number) => void;
+	ref: React.RefObject<HTMLElement>;
+	onSlideStart?: (value: number) => void;
+	onSlide?: (value: number) => void;
+	onSlideEnd?: (value: number) => void;
 }
 
 export function useTimelineDrag({
 	sliderHandlerConfig,
-	onValueChange,
+	ref,
+	onSlideStart,
+	onSlide,
+	onSlideEnd,
 }: UseTimelineSliderConfig) {
 	const [isSliding, setIsSliding] = useState(false);
 	const [value, setValue] = useState(0);
+	const { disabled } = sliderHandlerConfig;
 
-	const cbFunction = ({
-		event,
-		active,
+	const dragHandler = ({
 		type,
-		movement,
-		xy: [x, y],
-		currentTarget,
+		active,
+		xy: [ox, oy],
+		event,
+		ctrlKey,
+		shiftKey,
 	}: FullGestureState<'drag'>) => {
 		setIsSliding(active);
 
 		const {
 			min,
 			max,
-			step,
-			orientation: o9n,
-			dir,
-			inverted,
-			disabled,
+			step = 5,
+			skipStep = 30,
+			orientation: o9n = 'horizontal',
+			dir = 'ltr',
+			inverted = false,
 		} = sliderHandlerConfig;
-		if (disabled) return null;
 
-		console.log(
-			event.clientX,
-			event.clientY,
-			x,
-			y,
-			currentTarget.clientHeight
-		);
+		const { height, width, top, left } =
+			ref.current.getBoundingClientRect();
 
-		const clientPosition = o9n === 'vertical' ? y : x;
-		const rect = event.currentTarget.getBoundingClientRect();
+		let newValue = value;
 
-		const sliderSize =
-			o9n === 'vertical'
-				? event.currentTarget.clientHeight
-				: event.currentTarget.clientWidth;
+		if (event instanceof PointerEvent) {
+			const clientPosition = o9n === 'vertical' ? oy : ox;
+			const sliderSize = o9n === 'vertical' ? height : width;
+			const sliderPosition = o9n === 'vertical' ? top : left;
 
-		const sliderPosition = o9n === 'vertical' ? rect.top : rect.left;
-		const relativePosition = clientPosition - sliderPosition;
-		const percentage = relativePosition / sliderSize;
-		let newValue = percentage * (max - min) + min;
-		if (inverted || (dir === 'rtl' && o9n === 'horizontal'))
-			newValue = max - newValue + min;
+			const relativePosition = clientPosition - sliderPosition;
+			const percentage = relativePosition / sliderSize;
+			newValue = percentage * (max - min) + min;
 
-		console.log({ event: event.type, newValue, active });
+			if (inverted || (dir === 'rtl' && o9n === 'horizontal'))
+				newValue = max - newValue + min;
 
-		// if (onValueChange) onValueChange(newValue);
+			switch (type) {
+				case 'pointerdown':
+					onSlideStart?.(newValue);
+					break;
+				case 'pointermove':
+					onSlide?.(newValue);
+					break;
+				case 'pointerup':
+					onSlideEnd?.(newValue);
+					break;
+				default:
+					break;
+			}
+		}
+
+		if (event instanceof KeyboardEvent) {
+			const isInverted =
+				inverted || (dir === 'rtl' && o9n === 'horizontal');
+			const stepSize =
+				(shiftKey ? skipStep : step) * (isInverted ? -1 : 1);
+
+			if (active) {
+				switch (event.key) {
+					case 'ArrowLeft':
+						newValue -= stepSize;
+						break;
+					case 'ArrowRight':
+						newValue += stepSize;
+						break;
+					case 'ArrowUp':
+						newValue += stepSize;
+						break;
+					case 'ArrowDown':
+						newValue -= stepSize;
+						break;
+					default:
+						break;
+				}
+			}
+
+			switch (event.type) {
+				case 'keydown': {
+					onSlideStart?.(newValue);
+					onSlide?.(newValue);
+					break;
+				}
+				case 'keyup':
+					onSlideEnd?.(newValue);
+					break;
+				default:
+					break;
+			}
+		}
+
+		newValue = clamp(newValue, min, max);
 
 		setValue(newValue);
-
 		return newValue;
 	};
 
-	const events: any = useDrag(cbFunction);
+	useDrag(dragHandler, {
+		target: ref,
+		enabled: !disabled,
+	});
 
 	return {
 		value,
-		events,
 		isSliding,
 	};
 }

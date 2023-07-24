@@ -21,6 +21,7 @@ type OnSliderHandlerProps = {
 	disabled: boolean;
 	dir: 'ltr' | 'rtl';
 	inverted: boolean;
+	skipSize?: number;
 };
 
 export function TimelineSlider() {
@@ -46,25 +47,24 @@ export function TimelineSlider() {
 	const config: OnSliderHandlerProps = {
 		min: seekRange.start,
 		max: seekRange.end,
-		step: 0.05,
+		step: 5,
+		skipSize: 30,
 		orientation: 'horizontal',
 		disabled: false,
 		dir: 'ltr',
 		inverted: false,
 	};
 
-	const { events, isSliding, value } = useTimelineDrag({
+	const { isSliding, value } = useTimelineDrag({
 		sliderHandlerConfig: config,
-		onValueChange: updateCurrentTime,
-		// onDragStart
-		// onDragEnd
-		// onDrag
+		onSlideEnd: updateCurrentTime,
+		ref: elementRef,
 	});
 
 	return (
 		<div className={classes.timelineWrrapper}>
 			<CurrentTime
-				currentTime={isSliding ? value : currentTime}
+				currentTime={currentTime}
 				duration={duration}
 				player={player}
 				isLive={isLive}
@@ -75,14 +75,6 @@ export function TimelineSlider() {
 				className={classes.timelineSlider__Container}
 				ref={elementRef}
 				{...config}
-				{...events()}
-				// onValueChange={(value) => {
-				// 	const [_currentTime] = value;
-				// 	updateCurrentTime(_currentTime);
-				// }}
-				onDragEnd={() => {
-					console.log('onDragEnd');
-				}}
 			>
 				<Slider.Track className={classes.timelineSlider__ProgressBar}>
 					<Slider.Range
