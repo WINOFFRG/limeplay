@@ -17,6 +17,7 @@ export function PlayerOutlet() {
 			return `Shaka Player failed with an Error: ${event.message}`;
 		};
 
+		console.log(error);
 		// throw new Error(onErrorHandler(error));
 	}
 
@@ -38,9 +39,7 @@ export function PlayerOutlet() {
 				JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG) ?? {}
 			);
 
-			console.log(playerRef.current.getConfiguration().drm);
-
-			const url = process.env.NEXT_PUBLIC_PLAYBACK_URL;
+			const url = process.env.NEXT_PUBLIC_VODPLAYBACK_URL;
 
 			playerRef.current.load(url).then(() => {
 				console.log(
@@ -51,7 +50,7 @@ export function PlayerOutlet() {
 			});
 			// Error's during load need to be handled separately
 
-			console.log('             ');
+			console.log(' ');
 
 			// @ts-ignore
 			window.player = playerRef.current;

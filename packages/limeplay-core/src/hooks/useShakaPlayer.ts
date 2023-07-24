@@ -11,20 +11,14 @@ const generateVideoId = () => {
 };
 
 export function useShakaPlayer() {
-	const { playbackRef, playerRef, playback, player } = useLimeplay();
+	const { playbackRef, playerRef } = useLimeplay();
 	const [error, setError] = useState<shaka.util.Error | null>(null);
 	const [isLoaded, setIsLoaded] = useState(false);
-
-	useEffect(() => {
-		setIsLoaded(false);
-	}, [playback, player]);
 
 	useEffect(() => {
 		console.log(
 			` >> 1. (${playerRef.current?.time}) useShakaPlayer Mouted`
 		);
-
-		let _player = null;
 
 		const errorHandler = (event: shaka.util.Error | Event) => {
 			// TODO: Handle error for event
@@ -34,7 +28,7 @@ export function useShakaPlayer() {
 		};
 
 		if (playbackRef.current) {
-			_player = new shaka.Player(playbackRef.current);
+			const _player = new shaka.Player(playbackRef.current);
 			_player.time = generateVideoId();
 			playerRef.current = _player;
 			console.log(
@@ -55,7 +49,8 @@ export function useShakaPlayer() {
 			setIsLoaded(false);
 			setError(null);
 
-			if (_player) {
+			if (playbackRef.current) {
+				const _player = playerRef.current;
 				console.log(
 					` << 7. (${_player.time}) Shaka Player Instance Destroyed `,
 					_player.time
@@ -65,10 +60,10 @@ export function useShakaPlayer() {
 				window[_player.time] = null;
 				_player.removeEventListener('error', errorHandler);
 				_player.destroy();
-				_player = null;
+				playbackRef.current = null;
 			}
 		};
-	}, [playback, player]);
+	}, []);
 
 	return {
 		playerRef,
