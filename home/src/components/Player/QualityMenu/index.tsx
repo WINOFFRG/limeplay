@@ -1,17 +1,8 @@
 import { useQuality } from '@limeplay/core';
-import {
-	ActionIcon,
-	Box,
-	Button,
-	Menu,
-	Popover,
-	Text,
-	Title,
-	createStyles,
-} from '@mantine/core';
+import { ActionIcon, Box, Menu, Text, createStyles } from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
 import { VideoQuality } from '../Icons/Icons';
-import ControlButton from '../ControlButton';
+import { IconButton } from '@/components/common/Buttons';
 
 const useStyles = createStyles((theme) => ({
 	backgroundStyle: {},
@@ -26,10 +17,9 @@ function SelectIcon({ shown }: { shown: boolean }) {
 	);
 }
 
-export function QualityMenu({ player }: { player: shaka.Player }) {
+export function QualityMenu() {
 	const { isAuto, selectedTrack, tracks, selectTrack, setAutoMode } =
 		useQuality({
-			player,
 			clearBufferOnChange: 'auto',
 		});
 
@@ -57,9 +47,9 @@ export function QualityMenu({ player }: { player: shaka.Player }) {
 			}}
 		>
 			<Menu.Target>
-				<ActionIcon>
+				<IconButton aria-label="Select Quality">
 					<VideoQuality />
-				</ActionIcon>
+				</IconButton>
 			</Menu.Target>
 			<Menu.Dropdown
 				className={cx(classes.backgroundStyle, classes.backgroundStyle)}

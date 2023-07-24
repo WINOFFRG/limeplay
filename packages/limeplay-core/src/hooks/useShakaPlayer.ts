@@ -11,9 +11,13 @@ const generateVideoId = () => {
 };
 
 export function useShakaPlayer() {
-	const { playbackRef, playerRef } = useLimeplay();
+	const { playbackRef, playerRef, playback, player } = useLimeplay();
 	const [error, setError] = useState<shaka.util.Error | null>(null);
 	const [isLoaded, setIsLoaded] = useState(false);
+
+	useEffect(() => {
+		setIsLoaded(false);
+	}, [playback, player]);
 
 	useEffect(() => {
 		console.log(
@@ -24,22 +28,22 @@ export function useShakaPlayer() {
 
 		const errorHandler = (event: shaka.util.Error | Event) => {
 			// TODO: Handle error for event
+			console.log(event);
 			if (event instanceof Event) return;
 			setError(event);
 		};
 
 		if (playbackRef.current) {
-			const player = new shaka.Player(playbackRef.current);
-			player.time = generateVideoId();
-			playerRef.current = player;
-			_player = player;
+			_player = new shaka.Player(playbackRef.current);
+			_player.time = generateVideoId();
+			playerRef.current = _player;
 			console.log(
 				` >> 2. (${playerRef.current.time}) Shaka Player Instance`
 			);
 
 			// @ts-ignore
 			window[playerRef.current.time] = playerRef.current;
-			player.addEventListener('error', errorHandler);
+			_player.addEventListener('error', errorHandler);
 			setIsLoaded(true);
 		}
 
@@ -57,13 +61,14 @@ export function useShakaPlayer() {
 					_player.time
 				);
 
-				playerRef.current = null;
+				// playerRef.current = null;
 				window[_player.time] = null;
 				_player.removeEventListener('error', errorHandler);
 				_player.destroy();
+				_player = null;
 			}
 		};
-	}, []);
+	}, [playback, player]);
 
 	return {
 		playerRef,

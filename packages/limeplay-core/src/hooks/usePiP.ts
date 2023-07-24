@@ -16,7 +16,7 @@ export function usePiP({
 	onEnter,
 	onChange,
 	onResize,
-}: UsePiPConfig) {
+}: UsePiPConfig = {}) {
 	const { playbackRef, playerRef } = useLimeplay();
 	const playback = playbackRef.current;
 	const player = playerRef.current;
@@ -35,7 +35,7 @@ export function usePiP({
 
 	const togglePiP = async () => {
 		if (!document.pictureInPictureElement) {
-			playback
+			playbackRef.current
 				.requestPictureInPicture()
 				.then((_pipWindow) => {
 					setPipWindow(_pipWindow);

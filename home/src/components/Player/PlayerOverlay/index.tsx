@@ -1,89 +1,64 @@
-import {
-	useLimeplayStore,
-	useLimeplayStoreAPI,
-} from '@limeplay/core/src/store';
-import { useEffect, useState, useRef } from 'react';
-import { useSafeLoad } from '@limeplay/core/src/hooks';
-// @ts-ignore
+import { useEffect } from 'react';
 import mux from 'mux.js';
-import { useRouter } from 'next/router';
-import { merge } from 'lodash';
+import { useShakaPlayer } from '@limeplay/core';
 import ControlsOverlay from '../ControlsOverlay';
 import useStyles from './styles';
 import PlayerLoader from '../Loader';
 
-export default function PlayerOverlay() {
-	// useSafeLoad();
+export function PlayerOutlet() {
 	const { classes } = useStyles();
-	const playback = useLimeplayStore((state) => state.playback);
-	const player = useLimeplayStore((state) => state.player);
-	const isSafeLoad = useLimeplayStore((state) => state.isSafeLoad);
-	const { getState } = useLimeplayStoreAPI();
-	const router = useRouter();
-	const [error, setError] = useState<string>(null);
-	const isMounted = useRef(false);
-
-	const demoPlabackUrl =
-		'https://embed-cloudfront.wistia.com/deliveries/4a77e940176149046375a5036dbf2f7f01ce3a59.m3u8';
+	const { playerRef, isLoaded, error } = useShakaPlayer();
 
 	if (error) {
-		throw new Error(error);
+		const onErrorHandler = (event) => {
+			if (event.code && event.severity) {
+				return `Shaka Player failed with an Error Code: ${event.code} :: Severity: ${event.severity}`;
+			}
+			return `Shaka Player failed with an Error: ${event.message}`;
+		};
+
+		// throw new Error(onErrorHandler(error));
 	}
 
 	useEffect(() => {
-		if (isMounted.current) return;
-		isMounted.current = true;
+		console.log(` >> 3. (${playerRef.current?.time}) PlayerOutlet Mounted`);
 
-		if (!window.muxjs) {
-			window.muxjs = mux;
-		}
-
-		const onErrorHandler = (event) => {
-			if (event.code && event.severity) {
-				setError(`
-						Shaka Player failed with an Error Code: ${event.code} :: Severity: ${event.severity}
-					`);
-			} else {
-				setError(`
-						Shaka Player failed with an Error: ${event.message}
-					`);
+		if (playerRef.current && playerRef.current.getLoadMode() !== 0) {
+			if (!window.muxjs) {
+				window.muxjs = mux;
 			}
-		};
 
-		if (player && getState().isSafeLoad && player.getLoadMode() === 1) {
-			const playerConfig = merge(
-				player.getConfiguration(),
-				JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG ?? '{}')
+			console.log(
+				` >> 4. (${
+					playerRef.current.time
+				}) PlayerOutlet: Content Will be Loaded, Player Mode: ${playerRef.current.getLoadMode()}`
 			);
 
-			player.configure(playerConfig);
+			playerRef.current.configure(
+				JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG) ?? {}
+			);
 
-			const tParam = router.query.t;
-			let startTime = 0;
+			console.log(playerRef.current.getConfiguration().drm);
 
-			if (tParam) {
-				startTime = parseInt(tParam as string, 10);
-			}
+			const url = process.env.NEXT_PUBLIC_PLAYBACK_URL;
 
-			player
-				.load(
-					process.env.NEXT_PUBLIC_PLAYBACK_URL || demoPlabackUrl,
-					startTime
-				)
-				// Error's during load need to be handled separately
-				.catch(onErrorHandler);
+			playerRef.current.load(url).then(() => {
+				console.log(
+					` >> 5. PlayerOutlet (${
+						playerRef.current.time
+					}): Content Loaded, Player Mode: ${playerRef.current.getLoadMode()} :: ${url}`
+				);
+			});
+			// Error's during load need to be handled separately
 
-			player.addEventListener('error', onErrorHandler);
+			console.log('             ');
+
+			// @ts-ignore
+			window.player = playerRef.current;
 		}
+	}, [isLoaded]);
 
-		return () => {
-			if (player) {
-				player.removeEventListener('error', onErrorHandler);
-			}
-		};
-	}, [player, playback, isSafeLoad, router]);
-
-	if (!playback || !player) return null;
+	if (!isLoaded) return null;
 
 	return (
 		<div className={classes.overlayWrapper}>

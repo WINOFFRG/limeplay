@@ -26,10 +26,7 @@ export function useSliderMove(
 
 	const rect = event.currentTarget.getBoundingClientRect();
 
-	const sliderSize =
-		o9n === 'vertical'
-			? event.currentTarget.clientHeight
-			: event.currentTarget.clientWidth;
+	const sliderSize = o9n === 'vertical' ? rect.height : rect.width;
 
 	// Get the position of the slider
 	const sliderPosition = o9n === 'vertical' ? rect.top : rect.left;

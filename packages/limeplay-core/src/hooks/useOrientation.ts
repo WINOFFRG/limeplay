@@ -28,6 +28,8 @@ export function useOrientation({
 	// TODO: OritentationType can be used but it has few missing as compared to API Docs, Need to add later
 	const lockOrientation = (type: any) => {
 		o9n.orientation
+			// FIXME: Fix typescript typings as .lock is not available
+			// @ts-ignore
 			.lock(type)
 			.then(() => {
 				if (onLock && typeof onLock === 'function') {

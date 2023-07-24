@@ -1,17 +1,18 @@
 import { createContext, createRef, useContext, useMemo } from 'react';
+import { useStateRef } from '../utils';
 
 interface LimeplayProviderContextType {
-	playbackRef: React.MutableRefObject<HTMLVideoElement | null>;
+	playbackRef: React.MutableRefObject<HTMLMediaElement | null>;
 	playerRef: React.MutableRefObject<shaka.Player | null>;
 	containerRef: React.MutableRefObject<HTMLDivElement | null>;
+	player: shaka.Player | null;
+	setPlayer: (player: shaka.Player | null) => void;
+	playback: HTMLMediaElement | null;
+	setPlayback: (playback: HTMLMediaElement | null) => void;
 }
 
 const LimeplayProviderContext =
-	createContext<LimeplayProviderContextType | null>({
-		playbackRef: createRef<null>(),
-		playerRef: createRef<null>(),
-		containerRef: createRef<null>(),
-	});
+	createContext<LimeplayProviderContextType | null>(null);
 
 export function useLimeplay() {
 	const context = useContext(LimeplayProviderContext);
@@ -26,11 +27,22 @@ export function useLimeplay() {
 }
 
 export function LimeplayProvider({ children }: { children: React.ReactNode }) {
+	const [player, setPlayer, playerRef] = useStateRef<shaka.Player | null>(
+		null
+	);
+
+	const [playback, setPlayback, playbackRef] =
+		useStateRef<HTMLMediaElement | null>(null);
+
 	const defaultContext = useMemo(
 		() => ({
-			playbackRef: createRef<null>(),
-			playerRef: createRef<null>(),
+			playbackRef,
+			playerRef,
 			containerRef: createRef<null>(),
+			player,
+			setPlayer,
+			playback,
+			setPlayback,
 		}),
 		[]
 	);

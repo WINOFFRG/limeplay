@@ -16,11 +16,11 @@ const useStyles = createStyles((theme, _params) => ({
 		userSelect: 'none',
 		boxSizing: 'border-box',
 		position: 'relative',
-		padding: '0 12px',
+		// padding: '0 12px',
 
 		[`@media (max-width: ${em(getBreakpointValue(theme.breakpoints.md))})`]:
 			{
-				padding: '0 8px',
+				// padding: '0 8px',
 			},
 	},
 

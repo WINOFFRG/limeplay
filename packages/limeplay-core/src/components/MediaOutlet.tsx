@@ -7,6 +7,8 @@ export const MediaOutlet = forwardRef(
 		const { playbackRef, playerRef } = useLimeplay();
 		const composedRefs = useComposedRefs(forwardedRef, playbackRef);
 
+		console.log('[ MediaOutlet ] rendered');
+
 		useLayoutEffect(() => {
 			if (React.Children.count(children) !== 1) {
 				throw new Error(

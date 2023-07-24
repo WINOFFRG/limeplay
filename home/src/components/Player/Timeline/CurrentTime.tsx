@@ -1,26 +1,25 @@
-import ControlButton from '../ControlButton';
+import { useLive } from '@limeplay/core';
+import { IconButton } from '@/components/common/Buttons';
 import { buildTimeString } from './utils';
 
 export function CurrentTime({
-	playback,
-	player,
 	isLive,
+	player,
 	duration,
 	currentTime,
-	seekRange,
+	liveLatency,
 }: {
-	playback: HTMLMediaElement;
-	player: shaka.Player;
 	isLive: boolean;
+	player: shaka.Player;
 	duration: number;
 	currentTime: number;
-	seekRange: SeekRange;
+	liveLatency: number;
 }) {
 	return (
 		<span>
 			{!isLive && buildTimeString(currentTime, duration > 3600)}
 			{isLive && (
-				<ControlButton
+				<IconButton
 					onClick={() => {
 						player.goToLive();
 					}}
@@ -28,13 +27,10 @@ export function CurrentTime({
 						width: 'auto',
 					}}
 				>
-					{seekRange.end - playback.currentTime > 5
-						? `-${buildTimeString(
-								seekRange.end - playback.currentTime,
-								duration > 3600
-						  )}`
+					{liveLatency > 5
+						? `-${buildTimeString(liveLatency, duration > 3600)}`
 						: 'LIVE'}
-				</ControlButton>
+				</IconButton>
 			)}
 		</span>
 	);
