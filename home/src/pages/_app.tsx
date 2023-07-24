@@ -157,7 +157,7 @@ export default function App({ Component, pageProps }: AppProps) {
 		>
 			<MetaTags />
 			<Component {...pageProps} />
-			<Analytics />
+			{process.env.NODE_ENV === 'production' && <Analytics />}
 		</MantineProvider>
 	);
 }

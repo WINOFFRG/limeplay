@@ -18,13 +18,12 @@ const useStyles = createStyles((theme) => ({
 		borderRadius: '0.2rem',
 
 		'&[data-orientation="horizontal"]': {
-			height: '40px',
+			height: '100%',
 			width: '100px',
 		},
 
 		'&[data-orientation="vertical"]': {
 			width: '20px',
-			height: '200px',
 			flexDirection: 'column',
 
 			position: 'absolute',

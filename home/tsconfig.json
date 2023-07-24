@@ -16,8 +16,7 @@
 		"incremental": true,
 		"paths": {
 			"@/*": ["./src/*"],
-			"@limeplay/core": ["../packages/limeplay-core/src"],
-			"@limeplay/shaka-player": ["../packages/limeplay-shaka/src"]
+			"@limeplay/core": ["../packages/limeplay-core/src"]
 		}
 	},
 	"include": [
