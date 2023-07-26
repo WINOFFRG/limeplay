@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import clamp from 'lodash/clamp';
+import { clamp } from 'lodash';
 import { useStateRef } from '../utils';
 import { useLimeplay } from '../components';
 
