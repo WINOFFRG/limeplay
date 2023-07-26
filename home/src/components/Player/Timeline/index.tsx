@@ -31,7 +31,6 @@ export function TimelineSlider() {
 		currentTime,
 		isLive,
 		liveLatency,
-		currentProgress,
 		updateCurrentTime,
 	} = useTimeline({
 		updateInterval: 250,
@@ -53,8 +52,6 @@ export function TimelineSlider() {
 		onSlideEnd: updateCurrentTime,
 		ref: elementRef,
 	});
-
-	console.log({ currentTime, value, isSliding, seekRange, duration });
 
 	return (
 		<div className={classes.timelineWrrapper}>
