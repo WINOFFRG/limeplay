@@ -1,19 +1,9 @@
 import { useBufferInfo } from '@limeplay/core';
-import * as Slider from '@radix-ui/react-slider';
 import useStyles from './styles';
 
-export function BufferRangeBar({
-	player,
-	playback,
-}: {
-	player: shaka.Player;
-	playback: HTMLMediaElement;
-}) {
+export function BufferRangeBar() {
 	const { classes } = useStyles();
-	const { bufferInfo } = useBufferInfo({
-		playback,
-		player,
-	});
+	const { bufferInfo } = useBufferInfo();
 
 	return (
 		<div

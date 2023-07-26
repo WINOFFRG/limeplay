@@ -23,10 +23,8 @@ export default function Player() {
 				<PlayerOutlet />
 				<MediaOutlet>
 					<video
-						poster="/video-poster.jpg"
 						controls={false}
 						playsInline
-						muted
 						autoPlay
 						className={classes.videoElement}
 					/>

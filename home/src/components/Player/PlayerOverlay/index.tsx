@@ -17,40 +17,24 @@ export function PlayerOutlet() {
 			return `Shaka Player failed with an Error: ${event.message}`;
 		};
 
-		console.log(error);
-		// throw new Error(onErrorHandler(error));
+		throw new Error(onErrorHandler(error));
 	}
 
 	useEffect(() => {
-		console.log(` >> 3. (${playerRef.current?.time}) PlayerOutlet Mounted`);
-
 		if (playerRef.current && playerRef.current.getLoadMode() !== 0) {
 			if (!window.muxjs) {
 				window.muxjs = mux;
 			}
 
-			console.log(
-				` >> 4. (${
-					playerRef.current.time
-				}) PlayerOutlet: Content Will be Loaded, Player Mode: ${playerRef.current.getLoadMode()}`
-			);
+			// playerRef.current.configure(
+			// 	JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG) ?? {}
+			// );
 
-			playerRef.current.configure(
-				JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG) ?? {}
-			);
+			const url =
+				'https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8' ||
+				process.env.NEXT_PUBLIC_LIVEPLAYBACK_URL;
 
-			const url = process.env.NEXT_PUBLIC_VODPLAYBACK_URL;
-
-			playerRef.current.load(url).then(() => {
-				console.log(
-					` >> 5. PlayerOutlet (${
-						playerRef.current.time
-					}): Content Loaded, Player Mode: ${playerRef.current.getLoadMode()} :: ${url}`
-				);
-			});
-			// Error's during load need to be handled separately
-
-			console.log(' ');
+			playerRef.current.load(url); // Error's during load need to be handled separately
 
 			// @ts-ignore
 			window.player = playerRef.current;

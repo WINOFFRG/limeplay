@@ -9,14 +9,11 @@ export function PlaybackControl() {
 	useEffect(() => {
 		const spacePlayback = (event: KeyboardEvent) => {
 			if (event.code === 'Space') {
-				// Check if the focused element is a button
 				if (document.activeElement.tagName.toLowerCase() === 'button') {
-					// Toggle the button's behavior (performing a click)
-					document.activeElement.click();
+					(document.activeElement as HTMLElement).click();
 				} else {
 					togglePlayback();
 				}
-				// Prevent the default Space key behavior (scrolling down the page)
 				event.preventDefault();
 			}
 		};
