@@ -18,7 +18,7 @@ export function usePiP({
 	onResize,
 }: UsePiPConfig = {}) {
 	const { playbackRef, playerRef } = useLimeplay();
-	const playback = playbackRef.current;
+	const playback = playbackRef.current as HTMLVideoElement;
 	const player = playerRef.current;
 	const [isPiPActive, setIsPiPActive, isPiPActiveRef] = useStateRef(false);
 	const [isPiPSupported, setIsPiPSupported] = useState(false);
@@ -35,7 +35,7 @@ export function usePiP({
 
 	const togglePiP = async () => {
 		if (!document.pictureInPictureElement) {
-			playbackRef.current
+			playback
 				.requestPictureInPicture()
 				.then((_pipWindow) => {
 					setPipWindow(_pipWindow);

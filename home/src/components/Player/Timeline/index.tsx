@@ -1,17 +1,11 @@
-import {
-	useLive,
-	useTimeline,
-	useTimelineDrag,
-} from '@limeplay/core/src/hooks';
-import { useRef, useCallback, memo, useMemo } from 'react';
+import { useTimeline, useTimelineDrag } from '@limeplay/core/src/hooks';
+import { useRef } from 'react';
 
 import * as Slider from '@radix-ui/react-slider';
 import { useLimeplay } from '@limeplay/core';
-import { throttle } from 'lodash';
 import { buildTimeString } from './utils';
 import useStyles from './styles';
 import { CurrentTime } from './CurrentTime';
-import { BufferRangeBar } from './Buffer';
 
 type OnSliderHandlerProps = {
 	min: number;
@@ -29,7 +23,6 @@ export function TimelineSlider() {
 	const elementRef = useRef<HTMLDivElement>(null);
 
 	const { playbackRef, playerRef } = useLimeplay();
-	const playback = playbackRef.current;
 	const player = playerRef.current;
 
 	const {
@@ -60,6 +53,8 @@ export function TimelineSlider() {
 		onSlideEnd: updateCurrentTime,
 		ref: elementRef,
 	});
+
+	console.log({ currentTime, value, isSliding, seekRange, duration });
 
 	return (
 		<div className={classes.timelineWrrapper}>

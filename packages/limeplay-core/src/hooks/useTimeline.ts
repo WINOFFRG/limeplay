@@ -77,12 +77,7 @@ export function useTimeline({
 					if (durationRef.current !== playback.duration)
 						setDuration(playback.duration);
 
-					if (
-						seekRangeRef.current.start === 0 &&
-						seekRangeRef.current.end === 0
-					) {
-						setSeekRange(player.seekRange());
-					}
+					setSeekRange(player.seekRange());
 
 					setCurrentTime(playback.currentTime);
 

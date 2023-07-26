@@ -20,7 +20,7 @@ export function useFullScreen({
 	onChange,
 }: UseFullScreenConfig = {}) {
 	const { playbackRef } = useLimeplay();
-	const playback = playbackRef.current;
+	const playback = playbackRef.current as HTMLVideoElement;
 	const [isFullScreen, setIsFullScreen, isFullScreenRef] = useStateRef(false);
 	const [isFullScreenSupported, setIsFullScreenSupported] = useState(false);
 
