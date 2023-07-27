@@ -38,6 +38,13 @@ export function useTimeline({
 		const _seekRange = player.seekRange();
 		time = clamp(time, _seekRange.start, _seekRange.end);
 		playback.currentTime = time;
+
+		/* Even though state updates are managed by events below, but those are in intervals
+			means that can cause a delay in update or when intervals aren't running. So, we
+			update the state directly here and rest work is later done by events, since updating
+			time just affects currentTime state not others. If any more will do same for them!
+		*/
+
 		setCurrentTime(time);
 	}, []);
 

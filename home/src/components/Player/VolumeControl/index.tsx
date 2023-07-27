@@ -1,22 +1,46 @@
 import * as Slider from '@radix-ui/react-slider';
-import { useLimeplay, useVolume } from '@limeplay/core';
+import { useTimelineDrag, useVolume } from '@limeplay/core';
 import { Flex } from '@mantine/core';
+import { useRef } from 'react';
 import useStyles from './styles';
 import { MuteIcon, UnmuteIcon, VolumeHalf } from '../Icons/Icons';
 import { IconButton } from '@/components/common/Buttons';
+import { OnSliderHandlerProps } from '../Timeline';
 
-export function VolumeSlider({ volume }: { volume: number }) {
+export function VolumeSlider({
+	volume,
+	updateVolume,
+}: {
+	volume: number;
+	updateVolume: (value: number) => void;
+}) {
 	const { classes } = useStyles();
-	const { playbackRef } = useLimeplay();
+	const elementRef = useRef<HTMLDivElement>(null);
+
+	const config: OnSliderHandlerProps = {
+		min: 0,
+		max: 1,
+		step: 0.1,
+		skipSize: 0.5,
+		orientation: 'horizontal',
+		disabled: false,
+		dir: 'ltr',
+		inverted: false,
+	};
+
+	const { isSliding, value } = useTimelineDrag({
+		sliderHandlerConfig: config,
+		onSlide: updateVolume,
+		ref: elementRef,
+		initialValue: volume,
+	});
 
 	return (
 		<Slider.Root
 			tabIndex={0}
-			value={[volume]}
+			value={[value]}
+			ref={elementRef}
 			className={classes.sliderRoot}
-			onValueChange={(e) => {
-				[playbackRef.current.volume] = e;
-			}}
 			min={0}
 			max={1}
 			step={0.05}
@@ -36,7 +60,7 @@ function VolumeIcon({ volume, muted }: { volume: number; muted: boolean }) {
 }
 
 export default function VolumeControl() {
-	const { muted, volume, toggleMute } = useVolume();
+	const { muted, volume, toggleMute, updateCurrentVolume } = useVolume();
 
 	return (
 		<Flex gap="xs">
@@ -47,7 +71,7 @@ export default function VolumeControl() {
 			>
 				<VolumeIcon volume={volume} muted={muted} />
 			</IconButton>
-			<VolumeSlider volume={volume} />
+			<VolumeSlider volume={volume} updateVolume={updateCurrentVolume} />
 		</Flex>
 	);
 }

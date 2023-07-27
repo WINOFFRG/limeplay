@@ -7,7 +7,7 @@ export interface UseQualityConfig {
 	safeMargin?: number;
 }
 
-export function useQuality({
+export function useVariantTracks({
 	clearBufferOnChange = 'auto',
 	safeMargin = 0,
 }: UseQualityConfig) {
@@ -63,7 +63,7 @@ export function useQuality({
 				);
 			}
 		},
-		[clearBufferOnChange, safeMargin]
+		[clearBufferOnChange, safeMargin, setIsAuto]
 	);
 
 	const updateQualityHandler = useCallback(() => {
@@ -76,15 +76,19 @@ export function useQuality({
 		}
 
 		if (currSelectedTrack) {
-			currTracks = currTracks.filter((track, idx) => {
-				const otherIdx = player.isAudioOnly()
-					? currTracks.findIndex(
-							(t) => t.bandwidth === track.bandwidth
-					  )
-					: currTracks.findIndex((t) => t.height === track.height);
-				return otherIdx === idx;
-			});
+			currTracks = currTracks.filter(
+				(track) =>
+					track.language === currSelectedTrack.language &&
+					track.channelsCount === currSelectedTrack.channelsCount
+			);
 		}
+
+		currTracks = currTracks.filter((track, idx) => {
+			const otherIdx = player.isAudioOnly()
+				? currTracks.findIndex((t) => t.bandwidth === track.bandwidth)
+				: currTracks.findIndex((t) => t.height === track.height);
+			return otherIdx === idx;
+		});
 
 		if (player.isAudioOnly()) {
 			currTracks.sort((a, b) => a.bandwidth - b.bandwidth);
@@ -106,7 +110,7 @@ export function useQuality({
 			updateQualityHandler();
 			setIsAuto(_config.abr.enabled);
 		}
-	}, [updateQualityHandler, loadMode.current]);
+	}, [updateQualityHandler, loadMode.current, setIsAuto]);
 
 	useEffect(() => {
 		const events = [
