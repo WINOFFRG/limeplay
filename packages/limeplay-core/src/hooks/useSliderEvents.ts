@@ -1,6 +1,6 @@
-import { FullGestureState, useDrag } from '@use-gesture/react';
-import { clamp } from 'lodash';
-import { useState } from 'react';
+import { FullGestureState, useDrag, useGesture } from '@use-gesture/react';
+import { clamp, min } from 'lodash';
+import { useCallback, useState } from 'react';
 
 interface SliderHandlerConfig {
 	min: number;
@@ -16,21 +16,30 @@ interface SliderHandlerConfig {
 interface UseTimelineSliderConfig {
 	sliderHandlerConfig: SliderHandlerConfig;
 	ref: React.RefObject<HTMLElement>;
-	onSlideStart?: (value: number) => void;
-	onSlide?: (value: number) => void;
-	onSlideEnd?: (value: number) => void;
 	initialValue?: number;
+	onDragStart?: (value: number) => void;
+	onDrag?: (value: number) => void;
+	onDragEnd?: (value: number) => void;
+	onPointerEnter?: () => void;
+	onPointerMove?: (value: number) => void;
+	onPointerLeave?: () => void;
 }
 
-export function useTimelineDrag({
+export function useSliderEvents({
 	sliderHandlerConfig,
 	ref,
-	onSlideStart,
-	onSlide,
-	onSlideEnd,
 	initialValue = 0,
+	onDragStart,
+	onDrag,
+	onDragEnd,
+	onPointerEnter,
+	onPointerMove,
+	onPointerLeave,
 }: UseTimelineSliderConfig) {
 	const [isSliding, setIsSliding] = useState(false);
+	const [isHovering, setIsHovering] = useState(false);
+	const [isInside, setIsInside] = useState(false);
+	const [isKeying, setIsKeying] = useState(false);
 	const [value, setValue] = useState(initialValue);
 	const { disabled } = sliderHandlerConfig;
 
@@ -39,9 +48,26 @@ export function useTimelineDrag({
 		active,
 		xy: [ox, oy],
 		event,
+		moving,
+		dragging,
+		hovering,
 		ctrlKey,
 		shiftKey,
-	}: FullGestureState<'drag'>) => {
+		values,
+		overflow,
+		movement,
+		offset,
+	}: FullGestureState<'drag' | 'move' | 'hover'>) => {
+		// console.log({
+		// 	type,
+		// 	moving,
+		// 	dragging,
+		// 	hovering,
+		// 	values,
+		// 	offset,
+		// 	ox,
+		// });
+
 		const {
 			min,
 			max,
@@ -71,13 +97,21 @@ export function useTimelineDrag({
 
 			switch (type) {
 				case 'pointerdown':
-					onSlideStart?.(newValue);
+					onDragStart?.(newValue);
 					break;
-				case 'pointermove':
-					onSlide?.(newValue);
+				case 'pointermove': {
+					onDrag?.(newValue);
+					onPointerMove?.(newValue);
 					break;
+				}
 				case 'pointerup':
-					onSlideEnd?.(newValue);
+					onDragEnd?.(newValue);
+					break;
+				case 'pointerenter':
+					onPointerEnter?.(newValue);
+					break;
+				case 'pointerleave':
+					onPointerLeave?.(newValue);
 					break;
 				default:
 					break;
@@ -109,18 +143,18 @@ export function useTimelineDrag({
 				}
 			}
 
-			switch (event.type) {
-				case 'keydown': {
-					onSlideStart?.(newValue);
-					onSlide?.(newValue);
-					break;
-				}
-				case 'keyup':
-					onSlideEnd?.(newValue);
-					break;
-				default:
-					break;
-			}
+			// switch (event.type) {
+			// 	case 'keydown': {
+			// 		onSlideStart?.(newValue);
+			// 		onSlide?.(newValue);
+			// 		break;
+			// 	}
+			// 	case 'keyup':
+			// 		onSlideEnd?.(newValue);
+			// 		break;
+			// 	default:
+			// 		break;
+			// }
 		}
 
 		newValue = clamp(newValue, min, max);
@@ -130,13 +164,49 @@ export function useTimelineDrag({
 		return newValue;
 	};
 
-	useDrag(dragHandler, {
-		target: ref,
-		enabled: !disabled,
-	});
+	const hoverHandler = useCallback(
+		({ hovering, type }: FullGestureState<'hover'>) => {
+			setIsHovering(hovering);
+
+			// console.log({ type, hovering });
+
+			switch (type) {
+				case 'pointerenter':
+					onPointerEnter?.();
+					break;
+				case 'pointerleave':
+					onPointerLeave?.();
+					break;
+				default:
+					break;
+			}
+		},
+		[onPointerEnter, onPointerLeave]
+	);
+
+	useGesture(
+		{
+			// pointerenter, pointermove, pointerleave
+			onDrag: dragHandler,
+			onMove: hoverHandler,
+			// onHover: hoverHandler,
+		},
+		{
+			target: ref,
+			enabled: !disabled,
+			drag: {
+				bounds: {
+					left: sliderHandlerConfig.min,
+					right: sliderHandlerConfig.max,
+				},
+			},
+		}
+	);
 
 	return {
 		value,
 		isSliding,
+		isHovering,
+		isInside,
 	};
 }

@@ -1,4 +1,8 @@
-import { useTimeline, useTimelineDrag } from '@limeplay/core/src/hooks';
+import {
+	useSliderEvents,
+	useTimeline,
+	useTimelineDrag,
+} from '@limeplay/core/src/hooks';
 import { useRef } from 'react';
 
 import * as Slider from '@radix-ui/react-slider';
@@ -6,8 +10,9 @@ import { useLimeplay } from '@limeplay/core';
 import { buildTimeString } from './utils';
 import useStyles from './styles';
 import { CurrentTime } from './CurrentTime';
+import { HoverContainer } from './HoverContainer';
 
-type OnSliderHandlerProps = {
+export type OnSliderHandlerProps = {
 	min: number;
 	max: number;
 	step: number;
@@ -21,6 +26,7 @@ type OnSliderHandlerProps = {
 export function TimelineSlider() {
 	const { classes } = useStyles();
 	const elementRef = useRef<HTMLDivElement>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
 
 	const { playbackRef, playerRef } = useLimeplay();
 	const player = playerRef.current;
@@ -47,14 +53,14 @@ export function TimelineSlider() {
 		inverted: false,
 	};
 
-	const { isSliding, value } = useTimelineDrag({
+	const { isSliding, value } = useSliderEvents({
 		sliderHandlerConfig: config,
-		onSlideEnd: updateCurrentTime,
+		onDragEnd: updateCurrentTime,
 		ref: elementRef,
 	});
 
 	return (
-		<div className={classes.timelineWrrapper}>
+		<div className={classes.timelineWrrapper} ref={containerRef}>
 			<CurrentTime
 				currentTime={currentTime}
 				duration={duration}
@@ -79,11 +85,7 @@ export function TimelineSlider() {
 					tabIndex={0}
 					className={classes.timelineSlider__PlayHead}
 				/>
-				{/* <MemoizedHoverContainer
-					forwardRef={elementRef}
-					playback={playback}
-					player={player}
-				/> */}
+				<HoverContainer sliderRef={elementRef} sliderConfig={config} />
 			</Slider.Root>
 			<span>{buildTimeString(duration, duration > 3600)}</span>
 		</div>

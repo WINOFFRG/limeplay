@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { clamp } from 'lodash';
 import { useStateRef } from '../utils';
 import { useLimeplay } from '../components';
 
@@ -12,12 +13,12 @@ export interface UseVolumeConfig {
 }
 
 export function useVolume({
-	initialVolume = 1,
+	initialVolume, // Do not provide default value as playback.volume will be used
 	syncMuteState = true,
 }: UseVolumeConfig = {}) {
 	const { playbackRef } = useLimeplay();
 	const playback = playbackRef.current;
-	const [volume, setVolume] = useState(initialVolume);
+	const [volume, setVolume] = useState(initialVolume ?? playback.volume);
 	const [muted, setMuted, mutedRef] = useStateRef(playback.muted);
 	const [lastVolume, setLastVolume, lastVolumeRef] =
 		useStateRef(initialVolume);
@@ -25,6 +26,12 @@ export function useVolume({
 	const toggleMute = () => {
 		playback.muted = !playback.muted;
 	};
+
+	const updateCurrentVolume = useCallback((vol: number) => {
+		if (playback.readyState === 0 || Number.isNaN(vol)) return;
+		vol = clamp(vol, 0, 1);
+		playback.volume = vol;
+	}, []);
 
 	useEffect(() => {
 		const volumeEventHandler = () => {
@@ -87,14 +94,11 @@ export function useVolume({
 		};
 	}, [syncMuteState]);
 
-	useEffect(() => {
-		playback.volume = playback.muted ? 0 : initialVolume || playback.volume;
-	}, [initialVolume]);
-
 	return {
 		volume,
 		muted,
 		lastVolume,
 		toggleMute,
+		updateCurrentVolume,
 	} as const;
 }
