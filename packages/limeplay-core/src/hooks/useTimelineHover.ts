@@ -1,4 +1,10 @@
-import { FullGestureState, useDrag } from '@use-gesture/react';
+import {
+	FullGestureState,
+	useDrag,
+	useGesture,
+	useHover,
+	useMove,
+} from '@use-gesture/react';
 import { clamp } from 'lodash';
 import { useState } from 'react';
 
@@ -13,25 +19,24 @@ interface SliderHandlerConfig {
 	skipStep?: number;
 }
 
-interface UseTimelineSliderConfig {
+interface UseTimelineSliderHoverConfig {
 	sliderHandlerConfig: SliderHandlerConfig;
 	ref: React.RefObject<HTMLElement>;
 	onSlideStart?: (value: number) => void;
 	onSlide?: (value: number) => void;
 	onSlideEnd?: (value: number) => void;
-	initialValue?: number;
 }
 
-export function useTimelineDrag({
+export function useTimelineHover({
 	sliderHandlerConfig,
 	ref,
 	onSlideStart,
 	onSlide,
 	onSlideEnd,
-	initialValue = 0,
-}: UseTimelineSliderConfig) {
-	const [isSliding, setIsSliding] = useState(false);
-	const [value, setValue] = useState(initialValue);
+}: UseTimelineSliderHoverConfig) {
+	const [isHovering, setIsHovering] = useState(false);
+	const [isMoving, setIsMoving] = useState(false);
+	const [value, setValue] = useState(0);
 	const { disabled } = sliderHandlerConfig;
 
 	const dragHandler = ({
@@ -41,7 +46,7 @@ export function useTimelineDrag({
 		event,
 		ctrlKey,
 		shiftKey,
-	}: FullGestureState<'drag'>) => {
+	}: FullGestureState<'hover'>) => {
 		const {
 			min,
 			max,
@@ -70,7 +75,7 @@ export function useTimelineDrag({
 				newValue = max - newValue + min;
 
 			switch (type) {
-				case 'pointerdown':
+				case 'pointerenter':
 					onSlideStart?.(newValue);
 					break;
 				case 'pointermove':
@@ -84,59 +89,25 @@ export function useTimelineDrag({
 			}
 		}
 
-		if (event instanceof KeyboardEvent) {
-			const isInverted =
-				inverted || (dir === 'rtl' && o9n === 'horizontal');
-			const stepSize =
-				(shiftKey ? skipStep : step) * (isInverted ? -1 : 1);
-
-			if (active) {
-				switch (event.key) {
-					case 'ArrowLeft':
-						newValue -= stepSize;
-						break;
-					case 'ArrowRight':
-						newValue += stepSize;
-						break;
-					case 'ArrowUp':
-						newValue += stepSize;
-						break;
-					case 'ArrowDown':
-						newValue -= stepSize;
-						break;
-					default:
-						break;
-				}
-			}
-
-			switch (event.type) {
-				case 'keydown': {
-					onSlideStart?.(newValue);
-					onSlide?.(newValue);
-					break;
-				}
-				case 'keyup':
-					onSlideEnd?.(newValue);
-					break;
-				default:
-					break;
-			}
-		}
-
 		newValue = clamp(newValue, min, max);
-		setValue(newValue);
-		setIsSliding(active);
 
+		setValue(newValue);
 		return newValue;
 	};
 
-	useDrag(dragHandler, {
-		target: ref,
-		enabled: !disabled,
-	});
+	useGesture(
+		{
+			onHover: dragHandler,
+			onMove: dragHandler,
+		},
+		{
+			target: ref,
+			enabled: !disabled,
+		}
+	);
 
 	return {
 		value,
-		isSliding,
+		isHovering,
 	};
 }

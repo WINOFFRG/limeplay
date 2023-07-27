@@ -1,4 +1,4 @@
-import { useQuality } from '@limeplay/core';
+import { useVariantTracks } from '@limeplay/core';
 import { ActionIcon, Box, Menu, Text, createStyles } from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
 import { VideoQuality } from '../Icons/Icons';
@@ -19,7 +19,7 @@ function SelectIcon({ shown }: { shown: boolean }) {
 
 export function QualityMenu() {
 	const { isAuto, selectedTrack, tracks, selectTrack, setAutoMode } =
-		useQuality({
+		useVariantTracks({
 			clearBufferOnChange: 'auto',
 		});
 
