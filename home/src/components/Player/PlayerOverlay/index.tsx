@@ -20,6 +20,7 @@ export function PlayerOutlet() {
 			return `Shaka Player failed with an Error: ${event.message}`;
 		};
 
+		console.log('[OVERLAY] : Error', onErrorHandler(error));
 		// throw new Error(onErrorHandler(error));
 	}
 
@@ -58,11 +59,11 @@ export function PlayerOutlet() {
 			window.player = playerRef.current;
 			setPlayer(playerRef.current);
 			setPlayback(playbackRef.current);
-
-			return () => {
-				console.log('[OVERLAY] : Unmounting PlayerOutlet');
-			};
 		}
+
+		return () => {
+			console.log('[OVERLAY] : Unmounting PlayerOutlet');
+		};
 	}, [isLoaded, setPlayback, setPlayer]);
 
 	if (!isLoaded) return null;
