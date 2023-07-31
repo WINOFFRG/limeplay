@@ -20,8 +20,18 @@ interface HookProps {
 
 type HTMLMediaElementEvents = Array<keyof HTMLMediaElementEventMap>;
 
+type HTMLVideoElementEvents = Array<keyof HTMLVideoElementEventMap>;
+
 type ShakaPlayerEvents = Array<
-	'loading' | 'buffering' | 'trackschanged' | 'manifestparsed' | 'loaded'
+	| 'loading'
+	| 'buffering'
+	| 'trackschanged'
+	| 'manifestparsed'
+	| 'loaded'
+	| 'trackschanged'
+	| 'abrstatuschanged'
+	| 'variantchanged'
+	| 'adaptation'
 >;
 
 type UseGestureEvents = PointerEvent | MouseEvent | TouchEvent | KeyboardEvent;
@@ -31,3 +41,14 @@ interface CreateShakaPlayerProps {
 }
 
 type CreatePlayer = (props: CreateShakaPlayerProps) => shaka.Player;
+
+declare module 'o9n' {
+	export let orientation: ScreenOrientation;
+}
+
+interface HTMLVideoElement {
+	webkitExitFullscreen(): void;
+	webkitEnterFullscreen(): void;
+	webkitSupportsFullscreen: boolean;
+	webkitDisplayingFullscreen: boolean;
+}

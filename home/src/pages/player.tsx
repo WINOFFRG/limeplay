@@ -1,3 +1,4 @@
+import { Flex } from '@mantine/core';
 import dynamic from 'next/dynamic';
 
 const LimeplayPlayer = dynamic(() => import('@/components/Player'), {
@@ -6,14 +7,8 @@ const LimeplayPlayer = dynamic(() => import('@/components/Player'), {
 
 export default function Player() {
 	return (
-		<div
-			style={{
-				width: '100vw',
-				height: '100vh',
-			}}
-			id="limeplay-player"
-		>
+		<Flex w="100vw" h="100vh" id="limeplay-player" align="center">
 			<LimeplayPlayer />
-		</div>
+		</Flex>
 	);
 }

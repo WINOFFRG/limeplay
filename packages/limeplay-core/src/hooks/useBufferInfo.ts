@@ -1,11 +1,9 @@
-// @ts-nocheck
-import { useCallback, useEffect } from 'react';
-import { StateCreator } from 'zustand';
-import { useInterval } from '../utils/use-interval';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getPercentage } from '../utils';
-import { useLimeplayStore } from '../store';
+import { useLimeplay } from '../components';
 
 export interface UseBufferConfig {
+	events?: ShakaPlayerEvents;
 	updateInterval?: number;
 }
 
@@ -16,56 +14,81 @@ type Buffer = {
 	startPosition: number;
 };
 
-export interface BufferSlice {
-	bufferInfo: Buffer[];
-	setBufferInfo: (bufferInfo: Buffer[]) => void;
-}
-
-export function useBufferInfo() {
-	const UPDATE_INTERVAL = 2000;
-
-	const player = useLimeplayStore((state) => state.player);
-	const setBufferInfo = useLimeplayStore((state) => state.setBufferInfo);
-
-	const callbackFn = useCallback(() => {
-		const { total: buffer } = player.getBufferedInfo();
-		const seekRange = player.seekRange();
-		const duration = seekRange.end - seekRange.start;
-
-		if (buffer) {
-			const bufferSegments = buffer.map((item) => {
-				const width = getPercentage(item.end - item.start, duration);
-				const startPosition = getPercentage(
-					item.start - seekRange.start, // Subtract seekRange.start in case of live stream
-					duration
-				);
-
-				return {
-					start: item.start,
-					end: item.end,
-					width,
-					startPosition,
-				};
-			});
-
-			setBufferInfo(bufferSegments);
-		} else {
-			setBufferInfo([]);
-		}
-	}, [player]);
-
-	const { start, stop } = useInterval(callbackFn, UPDATE_INTERVAL);
+export function useBufferInfo({ updateInterval = 1000 }: UseBufferConfig = {}) {
+	const [bufferInfo, setBufferInfo] = useState<Buffer[]>([]);
+	const currentTimerId = useRef<number>(-1);
+	const { playbackRef, playerRef } = useLimeplay();
+	const player = playerRef.current;
+	const playback = playbackRef.current;
 
 	useEffect(() => {
-		start();
+		const updateSeekHandler = () => {
+			clearInterval(currentTimerId.current);
+
+			currentTimerId.current = window.setInterval(() => {
+				const [buffer] = player.getBufferedInfo().total;
+
+				const seekRange = player.seekRange();
+				const seekRangeSize = seekRange.end - seekRange.start;
+
+				if (player.getBufferFullness() && buffer) {
+					const clampedBufferStart = Math.max(
+						buffer.start,
+						seekRange.start
+					);
+
+					const clampedBufferEnd = Math.min(
+						buffer.end,
+						seekRange.end
+					);
+
+					const bufferStartDistance =
+						clampedBufferStart - seekRange.start;
+					const bufferEndDistance =
+						clampedBufferEnd - seekRange.start;
+
+					const bufferWidth = getPercentage(
+						bufferEndDistance - bufferStartDistance,
+						seekRangeSize
+					);
+
+					const bufferStartPosition = getPercentage(
+						bufferStartDistance,
+						seekRangeSize
+					);
+
+					setBufferInfo([
+						{
+							start: bufferStartDistance,
+							end: bufferEndDistance,
+							width: bufferWidth,
+							startPosition: bufferStartPosition,
+						},
+					]);
+				}
+			}, updateInterval);
+		};
+
+		const events = ['trackschanged', 'manifestparsed'];
+
+		events.forEach((event) => {
+			playback.addEventListener(event, updateSeekHandler);
+		});
+
+		updateSeekHandler();
 
 		return () => {
-			stop();
-		};
-	}, []);
-}
+			if (playback) {
+				events.forEach((event) => {
+					playback.removeEventListener(event, updateSeekHandler);
+				});
+			}
 
-export const createBufferSlice: StateCreator<BufferSlice> = (set) => ({
-	bufferInfo: [],
-	setBufferInfo: (bufferInfo: Buffer[]) => set({ bufferInfo }),
-});
+			clearInterval(currentTimerId.current);
+		};
+	}, [updateInterval]);
+
+	return {
+		bufferInfo,
+	};
+}

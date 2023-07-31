@@ -11,10 +11,14 @@
 		"access": "public"
 	},
 	"dependencies": {
+		"@use-gesture/react": "^10.2.25",
+		"google-closure-library": "^20221102.0.0",
 		"lodash": "^4.17.21",
+		"loglevel": "^1.8.1",
+		"pino": "^8.14.1",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
-		"shaka-player": ">=3.0.0",
+		"shaka-player": "^4.3.7",
 		"zustand": "^4.3.8"
 	},
 	"optionalDependencies": {
