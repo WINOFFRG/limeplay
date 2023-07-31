@@ -26,8 +26,8 @@ export default function Player() {
 					<video
 						controls={false}
 						// playsInline
-						// autoPlay
 						className={classes.videoElement}
+						poster="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/animated.webp?start=268&end=278&width=640"
 					/>
 				</MediaOutlet>
 			</ErrorBoundary>

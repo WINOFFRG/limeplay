@@ -24,7 +24,7 @@ export function languageParser(locale: string) {
 		case 'mul':
 			return 'Multiple Languages';
 		case 'und':
-			return 'Undetermined';
+			return 'Default';
 		case 'zxx':
 			return 'Not applicable';
 		default:

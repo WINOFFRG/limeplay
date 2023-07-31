@@ -53,7 +53,13 @@ export function PlayerOutlet() {
 				'https://storage.googleapis.com/shaka-demo-assets/tos-surround/dash.mpd' ??
 				process.env.NEXT_PUBLIC_LIVEPLAYBACK_URL;
 
-			playerRef.current.load(url); // Error's during load need to be handled separately
+			playerRef.current.load(url).then(() => {
+				playerRef.current.addTextTrackAsync(
+					'https://www.vidstack.io/media/sprite-fight.vtt',
+					'en',
+					'subtitles'
+				);
+			}); // Error's during load need to be handled separately
 
 			// @ts-ignore
 			window.player = playerRef.current;
