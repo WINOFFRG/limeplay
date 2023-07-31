@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import mux from 'mux.js';
 import { useLimeplay, useShakaPlayer } from '@limeplay/core';
 import shaka from 'shaka-player';
+import { merge } from 'lodash';
 import ControlsOverlay from '../ControlsOverlay';
 import useStyles from './styles';
 import PlayerLoader from '../Loader';
@@ -23,14 +24,27 @@ export function PlayerOutlet() {
 	}
 
 	useEffect(() => {
+		console.log('[OVERLAY] : Mounting PlayerOutlet');
+
 		if (playerRef.current && playerRef.current.getLoadMode() !== 0) {
 			if (!window.muxjs) {
 				window.muxjs = mux;
 			}
 
-			playerRef.current.configure(
-				JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG) ?? {}
+			const localConfig = {
+				abr: { enabled: true },
+				manifest: { dash: { ignoreMinBufferTime: true } },
+				streaming: {
+					useNativeHlsOnSafari: true,
+				},
+			};
+
+			const mergedConfig = merge(
+				localConfig,
+				JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG ?? '{}')
 			);
+
+			playerRef.current.configure(mergedConfig);
 
 			const url =
 				// 'http://localhost:3000/manifest2.mpd' ??
@@ -44,6 +58,10 @@ export function PlayerOutlet() {
 			window.player = playerRef.current;
 			setPlayer(playerRef.current);
 			setPlayback(playbackRef.current);
+
+			return () => {
+				console.log('[OVERLAY] : Unmounting PlayerOutlet');
+			};
 		}
 	}, [isLoaded, setPlayback, setPlayer]);
 
@@ -65,7 +83,7 @@ function CaptionsContainer() {
 
 	useEffect(() => {
 		if (playback && container && player) {
-			console.log('CONFIGURING!!!');
+			console.log('CONFIGURING CAPTIONS!!!');
 
 			const textDisplay = new shaka.text.UITextDisplayer(
 				playback,
@@ -77,7 +95,6 @@ function CaptionsContainer() {
 			player.configure('streaming.alwaysStreamText', true);
 
 			player.setVideoContainer(container);
-			console.log(player.getConfiguration(), textDisplay);
 
 			const textFactory = player.getConfiguration().textDisplayFactory();
 			textFactory.setTextVisibility(true);
