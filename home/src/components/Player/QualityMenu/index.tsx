@@ -1,5 +1,12 @@
 import { useAudioTracks, useVideoTracks } from '@limeplay/core';
-import { ActionIcon, Box, Menu, Text, createStyles } from '@mantine/core';
+import {
+	ActionIcon,
+	Box,
+	Menu,
+	Text,
+	UnstyledButton,
+	createStyles,
+} from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
 import { VideoQuality } from '../Icons/Icons';
 import { IconButton } from '@/components/common/Buttons';
@@ -28,17 +35,13 @@ export function QualityMenu() {
 	return (
 		<Menu
 			shadow="md"
-			width={160}
 			trigger="hover"
-			offset={36}
-			withArrow
 			transitionProps={{ transition: 'fade', duration: 100 }}
 			closeDelay={200}
 			styles={{
 				dropdown: {
 					background: 'rgba(0,0,0,0.64)',
 					backdropFilter: 'blur(10px)',
-					marginLeft: -24,
 				},
 				arrow: {
 					background: 'rgba(0,0,0,0.64)',
@@ -47,9 +50,19 @@ export function QualityMenu() {
 			}}
 		>
 			<Menu.Target>
-				<IconButton aria-label="Select Quality">
+				<UnstyledButton
+					aria-label="Select Quality"
+					display="flex"
+					style={{
+						alignItems: 'center',
+						justifyContent: 'center',
+						gap: 8,
+						padding: 8,
+					}}
+				>
 					<VideoQuality />
-				</IconButton>
+					<Text fw={500}>Quality</Text>
+				</UnstyledButton>
 			</Menu.Target>
 			<Menu.Dropdown
 				className={cx(classes.backgroundStyle, classes.backgroundStyle)}

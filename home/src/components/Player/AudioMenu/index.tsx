@@ -1,5 +1,13 @@
 import { useAudioTracks, useTextTracks } from '@limeplay/core';
-import { Box, Flex, Menu, Text, createStyles } from '@mantine/core';
+import {
+	Box,
+	Button,
+	Flex,
+	Menu,
+	Text,
+	UnstyledButton,
+	createStyles,
+} from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
 import { useRef, useState } from 'react';
 import { SubtitleIcons, VideoQuality } from '../Icons/Icons';
@@ -20,8 +28,6 @@ function SelectIcon({ shown }: { shown: boolean }) {
 
 export function AudioMenu() {
 	const { selectedTrack, tracks, selectTrack } = useAudioTracks();
-	const subtitleRef = useRef(document.getElementById('shaka-text-container'));
-	const [container, setContainer] = useState(null);
 
 	const {
 		selectedTrack: selectedSubtitleTracks,
@@ -29,27 +35,21 @@ export function AudioMenu() {
 		selectTrack: selectSubtitleTrack,
 		isVisible,
 		toggleVisibility,
-	} = useTextTracks({
-		ref: subtitleRef,
-	});
+	} = useTextTracks();
 
 	const { classes, cx } = useStyles();
 
 	return (
 		<Menu
 			shadow="md"
-			opened
-			// width={160}
 			trigger="hover"
-			offset={60}
-			withArrow
 			transitionProps={{ transition: 'fade', duration: 100 }}
 			closeDelay={200}
 			styles={{
 				dropdown: {
 					background: 'rgba(0,0,0,0.64)',
 					backdropFilter: 'blur(10px)',
-					marginLeft: -24,
+					// marginLeft: -24,
 				},
 				arrow: {
 					background: 'rgba(0,0,0,0.64)',
@@ -58,9 +58,18 @@ export function AudioMenu() {
 			}}
 		>
 			<Menu.Target>
-				<IconButton aria-label="Select Audio">
+				<UnstyledButton
+					display="flex"
+					style={{
+						alignItems: 'center',
+						justifyContent: 'center',
+						gap: 8,
+						padding: 8,
+					}}
+				>
 					<SubtitleIcons />
-				</IconButton>
+					<Text fw={500}>Audio & Subtitles</Text>
+				</UnstyledButton>
 			</Menu.Target>
 			<Menu.Dropdown
 				className={cx(classes.backgroundStyle, classes.backgroundStyle)}

@@ -57,6 +57,8 @@ export function useTimelineHover({
 			inverted = false,
 		} = sliderHandlerConfig;
 
+		setIsHovering(active);
+
 		const { height, width, top, left } =
 			ref.current.getBoundingClientRect();
 

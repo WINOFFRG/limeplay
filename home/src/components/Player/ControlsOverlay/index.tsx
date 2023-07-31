@@ -1,4 +1,12 @@
-import { Flex, Group, Space, Stack } from '@mantine/core';
+import {
+	ActionIcon,
+	Button,
+	Flex,
+	Group,
+	Space,
+	Stack,
+	Text,
+} from '@mantine/core';
 import VolumeControl from '../VolumeControl';
 import useStyles from './styles';
 import { PlaybackControl } from '../PlaybackControl';
@@ -24,9 +32,9 @@ export default function ControlsOverlay() {
 		>
 			<Group position="apart">
 				<Flex />
-				<Flex>
-					<PipControl />
-					<FullscreenControl />
+				<Flex gap="xl">
+					<QualityMenu />
+					<AudioMenu />
 				</Flex>
 			</Group>
 			<Stack>
@@ -37,9 +45,9 @@ export default function ControlsOverlay() {
 						<SeekControl />
 						<VolumeControl />
 					</Flex>
-					<Flex gap="xl">
-						<AudioMenu />
-						<QualityMenu />
+					<Flex>
+						<PipControl />
+						<FullscreenControl />
 					</Flex>
 				</Group>
 			</Stack>

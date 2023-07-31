@@ -1,4 +1,3 @@
-import { MotionConfig } from 'framer-motion';
 import { Text, Title } from '@mantine/core';
 import { Layout } from '@/components/Layout/Layout';
 import { MetaTags } from '@/components/Layout/MetaTags';

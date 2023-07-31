@@ -1,5 +1,6 @@
 import { useFullScreen, useOrientation } from '@limeplay/core';
 import { useRef } from 'react';
+import { useHotkeys } from '@mantine/hooks';
 import { IconButton } from '@/components/common/Buttons';
 import { FullscreenEnter, FullscreenExit } from '../Icons/Icons';
 
@@ -35,6 +36,8 @@ export function FullscreenControl() {
 			console.error('Hook: ', error);
 		},
 	});
+
+	useHotkeys([['f', () => toggleFullScreen()]]);
 
 	return (
 		<IconButton
