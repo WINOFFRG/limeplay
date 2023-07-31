@@ -6,7 +6,11 @@ import {
 	Space,
 	Stack,
 	Text,
+	UnstyledButton,
 } from '@mantine/core';
+import { useRouter } from 'next/router';
+import { useMemo } from 'react';
+import { useLimeplay } from '@limeplay/core';
 import VolumeControl from '../VolumeControl';
 import useStyles from './styles';
 import { PlaybackControl } from '../PlaybackControl';
@@ -16,6 +20,7 @@ import { FullscreenControl } from '../FullScreenControl';
 import { TimelineSlider } from '../Timeline';
 import { PipControl } from '../PipControl';
 import { AudioMenu } from '../AudioMenu';
+import { MaximizeIcon, MinimizeIcon } from '../Icons/Icons';
 
 export default function ControlsOverlay() {
 	const { classes } = useStyles();
@@ -45,12 +50,45 @@ export default function ControlsOverlay() {
 						<SeekControl />
 						<VolumeControl />
 					</Flex>
-					<Flex>
+					<Flex gap="sm">
 						<PipControl />
 						<FullscreenControl />
+						<RedirectControl />
 					</Flex>
 				</Group>
 			</Stack>
 		</Stack>
+	);
+}
+
+function RedirectControl() {
+	const router = useRouter();
+	const isHomePage = useMemo(
+		() => router.pathname === '/',
+		[router.pathname]
+	);
+
+	const { playbackRef } = useLimeplay();
+
+	const togglePage = () => {
+		const time = playbackRef.current.currentTime;
+
+		if (!isHomePage) {
+			router.push({
+				pathname: '/',
+				query: { t: time },
+			});
+		} else {
+			router.push({
+				pathname: '/player',
+				query: { t: time },
+			});
+		}
+	};
+
+	return (
+		<UnstyledButton onClick={togglePage}>
+			{isHomePage ? <MaximizeIcon /> : <MinimizeIcon />}
+		</UnstyledButton>
 	);
 }
