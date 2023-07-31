@@ -2,15 +2,15 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStateRef } from '../utils';
 import { useLimeplay } from '../components';
 
-export interface UseQualityConfig {
+export interface UseVideoTracksConfig {
 	clearBufferOnChange?: 'auto' | boolean;
 	safeMargin?: number;
 }
 
-export function useVariantTracks({
+export function useVideoTracks({
 	clearBufferOnChange = 'auto',
 	safeMargin = 0,
-}: UseQualityConfig) {
+}: UseVideoTracksConfig) {
 	const { playerRef } = useLimeplay();
 	const player = playerRef.current;
 	const loadMode = useRef(player?.getLoadMode());
@@ -75,6 +75,7 @@ export function useVariantTracks({
 			setIsAuto(currConfig.abr.enabled);
 		}
 
+		// TODO: Check if channelCount check is needed? Or shoudl we switch to a better channel if available?
 		if (currSelectedTrack) {
 			currTracks = currTracks.filter(
 				(track) =>

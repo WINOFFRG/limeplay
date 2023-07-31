@@ -46,7 +46,6 @@ export function TimelineSlider() {
 		min: seekRange.start,
 		max: seekRange.end,
 		step: 5,
-		skipSize: 30,
 		orientation: 'horizontal',
 		disabled: false,
 		dir: 'ltr',

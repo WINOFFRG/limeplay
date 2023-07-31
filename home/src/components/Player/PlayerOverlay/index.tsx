@@ -1,13 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import mux from 'mux.js';
-import { useShakaPlayer } from '@limeplay/core';
+import { useLimeplay, useShakaPlayer } from '@limeplay/core';
+import shaka from 'shaka-player';
 import ControlsOverlay from '../ControlsOverlay';
 import useStyles from './styles';
 import PlayerLoader from '../Loader';
 
 export function PlayerOutlet() {
 	const { classes } = useStyles();
-	const { playerRef, isLoaded, error } = useShakaPlayer();
+	const { playerRef, isLoaded, error, playbackRef } = useShakaPlayer();
+	const { setPlayback, setPlayer } = useLimeplay();
 
 	if (error) {
 		const onErrorHandler = (event) => {
@@ -17,7 +19,7 @@ export function PlayerOutlet() {
 			return `Shaka Player failed with an Error: ${event.message}`;
 		};
 
-		throw new Error(onErrorHandler(error));
+		// throw new Error(onErrorHandler(error));
 	}
 
 	useEffect(() => {
@@ -26,20 +28,23 @@ export function PlayerOutlet() {
 				window.muxjs = mux;
 			}
 
-			// playerRef.current.configure(
-			// 	JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG) ?? {}
-			// );
+			playerRef.current.configure(
+				JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG) ?? {}
+			);
 
 			const url =
-				'https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8' ||
+				// 'http://localhost:3000/manifest2.mpd' ??
+				// 'https://storage.googleapis.com/shaka-demo-assets/tos-surround/dash.mpd' ??
 				process.env.NEXT_PUBLIC_LIVEPLAYBACK_URL;
 
-			playerRef.current.load(url); // Error's during load need to be handled separately
+			playerRef.current.load(url, 695.528665); // Error's during load need to be handled separately
 
 			// @ts-ignore
 			window.player = playerRef.current;
+			setPlayer(playerRef.current);
+			setPlayback(playbackRef.current);
 		}
-	}, [isLoaded]);
+	}, [isLoaded, setPlayback, setPlayer]);
 
 	if (!isLoaded) return null;
 
@@ -47,6 +52,42 @@ export function PlayerOutlet() {
 		<div className={classes.overlayWrapper}>
 			<PlayerLoader />
 			<ControlsOverlay />
+			<CaptionsContainer />
 		</div>
+	);
+}
+
+function CaptionsContainer() {
+	const { classes } = useStyles();
+	const [container, setContainer] = useState(null);
+	const { player, playback } = useLimeplay();
+
+	useEffect(() => {
+		if (playback && container && player) {
+			console.log('CONFIGURING!!!');
+
+			const textDisplay = new shaka.text.UITextDisplayer(
+				playback,
+				container
+			);
+
+			player.configure('textDisplayFactory', () => textDisplay);
+
+			player.configure('streaming.alwaysStreamText', true);
+
+			player.setVideoContainer(container);
+			console.log(player.getConfiguration(), textDisplay);
+
+			const textFactory = player.getConfiguration().textDisplayFactory();
+			textFactory.setTextVisibility(true);
+		}
+	}, [container, player, playback]);
+
+	return (
+		<div
+			id="cues-container"
+			className={classes.cuesConatiner}
+			ref={setContainer}
+		/>
 	);
 }

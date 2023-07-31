@@ -10,7 +10,8 @@ const useStyles = createStyles((theme) => ({
 		width: '100%',
 		height: '100%',
 		backgroundColor: 'black',
-		// opacity: 0.05,
+		opacity: 1,
+		zIndex: 1,
 	},
 }));
 
@@ -24,8 +25,8 @@ export default function Player() {
 				<MediaOutlet>
 					<video
 						controls={false}
-						playsInline
-						autoPlay
+						// playsInline
+						// autoPlay
 						className={classes.videoElement}
 					/>
 				</MediaOutlet>
