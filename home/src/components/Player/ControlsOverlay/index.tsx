@@ -7,12 +7,21 @@ import { QualityMenu } from '../QualityMenu';
 import { FullscreenControl } from '../FullScreenControl';
 import { TimelineSlider } from '../Timeline';
 import { PipControl } from '../PipControl';
+import { AudioMenu } from '../AudioMenu';
 
 export default function ControlsOverlay() {
 	const { classes } = useStyles();
 
 	return (
-		<Stack justify="space-between" h="100%" p="lg">
+		<Stack
+			justify="space-between"
+			h="100%"
+			p="lg"
+			style={{
+				position: 'relative',
+				zIndex: 10,
+			}}
+		>
 			<Group position="apart">
 				<Flex />
 				<Flex>
@@ -28,7 +37,8 @@ export default function ControlsOverlay() {
 						<SeekControl />
 						<VolumeControl />
 					</Flex>
-					<Flex>
+					<Flex gap="xl">
+						<AudioMenu />
 						<QualityMenu />
 					</Flex>
 				</Group>

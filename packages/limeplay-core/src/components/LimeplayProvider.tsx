@@ -44,7 +44,7 @@ export function LimeplayProvider({ children }: { children: React.ReactNode }) {
 			playback,
 			setPlayback,
 		}),
-		[]
+		[playback, player]
 	);
 
 	return (
