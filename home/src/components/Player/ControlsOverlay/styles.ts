@@ -13,6 +13,7 @@ const useStyles = createStyles((theme) => ({
 		width: '100%',
 		height: '100%',
 		userSelect: 'none',
+		// backgroundColor: 'black',
 	},
 
 	controlsWrapper: {

@@ -1,89 +1,118 @@
-import {
-	useLimeplayStore,
-	useLimeplayStoreAPI,
-} from '@limeplay/core/src/store';
 import { useEffect, useState } from 'react';
-import { useSafeLoad } from '@limeplay/core/src/hooks';
-// @ts-ignore
 import mux from 'mux.js';
-import { useRouter } from 'next/router';
+import { useLimeplay, useShakaPlayer } from '@limeplay/core';
+import shaka from 'shaka-player';
 import { merge } from 'lodash';
 import ControlsOverlay from '../ControlsOverlay';
 import useStyles from './styles';
 import PlayerLoader from '../Loader';
 
-export default function PlayerOverlay() {
-	useSafeLoad();
+export function PlayerOutlet() {
 	const { classes } = useStyles();
-	const playback = useLimeplayStore((state) => state.playback);
-	const player = useLimeplayStore((state) => state.player);
-	const isSafeLoad = useLimeplayStore((state) => state.isSafeLoad);
-	const { getState } = useLimeplayStoreAPI();
-	const router = useRouter();
-	const [error, setError] = useState<string>(null);
-
-	const demoPlabackUrl =
-		'https://embed-cloudfront.wistia.com/deliveries/4a77e940176149046375a5036dbf2f7f01ce3a59.m3u8';
+	const { playerRef, isLoaded, error, playbackRef } = useShakaPlayer();
+	const { setPlayback, setPlayer } = useLimeplay();
 
 	if (error) {
-		throw new Error(error);
+		const onErrorHandler = (event) => {
+			if (event.code && event.severity) {
+				return `Shaka Player failed with an Error Code: ${event.code} :: Severity: ${event.severity}`;
+			}
+			return `Shaka Player failed with an Error: ${event.message}`;
+		};
+
+		console.log('[OVERLAY] : Error', onErrorHandler(error));
+		// throw new Error(onErrorHandler(error));
 	}
 
 	useEffect(() => {
-		if (!window.muxjs) {
-			window.muxjs = mux;
-		}
+		console.log('[OVERLAY] : Mounting PlayerOutlet');
 
-		const onErrorHandler = (event) => {
-			if (event.code && event.severity) {
-				setError(`
-						Shaka Player failed with an Error Code: ${event.code} :: Severity: ${event.severity}
-					`);
-			} else {
-				setError(`
-						Shaka Player failed with an Error: ${event.message}
-					`);
+		if (playerRef.current && playerRef.current.getLoadMode() !== 0) {
+			if (!window.muxjs) {
+				window.muxjs = mux;
 			}
-		};
 
-		if (player && getState().isSafeLoad && player.getLoadMode() === 1) {
-			player.addEventListener('error', onErrorHandler);
-			const playerConfig = merge(
-				player.getConfiguration(),
+			const localConfig = {
+				abr: { enabled: true },
+				manifest: { dash: { ignoreMinBufferTime: true } },
+				streaming: {
+					useNativeHlsOnSafari: true,
+				},
+			};
+
+			const mergedConfig = merge(
+				localConfig,
 				JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG ?? '{}')
 			);
 
-			player.configure(playerConfig);
+			playerRef.current.configure(mergedConfig);
 
-			const tParam = router.query.t;
-			let startTime = 0;
+			const url =
+				// 'http://localhost:3000/manifest2.mpd' ??
+				'https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8' ??
+				'https://storage.googleapis.com/shaka-demo-assets/tos-surround/dash.mpd' ??
+				process.env.NEXT_PUBLIC_LIVEPLAYBACK_URL;
 
-			if (tParam) {
-				startTime = parseInt(tParam as string, 10);
-			}
+			playerRef.current.load(url).then(() => {
+				playerRef.current.addTextTrackAsync(
+					'https://www.vidstack.io/media/sprite-fight.vtt',
+					'en',
+					'subtitles'
+				);
+			}); // Error's during load need to be handled separately
 
-			player
-				.load(
-					process.env.NEXT_PUBLIC_PLAYBACK_URL || demoPlabackUrl,
-					startTime
-				)
-				// Error's during load need to be handled separately
-				.catch(onErrorHandler);
+			// @ts-ignore
+			window.player = playerRef.current;
+			setPlayer(playerRef.current);
+			setPlayback(playbackRef.current);
 		}
 
 		return () => {
-			if (player) {
-				player.removeEventListener('error', onErrorHandler);
-			}
+			console.log('[OVERLAY] : Unmounting PlayerOutlet');
 		};
-	}, [player, playback, isSafeLoad, router]);
+	}, [isLoaded, setPlayback, setPlayer]);
 
-	if (!playback) return null;
+	if (!isLoaded) return null;
 
 	return (
 		<div className={classes.overlayWrapper}>
 			<PlayerLoader />
 			<ControlsOverlay />
+			<CaptionsContainer />
 		</div>
+	);
+}
+
+function CaptionsContainer() {
+	const { classes } = useStyles();
+	const [container, setContainer] = useState(null);
+	const { player, playback } = useLimeplay();
+
+	useEffect(() => {
+		if (playback && container && player) {
+			console.log('CONFIGURING CAPTIONS!!!');
+
+			const textDisplay = new shaka.text.UITextDisplayer(
+				playback,
+				container
+			);
+
+			player.configure('textDisplayFactory', () => textDisplay);
+
+			player.configure('streaming.alwaysStreamText', true);
+
+			player.setVideoContainer(container);
+
+			const textFactory = player.getConfiguration().textDisplayFactory();
+			textFactory.setTextVisibility(true);
+		}
+	}, [container, player, playback]);
+
+	return (
+		<div
+			id="cues-container"
+			className={classes.cuesConatiner}
+			ref={setContainer}
+		/>
 	);
 }

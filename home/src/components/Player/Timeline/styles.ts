@@ -16,11 +16,11 @@ const useStyles = createStyles((theme, _params) => ({
 		userSelect: 'none',
 		boxSizing: 'border-box',
 		position: 'relative',
-		padding: '0 12px',
+		// padding: '0 12px',
 
 		[`@media (max-width: ${em(getBreakpointValue(theme.breakpoints.md))})`]:
 			{
-				padding: '0 8px',
+				// padding: '0 8px',
 			},
 	},
 
@@ -81,7 +81,7 @@ const useStyles = createStyles((theme, _params) => ({
 		position: 'absolute',
 		backgroundColor: '#1db954',
 		borderRadius: '8px',
-		zIndex: 2,
+		zIndex: 0,
 
 		'&[data-orientation="horizontal"]': {
 			height: '100%',
@@ -105,7 +105,8 @@ const useStyles = createStyles((theme, _params) => ({
 		ref: getRef('timelineSlider__Buffer'),
 		position: 'relative',
 		height: '100%',
-		// borderRadius: '2px',
+		borderBottomRightRadius: '2px',
+		borderTopRightRadius: '2px',
 		backgroundColor: 'lightgray',
 		zIndex: 1,
 		transition: 'width 0.2s ease-in-out',

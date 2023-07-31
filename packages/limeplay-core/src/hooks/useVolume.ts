@@ -1,51 +1,53 @@
-import { useEffect } from 'react';
-import { StateCreator } from 'zustand';
-import { useLimeplayStore, useLimeplayStoreAPI } from '../store';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { clamp } from 'lodash';
+import { useStateRef } from '../utils';
+import { useLimeplay } from '../components';
 
 export interface UseVolumeConfig {
 	/**
 	 * HTMLMediaElement events to listen to
 	 * @default Events - ['volumechange']
 	 */
-	events?: HTMLMediaElementEvents;
-
 	initialVolume?: number;
-
 	syncMuteState?: boolean;
 }
 
-export interface VolumeSlice {
-	volume: number;
-	_setVolume: (volume: number) => void;
-	muted: boolean;
-	_setMuted: (muted: boolean) => void;
-	lastVolume: number;
-	_setLastVolume: (lastVolume: number) => void;
-}
-
 export function useVolume({
-	initialVolume = 1,
-	events,
+	initialVolume, // Do not provide default value as playback.volume will be used
 	syncMuteState = true,
 }: UseVolumeConfig = {}) {
-	const { getState } = useLimeplayStoreAPI();
-	const playback = useLimeplayStore((state) => state.playback);
-	const setVolume = useLimeplayStore((state) => state._setVolume);
-	const setMuted = useLimeplayStore((state) => state._setMuted);
-	const setLastVolume = useLimeplayStore((state) => state._setLastVolume);
+	const { playbackRef } = useLimeplay();
+	const playback = playbackRef.current;
+	const [volume, setVolume] = useState(initialVolume ?? playback.volume);
+	const [muted, setMuted, mutedRef] = useStateRef(playback.muted);
+	const [lastVolume, setLastVolume, lastVolumeRef] =
+		useStateRef(initialVolume);
+
+	const toggleMute = () => {
+		playback.muted = !playback.muted;
+	};
+
+	const updateCurrentVolume = useCallback((vol: number) => {
+		if (playback.readyState === 0 || Number.isNaN(vol)) return;
+		vol = clamp(vol, 0, 1);
+		playback.volume = vol;
+	}, []);
 
 	useEffect(() => {
 		const volumeEventHandler = () => {
 			if (syncMuteState) {
-				if (playback.muted !== getState().muted) {
+				// Volume Toggle Case - Muted
+				if (playback.muted !== mutedRef.current) {
 					setMuted(playback.muted);
 
 					if (playback.muted === true) {
 						setVolume(0);
 					} else {
-						setVolume(getState().lastVolume);
+						setVolume(lastVolumeRef.current);
 					}
-				} else if (playback.muted === true && playback.volume > 0) {
+				}
+				// Volume Slide Change Case
+				else if (playback.muted === true && playback.volume > 0) {
 					playback.muted = false;
 					setMuted(false);
 					setVolume(playback.volume);
@@ -57,11 +59,11 @@ export function useVolume({
 					setVolume(playback.volume);
 				}
 			} else if (!syncMuteState) {
-				if (playback.muted !== getState().muted) {
+				if (playback.muted !== mutedRef.current) {
 					setMuted(playback.muted);
 
-					if (playback.muted === false && getState().volume === 0) {
-						setVolume(getState().lastVolume);
+					if (playback.muted === false && playback.volume === 0) {
+						setVolume(lastVolumeRef.current);
 					}
 				} else {
 					setVolume(playback.volume);
@@ -77,31 +79,26 @@ export function useVolume({
 			}
 		};
 
-		const hookEvents: HTMLMediaElementEvents = events || ['volumechange'];
+		const events = ['volumechange'];
 
-		hookEvents.forEach((event) => {
+		events.forEach((event) => {
 			playback.addEventListener(event, volumeEventHandler);
 		});
 
-		playback.volume = playback.muted ? 0 : initialVolume || playback.volume;
-
-		volumeEventHandler();
-
 		return () => {
 			if (playback) {
-				hookEvents.forEach((event) => {
+				events.forEach((event) => {
 					playback.removeEventListener(event, volumeEventHandler);
 				});
 			}
 		};
-	}, [playback, events, syncMuteState, initialVolume]);
-}
+	}, [syncMuteState]);
 
-export const createVolumeSlice: StateCreator<VolumeSlice> = (set) => ({
-	volume: 0,
-	_setVolume: (volume: number) => set({ volume }),
-	muted: false,
-	_setMuted: (muted: boolean) => set({ muted }),
-	lastVolume: 1,
-	_setLastVolume: (lastVolume: number) => set({ lastVolume }),
-});
+	return {
+		volume,
+		muted,
+		lastVolume,
+		toggleMute,
+		updateCurrentVolume,
+	} as const;
+}

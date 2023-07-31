@@ -1,135 +1,37 @@
-import { memo, useEffect, useRef } from 'react';
-
-import { useLimeplayStore } from '@limeplay/core/src/store';
-import { buildTimeString, getChangeValue, getClientPosition } from './utils';
+import { useTimelineHover } from '@limeplay/core';
+import { useRef } from 'react';
 import useStyles from './styles';
+import { OnSliderHandlerProps } from '.';
+import { buildTimeString } from './utils';
 
-interface HoverContainerProps extends LimeplayRequiredProps {
-	forwardRef: React.MutableRefObject<HTMLDivElement | undefined>;
-}
-
-function HoverContainer({ forwardRef }: HoverContainerProps) {
+export function HoverContainer({
+	sliderRef,
+	sliderConfig,
+}: {
+	sliderRef: React.RefObject<HTMLDivElement>;
+	sliderConfig: OnSliderHandlerProps;
+}) {
 	const { classes } = useStyles();
-	const bubbleRef = useRef<HTMLDivElement>(null);
-	const hoverBarRef = useRef<HTMLDivElement>(null);
 
-	const { isSeeking, duration, isLive, seekRange } = useLimeplayStore(
-		(state) => ({
-			isSeeking: state.isSeeking,
-			duration: state.duration,
-			isLive: state.isLive,
-			seekRange: state.seekRange,
-		})
-	);
+	const { isHovering, value } = useTimelineHover({
+		ref: sliderRef,
+		sliderHandlerConfig: sliderConfig,
+	});
 
-	useEffect(() => {
-		const element = forwardRef.current;
-
-		const pointerLeaveEventHandler = (e: PointerEvent) => {
-			if (bubbleRef.current) bubbleRef.current.style.display = 'none';
-			if (hoverBarRef.current) hoverBarRef.current.style.display = 'none';
-		};
-
-		const pointerMoveEventHandler = (e: PointerEvent) => {
-			if (!element) return;
-
-			const rect = element.getBoundingClientRect();
-			const changePosition = getClientPosition(e);
-
-			const changeValue = getChangeValue({
-				value: changePosition - rect.left,
-				max: seekRange.end,
-				min: seekRange.start,
-				step: 0.01,
-				containerWidth: rect.width,
-			});
-
-			const hoverTimeText = buildTimeString(
-				isLive ? seekRange.end - changeValue : changeValue,
-				duration > 3600
-			);
-
-			// setHoverTime(hoverTimeText);
-
-			const dP = isLive
-				? 100 - ((seekRange.end - changeValue) / duration) * 100
-				: (changeValue / duration) * 100;
-
-			if (bubbleRef.current) {
-				bubbleRef.current.innerText = hoverTimeText;
-				bubbleRef.current.style.left = `${dP}%`;
-			}
-
-			if (hoverBarRef.current) {
-				hoverBarRef.current.style.left = `${dP}%`;
-			}
-		};
-
-		/*
-            It is important that we add listeners on these elements in react way,
-            since the component rerenders everytime mouse is moved it causes a
-            huge impact. I checked with Chrome performance monitor tools, whenever
-            mouse was hovered the number of listeners increased exponentially as
-            everytime the component renders onPointerMove and onPointerLeave events
-            were added.
-        */
-
-		const pointerEnterEventHandler = (e: PointerEvent) => {
-			if (bubbleRef.current) {
-				bubbleRef.current.style.display = 'block';
-			}
-
-			if (hoverBarRef.current) {
-				hoverBarRef.current.style.display = 'block';
-			}
-
-			// Need to confirm this
-			pointerMoveEventHandler(e);
-		};
-
-		if (element) {
-			element.addEventListener('pointerenter', pointerEnterEventHandler);
-			element.addEventListener('pointermove', pointerMoveEventHandler);
-			element.addEventListener('pointerleave', pointerLeaveEventHandler);
-		}
-
-		if (hoverBarRef.current) hoverBarRef.current.style.display = 'none';
-		if (bubbleRef.current) bubbleRef.current.style.display = 'none';
-
-		return () => {
-			if (element) {
-				element.removeEventListener(
-					'pointerenter',
-					pointerEnterEventHandler
-				);
-				element.removeEventListener(
-					'pointermove',
-					pointerMoveEventHandler
-				);
-				element.removeEventListener(
-					'pointerleave',
-					pointerLeaveEventHandler
-				);
-			}
-		};
-	}, [forwardRef, bubbleRef, hoverBarRef, duration]);
+	if (!isHovering) return null;
 
 	return (
-		<>
-			{/* {!isSeeking && ( */}
-			<div
-				ref={hoverBarRef}
-				className={classes.timelineSlider__VerticalBar__Hover}
-			/>
-			{/* )} */}
-			<div
-				ref={bubbleRef}
-				className={classes.timelineSlider__VerticalBarDuration__Hover}
-			/>
-		</>
+		<div
+			style={{
+				position: 'absolute',
+				top: '25%',
+				left: `${(value / sliderConfig.max) * 100}%`,
+			}}
+		>
+			<div className={classes.timelineSlider__VerticalBar__Hover} />
+			<div className={classes.timelineSlider__VerticalBarDuration__Hover}>
+				{buildTimeString(value, value > 3600)}
+			</div>
+		</div>
 	);
 }
-
-const MemoizedHoverContainer = memo(HoverContainer);
-
-export default MemoizedHoverContainer;
