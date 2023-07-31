@@ -52,6 +52,7 @@ export default function App({ Component, pageProps }: AppProps) {
 			withGlobalStyles
 			withNormalizeCSS
 			theme={{
+				colorScheme: 'dark',
 				other: glassGlobalTheme,
 				globalStyles: (theme) => ({
 					':root': {
@@ -156,7 +157,7 @@ export default function App({ Component, pageProps }: AppProps) {
 		>
 			<MetaTags />
 			<Component {...pageProps} />
-			<Analytics />
+			{process.env.NODE_ENV === 'production' && <Analytics />}
 		</MantineProvider>
 	);
 }

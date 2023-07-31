@@ -17,7 +17,9 @@
 		"paths": {
 			"@/*": ["./src/*"],
 			"@limeplay/core": ["../packages/limeplay-core/src"],
-			"@limeplay/shaka-player": ["../packages/limeplay-shaka/src"]
+			"shaka-player": [
+				"../packages/limeplay-core/node_modules/shaka-player/dist/shaka-player.ui.debug"
+			]
 		}
 	},
 	"include": [

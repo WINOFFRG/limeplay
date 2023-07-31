@@ -1,13 +1,9 @@
-import { useLimeplayStore } from '@limeplay/core/src/store';
 import { useBufferInfo } from '@limeplay/core';
 import useStyles from './styles';
 
 export function BufferRangeBar() {
 	const { classes } = useStyles();
-	// const playback = useLimeplayStore((state) => state.playback);
-	// const player = useLimeplayStore((state) => state.player);
-	const bufferInfo = useLimeplayStore((state) => state.bufferInfo);
-	useBufferInfo();
+	const { bufferInfo } = useBufferInfo();
 
 	return (
 		<div

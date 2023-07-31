@@ -1,50 +1,120 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import screenfull from 'screenfull';
-import o9n from 'o9n';
-import { StateCreator } from 'zustand';
-import { useLimeplayStore } from '../store';
+import { useStateRef } from '../utils';
+import { useLimeplay } from '../components';
 
+// Missing iOS Mobile Support https://github.com/sindresorhus/screenfull#support
 export interface UseFullScreenConfig {
 	elementRef?: React.RefObject<HTMLElement>;
-	toggleOrientation?: boolean;
 	onError?: (event: Event) => void;
-	onOrientationChangeError?: (error: Error) => void;
-}
-
-export interface FullScreenSlice {
-	isFullScreen: null | boolean;
-	_setIsFullScreen: (isFullScreen: boolean) => void;
-	orientation: OrientationType;
-	_setOrientation: (orientation: string) => void;
+	onExit?: () => void;
+	onEnter?: () => void;
+	onChange?: (event: Event) => void;
 }
 
 export function useFullScreen({
 	elementRef,
-	toggleOrientation = true,
 	onError,
-	onOrientationChangeError,
+	onExit,
+	onEnter,
+	onChange,
 }: UseFullScreenConfig = {}) {
-	const setIsFullScreen = useLimeplayStore((state) => state._setIsFullScreen);
-	const setOrientation = useLimeplayStore((state) => state._setOrientation);
+	const { playbackRef } = useLimeplay();
+	const playback = playbackRef.current as HTMLVideoElement;
+	const [isFullScreen, setIsFullScreen, isFullScreenRef] = useStateRef(false);
+	const [isFullScreenSupported, setIsFullScreenSupported] = useState(false);
 
-	const orientationError = (error: Error) => {
-		if (
-			onOrientationChangeError &&
-			typeof onOrientationChangeError === 'function'
-		) {
-			onOrientationChangeError(error);
+	async function enterFullScreen() {
+		try {
+			if (document.pictureInPictureElement) {
+				await document.exitPictureInPicture();
+			}
+
+			if (screenfull.isEnabled) {
+				await screenfull.request(elementRef.current, {
+					navigationUI: 'hide',
+				});
+			} else if (playback && playback.webkitSupportsFullscreen) {
+				playback.webkitEnterFullscreen();
+			}
+
+			if (onEnter && typeof onEnter === 'function') {
+				onEnter();
+			}
+		} catch (error) {
+			// Entering fullscreen can fail without user interaction.
+			if (onError && typeof onError === 'function') {
+				onError(error);
+			}
 		}
-	};
+	}
+
+	function exitFullScreen() {
+		if (screenfull.isEnabled) {
+			screenfull.exit();
+		} else if (playback && playback.webkitSupportsFullscreen) {
+			playback.webkitExitFullscreen();
+		}
+
+		if (onExit && typeof onExit === 'function') {
+			onExit();
+		}
+	}
+
+	function toggleFullScreen() {
+		if (isFullScreenRef.current) {
+			exitFullScreen();
+		} else {
+			enterFullScreen();
+		}
+	}
+
+	const fullscreenEventHandler = useCallback(
+		(_event: Event) => {
+			if (screenfull.isEnabled) {
+				setIsFullScreen(screenfull.isFullscreen ?? false);
+			} else if (playback && playback.webkitSupportsFullscreen) {
+				setIsFullScreen(playback.webkitDisplayingFullscreen);
+			}
+
+			if (onChange && typeof onChange === 'function') {
+				onChange(_event);
+			}
+		},
+		[onChange]
+	);
 
 	useEffect(() => {
-		const fullscreenEventHandler = () => {
-			setIsFullScreen(screenfull.isFullscreen);
-		};
+		function checkFullScreenSupport() {
+			if (screenfull.isEnabled) {
+				return true;
+			}
+			if (playback && playback.webkitSupportsFullscreen) {
+				return true;
+			}
+			return false;
+		}
 
-		const orientationEventHandler = () => {
-			setOrientation(o9n.orientation.type as OrientationType);
-		};
+		setIsFullScreenSupported(checkFullScreenSupport());
 
+		function checkSupport_() {
+			setIsFullScreenSupported(checkFullScreenSupport());
+		}
+
+		// https://developer.apple.com/documentation/webkitjs/htmlvideoelement/1628805-webkitsupportsfullscreen
+		// On iOS, Native Video Fullscreen support can only be detected after the video has loaded.
+		playback.addEventListener('loadedmetadata', checkSupport_);
+		playback.addEventListener('loadeddata', checkSupport_);
+
+		fullscreenEventHandler({} as Event);
+
+		return () => {
+			playback.removeEventListener('loadedmetadata', checkSupport_);
+			playback.removeEventListener('loadeddata', checkSupport_);
+		};
+	}, []);
+
+	useEffect(() => {
 		if (screenfull.isEnabled) {
 			screenfull.on('change', fullscreenEventHandler);
 
@@ -53,7 +123,12 @@ export function useFullScreen({
 			}
 		}
 
-		o9n.orientation.addEventListener('change', orientationEventHandler);
+		if (playback && playback.webkitSupportsFullscreen) {
+			playback.addEventListener(
+				'webkitfullscreenchange',
+				fullscreenEventHandler
+			);
+		}
 
 		return () => {
 			if (screenfull.isEnabled) {
@@ -64,18 +139,21 @@ export function useFullScreen({
 				}
 			}
 
-			o9n.orientation.removeEventListener(
-				'change',
-				orientationEventHandler
-			);
+			if (playback && playback.webkitSupportsFullscreen) {
+				playback.removeEventListener(
+					'webkitfullscreenchange',
+					fullscreenEventHandler
+				);
+			}
 		};
-	}, [elementRef, onError, toggleOrientation]);
-}
+	}, [onError, onChange, fullscreenEventHandler]);
 
-export const createFullScreenSlice: StateCreator<FullScreenSlice> = (set) => ({
-	isFullScreen: null,
-	_setIsFullScreen: (isFullScreen: boolean) => set({ isFullScreen }),
-	orientation: o9n.orientation.type,
-	_setOrientation: (orientation: string) =>
-		set({ orientation: orientation as OrientationType }),
-});
+	return {
+		isFullScreen,
+		enterFullScreen,
+		exitFullScreen,
+		toggleFullScreen,
+		isFullScreenSupported,
+		api: screenfull,
+	} as const;
+}
