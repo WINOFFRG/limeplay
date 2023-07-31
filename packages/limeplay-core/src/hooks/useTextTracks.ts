@@ -11,11 +11,7 @@ interface SubtitleTrack {
 	language: string;
 }
 
-interface UseTextTracksConfig {
-	container: HTMLMediaElement;
-}
-
-export function useTextTracks({ container }: UseTextTracksConfig) {
+export function useTextTracks() {
 	const { playerRef, playbackRef } = useLimeplay();
 	const player = playerRef.current;
 	const [tracks, setTracks] = useState<SubtitleTrack[]>([]);

@@ -1,5 +1,5 @@
 import { FullGestureState, useDrag, useGesture } from '@use-gesture/react';
-import { clamp, min } from 'lodash';
+import { clamp } from 'lodash';
 import { useCallback, useState } from 'react';
 
 interface SliderHandlerConfig {
@@ -58,16 +58,6 @@ export function useSliderEvents({
 		movement,
 		offset,
 	}: FullGestureState<'drag' | 'move' | 'hover'>) => {
-		// console.log({
-		// 	type,
-		// 	moving,
-		// 	dragging,
-		// 	hovering,
-		// 	values,
-		// 	offset,
-		// 	ox,
-		// });
-
 		const {
 			min,
 			max,
@@ -108,10 +98,10 @@ export function useSliderEvents({
 					onDragEnd?.(newValue);
 					break;
 				case 'pointerenter':
-					onPointerEnter?.(newValue);
+					onPointerEnter?.();
 					break;
 				case 'pointerleave':
-					onPointerLeave?.(newValue);
+					onPointerLeave?.();
 					break;
 				default:
 					break;
