@@ -38,6 +38,7 @@ export function PlayerOutlet() {
 				streaming: {
 					useNativeHlsOnSafari: true,
 				},
+				drm: {},
 			};
 
 			const mergedConfig = merge(
@@ -53,12 +54,16 @@ export function PlayerOutlet() {
 				'https://storage.googleapis.com/shaka-demo-assets/tos-surround/dash.mpd' ??
 				process.env.NEXT_PUBLIC_LIVEPLAYBACK_URL;
 
+			console.log('1', playerRef.current);
+
 			playerRef.current.load(url).then(() => {
-				playerRef.current.addTextTrackAsync(
-					'https://www.vidstack.io/media/sprite-fight.vtt',
-					'en',
-					'subtitles'
-				);
+				console.log('2', playerRef.current);
+
+				// playerRef.current.addTextTrackAsync(
+				// 	'https://www.vidstack.io/media/sprite-fight.vtt',
+				// 	'en',
+				// 	'subtitles'
+				// );
 			}); // Error's during load need to be handled separately
 
 			// @ts-ignore
@@ -70,7 +75,7 @@ export function PlayerOutlet() {
 		return () => {
 			console.log('[OVERLAY] : Unmounting PlayerOutlet');
 		};
-	}, [isLoaded, setPlayback, setPlayer]);
+	}, []);
 
 	if (!isLoaded) return null;
 
@@ -90,21 +95,14 @@ function CaptionsContainer() {
 
 	useEffect(() => {
 		if (playback && container && player) {
-			console.log('CONFIGURING CAPTIONS!!!');
-
 			const textDisplay = new shaka.text.UITextDisplayer(
 				playback,
 				container
 			);
 
 			player.configure('textDisplayFactory', () => textDisplay);
-
 			player.configure('streaming.alwaysStreamText', true);
-
 			player.setVideoContainer(container);
-
-			const textFactory = player.getConfiguration().textDisplayFactory();
-			textFactory.setTextVisibility(true);
 		}
 	}, [container, player, playback]);
 

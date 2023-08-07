@@ -25,10 +25,10 @@ export function useShakaPlayer() {
 			setError(null);
 
 			if (playbackRef.current) {
-				const _player = playerRef.current;
-				_player.removeEventListener('error', errorHandler);
-				_player.destroy();
-				playbackRef.current = null;
+				// const _player = playerRef.current;
+				// _player.removeEventListener('error', errorHandler);
+				// _player.destroy();
+				// playbackRef.current = null;
 			}
 		};
 	}, []);

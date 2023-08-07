@@ -18,7 +18,7 @@
 			"@/*": ["./src/*"],
 			"@limeplay/core": ["../packages/limeplay-core/src"],
 			"shaka-player": [
-				"../packages/limeplay-core/node_modules/shaka-player/dist/shaka-player.ui.debug"
+				"../packages/limeplay-core/node_modules/shaka-player/dist/shaka-player.compiled.js"
 			]
 		}
 	},
