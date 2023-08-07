@@ -32,7 +32,7 @@
 		"framer-motion": "^10.12.4",
 		"lodash": "^4.17.21",
 		"mux.js": "^6.3.0",
-		"next": "13.4.10",
+		"next": "13.4.12",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"screenfull": "^6.0.2",
