@@ -52,3 +52,8 @@ interface HTMLVideoElement {
 	webkitSupportsFullscreen: boolean;
 	webkitDisplayingFullscreen: boolean;
 }
+
+interface SeekRange {
+	start: number;
+	end: number;
+}

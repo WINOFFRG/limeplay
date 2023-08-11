@@ -28,9 +28,8 @@ export function PlayerOutlet() {
 		console.log('[OVERLAY] : Mounting PlayerOutlet');
 
 		if (player && player.getLoadMode() !== 0) {
-			if (!window.muxjs) {
-				window.muxjs = mux;
-			}
+			// @ts-ignore
+			if (!window.muxjs) window.muxjs = mux;
 
 			const localConfig = {
 				abr: { enabled: true },
@@ -50,8 +49,8 @@ export function PlayerOutlet() {
 
 			const url =
 				// 'http://localhost:3000/manifest2.mpd' ??
-				'https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8' ??
-				'https://storage.googleapis.com/shaka-demo-assets/tos-surround/dash.mpd' ??
+				// 'https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8' ??
+				// 'https://storage.googleapis.com/shaka-demo-assets/tos-surround/dash.mpd' ??
 				process.env.NEXT_PUBLIC_LIVEPLAYBACK_URL;
 
 			player.load(url).then(() => {
@@ -69,7 +68,8 @@ export function PlayerOutlet() {
 		return () => {
 			console.log('[OVERLAY] : Unmounting PlayerOutlet');
 		};
-	}, [player]);
+		// TODO: Not sure if isLoaded needs to be added or not
+	}, [player, isLoaded]);
 
 	if (!isLoaded) return null;
 

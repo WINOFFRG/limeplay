@@ -13,9 +13,9 @@
 		"typeRoots": ["./src/types"],
 		"module": "CommonJS",
 		"paths": {
-			"shaka-player": [
-				"./node_modules/shaka-player/dist/shaka-player.compiled.debug.js"
-			]
+			// "shaka-player": [
+			// 	"./node_modules/shaka-player/dist/shaka-player.compiled.debug.js"
+			// ]
 		}
 	}
 }

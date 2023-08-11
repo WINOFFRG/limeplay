@@ -18,9 +18,7 @@ export function useTimeline({
 	updateInterval = 250,
 	isSlidingRef = React.createRef(),
 }: UseTimelineConfig = {}) {
-	const { playbackRef, playerRef } = useLimeplay();
-	const playback = playbackRef.current;
-	const player = playerRef.current;
+	const { playback, player } = useLimeplay();
 	const currentTimerId = useRef<number>(-1);
 
 	const [currentTime, setCurrentTime] = useState(0);
