@@ -28,8 +28,7 @@ export function TimelineSlider() {
 	const elementRef = useRef<HTMLDivElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	const { playbackRef, playerRef } = useLimeplay();
-	const player = playerRef.current;
+	const { player } = useLimeplay();
 
 	const {
 		seekRange,
