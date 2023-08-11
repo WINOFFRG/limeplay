@@ -4,7 +4,7 @@ import { useLimeplay } from './LimeplayProvider';
 
 export const MediaOutlet = forwardRef(
 	({ children }: { children: React.ReactNode }, forwardedRef) => {
-		const { playbackRef, playerRef } = useLimeplay();
+		const { playbackRef, setPlayback } = useLimeplay();
 		const composedRefs = useComposedRefs(forwardedRef, playbackRef);
 
 		console.log('[ MediaOutlet ] rendered');
@@ -22,10 +22,9 @@ export const MediaOutlet = forwardRef(
 				);
 			}
 
-			return () => {
-				playbackRef.current = null;
-				playerRef.current = null;
-			};
+			setPlayback(playbackRef.current);
+
+			// return () => {};
 		}, [children]);
 
 		return (

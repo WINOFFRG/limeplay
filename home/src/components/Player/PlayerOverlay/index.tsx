@@ -9,8 +9,8 @@ import PlayerLoader from '../Loader';
 
 export function PlayerOutlet() {
 	const { classes } = useStyles();
-	const { playerRef, isLoaded, error, playbackRef } = useShakaPlayer();
-	const { setPlayback, setPlayer } = useLimeplay();
+	const { isLoaded, error } = useShakaPlayer();
+	const { player } = useLimeplay();
 
 	if (error) {
 		const onErrorHandler = (event) => {
@@ -27,7 +27,7 @@ export function PlayerOutlet() {
 	useEffect(() => {
 		console.log('[OVERLAY] : Mounting PlayerOutlet');
 
-		if (playerRef.current && playerRef.current.getLoadMode() !== 0) {
+		if (player && player.getLoadMode() !== 0) {
 			if (!window.muxjs) {
 				window.muxjs = mux;
 			}
@@ -46,7 +46,7 @@ export function PlayerOutlet() {
 				JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG ?? '{}')
 			);
 
-			playerRef.current.configure(mergedConfig);
+			player.configure(mergedConfig);
 
 			const url =
 				// 'http://localhost:3000/manifest2.mpd' ??
@@ -54,28 +54,22 @@ export function PlayerOutlet() {
 				'https://storage.googleapis.com/shaka-demo-assets/tos-surround/dash.mpd' ??
 				process.env.NEXT_PUBLIC_LIVEPLAYBACK_URL;
 
-			console.log('1', playerRef.current);
-
-			playerRef.current.load(url).then(() => {
-				console.log('2', playerRef.current);
-
-				// playerRef.current.addTextTrackAsync(
-				// 	'https://www.vidstack.io/media/sprite-fight.vtt',
-				// 	'en',
-				// 	'subtitles'
-				// );
+			player.load(url).then(() => {
+				player.addTextTrackAsync(
+					'https://www.vidstack.io/media/sprite-fight.vtt',
+					'en',
+					'subtitles'
+				);
 			}); // Error's during load need to be handled separately
 
 			// @ts-ignore
-			window.player = playerRef.current;
-			setPlayer(playerRef.current);
-			setPlayback(playbackRef.current);
+			window.player = player;
 		}
 
 		return () => {
 			console.log('[OVERLAY] : Unmounting PlayerOutlet');
 		};
-	}, []);
+	}, [player]);
 
 	if (!isLoaded) return null;
 
@@ -83,7 +77,7 @@ export function PlayerOutlet() {
 		<div className={classes.overlayWrapper}>
 			<PlayerLoader />
 			<ControlsOverlay />
-			<CaptionsContainer />
+			{/* <CaptionsContainer /> */}
 		</div>
 	);
 }
