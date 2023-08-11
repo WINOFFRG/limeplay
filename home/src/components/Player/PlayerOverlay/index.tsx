@@ -66,7 +66,7 @@ export function PlayerOutlet() {
 		<div className={classes.overlayWrapper}>
 			<PlayerLoader />
 			<ControlsOverlay />
-			{/* <CaptionsContainer /> */}
+			<CaptionsContainer />
 		</div>
 	);
 }
