@@ -1,4 +1,5 @@
 import { createContext, createRef, useContext, useMemo } from 'react';
+import shaka from 'shaka-player';
 import { useStateRef } from '../utils';
 
 interface LimeplayProviderContextType {

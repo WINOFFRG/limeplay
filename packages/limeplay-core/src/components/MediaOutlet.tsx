@@ -4,10 +4,8 @@ import { useLimeplay } from './LimeplayProvider';
 
 export const MediaOutlet = forwardRef(
 	({ children }: { children: React.ReactNode }, forwardedRef) => {
-		const { playbackRef, playerRef } = useLimeplay();
+		const { playbackRef, setPlayback } = useLimeplay();
 		const composedRefs = useComposedRefs(forwardedRef, playbackRef);
-
-		console.log('[ MediaOutlet ] rendered');
 
 		useLayoutEffect(() => {
 			if (React.Children.count(children) !== 1) {
@@ -22,10 +20,9 @@ export const MediaOutlet = forwardRef(
 				);
 			}
 
-			return () => {
-				playbackRef.current = null;
-				playerRef.current = null;
-			};
+			if (playbackRef.current) {
+				setPlayback(playbackRef.current);
+			}
 		}, [children]);
 
 		return (

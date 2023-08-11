@@ -25,7 +25,8 @@ export default function Player() {
 				<MediaOutlet>
 					<video
 						controls={false}
-						// playsInline
+						playsInline
+						autoPlay
 						className={classes.videoElement}
 						poster="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/animated.webp?start=268&end=278&width=640"
 					/>

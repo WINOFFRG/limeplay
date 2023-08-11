@@ -1,18 +1,8 @@
-import {
-	ActionIcon,
-	Button,
-	Flex,
-	Group,
-	Space,
-	Stack,
-	Text,
-	UnstyledButton,
-} from '@mantine/core';
+import { Flex, Group, Stack, UnstyledButton } from '@mantine/core';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { useLimeplay } from '@limeplay/core';
 import VolumeControl from '../VolumeControl';
-import useStyles from './styles';
 import { PlaybackControl } from '../PlaybackControl';
 import { SeekControl } from '../SeekControl';
 import { QualityMenu } from '../QualityMenu';
@@ -23,8 +13,6 @@ import { AudioMenu } from '../AudioMenu';
 import { MaximizeIcon, MinimizeIcon } from '../Icons/Icons';
 
 export default function ControlsOverlay() {
-	const { classes } = useStyles();
-
 	return (
 		<Stack
 			justify="space-between"

@@ -1,7 +1,6 @@
 import { useAudioTracks, useTextTracks } from '@limeplay/core';
 import {
 	Box,
-	Button,
 	Flex,
 	Menu,
 	Text,
@@ -9,11 +8,9 @@ import {
 	createStyles,
 } from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
-import { useRef, useState } from 'react';
-import { SubtitleIcons, VideoQuality } from '../Icons/Icons';
-import { IconButton } from '@/components/common/Buttons';
+import { SubtitleIcons } from '../Icons/Icons';
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(() => ({
 	backgroundStyle: {},
 	dropDown: {},
 }));
