@@ -77,7 +77,7 @@ function CaptionsContainer() {
 	const { player, playback } = useLimeplay();
 
 	useEffect(() => {
-		if (playback && container && player) {
+		if (playback && container && player?.getLoadMode() === 1) {
 			player.addTextTrackAsync(
 				'https://www.vidstack.io/media/sprite-fight.vtt',
 				'en',

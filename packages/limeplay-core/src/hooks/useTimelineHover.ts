@@ -35,17 +35,13 @@ export function useTimelineHover({
 	onSlideEnd,
 }: UseTimelineSliderHoverConfig) {
 	const [isHovering, setIsHovering] = useState(false);
-	const [isMoving, setIsMoving] = useState(false);
 	const [value, setValue] = useState(0);
 	const { disabled } = sliderHandlerConfig;
 
 	const dragHandler = ({
-		type,
 		active,
 		xy: [ox, oy],
 		event,
-		ctrlKey,
-		shiftKey,
 	}: FullGestureState<'hover'>) => {
 		const {
 			min,
@@ -56,8 +52,6 @@ export function useTimelineHover({
 			dir = 'ltr',
 			inverted = false,
 		} = sliderHandlerConfig;
-
-		setIsHovering(active);
 
 		const { height, width, top, left } =
 			ref.current.getBoundingClientRect();
@@ -75,20 +69,6 @@ export function useTimelineHover({
 
 			if (inverted || (dir === 'rtl' && o9n === 'horizontal'))
 				newValue = max - newValue + min;
-
-			switch (type) {
-				case 'pointerenter':
-					onSlideStart?.(newValue);
-					break;
-				case 'pointermove':
-					onSlide?.(newValue);
-					break;
-				case 'pointerup':
-					onSlideEnd?.(newValue);
-					break;
-				default:
-					break;
-			}
 		}
 
 		newValue = clamp(newValue, min, max);
@@ -97,16 +77,20 @@ export function useTimelineHover({
 		return newValue;
 	};
 
-	useGesture(
-		{
-			onHover: dragHandler,
-			onMove: dragHandler,
+	useHover(
+		({ hovering }: FullGestureState<'hover'>) => {
+			setIsHovering(hovering);
 		},
 		{
 			target: ref,
 			enabled: !disabled,
 		}
 	);
+
+	useMove(dragHandler, {
+		target: ref,
+		enabled: !disabled,
+	});
 
 	return {
 		value,
