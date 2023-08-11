@@ -30,8 +30,6 @@ export function useTextTracks() {
 	};
 
 	const trackHandler = () => {
-		console.log('trackHandler');
-
 		const currTracks = player.getTextTracks();
 		let currSelectedTrack = null;
 		const uniqueTracks = new Set<string>();

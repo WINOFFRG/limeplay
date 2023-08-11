@@ -133,18 +133,20 @@ export function useSliderEvents({
 				}
 			}
 
-			// switch (event.type) {
-			// 	case 'keydown': {
-			// 		onSlideStart?.(newValue);
-			// 		onSlide?.(newValue);
-			// 		break;
-			// 	}
-			// 	case 'keyup':
-			// 		onSlideEnd?.(newValue);
-			// 		break;
-			// 	default:
-			// 		break;
-			// }
+			switch (event.type) {
+				case 'keydown': {
+					onDrag?.(newValue);
+					if (!isSliding) {
+						onDragStart?.(newValue);
+					}
+					break;
+				}
+				case 'keyup':
+					onDragEnd?.(newValue);
+					break;
+				default:
+					break;
+			}
 		}
 
 		newValue = clamp(newValue, min, max);
@@ -157,8 +159,6 @@ export function useSliderEvents({
 	const hoverHandler = useCallback(
 		({ hovering, type }: FullGestureState<'hover'>) => {
 			setIsHovering(hovering);
-
-			// console.log({ type, hovering });
 
 			switch (type) {
 				case 'pointerenter':
