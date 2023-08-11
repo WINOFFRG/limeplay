@@ -22,9 +22,13 @@ export const MediaOutlet = forwardRef(
 				);
 			}
 
-			setPlayback(playbackRef.current);
+			if (playbackRef.current) {
+				setPlayback(playbackRef.current);
+			}
 
-			// return () => {};
+			return () => {
+				console.log('[ MediaOutlet ] unmounted');
+			};
 		}, [children]);
 
 		return (
