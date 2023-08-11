@@ -3,39 +3,41 @@ import shaka from 'shaka-player';
 import { useLimeplay } from '../components/LimeplayProvider';
 
 export function useShakaPlayer() {
-	const { playbackRef, playerRef } = useLimeplay();
+	const { playback, player, setPlayer } = useLimeplay();
 	const [error, setError] = useState<shaka.util.Error | null>(null);
 	const [isLoaded, setIsLoaded] = useState(false);
 
 	useEffect(() => {
+		console.log('[useShakaPlayer] : Mounting');
+
 		const errorHandler = (event: shaka.util.Error | Event) => {
 			if (event instanceof Event) return;
 			setError(event);
 		};
 
-		if (playbackRef.current) {
-			const _player = new shaka.Player(playbackRef.current);
-			playerRef.current = _player;
+		if (playback && !isLoaded) {
+			const _player = new shaka.Player(playback);
 			_player.addEventListener('error', errorHandler);
+			setPlayer(_player);
 			setIsLoaded(true);
 		}
 
 		return () => {
+			console.log('[useShakaPlayer] : Unmounting');
+
 			setIsLoaded(false);
 			setError(null);
 
-			if (playbackRef.current) {
+			if (player) {
 				// const _player = playerRef.current;
 				// _player.removeEventListener('error', errorHandler);
-				// _player.destroy();
-				// playbackRef.current = null;
+				player.destroy();
+				setPlayer(null);
 			}
 		};
-	}, []);
+	}, [playback]);
 
 	return {
-		playerRef,
-		playbackRef,
 		error,
 		isLoaded,
 	};
