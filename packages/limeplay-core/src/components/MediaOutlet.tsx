@@ -7,8 +7,6 @@ export const MediaOutlet = forwardRef(
 		const { playbackRef, setPlayback } = useLimeplay();
 		const composedRefs = useComposedRefs(forwardedRef, playbackRef);
 
-		console.log('[ MediaOutlet ] rendered');
-
 		useLayoutEffect(() => {
 			if (React.Children.count(children) !== 1) {
 				throw new Error(
@@ -25,10 +23,6 @@ export const MediaOutlet = forwardRef(
 			if (playbackRef.current) {
 				setPlayback(playbackRef.current);
 			}
-
-			return () => {
-				console.log('[ MediaOutlet ] unmounted');
-			};
 		}, [children]);
 
 		return (
