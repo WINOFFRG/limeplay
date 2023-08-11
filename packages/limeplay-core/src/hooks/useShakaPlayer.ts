@@ -4,20 +4,17 @@ import { useLimeplay } from '../components/LimeplayProvider';
 
 export function useShakaPlayer() {
 	const { playback, setPlayer } = useLimeplay();
-	const [error, setError] = useState<shaka.util.Error | null>(null);
+	const [error, setError] = useState<shaka.util.Error | Event | null>(null);
 	const [isLoaded, setIsLoaded] = useState(false);
 
 	useEffect(() => {
-		console.log('[useShakaPlayer] : Mounting');
-
 		let _player: shaka.Player | null = null;
 
-		const errorHandler = (event: shaka.util.Error | Event) => {
-			if (event instanceof Event) return;
+		const errorHandler = (event: shaka.util.Error | Event) =>
 			setError(event);
-		};
 
 		if (playback) {
+			console.log('[ useShakaPlayer ] - Creating new player ');
 			_player = new shaka.Player(playback);
 			_player.addEventListener('error', errorHandler);
 			setPlayer(_player);
@@ -25,8 +22,6 @@ export function useShakaPlayer() {
 		}
 
 		return () => {
-			console.log('[useShakaPlayer] : Unmounting');
-
 			setIsLoaded(false);
 			setError(null);
 
