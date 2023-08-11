@@ -1,5 +1,4 @@
 import { useTimelineHover } from '@limeplay/core';
-import { useRef } from 'react';
 import useStyles from './styles';
 import { OnSliderHandlerProps } from '.';
 import { buildTimeString } from './utils';
