@@ -16,10 +16,7 @@
 		"incremental": true,
 		"paths": {
 			"@/*": ["./src/*"],
-			"@limeplay/core": ["../packages/limeplay-core/src"],
-			"shaka-player": [
-				"../packages/limeplay-core/node_modules/shaka-player/dist/shaka-player.ui.debug"
-			]
+			"@limeplay/core": ["../packages/limeplay-core/src"]
 		}
 	},
 	"include": [
