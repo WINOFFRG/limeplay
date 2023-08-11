@@ -3,20 +3,21 @@ import shaka from 'shaka-player';
 import { useLimeplay } from '../components/LimeplayProvider';
 
 export function useShakaPlayer() {
-	const { playbackRef, playerRef } = useLimeplay();
-	const [error, setError] = useState<shaka.util.Error | null>(null);
+	const { playback, setPlayer } = useLimeplay();
+	const [error, setError] = useState<shaka.util.Error | Event | null>(null);
 	const [isLoaded, setIsLoaded] = useState(false);
 
 	useEffect(() => {
-		const errorHandler = (event: shaka.util.Error | Event) => {
-			if (event instanceof Event) return;
-			setError(event);
-		};
+		let _player: shaka.Player | null = null;
 
-		if (playbackRef.current) {
-			const _player = new shaka.Player(playbackRef.current);
-			playerRef.current = _player;
+		const errorHandler = (event: shaka.util.Error | Event) =>
+			setError(event);
+
+		if (playback) {
+			console.log('[ useShakaPlayer ] - Creating new player ');
+			_player = new shaka.Player(playback);
 			_player.addEventListener('error', errorHandler);
+			setPlayer(_player);
 			setIsLoaded(true);
 		}
 
@@ -24,18 +25,15 @@ export function useShakaPlayer() {
 			setIsLoaded(false);
 			setError(null);
 
-			if (playbackRef.current) {
-				const _player = playerRef.current;
+			if (_player) {
 				_player.removeEventListener('error', errorHandler);
 				_player.destroy();
-				playbackRef.current = null;
+				setPlayer(null);
 			}
 		};
-	}, []);
+	}, [playback]);
 
 	return {
-		playerRef,
-		playbackRef,
 		error,
 		isLoaded,
 	};

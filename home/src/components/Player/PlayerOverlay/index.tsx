@@ -9,8 +9,8 @@ import PlayerLoader from '../Loader';
 
 export function PlayerOutlet() {
 	const { classes } = useStyles();
-	const { playerRef, isLoaded, error, playbackRef } = useShakaPlayer();
-	const { setPlayback, setPlayer } = useLimeplay();
+	const { isLoaded, error } = useShakaPlayer();
+	const { player } = useLimeplay();
 
 	if (error) {
 		const onErrorHandler = (event) => {
@@ -25,12 +25,9 @@ export function PlayerOutlet() {
 	}
 
 	useEffect(() => {
-		console.log('[OVERLAY] : Mounting PlayerOutlet');
-
-		if (playerRef.current && playerRef.current.getLoadMode() !== 0) {
-			if (!window.muxjs) {
-				window.muxjs = mux;
-			}
+		if (player && player.getLoadMode() !== 0) {
+			// @ts-ignore
+			if (!window.muxjs) window.muxjs = mux;
 
 			const localConfig = {
 				abr: { enabled: true },
@@ -38,6 +35,7 @@ export function PlayerOutlet() {
 				streaming: {
 					useNativeHlsOnSafari: true,
 				},
+				drm: {},
 			};
 
 			const mergedConfig = merge(
@@ -45,32 +43,22 @@ export function PlayerOutlet() {
 				JSON.parse(process.env.NEXT_PUBLIC_SHAKA_CONFIG ?? '{}')
 			);
 
-			playerRef.current.configure(mergedConfig);
+			player.configure(mergedConfig);
 
 			const url =
 				// 'http://localhost:3000/manifest2.mpd' ??
 				'https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8' ??
-				'https://storage.googleapis.com/shaka-demo-assets/tos-surround/dash.mpd' ??
+				// 'https://storage.googleapis.com/shaka-demo-assets/tos-surround/dash.mpd' ??
 				process.env.NEXT_PUBLIC_LIVEPLAYBACK_URL;
 
-			playerRef.current.load(url).then(() => {
-				playerRef.current.addTextTrackAsync(
-					'https://www.vidstack.io/media/sprite-fight.vtt',
-					'en',
-					'subtitles'
-				);
-			}); // Error's during load need to be handled separately
+			player.load(url);
 
 			// @ts-ignore
-			window.player = playerRef.current;
-			setPlayer(playerRef.current);
-			setPlayback(playbackRef.current);
+			window.player = player;
 		}
 
-		return () => {
-			console.log('[OVERLAY] : Unmounting PlayerOutlet');
-		};
-	}, [isLoaded, setPlayback, setPlayer]);
+		// TODO: Not sure if isLoaded needs to be added or not
+	}, [player, isLoaded]);
 
 	if (!isLoaded) return null;
 
@@ -89,8 +77,12 @@ function CaptionsContainer() {
 	const { player, playback } = useLimeplay();
 
 	useEffect(() => {
-		if (playback && container && player) {
-			console.log('CONFIGURING CAPTIONS!!!');
+		if (playback && container && player?.getLoadMode() === 1) {
+			player.addTextTrackAsync(
+				'https://www.vidstack.io/media/sprite-fight.vtt',
+				'en',
+				'subtitles'
+			);
 
 			const textDisplay = new shaka.text.UITextDisplayer(
 				playback,
@@ -98,13 +90,8 @@ function CaptionsContainer() {
 			);
 
 			player.configure('textDisplayFactory', () => textDisplay);
-
 			player.configure('streaming.alwaysStreamText', true);
-
 			player.setVideoContainer(container);
-
-			const textFactory = player.getConfiguration().textDisplayFactory();
-			textFactory.setTextVisibility(true);
 		}
 	}, [container, player, playback]);
 

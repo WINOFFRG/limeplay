@@ -16,10 +16,12 @@ export function useVolume({
 	initialVolume, // Do not provide default value as playback.volume will be used
 	syncMuteState = true,
 }: UseVolumeConfig = {}) {
-	const { playbackRef } = useLimeplay();
-	const playback = playbackRef.current;
-	const [volume, setVolume] = useState(initialVolume ?? playback.volume);
+	const { playback } = useLimeplay();
 	const [muted, setMuted, mutedRef] = useStateRef(playback.muted);
+	const _initialVolume =
+		syncMuteState && muted ? 0 : initialVolume ?? playback.volume;
+	const [volume, setVolume] = useState(_initialVolume);
+
 	const [lastVolume, setLastVolume, lastVolumeRef] =
 		useStateRef(initialVolume);
 
