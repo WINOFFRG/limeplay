@@ -25,8 +25,6 @@ export function PlayerOutlet() {
 	}
 
 	useEffect(() => {
-		console.log('[OVERLAY] : Mounting PlayerOutlet');
-
 		if (player && player.getLoadMode() !== 0) {
 			// @ts-ignore
 			if (!window.muxjs) window.muxjs = mux;
@@ -49,25 +47,16 @@ export function PlayerOutlet() {
 
 			const url =
 				// 'http://localhost:3000/manifest2.mpd' ??
-				// 'https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8' ??
+				'https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8' ??
 				// 'https://storage.googleapis.com/shaka-demo-assets/tos-surround/dash.mpd' ??
 				process.env.NEXT_PUBLIC_LIVEPLAYBACK_URL;
 
-			player.load(url).then(() => {
-				player.addTextTrackAsync(
-					'https://www.vidstack.io/media/sprite-fight.vtt',
-					'en',
-					'subtitles'
-				);
-			}); // Error's during load need to be handled separately
+			player.load(url);
 
 			// @ts-ignore
 			window.player = player;
 		}
 
-		return () => {
-			console.log('[OVERLAY] : Unmounting PlayerOutlet');
-		};
 		// TODO: Not sure if isLoaded needs to be added or not
 	}, [player, isLoaded]);
 
@@ -89,6 +78,12 @@ function CaptionsContainer() {
 
 	useEffect(() => {
 		if (playback && container && player) {
+			player.addTextTrackAsync(
+				'https://www.vidstack.io/media/sprite-fight.vtt',
+				'en',
+				'subtitles'
+			);
+
 			const textDisplay = new shaka.text.UITextDisplayer(
 				playback,
 				container
