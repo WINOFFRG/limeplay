@@ -29,16 +29,6 @@ Limeplay is a React based Headless UI library made to work with HTML5 & [Shaka P
 > **Warning**
 > This project is under Heavy Development, Things might change anytime.
 
-## Table of contents
-
--   📋 [Documentation](#documentation)
--   🚀 [Features](#features)
--   📦 [Installation](#installation)
--   💻 [Usage](#usage)
--   👋 [Support](#support)
--   📝 [Contributing](#contributing)
--   ⚖️ [License](#license)
-
 ## Documentation
 
 👉 It's the https://docs.limeplay.me website for the latest version of Limeplay.
