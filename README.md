@@ -26,10 +26,8 @@
 
 Limeplay is a React based Headless UI library made to work with HTML5 & [Shaka Player](https://github.com/shaka-project/shaka-player) that allows you to build stunning, accessible and modern looking Media Players with ease. It exposes several hooks and highly configurable components using which you can build any functional Media Player like Netflix, Youtube, Hulu, Hotstar, without having to worry about the underlying player logic while adhering to accessibility best practices.
 
-<h2 align="center"> 🚧 <b>This project is still in its early stages and is looking for contributors</b> 🚧 </h2>
-<h3 align="center">🏗️ This project is under Heavy Development, Things might change anytime! 🏗️<h3>
-
-<br>
+> **Warning**
+> This project is under Heavy Development, Things might change anytime.
 
 ## Table of contents
 
@@ -57,64 +55,64 @@ To use Limeplay UI components, all you need to do is install the
 `@limeplay/core` package and its peer dependencies:
 
 ```sh
-$ yarn add @limeplay/core @limeplay/shaka-player
-
-# or
-
-$ npm i @limeplay/core @limeplay/shaka-player
+npm i @limeplay/core
 ```
 
 ## Usage
 
 To start using the components, please follow these steps:
 
-1. Player Setup
+1. LimeplayProvider is the context for accessing the player instance and playback element using `useLimeplay` hook. `MediaOutlet` is required so that limeplay can attach the `HTMLMediaElement` to store and setup the player instance.
 
-```jsx
-import { useShakaPlayer } from "@limeplay/shaka-player";
-import { LimeplayProvider, OverlayOutlet, MediaOutlet } from "@limeplay/core";
+```tsx
+// Player.tsx
+import { LimeplayProvider, MediaOutlet } from "@limeplay/core";
+import { PlayerOutlet } from "./PlayerOutlet.tsx";
 
 export default function Player() {
-	const createPlayer = useShakaPlayer();
 
 	return (
 		<LimeplayProvider>
-			<OverlayOutlet createPlayer={createPlayer}>
-				<PlayerOverlay /> {/* Your custom overlay component */}
-			</OverlayOutlet>
-			<MediaOutlet>
-				<video controls={false} playsInline autoPlay={false} />
-			</MediaOutlet>
+				<PlayerOutlet />
+				<MediaOutlet>
+					<video
+						controls={false}
+						autoPlay
+					/>
+				</MediaOutlet>
 		</LimeplayProvider>
 	);
 }
 ```
 
-2. Configure Playback and Controls Overlay
+2. `useShakaPlayer` hook is used to create an instance of `player` user is responsible for managing the actions like loading, error handling, etc on their own. Refer [Shaka Player Docs](https://shaka-player-demo.appspot.com/docs/api/tutorial-basic-usage.html) for basic usage.
 
-```jsx
-import { useLimeplayStore, useLimeplayStoreAPI } from "@limeplay/core";
-import { useEffect } from "react";
-
-export default function PlayerOverlay() {
-	const playback = useLimeplayStore((state) => state.playback);
-	const player = useLimeplayStore((state) => state.player);
-	const demoPlabackUrl =
-		"https://storage.googleapis.com/nodejs-streaming.appspot.com/uploads/f6b7c492-e78f-4b26-b95f-81ea8ca21a18/1642708128072/manifest.mpd";
+```tsx
+// PlayerOutlet.tsx
+export function PlayerOutlet() {
+	const { isLoaded, error } = useShakaPlayer();
+	const { player } = useLimeplay();
 
 	useEffect(() => {
-		if (player && player.getLoadMode() === 1) {
-			const playerConfig = player.getConfiguration();
-
-			player.load(demoPlabackUrl);
+		if (player && player.getLoadMode() !== 0) {
 		}
-	}, [player, playback]);
 
-	return (
-		<div className={classes.overlayWrapper}>
-			<ControlsOverlay /> {/* Your custom controls component */}
-		</div>
-	);
+		const config = player.getConfiguration();
+
+		player.configure(config);
+
+		const url = 'https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8';
+
+		player.load(url);
+
+		window.player = player;
+
+	}, [player, isLoaded]);
+
+	if (!isLoaded) return null;
+
+	// Implement your own Controls Overlay using custom hooks
+	return <ControlsOverlay /> ;
 }
 ```
 
