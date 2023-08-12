@@ -1,6 +1,6 @@
 {
 	"name": "@limeplay/core",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"description": "React Headless UI library for Shaka Player focused on usability, accessibility, performance and developer experience",
 	"main": "src/index.ts",
 	"files": [
