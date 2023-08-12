@@ -1,6 +1,6 @@
 import { FullGestureState, useDrag, useGesture } from '@use-gesture/react';
-import { clamp } from 'lodash';
 import { useCallback, useState } from 'react';
+import { clamp } from '../utils';
 
 interface SliderHandlerConfig {
 	min: number;
