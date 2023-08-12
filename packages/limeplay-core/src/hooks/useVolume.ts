@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { clamp } from 'lodash';
-import { useStateRef } from '../utils';
+import { clamp, useStateRef } from '../utils';
 import { useLimeplay } from '../components';
 
 export interface UseVolumeConfig {

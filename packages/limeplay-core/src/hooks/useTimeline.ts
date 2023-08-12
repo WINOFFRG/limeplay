@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import clamp from 'lodash/clamp';
-import { useStateRef } from '../utils';
+import { clamp, useStateRef } from '../utils';
 import { useLimeplay } from '../components';
 
 export interface UseTimelineConfig {

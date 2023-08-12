@@ -1,5 +1,5 @@
 import { useMove } from '@use-gesture/react';
-import { clamp } from 'lodash';
+import { clamp } from '../utils';
 
 type Direction = 'ltr' | 'rtl';
 
