@@ -1,5 +1,15 @@
 # @limeplay/core
 
+## 1.1.0
+
+### Minor Changes
+
+- [`f417b55`](https://github.com/WINOFFRG/limeplay/commit/f417b558ade33b80a90c7f462ba0490bc86ca24d) Thanks [@WINOFFRG](https://github.com/WINOFFRG)! - Migrated to new version, Removed additional dependencies, Completely Headless, Stable
+
+### Patch Changes
+
+- [`69dc9f8`](https://github.com/WINOFFRG/limeplay/commit/69dc9f8306e5beed6879299991b4c6bf70696436) Thanks [@WINOFFRG](https://github.com/WINOFFRG)! - Bump Dependencies
+
 ## 1.0.0
 
 ### Major Changes
