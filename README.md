@@ -13,7 +13,7 @@
   <a href="https://discord.gg/winoffrg/limeplay">
   	<img alt="Github Stars" src="https://badgen.net/github/stars/WINOFFRG/limeplay" />
   </a>
-  <a href="https://discord.gg/winoffrg/limeplay">
+  <a href="https://discord.gg/ZjXFzqmqjn">
     <img alt="Discord" src="https://badgen.net/discord/online-members/ZjXFzqmqjn?label=&icon=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2" />
   </a>
 </p>
@@ -43,78 +43,14 @@ Limeplay is a React based Headless UI library made to work with HTML5 & [Shaka P
 
 👉 It's the https://docs.limeplay.me website for the latest version of Limeplay.
 
-<!-- ## Features
-- To be Added
-- To be Added
-- To be Added
-- To be Added -->
+> **Warning**
+> Documentation is still under development, Contributions are welcome!
 
-## Installation
+## Codesandbox Template
 
-To use Limeplay UI components, all you need to do is install the
-`@limeplay/core` package and its peer dependencies:
+[![Edit in CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/limeplay-starter-3qv9y4)
 
-```sh
-npm i @limeplay/core
-```
-
-## Usage
-
-To start using the components, please follow these steps:
-
-1. LimeplayProvider is the context for accessing the player instance and playback element using `useLimeplay` hook. `MediaOutlet` is required so that limeplay can attach the `HTMLMediaElement` to store and setup the player instance.
-
-```tsx
-// Player.tsx
-import { LimeplayProvider, MediaOutlet } from "@limeplay/core";
-import { PlayerOutlet } from "./PlayerOutlet.tsx";
-
-export default function Player() {
-
-	return (
-		<LimeplayProvider>
-				<PlayerOutlet />
-				<MediaOutlet>
-					<video
-						controls={false}
-						autoPlay
-					/>
-				</MediaOutlet>
-		</LimeplayProvider>
-	);
-}
-```
-
-2. `useShakaPlayer` hook is used to create an instance of `player` user is responsible for managing the actions like loading, error handling, etc on their own. Refer [Shaka Player Docs](https://shaka-player-demo.appspot.com/docs/api/tutorial-basic-usage.html) for basic usage.
-
-```tsx
-// PlayerOutlet.tsx
-export function PlayerOutlet() {
-	const { isLoaded, error } = useShakaPlayer();
-	const { player } = useLimeplay();
-
-	useEffect(() => {
-		if (player && player.getLoadMode() !== 0) {
-		}
-
-		const config = player.getConfiguration();
-
-		player.configure(config);
-
-		const url = 'https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8';
-
-		player.load(url);
-
-		window.player = player;
-
-	}, [player, isLoaded]);
-
-	if (!isLoaded) return null;
-
-	// Implement your own Controls Overlay using custom hooks
-	return <ControlsOverlay /> ;
-}
-```
+Usage with HTML 👉 [jsdelivr](https://www.jsdelivr.com/package/npm/@limeplay/core)
 
 ## Support & Discussion
 
