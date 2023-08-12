@@ -15,8 +15,9 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@/*": ["./*"]
-    }
+		"@/*": ["./*"],
+		"@limeplay/core": ["../../packages/limeplay-core/src"]
+	}
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
