@@ -38,7 +38,7 @@ Limeplay is a React based Headless UI library made to work with HTML5 & [Shaka P
 
 ## Codesandbox Template
 
-[![Edit in CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/limeplay-starter-3qv9y4)
+[![Edit in CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/WINOFFRG/limeplay/tree/main/.codesandbox/limeplay-starter)
 
 Usage with HTML 👉 [jsdelivr](https://www.jsdelivr.com/package/npm/@limeplay/core)
 
