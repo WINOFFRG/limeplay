@@ -20,7 +20,7 @@
 
 <p align="center">
   <a href="https://github.com/winoffrg/limeplay">
-    <img src="https://limeplay.me/og/default.jpg" alt="Limeplay logo"/>
+    <img src="https://github.com/WINOFFRG/limeplay/blob/main/home/public/og/default.png" alt="Limeplay logo"/>
   </a>
 </p>
 
