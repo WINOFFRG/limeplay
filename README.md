@@ -26,14 +26,14 @@
 
 Limeplay is a React based Headless UI library made to work with HTML5 & [Shaka Player](https://github.com/shaka-project/shaka-player) that allows you to build stunning, accessible and modern looking Media Players with ease. It exposes several hooks and highly configurable components using which you can build any functional Media Player like Netflix, Youtube, Hulu, Hotstar, without having to worry about the underlying player logic while adhering to accessibility best practices.
 
-> **Warning**
+> [!WARNING]  
 > This project is under Heavy Development, Things might change anytime.
 
 ## Documentation
 
 👉 It's the https://docs.limeplay.me website for the latest version of Limeplay.
 
-> **Warning**
+> [!IMPORTANT]  
 > Documentation is still under development, Contributions are welcome!
 
 ## Codesandbox Template
