@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand';
-import { PlayerSkinStore } from './usePlayerSkinStore';
+import { PlayerRootStore } from './usePlayerRootStore';
 
 export interface FullscreenStore {
 	fullscreen: boolean;
@@ -7,7 +7,7 @@ export interface FullscreenStore {
 }
 
 export const createFullscreenStore: StateCreator<
-	FullscreenStore & PlayerSkinStore,
+	FullscreenStore & PlayerRootStore,
 	[],
 	[],
 	FullscreenStore

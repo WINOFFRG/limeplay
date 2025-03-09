@@ -1,18 +1,10 @@
-import { create, StateCreator } from 'zustand';
+import { StateCreator } from 'zustand';
 
 export interface VolumeStore {
 	volume: number;
 	muted: boolean;
 	toggleMute: () => void;
 }
-
-// case "TOGGLE_MUTE": {
-// 	return merge({}, state, {
-// 	  muted: !state.muted,
-// 	  volume: state.volume === 0 ? VOLUME_SMALL : state.volume,
-// 	  idle: false,
-// 	});
-//   }
 
 const VOLUME_SMALL = 0.05;
 
