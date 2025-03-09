@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand';
-import { PlayerSkinStore } from './usePlayerSkinStore';
+import { PlayerRootStore } from './usePlayerRootStore';
 
 export interface PipStore {
 	pip: boolean;
@@ -7,7 +7,7 @@ export interface PipStore {
 }
 
 export const createPipStore: StateCreator<
-	PipStore & PlayerSkinStore,
+	PipStore & PlayerRootStore,
 	[],
 	[],
 	PipStore
