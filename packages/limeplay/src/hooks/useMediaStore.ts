@@ -1,4 +1,5 @@
 import { StateCreator } from 'zustand';
+import { PlayerRootStore } from '@/hooks/usePlayerRootStore';
 
 export interface MediaStore {
 	/** Whether the media is playing. */
@@ -20,15 +21,19 @@ export interface MediaStore {
 	playbackRate: number;
 	setPlaybackRate: (playbackRate: number) => void;
 	/** Whether the media loops back to the beginning after ending. */
-	loop: true | false;
-	setLoop: (loop: true | false) => void;
+	loop: boolean;
+	setLoop: (loop: boolean) => void;
 }
 
-export const createMediaStore: StateCreator<MediaStore, [], [], MediaStore> = (
-	set
-) => ({
+export const createMediaStore: StateCreator<
+	MediaStore & PlayerRootStore,
+	[],
+	[],
+	MediaStore
+> = (set) => ({
 	paused: false,
-	setPaused: (paused: boolean) => set({ paused }),
+	setPaused: (paused: boolean) =>
+		set({ paused, status: paused ? 'paused' : 'playing', idle: false }),
 	ended: false,
 	setEnded: (ended: boolean) => set({ ended }),
 	duration: 0,
@@ -40,5 +45,5 @@ export const createMediaStore: StateCreator<MediaStore, [], [], MediaStore> = (
 	playbackRate: 1,
 	setPlaybackRate: (playbackRate: number) => set({ playbackRate }),
 	loop: false,
-	setLoop: (loop: true | false) => set({ loop }),
+	setLoop: (loop: boolean) => set({ loop }),
 });

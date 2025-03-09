@@ -1,21 +1,37 @@
 {
-	"extends": "../../tsconfig.json",
-	"include": [
-		"./src",
-		"../../@types",
-		"./src/types/**/*",
-		"../../home/src/components/Player/Loader",
-		"../../home/src/components/Player/Timeline/styles.ts",
-		"../../home/src/components/Player/Timeline/HoverContainer.tsx",
-		"../../home/src/components/Player/Timeline/utils"
-	],
 	"compilerOptions": {
-		"typeRoots": ["./src/types"],
-		"module": "CommonJS",
+		"target": "ES2017",
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"allowJs": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"noEmit": true,
+		"esModuleInterop": true,
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"jsx": "preserve",
+		"incremental": true,
+
+		"plugins": [
+			{
+				"name": "next"
+			}
+		],
+		"baseUrl": ".",
 		"paths": {
-			// "shaka-player": [
-			// 	"./node_modules/shaka-player/dist/shaka-player.compiled.debug.js"
-			// ]
+			"@/www/*": ["../www/*"],
+			"@/*": ["./src/*"],
+			"react": ["./node_modules/@types/react"]
 		}
-	}
+	},
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		".next/types/**/*.ts",
+		"scripts/build-registry.mts"
+	],
+	"exclude": ["node_modules"]
 }
