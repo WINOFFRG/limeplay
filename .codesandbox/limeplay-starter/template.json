@@ -1,0 +1,16 @@
+{
+	"title": "Limeplay Starter",
+	"description": "Limeplay UI library for Video Player in React | Starter",
+	"iconUrl": "https://limeplay.me/favicon/favicon-32x32.png",
+	"tags": [
+		"react",
+		"typescript",
+		"shaka-player",
+		"hls.js",
+		"dash.js",
+		"library",
+		"video",
+		"player"
+	],
+	"published": true
+}
