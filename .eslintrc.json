@@ -1,74 +1,23 @@
 {
-	"env": {
-		"browser": true,
-		"es2021": true
-	},
-	"plugins": [
-		"react",
-		"@typescript-eslint",
-		"prettier",
-		"react-hooks",
-		"jsx-a11y",
-		"@typescript-eslint/eslint-plugin",
-		"eslint-plugin-tsdoc"
-	],
-	"extends": [
-		"plugin:react/recommended",
-		"plugin:prettier/recommended",
-		"airbnb",
-		"prettier",
-		"plugin:jsx-a11y/recommended",
-		"plugin:react-hooks/recommended",
-		"plugin:@typescript-eslint/eslint-recommended",
-		"plugin:@typescript-eslint/recommended",
-		"plugin:@typescript-eslint/recommended",
-		"plugin:@next/next/recommended"
-	],
-	"parser": "@typescript-eslint/parser",
-	"parserOptions": {
-		"ecmaFeatures": {
-			"jsx": true
-		},
-		"ecmaVersion": 14,
-		"sourceType": "module"
-	},
-	"rules": {
-		"@typescript-eslint/ban-ts-comment": "off",
-		"import/prefer-default-export": "off",
-		"import/no-extraneous-dependencies": "off",
-		"no-use-before-define": "off",
-		"import/no-unresolved": "off",
-		"no-underscore-dangle": "off",
-		"react/jsx-props-no-spreading": "off",
-		"react/react-in-jsx-scope": "off",
-		"no-param-reassign": "off",
-		"react/jsx-filename-extension": "off",
-		"react/require-default-props": "off",
-		"react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
-		"react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
-		"prettier/prettier": [
-			"error",
-			{
-				"endOfLine": "auto"
-			}
-		],
-		"import/extensions": [
-			"error",
-			"ignorePackages",
-			{
-				"": "never",
-				"js": "never",
-				"jsx": "never",
-				"ts": "never",
-				"tsx": "never"
-			}
-		]
-	},
-	"settings": {
-		"import/resolver": {
-			"node": {
-				"extensions": [".js", ".jsx", ".ts", ".tsx"]
-			}
-		}
-	}
+  "$schema": "https://json.schemastore.org/eslintrc",
+  "root": true,
+  "extends": ["next/core-web-vitals", "prettier"],
+  "plugins": [],
+  "ignorePatterns": ["**/fixtures/**"],
+  "rules": {
+    "@next/next/no-html-link-for-pages": "off",
+    "tailwindcss/no-custom-classname": "off",
+    "react/display-name": "off"
+  },
+  // "settings": {
+  //   "next": {
+  //     "rootDir": ["apps/*/"]
+  //   }
+  // },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parser": "@typescript-eslint/parser"
+    }
+  ]
 }
