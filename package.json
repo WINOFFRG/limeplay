@@ -60,7 +60,7 @@
 		"rimraf": "^3.0.2",
 		"tsup": "^6.7.0",
 		"tsx": "^3.12.6",
-		"turbo": "^2.4.4",
+		"turbo": "^1.8.8",
 		"typescript": "^5.0.2"
 	},
 	"tsdoc": {
@@ -72,21 +72,16 @@
 		}
 	},
 	"devDependencies": {
-		"@babel/core": "^7.26.10",
 		"@babel/preset-env": "^7.16.11",
 		"@babel/preset-react": "^7.18.6",
 		"@babel/preset-typescript": "^7.21.4",
-		"@ianvs/prettier-plugin-sort-imports": "^4.4.1",
 		"@storybook/addon-essentials": "7.0.6",
 		"@storybook/addon-links": "7.0.6",
 		"@storybook/blocks": "7.0.6",
 		"@storybook/builder-vite": "^7.0.6",
 		"@storybook/react": "7.0.6",
 		"@storybook/react-webpack5": "7.0.6",
-		"babel-plugin-module-resolver": "^5.0.2",
-		"eslint-config-turbo": "^2.4.4",
 		"eslint-plugin-storybook": "^0.6.11",
-		"eslint-plugin-tailwindcss": "^3.18.0",
 		"prop-types": "15.8.1",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
