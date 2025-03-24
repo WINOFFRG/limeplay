@@ -7,8 +7,6 @@ import {
   DocsTitle,
 } from "fumadocs-ui/page"
 
-import { useMDXComponents } from "@/components/mdx-components"
-
 import { source } from "../../../lib/source"
 
 export default async function Page(props: {
@@ -32,15 +30,14 @@ export default async function Page(props: {
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
       <DocsBody>
-        {/* <MDXContent
+        <MDXContent
           components={{
             ...defaultMdxComponents,
             // this allows you to link to other pages with relative file paths
             a: createRelativeLink(source, page),
             // you can add other MDX components here
           }}
-        /> */}
-        <MDXContent components={{ ...useMDXComponents({}) }} />
+        />
       </DocsBody>
     </DocsPage>
   )
