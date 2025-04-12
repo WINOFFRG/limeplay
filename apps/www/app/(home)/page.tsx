@@ -1,19 +1,14 @@
-import Link from 'next/link';
+import { VideoBackground } from "@/components/VideoBackground";
+import { VideoPlayer } from "@/components/VideoPlayer";
+import { MediaProvider } from "@/registry/default/ui/media-provider";
 
-export default function HomePage() {
+export default function Home() {
   return (
-    <main className="flex flex-1 flex-col justify-center text-center">
-      <h1 className="mb-4 text-2xl font-bold">Hello World</h1>
-      <p className="text-fd-muted-foreground">
-        You can open{' '}
-        <Link
-          href="/docs"
-          className="text-fd-foreground font-semibold underline"
-        >
-          /docs
-        </Link>{' '}
-        and see the documentation.
-      </p>
-    </main>
+    <section>
+      <VideoBackground />
+      <MediaProvider>
+        <VideoPlayer />
+      </MediaProvider>
+    </section>
   );
 }
