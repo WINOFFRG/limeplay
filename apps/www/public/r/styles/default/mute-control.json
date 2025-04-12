@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "mute-control",
+  "type": "registry:ui",
+  "dependencies": [
+    "@radix-ui/react-slot"
+  ],
+  "files": [
+    {
+      "path": "registry/default/ui/mute-control.tsx",
+      "content": "import React from \"react\"\nimport { Slot } from \"@radix-ui/react-slot\"\n\nimport { useVolumeStates } from \"@/registry/default/hooks/useVolumeStates\"\nimport { useMediaStore } from \"@/registry/default/ui/MediaProvider\"\n\nexport interface MuteControlProps\n  extends React.ButtonHTMLAttributes<HTMLButtonElement> {\n  asChild?: boolean\n}\n\n// eslint-disable-next-line react/display-name\nexport const MuteControl = React.forwardRef<\n  HTMLButtonElement,\n  MuteControlProps\n>((props, forwardedRef) => {\n  useVolumeStates()\n\n  const Comp = props.asChild ? Slot : \"button\"\n  const toggleMute = useMediaStore((state) => state.toggleMute)\n  const muted = useMediaStore((state) => state.muted)\n\n  return (\n    <Comp\n      data-slot=\"mute-control\"\n      {...props}\n      ref={forwardedRef}\n      aria-label=\"Mute (keyboard shortcut m)\"\n      aria-keyshortcuts=\"m\"\n      onClick={toggleMute}\n    />\n  )\n})\n",
+      "type": "registry:ui"
+    }
+  ]
+}
