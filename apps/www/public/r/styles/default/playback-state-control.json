@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "playback-state-control",
+  "type": "registry:example",
+  "registryDependencies": [
+    ""
+  ],
+  "files": [
+    {
+      "path": "registry/default/examples/playback-state-control.tsx",
+      "content": "\"use client\"\n\nimport { Button } from \"@/components/ui/button\"\nimport { PauseIcon } from \"@/components/icons/PauseIcon\"\nimport { PlayIcon } from \"@/components/icons/PlayIcon\"\nimport { ReplayIcon } from \"@/components/icons/ReplayIcon\"\nimport { Spinner } from \"@/components/icons/Spinner\"\nimport { useMediaStore } from \"@/registry/default/ui/MediaProvider\"\nimport { PlaybackControl } from \"@/registry/default/ui/PlaybackControl\"\n\nimport { PlayerDemoLayout } from \"./player-demo-root\"\n\nfunction PlaybackControlExample() {\n  const status = useMediaStore((state) => state.status)\n\n  return (\n    <Button size=\"icon\" variant=\"glass\" asChild>\n      <PlaybackControl>\n        {status === \"playing\" ? (\n          <PauseIcon />\n        ) : status === \"ended\" ? (\n          <ReplayIcon />\n        ) : status === \"buffering\" ? (\n          <Spinner />\n        ) : (\n          <PlayIcon />\n        )}\n      </PlaybackControl>\n    </Button>\n  )\n}\n\nexport function PlaybackStateControl() {\n  return (\n    <PlayerDemoLayout>\n      <PlaybackControlExample />\n    </PlayerDemoLayout>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ]
+}
