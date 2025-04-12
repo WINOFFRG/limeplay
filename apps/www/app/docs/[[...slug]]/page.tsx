@@ -1,4 +1,6 @@
+import React from "react"
 import { notFound } from "next/navigation"
+import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock"
 import defaultMdxComponents, { createRelativeLink } from "fumadocs-ui/mdx"
 import {
   DocsBody,
@@ -7,9 +9,8 @@ import {
   DocsTitle,
 } from "fumadocs-ui/page"
 
-import { useMDXComponents } from "@/components/mdx-components"
-
-import { source } from "../../../lib/source"
+import { source } from "@/lib/source"
+import { ComponentPreview } from "@/components/component-preview"
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>
@@ -26,21 +27,29 @@ export default async function Page(props: {
       full={page.data.full}
       tableOfContent={{
         style: "clerk",
-        header: <div className="w-10 h-4"></div>,
+        header: <div className="h-4 w-10"></div>,
       }}
     >
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
       <DocsBody>
-        {/* <MDXContent
+        <MDXContent
           components={{
             ...defaultMdxComponents,
             // this allows you to link to other pages with relative file paths
             a: createRelativeLink(source, page),
+            ComponentPreview,
+            pre: ({
+              ref: _ref,
+              ...props
+            }: React.ComponentPropsWithRef<any>) => (
+              <CodeBlock keepBackground className="" {...props}>
+                <Pre>{props.children}</Pre>
+              </CodeBlock>
+            ),
             // you can add other MDX components here
           }}
-        /> */}
-        <MDXContent components={{ ...useMDXComponents({}) }} />
+        />
       </DocsBody>
     </DocsPage>
   )
