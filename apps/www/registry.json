@@ -1,0 +1,51 @@
+{
+  "name": "shadcn/ui",
+  "homepage": "https://ui.shadcn.com",
+  "items": [
+    {
+      "name": "index",
+      "type": "registry:style",
+      "dependencies": [
+        "tw-animate-css",
+        "class-variance-authority",
+        "lucide-react"
+      ],
+      "registryDependencies": ["utils"],
+      "files": [],
+      "cssVars": {}
+    },
+    {
+      "name": "mute-control",
+      "type": "registry:ui",
+      "dependencies": ["@radix-ui/react-slot"],
+      "files": [
+        {
+          "path": "registry/default/ui/mute-control.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "registry/default/lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "playback-state-control",
+      "type": "registry:example",
+      "registryDependencies": ["media-provider"],
+      "files": [
+        {
+          "path": "registry/default/examples/playback-state-control.tsx",
+          "type": "registry:example"
+        }
+      ]
+    }
+  ]
+}
