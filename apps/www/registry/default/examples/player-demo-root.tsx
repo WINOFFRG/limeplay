@@ -3,7 +3,7 @@
 import { Media } from "@/registry/default/ui/media";
 import {
   MediaProvider,
-  useMediaStore,
+  useMediaStore
 } from "@/registry/default/ui/media-provider";
 import React, { Suspense, useEffect } from "react";
 import { useControls } from "leva";
@@ -11,6 +11,7 @@ import { useControls } from "leva";
 import { ControlsWrapper } from "@/registry/default/internal/controls-wrapper";
 import { ShakaProvider } from "@/registry/default/ui/shaka-provider";
 import { LevaControls } from "@/components/leva-controls";
+import { useIntersection } from "react-use";
 
 function PlayerRoot({ children }: React.PropsWithChildren) {
   const player = useMediaStore((state) => state.player);
@@ -19,8 +20,8 @@ function PlayerRoot({ children }: React.PropsWithChildren) {
     streamUrl: {
       value:
         "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8",
-      label: "Stream URL",
-    },
+      label: "Stream URL"
+    }
   });
 
   useEffect(() => {
