@@ -2,7 +2,7 @@ import Image from "next/image";
 import Logo from "@/public/product-icon.svg";
 import { GITHUB_URL, PRODUCT_NAME } from "@/lib/constants";
 import { BaseLayoutProps } from "@/components/layouts/shared";
-import { X, XLogo } from "@phosphor-icons/react/dist/ssr";
+import { Book, Question, XLogo } from "@phosphor-icons/react/dist/ssr";
 
 export const baseOptions: BaseLayoutProps = {
   nav: {
@@ -22,12 +22,15 @@ export const baseOptions: BaseLayoutProps = {
   links: [
     {
       type: "main",
-      text: "Documentation",
-      url: "/docs/getting-started"
+      text: "Getting Started",
+      url: "/docs/getting-started",
+      icon: <Book />
     },
     {
-      type: "custom",
-      children: <div className="ml-auto flex grow" />
+      type: "main",
+      text: "What is Limeplay?",
+      url: "/docs/what-is-limeplay",
+      icon: <Question />
     },
     {
       type: "icon",
