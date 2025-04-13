@@ -3,7 +3,7 @@
 import { Media } from "@/registry/default/ui/media";
 import {
   MediaProvider,
-  useMediaStore
+  useMediaStore,
 } from "@/registry/default/ui/media-provider";
 import React, { Suspense, useEffect } from "react";
 import { useControls } from "leva";
@@ -19,8 +19,8 @@ function PlayerRoot({ children }: React.PropsWithChildren) {
     streamUrl: {
       value:
         "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8",
-      label: "Stream URL"
-    }
+      label: "Stream URL",
+    },
   });
 
   useEffect(() => {

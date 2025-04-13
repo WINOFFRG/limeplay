@@ -3,7 +3,7 @@
 import { Media } from "@/registry/default/ui/media";
 import {
   MediaProvider,
-  useMediaStore
+  useMediaStore,
 } from "@/registry/default/ui/media-provider";
 import React, { Suspense, useEffect } from "react";
 import { ShakaProvider } from "@/registry/default/ui/shaka-provider";

@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { type SelectTriggerProps } from "@radix-ui/react-select"
+import * as React from "react";
+import { type SelectTriggerProps } from "@radix-ui/react-select";
 
-import { cn } from "@/lib/utils"
-import { useConfig } from "@/hooks/use-config"
+import { cn } from "@/lib/utils";
+import { useConfig } from "@/hooks/use-config";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Style, styles } from "@/registry/registry-styles"
+  SelectValue
+} from "@/components/ui/select";
+import { Style, styles } from "@/registry/registry-styles";
 
 export function StyleSwitcher({ className, ...props }: SelectTriggerProps) {
-  const [config, setConfig] = useConfig()
+  const [config, setConfig] = useConfig();
 
   return (
     <Select
@@ -23,15 +23,12 @@ export function StyleSwitcher({ className, ...props }: SelectTriggerProps) {
       onValueChange={(value: Style["name"]) =>
         setConfig({
           ...config,
-          style: value,
+          style: value
         })
       }
     >
       <SelectTrigger
-        className={cn(
-          "h-7 w-[145px] text-xs [&_svg]:h-4 [&_svg]:w-4",
-          className
-        )}
+        className={cn("h-7 w-[145px] text-xs [&_svg]:size-4", className)}
         {...props}
       >
         <span className="text-muted-foreground">Style: </span>
@@ -45,5 +42,5 @@ export function StyleSwitcher({ className, ...props }: SelectTriggerProps) {
         ))}
       </SelectContent>
     </Select>
-  )
+  );
 }

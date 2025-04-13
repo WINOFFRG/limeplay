@@ -66,16 +66,16 @@ export function ComponentPreview({
     return <Component />;
   }, [name, config.style]);
 
-  const codeString = React.useMemo(() => {
-    if (
-      typeof Code?.props["data-rehype-pretty-code-fragment"] !== "undefined"
-    ) {
-      const [Button] = React.Children.toArray(
-        Code.props.children
-      ) as React.ReactElement[];
-      return Button?.props?.value || Button?.props?.__rawString__ || null;
-    }
-  }, [Code]);
+  // const codeString = React.useMemo(() => {
+  //   if (
+  //     typeof Code?.props["data-rehype-pretty-code-fragment"] !== "undefined"
+  //   ) {
+  //     const [Button] = React.Children.toArray(
+  //       Code.props.children
+  //     ) as React.ReactElement[];
+  //     return Button?.props?.value || Button?.props?.__rawString__ || null;
+  //   }
+  // }, [Code]);
 
   if (type === "block") {
     return (
