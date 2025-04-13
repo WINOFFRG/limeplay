@@ -1,25 +1,25 @@
-import React from "react"
-import { notFound } from "next/navigation"
-import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock"
-import defaultMdxComponents, { createRelativeLink } from "fumadocs-ui/mdx"
+import React from "react";
+import { notFound } from "next/navigation";
+import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
+import defaultMdxComponents, { createRelativeLink } from "fumadocs-ui/mdx";
 import {
   DocsBody,
   DocsDescription,
   DocsPage,
-  DocsTitle,
-} from "fumadocs-ui/page"
+  DocsTitle
+} from "fumadocs-ui/page";
 
-import { source } from "@/lib/source"
-import { ComponentPreview } from "@/components/component-preview"
+import { source } from "@/lib/source";
+import { ComponentPreview } from "@/components/component-preview";
 
 export default async function Page(props: {
-  params: Promise<{ slug?: string[] }>
+  params: Promise<{ slug?: string[] }>;
 }) {
-  const params = await props.params
-  const page = source.getPage(params.slug)
-  if (!page) notFound()
+  const params = await props.params;
+  const page = source.getPage(params.slug);
+  if (!page) notFound();
 
-  const MDXContent = page.data.body
+  const MDXContent = page.data.body;
 
   return (
     <DocsPage
@@ -27,7 +27,7 @@ export default async function Page(props: {
       full={page.data.full}
       tableOfContent={{
         style: "clerk",
-        header: <div className="h-4 w-10"></div>,
+        header: <div className="h-4 w-10"></div>
       }}
     >
       <DocsTitle>{page.data.title}</DocsTitle>
@@ -46,28 +46,28 @@ export default async function Page(props: {
               <CodeBlock keepBackground className="" {...props}>
                 <Pre>{props.children}</Pre>
               </CodeBlock>
-            ),
+            )
             // you can add other MDX components here
           }}
         />
       </DocsBody>
     </DocsPage>
-  )
+  );
 }
 
 export async function generateStaticParams() {
-  return source.generateParams()
+  return source.generateParams();
 }
 
 export async function generateMetadata(props: {
-  params: Promise<{ slug?: string[] }>
+  params: Promise<{ slug?: string[] }>;
 }) {
-  const params = await props.params
-  const page = source.getPage(params.slug)
-  if (!page) notFound()
+  const params = await props.params;
+  const page = source.getPage(params.slug);
+  if (!page) notFound();
 
   return {
     title: page.data.title,
-    description: page.data.description,
-  }
+    description: page.data.description
+  };
 }
