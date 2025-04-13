@@ -10,14 +10,18 @@
         "class-variance-authority",
         "lucide-react"
       ],
-      "registryDependencies": ["utils"],
+      "registryDependencies": [
+        "utils"
+      ],
       "files": [],
       "cssVars": {}
     },
     {
       "name": "mute-control",
       "type": "registry:ui",
-      "dependencies": ["@radix-ui/react-slot"],
+      "dependencies": [
+        "@radix-ui/react-slot"
+      ],
       "files": [
         {
           "path": "registry/default/ui/mute-control.tsx",
@@ -28,7 +32,10 @@
     {
       "name": "utils",
       "type": "registry:lib",
-      "dependencies": ["clsx", "tailwind-merge"],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
       "files": [
         {
           "path": "registry/default/lib/utils.ts",
@@ -39,10 +46,51 @@
     {
       "name": "playback-state-control",
       "type": "registry:example",
-      "registryDependencies": ["media-provider"],
+      "registryDependencies": [
+        ""
+      ],
       "files": [
         {
           "path": "registry/default/examples/playback-state-control.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "volume-slider-control-horizontal",
+      "type": "registry:example",
+      "registryDependencies": [
+        ""
+      ],
+      "files": [
+        {
+          "path": "registry/default/examples/volume-slider-control-horizontal.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "volume-slider-control-vertical",
+      "type": "registry:example",
+      "registryDependencies": [
+        ""
+      ],
+      "files": [
+        {
+          "path": "registry/default/examples/volume-slider-control-vertical.tsx",
+          "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "volume-state-control",
+      "type": "registry:example",
+      "registryDependencies": [
+        ""
+      ],
+      "files": [
+        {
+          "path": "registry/default/examples/volume-state-control.tsx",
           "type": "registry:example"
         }
       ]
