@@ -165,5 +165,3 @@ html {
 @utility -focus-area-y-* {
   --y: --value(number) * -1;
 }
-
-/* className="focus-area -focus-area-x-24 -focus-area-y-6" */
