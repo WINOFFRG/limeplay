@@ -6,6 +6,7 @@
     "build": "next build",
     "dev": "next dev --turbopack",
     "start": "next start",
+    "postinstall": "fumadocs-mdx",
     "registry:build": "tsx --tsconfig ./tsconfig.scripts.json ./scripts/build-registry.ts && prettier --log-level silent --write \"registry/**/*.{ts,tsx,json,mdx}\" --cache",
     "registry:dev": "tsx --watch --tsconfig ./tsconfig.scripts.json ./scripts/build-registry.ts && prettier --log-level silent --write \"registry/**/*.{ts,tsx,json,mdx}\" --cache"
   },

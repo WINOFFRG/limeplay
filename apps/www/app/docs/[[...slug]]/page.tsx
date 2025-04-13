@@ -37,6 +37,8 @@ export default async function Page(props: {
           components={{
             ...defaultMdxComponents,
             // this allows you to link to other pages with relative file paths
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore Fix me later
             a: createRelativeLink(source, page),
             ComponentPreview,
             pre: ({
@@ -47,7 +49,6 @@ export default async function Page(props: {
                 <Pre>{props.children}</Pre>
               </CodeBlock>
             )
-            // you can add other MDX components here
           }}
         />
       </DocsBody>
