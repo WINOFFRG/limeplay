@@ -6,7 +6,7 @@ export function ControlsContainer() {
   return (
     <div
       id="controls_wrapper"
-      className="z-100 absolute inset-0 isolate contain-strict"
+      className="z-100 absolute inset-0 isolate mx-auto max-w-7xl contain-strict"
     >
       <div
         id="controls_container"

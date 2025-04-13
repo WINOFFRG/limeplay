@@ -62,7 +62,7 @@ export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
           })}
       </ul>
 
-      <ul className="ml-auto flex flex-row items-center">
+      <ul className="ml-auto flex flex-row items-center gap-2">
         {navItems.filter(isSecondary).map((item, i) => (
           <NavbarLinkItem
             key={i}
