@@ -1,0 +1,106 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import { useMediaStore } from "@/registry/default/ui/media-provider";
+import React from "react";
+import * as SliderPrimitive from "@radix-ui/react-slider";
+import { useState } from "react";
+
+const VOLUME_RESET_BASE = 0.05;
+
+export const Root = React.forwardRef<
+  React.ComponentRef<typeof SliderPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
+>((props, forwardedRef) => {
+  const { className, onValueChange: propOnValueChange, ...etc } = props;
+  const volume = useMediaStore((state) => state.volume);
+  const hasAudio = useMediaStore((state) => state.hasAudio);
+  const setVolume = useMediaStore((state) => state.setVolume);
+  const muted = useMediaStore((state) => state.muted);
+  const [currentValue, setCurrentValue] = useState(volume);
+
+  const onValueChange = (value: number[]) => {
+    propOnValueChange?.(value);
+    setCurrentValue(value[0]);
+    setVolume(value[0]);
+  };
+
+  if (!hasAudio) {
+    return null;
+  }
+
+  return (
+    <SliderPrimitive.Root
+      ref={forwardedRef}
+      min={0}
+      max={1}
+      step={0.05}
+      value={[muted ? 0 : currentValue === 0 ? VOLUME_RESET_BASE : volume]}
+      defaultValue={[volume]}
+      className={cn(
+        "relative flex touch-none select-none items-center justify-center",
+        className
+      )}
+      onValueChange={onValueChange}
+      {...etc}
+    />
+  );
+});
+
+export const Track = React.forwardRef<
+  React.ComponentRef<typeof SliderPrimitive.Track>,
+  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Track>
+>((props, forwardRef) => {
+  const { className } = props;
+
+  return (
+    <SliderPrimitive.Track
+      {...props}
+      ref={forwardRef}
+      className={cn(
+        "relative size-full overflow-hidden rounded-md bg-white/20",
+        className
+      )}
+    />
+  );
+});
+
+export const Range = React.forwardRef<
+  React.ComponentRef<typeof SliderPrimitive.Range>,
+  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Range>
+>((props, forwardedRef) => {
+  const { ...etc } = props;
+
+  return (
+    <SliderPrimitive.Range
+      ref={forwardedRef}
+      {...etc}
+      className="absolute rounded-md bg-white data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full"
+    />
+  );
+});
+
+export const Thumb = React.forwardRef<
+  React.ComponentRef<typeof SliderPrimitive.Thumb>,
+  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Thumb>
+>((props, forwardRef) => {
+  const { className, ...etc } = props;
+  const volume = useMediaStore((state) => state.volume);
+  const displayValue = Number((volume * 100).toFixed(2));
+
+  return (
+    <SliderPrimitive.Thumb
+      className={cn(
+        "block size-2 rounded-full bg-white outline-offset-1 outline-white focus-visible:outline-1 focus-visible:ring-0",
+        className
+      )}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={displayValue}
+      aria-valuetext={`${displayValue}% volume`}
+      aria-label="Volume"
+      {...etc}
+      ref={forwardRef}
+    />
+  );
+});

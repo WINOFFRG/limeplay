@@ -1,14 +1,11 @@
 import { VideoBackground } from "@/components/VideoBackground";
-import { VideoPlayer } from "@/components/VideoPlayer";
-import { MediaProvider } from "@/registry/default/ui/media-provider";
+import { PlayerDemoLayout } from "@/registry/default/blocks/linear-player/player-demo-root";
 
 export default function Home() {
   return (
     <section>
       <VideoBackground />
-      <MediaProvider>
-        <VideoPlayer />
-      </MediaProvider>
+      <PlayerDemoLayout />
     </section>
   );
 }
