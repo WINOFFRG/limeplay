@@ -1,41 +1,43 @@
 "use client";
 
-import React, { lazy, Suspense, useEffect } from "react";
-
 import { Media } from "@/registry/default/ui/media";
 import {
   MediaProvider,
   useMediaStore
 } from "@/registry/default/ui/media-provider";
+import React, { Suspense, useEffect } from "react";
+import { useControls } from "leva";
 
-import { ControlsWrapper } from "../internal/controls-wrapper";
-import { ShakaProvider } from "../ui/shaka-provider";
-
-// const ShakaProvider = lazy(() =>
-//   import("@/registry/default/ui/ShakaProvider").then((mod) => ({
-//     default: mod.ShakaProvider,
-//   }))
-// )
+import { ControlsWrapper } from "@/registry/default/internal/controls-wrapper";
+import { ShakaProvider } from "@/registry/default/ui/shaka-provider";
+import { LevaControls } from "@/components/leva-controls";
 
 function PlayerRoot({ children }: React.PropsWithChildren) {
   const player = useMediaStore((state) => state.player);
-  const mediaRef = useMediaStore((state) => state.mediaRef);
+
+  const { streamUrl } = useControls({
+    streamUrl: {
+      value:
+        "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8",
+      label: "Stream URL"
+    }
+  });
 
   useEffect(() => {
     if (player) {
-      player.load(
-        "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
-      );
+      try {
+        const url = new URL(streamUrl);
 
-      return () => {
-        if (mediaRef.current) {
-          mediaRef.current.pause();
+        if (url.protocol === "http:" || url.protocol === "https:") {
+          player.load(streamUrl);
+        } else {
+          console.warn("Invalid stream URL protocol. Must be http or https.");
         }
-
-        player.destroy();
-      };
+      } catch (error) {
+        console.error("Invalid stream URL format:", streamUrl);
+      }
     }
-  }, [player]);
+  }, [player, streamUrl]);
 
   return (
     <Suspense>
@@ -44,10 +46,7 @@ function PlayerRoot({ children }: React.PropsWithChildren) {
           <Media
             as="video"
             className="m-0! size-full rounded-lg bg-black object-cover"
-            autoPlay={false}
             poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
-            muted
-            loop
           />
         </div>
         <ControlsWrapper>{children}</ControlsWrapper>
@@ -59,8 +58,9 @@ function PlayerRoot({ children }: React.PropsWithChildren) {
 export function PlayerDemoLayout({ children }: React.PropsWithChildren) {
   return (
     <MediaProvider>
+      <LevaControls />
       <PlayerRoot>
-        <div className="flex flex-row items-center px-8 py-4">{children}</div>
+        <div className="flex flex-row px-8 py-4">{children}</div>
       </PlayerRoot>
     </MediaProvider>
   );
