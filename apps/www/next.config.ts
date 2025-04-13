@@ -5,6 +5,7 @@ const withMDX = createMDX();
 
 const config: NextConfig = {
   reactStrictMode: true,
+  output: "export",
 };
 
 export default withMDX(config);

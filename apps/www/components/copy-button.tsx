@@ -1,30 +1,30 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { DropdownMenuTriggerProps } from "@radix-ui/react-dropdown-menu"
-import { CheckIcon, ClipboardIcon } from "lucide-react"
-import { NpmCommands } from "types/unist"
+import * as React from "react";
+import { DropdownMenuTriggerProps } from "@radix-ui/react-dropdown-menu";
+import { CheckIcon, ClipboardIcon } from "lucide-react";
+import { NpmCommands } from "types/unist";
 
-import { Event, trackEvent } from "@/lib/events"
-import { cn } from "@/lib/utils"
-import { Button, ButtonProps } from "@/components/ui/button"
+import { Event, trackEvent } from "@/lib/events";
+import { cn } from "@/lib/utils";
+import { Button, ButtonProps } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
 interface CopyButtonProps extends ButtonProps {
-  value: string
-  src?: string
-  event?: Event["name"]
+  value: string;
+  src?: string;
+  event?: Event["name"];
 }
 
 export async function copyToClipboardWithMeta(value: string, event?: Event) {
-  navigator.clipboard.writeText(value)
+  navigator.clipboard.writeText(value);
   if (event) {
-    trackEvent(event)
+    trackEvent(event);
   }
 }
 
@@ -36,20 +36,20 @@ export function CopyButton({
   event,
   ...props
 }: CopyButtonProps) {
-  const [hasCopied, setHasCopied] = React.useState(false)
+  const [hasCopied, setHasCopied] = React.useState(false);
 
   React.useEffect(() => {
     setTimeout(() => {
-      setHasCopied(false)
-    }, 2000)
-  }, [hasCopied])
+      setHasCopied(false);
+    }, 2000);
+  }, [hasCopied]);
 
   return (
     <Button
       size="icon"
       variant={variant}
       className={cn(
-        "relative z-10 h-6 w-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50 [&_svg]:h-3 [&_svg]:w-3",
+        "relative z-10 size-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50 [&_svg]:size-3",
         className
       )}
       onClick={() => {
@@ -59,25 +59,25 @@ export function CopyButton({
             ? {
                 name: event,
                 properties: {
-                  code: value,
-                },
+                  code: value
+                }
               }
             : undefined
-        )
-        setHasCopied(true)
+        );
+        setHasCopied(true);
       }}
       {...props}
     >
       <span className="sr-only">Copy</span>
       {hasCopied ? <CheckIcon /> : <ClipboardIcon />}
     </Button>
-  )
+  );
 }
 
 interface CopyWithClassNamesProps extends DropdownMenuTriggerProps {
-  value: string
-  classNames: string
-  className?: string
+  value: string;
+  classNames: string;
+  className?: string;
 }
 
 export function CopyWithClassNames({
@@ -86,18 +86,18 @@ export function CopyWithClassNames({
   className,
   ...props
 }: CopyWithClassNamesProps) {
-  const [hasCopied, setHasCopied] = React.useState(false)
+  const [hasCopied, setHasCopied] = React.useState(false);
 
   React.useEffect(() => {
     setTimeout(() => {
-      setHasCopied(false)
-    }, 2000)
-  }, [hasCopied])
+      setHasCopied(false);
+    }, 2000);
+  }, [hasCopied]);
 
   const copyToClipboard = React.useCallback((value: string) => {
-    copyToClipboardWithMeta(value)
-    setHasCopied(true)
-  }, [])
+    copyToClipboardWithMeta(value);
+    setHasCopied(true);
+  }, []);
 
   return (
     <DropdownMenu>
@@ -106,14 +106,14 @@ export function CopyWithClassNames({
           size="icon"
           variant="ghost"
           className={cn(
-            "relative z-10 h-6 w-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50",
+            "relative z-10 size-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50",
             className
           )}
         >
           {hasCopied ? (
-            <CheckIcon className="h-3 w-3" />
+            <CheckIcon className="size-3" />
           ) : (
-            <ClipboardIcon className="h-3 w-3" />
+            <ClipboardIcon className="size-3" />
           )}
           <span className="sr-only">Copy</span>
         </Button>
@@ -127,11 +127,11 @@ export function CopyWithClassNames({
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
 
 interface CopyNpmCommandButtonProps extends DropdownMenuTriggerProps {
-  commands: Required<NpmCommands>
+  commands: Required<NpmCommands>;
 }
 
 export function CopyNpmCommandButton({
@@ -139,13 +139,13 @@ export function CopyNpmCommandButton({
   className,
   ...props
 }: CopyNpmCommandButtonProps) {
-  const [hasCopied, setHasCopied] = React.useState(false)
+  const [hasCopied, setHasCopied] = React.useState(false);
 
   React.useEffect(() => {
     setTimeout(() => {
-      setHasCopied(false)
-    }, 2000)
-  }, [hasCopied])
+      setHasCopied(false);
+    }, 2000);
+  }, [hasCopied]);
 
   const copyCommand = React.useCallback(
     (value: string, pm: "npm" | "pnpm" | "yarn" | "bun") => {
@@ -153,13 +153,13 @@ export function CopyNpmCommandButton({
         name: "copy_npm_command",
         properties: {
           command: value,
-          pm,
-        },
-      })
-      setHasCopied(true)
+          pm
+        }
+      });
+      setHasCopied(true);
     },
     []
-  )
+  );
 
   return (
     <DropdownMenu>
@@ -168,14 +168,14 @@ export function CopyNpmCommandButton({
           size="icon"
           variant="ghost"
           className={cn(
-            "relative z-10 h-6 w-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50",
+            "relative z-10 size-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50",
             className
           )}
         >
           {hasCopied ? (
-            <CheckIcon className="h-3 w-3" />
+            <CheckIcon className="size-3" />
           ) : (
-            <ClipboardIcon className="h-3 w-3" />
+            <ClipboardIcon className="size-3" />
           )}
           <span className="sr-only">Copy</span>
         </Button>
@@ -203,5 +203,5 @@ export function CopyNpmCommandButton({
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
