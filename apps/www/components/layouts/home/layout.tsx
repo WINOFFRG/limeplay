@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { slot } from "../shared";
 import { Header, HomeLayoutProps } from "../header";
 import { HTMLAttributes } from "react";
+import { HEADER_LINKS } from "@/app/layout.config";
 
 export function HomeLayout(
   props: HomeLayoutProps & HTMLAttributes<HTMLElement>
@@ -18,7 +19,7 @@ export function HomeLayout(
       >
         {slot(
           nav,
-          <Header links={links} nav={nav} themeSwitch={themeSwitch} />
+          <Header links={HEADER_LINKS} nav={nav} themeSwitch={themeSwitch} />
         )}
         {props.children}
       </main>
