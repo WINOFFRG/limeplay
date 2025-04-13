@@ -3,6 +3,7 @@ import { Slot } from "@radix-ui/react-slot";
 
 import { useVolumeStates } from "@/registry/default/hooks/use-volume-states";
 import { useMediaStore } from "@/registry/default/ui/media-provider";
+import { Button } from "@/components/ui/button";
 
 export interface MuteControlProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -14,11 +15,8 @@ export const MuteControl = React.forwardRef<
   MuteControlProps
 >((props, forwardedRef) => {
   useVolumeStates();
-
-  const Comp = props.asChild ? Slot : "button";
+  const Comp = props.asChild ? Slot : Button;
   const toggleMute = useMediaStore((state) => state.toggleMute);
-  const muted = useMediaStore((state) => state.muted);
-  const setMuted = useMediaStore((state) => state.setMuted);
 
   return (
     <Comp

@@ -67,5 +67,56 @@ export const Index: Record<string, any> = {
       }),
       meta: undefined,
     },
+    "volume-slider-control-horizontal": {
+      name: "volume-slider-control-horizontal",
+      description: "",
+      type: "registry:example",
+      registryDependencies: [""],
+      files: [{
+        path: "registry/default/examples/volume-slider-control-horizontal.tsx",
+        type: "registry:example",
+        target: ""
+      }],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/default/examples/volume-slider-control-horizontal.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-slider-control-horizontal"
+        return { default: mod.default || mod[exportName] }
+      }),
+      meta: undefined,
+    },
+    "volume-slider-control-vertical": {
+      name: "volume-slider-control-vertical",
+      description: "",
+      type: "registry:example",
+      registryDependencies: [""],
+      files: [{
+        path: "registry/default/examples/volume-slider-control-vertical.tsx",
+        type: "registry:example",
+        target: ""
+      }],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/default/examples/volume-slider-control-vertical.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-slider-control-vertical"
+        return { default: mod.default || mod[exportName] }
+      }),
+      meta: undefined,
+    },
+    "volume-state-control": {
+      name: "volume-state-control",
+      description: "",
+      type: "registry:example",
+      registryDependencies: [""],
+      files: [{
+        path: "registry/default/examples/volume-state-control.tsx",
+        type: "registry:example",
+        target: ""
+      }],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/default/examples/volume-state-control.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-state-control"
+        return { default: mod.default || mod[exportName] }
+      }),
+      meta: undefined,
+    },
   }
 }

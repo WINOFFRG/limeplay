@@ -5,17 +5,17 @@
 
 // Helper type to extract valid event names from an element type
 type EventNames<T> = {
-  [K in keyof T]: K extends `on${infer E}` ? Lowercase<E> : never
-}[keyof T]
+  [K in keyof T]: K extends `on${infer E}` ? Lowercase<E> : never;
+}[keyof T];
 
 // Helper type to get the event type for a given event name and element
 type EventType<T, E> = T extends {
-  addEventListener: (event: any, handler: infer H) => any
+  addEventListener: (event: any, handler: infer H) => any;
 }
   ? H extends (event: infer Event) => any
     ? Event
     : never
-  : never
+  : never;
 
 /**
  * Attaches event listeners to an element with type-safe event names
@@ -36,13 +36,13 @@ export function on<
 ): T {
   if (Array.isArray(events)) {
     events.forEach((event) => {
-      element.addEventListener(event, callback as EventListener)
-    })
+      element.addEventListener(event, callback as EventListener);
+    });
   } else {
-    element.addEventListener(events, callback as EventListener)
+    element.addEventListener(events, callback as EventListener);
   }
 
-  return element
+  return element;
 }
 
 /**
@@ -64,13 +64,13 @@ export function off<
 ): T {
   if (Array.isArray(events)) {
     events.forEach((event) => {
-      element.removeEventListener(event, callback as EventListener)
-    })
+      element.removeEventListener(event, callback as EventListener);
+    });
   } else {
-    element.removeEventListener(events, callback as EventListener)
+    element.removeEventListener(events, callback as EventListener);
   }
 
-  return element
+  return element;
 }
 
 /**

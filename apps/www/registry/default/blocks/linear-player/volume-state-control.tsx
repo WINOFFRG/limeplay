@@ -14,11 +14,11 @@ export function VolumeStateControl() {
     <Button size="icon" variant="glass" asChild>
       <MuteControl>
         {muted || volume === 0 ? (
-          <SpeakerX size={20} weight="fill" />
+          <SpeakerX size={18} weight="fill" />
         ) : volume < 0.5 ? (
-          <SpeakerLow size={20} weight="fill" />
+          <SpeakerLow size={18} weight="fill" />
         ) : (
-          <SpeakerHigh size={20} weight="fill" />
+          <SpeakerHigh size={18} weight="fill" />
         )}
       </MuteControl>
     </Button>

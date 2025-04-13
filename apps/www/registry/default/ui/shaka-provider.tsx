@@ -1,47 +1,61 @@
-"use client"
+"use client";
 
-import React, { useEffect } from "react"
+import React, { useEffect } from "react";
 
 // import shaka from "shaka-player"
 
-import { useMediaStore } from "@/registry/default/ui/media-provider"
+import { useMediaStore } from "@/registry/default/ui/media-provider";
 
 interface ShakaProviderProps extends React.PropsWithChildren {
   // Loads shaka-player debug version
-  debug?: boolean
+  debug?: boolean;
 }
 
 export function ShakaProvider({ children, debug = false }: ShakaProviderProps) {
-  const setPlayer = useMediaStore((state) => state.setPlayer)
-  const mediaRef = useMediaStore((state) => state.mediaRef)
-  const isServer = typeof window === undefined
+  const setPlayer = useMediaStore((state) => state.setPlayer);
+  const mediaRef = useMediaStore((state) => state.mediaRef);
+  const isServer = typeof window === undefined;
 
   useEffect(() => {
     if (isServer) {
-      console.warn("skipping shaka load on server")
-      return
+      console.warn("skipping shaka load on server");
+      return;
     }
+
+    let _player: shaka.Player | null = null;
 
     async function loadPlayer() {
       const shakaLib = debug
         ? await import("shaka-player/dist/shaka-player.compiled.debug")
-        : await import("shaka-player")
+        : await import("shaka-player");
 
       if (!mediaRef?.current) {
-        return
+        return;
       }
 
-      const _player = new shakaLib.Player(mediaRef.current)
-      setPlayer(_player)
+      _player = new shakaLib.Player();
+      _player.attach(mediaRef.current);
+      setPlayer(_player);
 
       if (debug) {
         // @ts-expect-error DEV only
-        window.player = _player
+        window.player = _player;
       }
+
+      return _player;
     }
 
-    loadPlayer()
-  }, [mediaRef, debug, setPlayer])
+    loadPlayer();
 
-  return <div>{children}</div>
+    return () => {
+      if (_player) {
+        if (mediaRef.current) {
+          mediaRef.current.pause();
+        }
+        _player.destroy();
+      }
+    };
+  }, [mediaRef, debug, setPlayer]);
+
+  return <div>{children}</div>;
 }
