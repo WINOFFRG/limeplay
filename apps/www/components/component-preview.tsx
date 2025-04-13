@@ -7,11 +7,8 @@ import { Index } from "@/__registry__";
 import { cn } from "@/lib/utils";
 import { useConfig } from "@/hooks/use-config";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CopyButton } from "@/components/copy-button";
 import { Icons } from "@/components/icons";
-import { ThemeWrapper } from "@/components/theme-wrapper";
 import { PlayerDemoLayout } from "@/registry/default/examples/player-demo-root";
-// import { V0Button } from "@/components/v0-button"
 import { styles } from "@/registry/registry-styles";
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -66,17 +63,6 @@ export function ComponentPreview({
     return <Component />;
   }, [name, config.style]);
 
-  // const codeString = React.useMemo(() => {
-  //   if (
-  //     typeof Code?.props["data-rehype-pretty-code-fragment"] !== "undefined"
-  //   ) {
-  //     const [Button] = React.Children.toArray(
-  //       Code.props.children
-  //     ) as React.ReactElement[];
-  //     return Button?.props?.value || Button?.props?.__rawString__ || null;
-  //   }
-  // }, [Code]);
-
   if (type === "block") {
     return (
       <div className="relative aspect-[4/2.5] w-full overflow-hidden rounded-md border">
@@ -129,22 +115,20 @@ export function ComponentPreview({
           )}
         </div>
         <TabsContent value="preview" className="relative">
-          <ThemeWrapper defaultTheme="zinc">
-            <React.Suspense
-              fallback={
-                <div className="text-muted-foreground flex w-full items-center justify-center text-sm">
-                  <Icons.spinner className="mr-2 size-4 animate-spin" />
-                  Loading...
-                </div>
-              }
-            >
-              {withPlayer ? (
-                <PlayerDemoLayout>{Preview}</PlayerDemoLayout>
-              ) : (
-                Preview
-              )}
-            </React.Suspense>
-          </ThemeWrapper>
+          <React.Suspense
+            fallback={
+              <div className="text-muted-foreground flex w-full items-center justify-center text-sm">
+                <Icons.spinner className="mr-2 size-4 animate-spin" />
+                Loading...
+              </div>
+            }
+          >
+            {withPlayer ? (
+              <PlayerDemoLayout>{Preview}</PlayerDemoLayout>
+            ) : (
+              Preview
+            )}
+          </React.Suspense>
         </TabsContent>
         <TabsContent value="code">
           <div className="flex flex-col space-y-4">
