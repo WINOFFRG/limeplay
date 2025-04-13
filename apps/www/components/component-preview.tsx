@@ -1,28 +1,28 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Image from "next/image"
-import { Index } from "@/__registry__"
+import * as React from "react";
+import Image from "next/image";
+import { Index } from "@/__registry__";
 
-import { cn } from "@/lib/utils"
-import { useConfig } from "@/hooks/use-config"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { CopyButton } from "@/components/copy-button"
-import { Icons } from "@/components/icons"
-import { ThemeWrapper } from "@/components/theme-wrapper"
-import { PlayerDemoLayout } from "@/registry/default/examples/player-demo-root"
+import { cn } from "@/lib/utils";
+import { useConfig } from "@/hooks/use-config";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CopyButton } from "@/components/copy-button";
+import { Icons } from "@/components/icons";
+import { ThemeWrapper } from "@/components/theme-wrapper";
+import { PlayerDemoLayout } from "@/registry/default/examples/player-demo-root";
 // import { V0Button } from "@/components/v0-button"
-import { styles } from "@/registry/registry-styles"
+import { styles } from "@/registry/registry-styles";
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
-  name: string
-  extractClassname?: boolean
-  extractedClassNames?: string
-  align?: "center" | "start" | "end"
-  description?: string
-  hideCode?: boolean
-  type?: "block" | "component" | "example"
-  withPlayer?: boolean
+  name: string;
+  extractClassname?: boolean;
+  extractedClassNames?: string;
+  align?: "center" | "start" | "end";
+  description?: string;
+  hideCode?: boolean;
+  type?: "block" | "component" | "example";
+  withPlayer?: boolean;
 }
 
 export function ComponentPreview({
@@ -38,18 +38,18 @@ export function ComponentPreview({
   withPlayer = false,
   ...props
 }: ComponentPreviewProps) {
-  const [config] = useConfig()
-  const index = styles.findIndex((style) => style.name === config.style)
+  const [config] = useConfig();
+  const index = styles.findIndex((style) => style.name === config.style);
 
-  const Codes = React.Children.toArray(children) as React.ReactElement[]
-  const Code = Codes[index]
+  const Codes = React.Children.toArray(children) as React.ReactElement[];
+  const Code = Codes[index];
 
   if (!name) {
-    throw new Error("component name is required")
+    throw new Error("component name is required");
   }
 
   const Preview = React.useMemo(() => {
-    const Component = Index[config.style][name]?.component
+    const Component = Index[config.style][name]?.component;
 
     if (!Component) {
       return (
@@ -60,11 +60,11 @@ export function ComponentPreview({
           </code>{" "}
           not found in registry.
         </p>
-      )
+      );
     }
 
-    return <Component />
-  }, [name, config.style])
+    return <Component />;
+  }, [name, config.style]);
 
   const codeString = React.useMemo(() => {
     if (
@@ -72,10 +72,10 @@ export function ComponentPreview({
     ) {
       const [Button] = React.Children.toArray(
         Code.props.children
-      ) as React.ReactElement[]
-      return Button?.props?.value || Button?.props?.__rawString__ || null
+      ) as React.ReactElement[];
+      return Button?.props?.value || Button?.props?.__rawString__ || null;
     }
-  }, [Code])
+  }, [Code]);
 
   if (type === "block") {
     return (
@@ -101,7 +101,7 @@ export function ComponentPreview({
           />
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -133,7 +133,7 @@ export function ComponentPreview({
             <React.Suspense
               fallback={
                 <div className="text-muted-foreground flex w-full items-center justify-center text-sm">
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                  <Icons.spinner className="mr-2 size-4 animate-spin" />
                   Loading...
                 </div>
               }
@@ -155,5 +155,5 @@ export function ComponentPreview({
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

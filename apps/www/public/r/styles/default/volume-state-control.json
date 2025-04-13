@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "volume-state-control",
+  "type": "registry:example",
+  "registryDependencies": [
+    ""
+  ],
+  "files": [
+    {
+      "path": "registry/default/examples/volume-state-control.tsx",
+      "content": "\"use client\";\n\nimport { SpeakerHigh, SpeakerLow, SpeakerX } from \"@phosphor-icons/react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { useMediaStore } from \"@/registry/default/ui/media-provider\";\nimport { MuteControl } from \"@/registry/default/ui/mute-control\";\n\nexport function VolumeStateControl() {\n  const muted = useMediaStore((state) => state.muted);\n  const volume = useMediaStore((state) => state.volume);\n\n  return (\n    <Button size=\"icon\" variant=\"glass\" asChild>\n      <MuteControl>\n        {muted || volume === 0 ? (\n          <SpeakerX size={20} weight=\"fill\" />\n        ) : volume < 0.5 ? (\n          <SpeakerLow size={20} weight=\"fill\" />\n        ) : (\n          <SpeakerHigh size={20} weight=\"fill\" />\n        )}\n      </MuteControl>\n    </Button>\n  );\n}\n",
+      "type": "registry:example"
+    }
+  ]
+}
