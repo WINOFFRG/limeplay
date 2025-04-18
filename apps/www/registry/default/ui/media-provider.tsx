@@ -13,13 +13,10 @@ type MediaProviderContext = ReturnType<typeof createMediaStore>;
 
 const MediaProviderContext = createContext<MediaProviderContext | null>(null);
 
-interface MediaProviderProps extends CreateMediaStoreProps {
-  debug?: boolean;
-}
+type MediaProviderProps = CreateMediaStoreProps;
 
 export function MediaProvider({
   children,
-  debug = false,
   ...props
 }: React.PropsWithChildren<MediaProviderProps>) {
   const store = useRef(createMediaStore(props)).current;

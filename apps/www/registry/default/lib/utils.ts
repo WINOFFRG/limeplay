@@ -1,3 +1,5 @@
+import React from "react";
+
 /**
  * Type-safe event handler utility function
  * Provides autocomplete for available events based on element type
@@ -18,22 +20,22 @@ type EventType<T, E> = T extends {
   : never;
 
 /**
- * Attaches event listeners to an element with type-safe event names
- * @param element - The DOM element to attach events to
- * @param events - Event name or array of event names
- * @param callback - The event handler function
- * @returns The original element (for chaining)
+ * Overloaded function for React synthetic events
  */
-export function on<
-  T extends EventTarget,
-  E extends EventNames<T> | EventNames<T>[]
->(
-  element: T,
+export function on<E extends string | string[], R extends HTMLElement>(
+  element: EventTarget,
   events: E,
-  callback: (
-    event: E extends Array<any> ? EventType<T, E[number]> : EventType<T, E>
-  ) => void
-): T {
+  callback: (event: React.SyntheticEvent<R, Event>) => void
+): EventTarget;
+
+/**
+ * Implementation
+ */
+export function on(
+  element: EventTarget,
+  events: string | string[],
+  callback: (event: any) => void
+): EventTarget {
   if (Array.isArray(events)) {
     events.forEach((event) => {
       element.addEventListener(event, callback as EventListener);
@@ -46,22 +48,22 @@ export function on<
 }
 
 /**
- * Removes event listeners from an element with type-safe event names
- * @param element - The DOM element to remove events from
- * @param events - Event name or array of event names
- * @param callback - The event handler function to remove
- * @returns The original element (for chaining)
+ * Overloaded function for React synthetic events
  */
-export function off<
-  T extends EventTarget,
-  E extends EventNames<T> | EventNames<T>[]
->(
-  element: T,
+export function off<E extends string | string[], R extends HTMLElement>(
+  element: EventTarget,
   events: E,
-  callback: (
-    event: E extends Array<any> ? EventType<T, E[number]> : EventType<T, E>
-  ) => void
-): T {
+  callback: (event: React.SyntheticEvent<R, Event>) => void
+): EventTarget;
+
+/**
+ * Implementation
+ */
+export function off(
+  element: EventTarget,
+  events: string | string[],
+  callback: (event: any) => void
+): EventTarget {
   if (Array.isArray(events)) {
     events.forEach((event) => {
       element.removeEventListener(event, callback as EventListener);
@@ -78,3 +80,8 @@ export function off<
  * @returns undefined
  */
 export function noop() {}
+
+export function toFixedNumber(num: number, digits: number, base = 10) {
+  const pow = Math.pow(base, digits);
+  return Math.round(num * pow) / pow;
+}
