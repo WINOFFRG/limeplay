@@ -12,11 +12,10 @@ export function useVolumeStates() {
 
   React.useEffect(() => {
     const mediaElement = mediaRef?.current;
+    if (!mediaElement) return noop;
 
-    if (mediaElement) {
-      mediaElement.volume = volume;
-      mediaElement.muted = muted;
-    }
+    mediaElement.volume = volume;
+    mediaElement.muted = muted;
   }, [volume, muted, mediaRef]);
 
   React.useEffect(() => {

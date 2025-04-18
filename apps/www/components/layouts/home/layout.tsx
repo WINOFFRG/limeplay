@@ -8,7 +8,7 @@ import { HEADER_LINKS } from "@/app/layout.config";
 export function HomeLayout(
   props: HomeLayoutProps & HTMLAttributes<HTMLElement>
 ) {
-  const { nav, links, themeSwitch, ...rest } = props;
+  const { nav, ...rest } = props;
 
   return (
     <NavProvider transparentMode={nav?.transparentMode}>
@@ -17,10 +17,7 @@ export function HomeLayout(
         {...rest}
         className={cn("flex flex-1 flex-col pt-14", rest.className)}
       >
-        {slot(
-          nav,
-          <Header links={HEADER_LINKS} nav={nav} themeSwitch={themeSwitch} />
-        )}
+        {slot(nav, <Header links={HEADER_LINKS} nav={nav} />)}
         {props.children}
       </main>
     </NavProvider>
