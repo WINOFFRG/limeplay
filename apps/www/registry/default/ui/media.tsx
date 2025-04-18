@@ -16,8 +16,6 @@ export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
     const status = useMediaStore((state) => state.status);
     const setStatus = useMediaStore((state) => state.setStatus);
     const setMuted = useMediaStore((state) => state.setMuted);
-    // const setDuration = useMediaStore((state) => state.setDuration)
-    // const loop = useMediaStore((state) => state.loop)
 
     React.useEffect(() => {
       if (!mediaRef?.current) {
@@ -34,7 +32,6 @@ export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
       if (mediaRef.current.readyState >= 2) {
         const shouldAutoplay = mediaRef.current.autoplay;
         setStatus(shouldAutoplay ? "playing" : "paused");
-        // setDuration(mediaRef.current.duration)
       }
     }, []);
 

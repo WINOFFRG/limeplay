@@ -81,13 +81,13 @@ export function useMediaStates() {
     };
 
     const waitingHandler = () => {
-      console.log("Native Waiting");
-      // setStatus('buffering');
+      // console.log("Native Waiting");
+      setStatus("buffering");
     };
 
     const onPlayingHandler = () => {
-      console.log("Native Playing");
-      // setStatus('playing');
+      // console.log("Native Playing");
+      setStatus("playing");
     };
 
     if (mediaRef?.current) {

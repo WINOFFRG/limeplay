@@ -5,17 +5,14 @@ import { Moon, Sun, Airplay } from "lucide-react";
 import { useTheme } from "next-themes";
 import { type HTMLAttributes, useLayoutEffect, useState } from "react";
 
-const itemVariants = cva(
-  "size-6.5 text-fd-muted-foreground rounded-full p-1.5",
-  {
-    variants: {
-      active: {
-        true: "bg-fd-accent text-fd-accent-foreground",
-        false: "text-fd-muted-foreground"
-      }
+const itemVariants = cva("text-fd-muted-foreground size-6 rounded-full p-1", {
+  variants: {
+    active: {
+      true: "bg-fd-accent text-fd-accent-foreground",
+      false: "text-fd-muted-foreground"
     }
   }
-);
+});
 
 const full = [
   ["light", Sun] as const,

@@ -3,58 +3,66 @@
 import { Media } from "@/registry/default/ui/media";
 import {
   MediaProvider,
-  useMediaStore,
+  useMediaStore
 } from "@/registry/default/ui/media-provider";
-import React, { Suspense, useEffect } from "react";
-import { ShakaProvider } from "@/registry/default/ui/shaka-provider";
-import { PlayerContainer } from "./player-container";
-import { ControlsContainer } from "./controls-container";
+import React, { useEffect } from "react";
+import { ControlsContainer as CustomControls } from "./controls-container";
+import * as Layout from "@/registry/default/ui/player-layout";
 
-function PlayerRoot() {
+import { PlayerHooks } from "@/registry/default/ui/player-hooks";
+import { CustomPlayerWrapper } from "./custom-player-wrapper";
+
+function MediaElement() {
   const player = useMediaStore((state) => state.player);
   const mediaRef = useMediaStore((state) => state.mediaRef);
 
   useEffect(() => {
-    if (player) {
+    const mediaElement = mediaRef?.current;
+
+    if (player && mediaElement) {
       player.load(
         "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
       );
 
       return () => {
-        if (mediaRef.current) {
-          mediaRef.current.pause();
+        if (mediaElement) {
+          mediaElement.pause();
         }
 
-        player.destroy();
+        if (player) {
+          player.destroy();
+        }
       };
     }
-  }, [player]);
+  }, [player, mediaRef]);
 
   return (
-    <Suspense>
-      <ShakaProvider>
-        <div className="relative mx-auto w-full max-w-7xl overflow-hidden rounded-lg">
-          <Media
-            as="video"
-            className="size-full rounded-lg bg-black object-cover"
-            autoPlay={false}
-            poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
-            muted
-            loop
-          />
-        </div>
-        <ControlsContainer />
-      </ShakaProvider>
-    </Suspense>
+    <Media
+      as="video"
+      className="size-full bg-black object-cover"
+      autoPlay={false}
+      poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
+      muted
+      controls={false}
+      loop
+    />
   );
 }
 
 export function PlayerDemoLayout() {
   return (
-    <MediaProvider>
-      <PlayerContainer>
-        <PlayerRoot />
-      </PlayerContainer>
-    </MediaProvider>
+    <CustomPlayerWrapper>
+      <MediaProvider>
+        <PlayerHooks />
+        <Layout.RootContainer height={720} width={1280} className="container">
+          <Layout.PlayerContainer className="mx-auto my-16">
+            <MediaElement />
+            <Layout.ControlsContainer>
+              <CustomControls />
+            </Layout.ControlsContainer>
+          </Layout.PlayerContainer>
+        </Layout.RootContainer>
+      </MediaProvider>
+    </CustomPlayerWrapper>
   );
 }

@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 
-export function PlayerContainer({ children }: { children: React.ReactNode }) {
+export function MotionContainer({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
       initial={{
