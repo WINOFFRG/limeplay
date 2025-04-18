@@ -3,25 +3,25 @@
 import { Media } from "@/registry/default/ui/media";
 import {
   MediaProvider,
-  useMediaStore
+  useMediaStore,
 } from "@/registry/default/ui/media-provider";
-import React, { Suspense, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useControls } from "leva";
+import * as Layout from "@/registry/default/ui/player-layout";
+import { PlayerHooks } from "@/registry/default/ui/player-hooks";
 
-import { ControlsWrapper } from "@/registry/default/internal/controls-wrapper";
-import { ShakaProvider } from "@/registry/default/ui/shaka-provider";
+import { CustomDemoControls } from "@/registry/default/internal/custom-demo-controls";
 import { LevaControls } from "@/components/leva-controls";
-import { useIntersection } from "react-use";
 
-function PlayerRoot({ children }: React.PropsWithChildren) {
+function MediaElement() {
   const player = useMediaStore((state) => state.player);
 
   const { streamUrl } = useControls({
     streamUrl: {
       value:
         "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8",
-      label: "Stream URL"
-    }
+      label: "Stream URL",
+    },
   });
 
   useEffect(() => {
@@ -41,28 +41,30 @@ function PlayerRoot({ children }: React.PropsWithChildren) {
   }, [player, streamUrl]);
 
   return (
-    <Suspense>
-      <ShakaProvider>
-        <div className="min-w-xl relative mx-auto aspect-video min-h-80 w-full max-w-7xl overflow-hidden rounded-lg">
-          <Media
-            as="video"
-            className="m-0! size-full rounded-lg bg-black object-cover"
-            poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
-          />
-        </div>
-        <ControlsWrapper>{children}</ControlsWrapper>
-      </ShakaProvider>
-    </Suspense>
+    <Media
+      as="video"
+      className="m-0! size-full rounded-lg bg-black object-cover"
+      poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
+      muted
+      autoPlay
+    />
   );
 }
 
 export function PlayerDemoLayout({ children }: React.PropsWithChildren) {
   return (
     <MediaProvider>
+      <PlayerHooks />
       <LevaControls />
-      <PlayerRoot>
-        <div className="flex flex-row px-8 py-4">{children}</div>
-      </PlayerRoot>
+      <Layout.RootContainer height={720} width={1280} className="container">
+        <Layout.PlayerContainer className="my-16">
+          <MediaElement />
+          <Layout.ControlsContainer>
+            {/* We don't need any overlay controls here as we have custom controls for docs */}
+          </Layout.ControlsContainer>
+        </Layout.PlayerContainer>
+        <CustomDemoControls>{children}</CustomDemoControls>
+      </Layout.RootContainer>
     </MediaProvider>
   );
 }

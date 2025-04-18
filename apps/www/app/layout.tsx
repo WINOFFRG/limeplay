@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Inter } from "next/font/google";
 import { Metadata } from "next";
 import { PRODUCT_DECSRIPTION, PRODUCT_NAME } from "@/lib/constants";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({
   subsets: ["latin"]
@@ -20,7 +21,15 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="dark flex min-h-screen flex-col">{children}</body>
+      <body className="antialiased">
+        <ThemeProvider
+          storageKey="limeplay-ui-theme"
+          defaultTheme="dark"
+          attribute="class"
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

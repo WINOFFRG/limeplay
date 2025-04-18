@@ -3,9 +3,9 @@
 
 import React from "react";
 
-export function ControlsWrapper({ children }: React.PropsWithChildren) {
+export function CustomDemoControls({ children }: React.PropsWithChildren) {
   return (
-    <section className="animate-in fade-in-100 relative my-12 w-full bg-gradient-to-br from-gray-100 to-white transition-all duration-500 ease-in-out dark:from-neutral-900 dark:to-neutral-950">
+    <section className="animate-in fade-in-100 relative mt-12 flex w-full flex-row bg-gradient-to-br from-gray-100 to-white px-8 py-3 transition-all duration-500 ease-in-out dark:from-neutral-900 dark:to-neutral-950">
       <div
         className="absolute left-0 top-0 size-full"
         style={{

@@ -4,39 +4,31 @@ import { cn } from "@/lib/utils";
 import { useMediaStore } from "@/registry/default/ui/media-provider";
 import React from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
-import { useState } from "react";
-
-const VOLUME_RESET_BASE = 0.05;
 
 export const Root = React.forwardRef<
   React.ComponentRef<typeof SliderPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
 >((props, forwardedRef) => {
   const { className, onValueChange: propOnValueChange, ...etc } = props;
-  const volume = useMediaStore((state) => state.volume);
-  const hasAudio = useMediaStore((state) => state.hasAudio);
-  const setVolume = useMediaStore((state) => state.setVolume);
-  const muted = useMediaStore((state) => state.muted);
-  const [currentValue, setCurrentValue] = useState(volume);
+  const currentProgress = useMediaStore((state) => state.progress);
+  const seekTo = useMediaStore((state) => state.seekTo);
 
   const onValueChange = (value: number[]) => {
     propOnValueChange?.(value);
-    setCurrentValue(value[0]);
-    setVolume(value[0]);
+    seekTo({
+      progress: value[0],
+    });
   };
-
-  if (!hasAudio) {
-    return null;
-  }
 
   return (
     <SliderPrimitive.Root
       ref={forwardedRef}
       min={0}
       max={1}
-      step={0.05}
-      value={[muted ? 0 : currentValue === 0 ? VOLUME_RESET_BASE : volume]}
-      defaultValue={[volume]}
+      // DEV: Create a function for precision control which reads 0 and duration to get decimal places
+      step={0.0001}
+      value={[currentProgress]}
+      // defaultValue={[]}
       className={cn(
         "relative flex touch-none select-none items-center justify-center",
         className
