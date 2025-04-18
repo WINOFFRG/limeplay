@@ -1,11 +1,42 @@
 import Image from "next/image";
 import Logo from "@/public/product-icon.svg";
-import { GITHUB_URL, PRODUCT_NAME, X_URL } from "@/lib/constants";
+import { DISCORD_URL, GITHUB_URL, PRODUCT_NAME, X_URL } from "@/lib/constants";
 import { BaseLayoutProps } from "@/components/layouts/shared";
-import { Book, Question, XLogo } from "@phosphor-icons/react/dist/ssr";
+import {
+  Blueprint,
+  Book,
+  DiscordLogo,
+  Question,
+  Sparkle,
+  XLogo
+} from "@phosphor-icons/react/dist/ssr";
 import { Icons } from "@/components/icons";
 import { LinkItemType } from "fumadocs-ui/layouts/links";
 import { NavbarLink } from "@/components/layouts/home/navbar";
+
+const COMMON_LINKS: LinkItemType[] = [
+  {
+    type: "icon",
+    url: GITHUB_URL,
+    text: "Github",
+    icon: <Icons.gitHub />,
+    external: true
+  },
+  {
+    type: "icon",
+    url: DISCORD_URL,
+    text: "Discord",
+    icon: <DiscordLogo />,
+    external: true
+  },
+  {
+    type: "icon",
+    url: X_URL,
+    text: "X",
+    icon: <XLogo />,
+    external: true
+  }
+];
 
 export const baseOptions: BaseLayoutProps = {
   nav: {
@@ -27,7 +58,7 @@ export const baseOptions: BaseLayoutProps = {
       type: "main",
       text: "Getting Started",
       url: "/docs/getting-started",
-      icon: <Book />
+      icon: <Sparkle />
     },
     {
       type: "main",
@@ -36,19 +67,18 @@ export const baseOptions: BaseLayoutProps = {
       icon: <Question />
     },
     {
-      type: "icon",
-      url: GITHUB_URL,
-      text: "Github",
-      icon: <Icons.gitHub />,
-      external: true
+      type: "main",
+      text: "Architecture",
+      url: "/docs/architecture",
+      icon: <Blueprint />
     },
     {
-      type: "icon",
-      url: X_URL,
-      text: "X",
-      icon: <XLogo />,
-      external: true
-    }
+      type: "main",
+      text: "Concepts & Design",
+      url: "/docs/concepts-and-design",
+      icon: <Book />
+    },
+    ...COMMON_LINKS
   ]
 };
 
@@ -75,18 +105,5 @@ export const HEADER_LINKS: LinkItemType[] = [
       );
     })()
   },
-  {
-    type: "icon",
-    url: GITHUB_URL,
-    text: "Github",
-    icon: <Icons.gitHub />,
-    external: true
-  },
-  {
-    type: "icon",
-    url: X_URL,
-    text: "X",
-    icon: <XLogo />,
-    external: true
-  }
+  ...COMMON_LINKS
 ];
