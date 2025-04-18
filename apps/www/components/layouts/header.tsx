@@ -41,20 +41,19 @@ export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
   const navItems = links.filter((item) =>
     ["nav", "all"].includes(item.on ?? "all")
   );
-  const menuItems = links.filter((item) =>
-    ["menu", "all"].includes(item.on ?? "all")
-  );
 
   return (
     <Navbar>
       <Link
+        aria-label="Navigate to Home"
         href={nav.url ?? "/"}
         className="inline-flex items-center gap-2.5 font-semibold"
       >
         {nav.title}
       </Link>
       {nav.children}
-      <ul className="flex flex-row items-center gap-2 px-6 max-sm:hidden">
+
+      <ul className="flex flex-1 flex-row items-center gap-2 px-6 max-sm:hidden">
         {navItems
           .filter((item) => !isSecondary(item))
           .map((item, i) => {
@@ -62,7 +61,14 @@ export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
           })}
       </ul>
 
-      <ul className="ml-auto flex flex-row items-center gap-2">
+      <div className="ml-4 flex flex-row items-center justify-end gap-1.5">
+        {slot(
+          themeSwitch,
+          <ThemeToggle className="max-lg:hidden" mode={themeSwitch?.mode} />
+        )}
+      </div>
+
+      <ul className="ml-2 flex flex-row items-center gap-2">
         {navItems.filter(isSecondary).map((item, i) => (
           <NavbarLinkItem
             key={i}
@@ -79,13 +85,13 @@ export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
             <ChevronDown className="size-3 transition-transform duration-300 group-data-[state=open]:rotate-180" />
           </MenuTrigger>
           <MenuContent className="sm:flex-row sm:items-center sm:justify-end">
-            {menuItems
+            {navItems
               .filter((item) => !isSecondary(item))
               .map((item, i) => (
                 <MenuLinkItem key={i} item={item} className="sm:hidden" />
               ))}
             <div className="-ms-1.5 flex flex-row items-center gap-1.5 max-sm:mt-2">
-              {menuItems.filter(isSecondary).map((item, i) => (
+              {navItems.filter(isSecondary).map((item, i) => (
                 <MenuLinkItem key={i} item={item} className="-me-1.5" />
               ))}
               <div role="separator" className="flex-1" />
@@ -115,7 +121,7 @@ function NavbarLinkItem({
 
       const {
         banner = child.icon ? (
-          <div className="bg-fd-muted w-fit rounded-md border p-1 [&_svg]:size-4">
+          <div className="bg-fd-muted w-fit rounded-md border p-1 [&_svg]:size-5">
             {child.icon}
           </div>
         ) : null,

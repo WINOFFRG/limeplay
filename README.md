@@ -56,3 +56,13 @@ specification. Contributions of any kind welcome!
 ## License
 
 MIT © [WINOFFRG](https://github.com/winoffrg)
+
+
+player root -
+  player container - 
+    fallback poster
+    Media Element
+    Controls Container
+      Top Controls
+      Middle Grow Controls
+      Bottom Controls
