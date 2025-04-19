@@ -1,16 +1,18 @@
-import { exec } from "child_process"
-import { promises as fs } from "fs"
-import path from "path"
-import { rimraf } from "rimraf"
-import { registryItemSchema, type Registry } from "shadcn/registry"
-import { z } from "zod"
+import { exec } from "child_process";
+import { promises as fs } from "fs";
+import path from "path";
+import { rimraf } from "rimraf";
+import { registryItemSchema, type Registry } from "shadcn/registry";
+import { z } from "zod";
 
-import { examples } from "@/registry/registry-examples"
-import { lib } from "@/registry/registry-lib"
-import { ui } from "@/registry/registry-ui"
+import { examples } from "@/registry/registry-examples";
+import { lib } from "@/registry/registry-lib";
+import { ui } from "@/registry/registry-ui";
+import { hooks } from "@/registry/registry-hooks";
+import { blocks } from "@/registry/registry-blocks";
 
-const STYLE = "default"
-const DEPRECATED_ITEMS = ["toast"]
+const STYLE = "default";
+const DEPRECATED_ITEMS = ["toast"];
 
 const registry = {
   name: "shadcn/ui",
@@ -31,20 +33,22 @@ const registry = {
       },
       ...ui,
       ...lib,
+      ...hooks,
       ...examples,
+      ...blocks,
     ]
       .filter((item) => {
-        return !DEPRECATED_ITEMS.includes(item.name)
+        return !DEPRECATED_ITEMS.includes(item.name);
       })
       .map((item) => {
         // Temporary fix for dashboard-01.
         if (item.name === "dashboard-01") {
-          item.dependencies?.push("@tabler/icons-react")
+          item.dependencies?.push("@tabler/icons-react");
         }
-        return item
+        return item;
       })
   ),
-} satisfies Registry
+} satisfies Registry;
 
 async function buildRegistryIndex() {
   let index = `/* eslint-disable @typescript-eslint/ban-ts-comment */
@@ -55,19 +59,19 @@ async function buildRegistryIndex() {
 import * as React from "react"
 
 export const Index: Record<string, any> = {
-  "${STYLE}": {`
+  "${STYLE}": {`;
 
   for (const item of registry.items) {
     const resolveFiles = item.files?.map(
       (file) => `registry/${STYLE}/${file.path}`
-    )
+    );
     if (!resolveFiles) {
-      continue
+      continue;
     }
 
     const componentPath = item.files?.[0]?.path
       ? `@/registry/${STYLE}/${item.files[0].path}`
-      : ""
+      : "";
 
     index += `
     "${item.name}": {
@@ -78,15 +82,15 @@ export const Index: Record<string, any> = {
       files: [${item.files?.map((file) => {
         const filePath = `registry/${STYLE}/${
           typeof file === "string" ? file : file.path
-        }`
-        const resolvedFilePath = path.resolve(filePath)
+        }`;
+        const resolvedFilePath = path.resolve(filePath);
         return typeof file === "string"
           ? `"${resolvedFilePath}"`
           : `{
         path: "${filePath}",
         type: "${file.type}",
         target: "${file.target ?? ""}"
-      }`
+      }`;
       })}],
       component: ${
         componentPath
@@ -98,20 +102,20 @@ export const Index: Record<string, any> = {
           : "null"
       },
       meta: ${JSON.stringify(item.meta)},
-    },`
+    },`;
   }
 
   index += `
   }
-}`
+}`;
 
   // Create __registry__ directory if it doesn't exist
-  const registryDir = path.join(process.cwd(), "__registry__")
-  await fs.mkdir(registryDir, { recursive: true })
+  const registryDir = path.join(process.cwd(), "__registry__");
+  await fs.mkdir(registryDir, { recursive: true });
 
   // Write style index.
-  rimraf.sync(path.join(registryDir, "index.tsx"))
-  await fs.writeFile(path.join(registryDir, "index.tsx"), index)
+  rimraf.sync(path.join(registryDir, "index.tsx"));
+  await fs.writeFile(path.join(registryDir, "index.tsx"), index);
 }
 
 async function buildRegistryJsonFile() {
@@ -123,64 +127,64 @@ async function buildRegistryJsonFile() {
         return {
           ...file,
           path: `registry/${STYLE}/${file.path}`,
-        }
-      })
+        };
+      });
 
       return {
         ...item,
         files,
-      }
+      };
     }),
-  }
+  };
 
   // 2. Write the content of the registry to `registry.json`
-  rimraf.sync(path.join(process.cwd(), `registry.json`))
+  rimraf.sync(path.join(process.cwd(), `registry.json`));
   await fs.writeFile(
     path.join(process.cwd(), `registry.json`),
     JSON.stringify(fixedRegistry, null, 2)
-  )
+  );
 }
 
 async function buildRegistry() {
   return new Promise((resolve, reject) => {
     const process = exec(
       `pnpm dlx shadcn build registry.json --output ../www/public/r/styles/${STYLE}`
-    )
+    );
 
     // Capture stdout
     process.stdout?.on("data", (data) => {
-      console.log(`${data.toString().trim()}`)
-    })
+      console.log(`${data.toString().trim()}`);
+    });
 
     // Capture stderr
     process.stderr?.on("data", (data) => {
-      console.error(`${data.toString().trim()}`)
-    })
+      console.error(`${data.toString().trim()}`);
+    });
 
     process.on("exit", (code) => {
       if (code === 0) {
-        resolve(undefined)
+        resolve(undefined);
       } else {
-        reject(new Error(`Process exited with code ${code}`))
+        reject(new Error(`Process exited with code ${code}`));
       }
-    })
-  })
+    });
+  });
 }
 
 async function main() {
   try {
-    console.log("🗂️ Building registry/__index__.tsx...")
-    await buildRegistryIndex()
+    console.log("🗂️ Building registry/__index__.tsx...");
+    await buildRegistryIndex();
 
-    console.log("💅 Building registry.json...")
-    await buildRegistryJsonFile()
+    console.log("💅 Building registry.json...");
+    await buildRegistryJsonFile();
 
-    console.log("🏗️ Building registry...")
-    await buildRegistry()
+    console.log("🏗️ Building registry...");
+    await buildRegistry();
   } catch (error) {
-    console.error(error)
-    process.exit(1)
+    console.error(error);
+    process.exit(1);
   }
 }
 
-main()
+main();

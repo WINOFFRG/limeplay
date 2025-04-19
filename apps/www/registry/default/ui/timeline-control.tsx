@@ -16,7 +16,7 @@ export const Root = React.forwardRef<
   const onValueChange = (value: number[]) => {
     propOnValueChange?.(value);
     seekTo({
-      progress: value[0],
+      progress: value[0]
     });
   };
 
@@ -50,7 +50,7 @@ export const Track = React.forwardRef<
       {...props}
       ref={forwardRef}
       className={cn(
-        "relative size-full overflow-hidden rounded-md bg-white/20",
+        "bg-primary/20 relative size-full overflow-hidden rounded-md",
         className
       )}
     />
@@ -67,7 +67,7 @@ export const Range = React.forwardRef<
     <SliderPrimitive.Range
       ref={forwardedRef}
       {...etc}
-      className="absolute rounded-s-md bg-white data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full"
+      className="bg-primary absolute rounded-s-md data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full"
     />
   );
 });

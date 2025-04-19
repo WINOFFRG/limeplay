@@ -1,11 +1,11 @@
 import { VideoBackground } from "@/components/video-background";
-import { PlayerDemoLayout } from "@/registry/default/blocks/linear-player/player-demo-root";
+import { MediaPlayer as LinearMediaPlayer } from "@/registry/default/blocks/linear-player/media-player";
 
 export default function Home() {
   return (
     <section>
       <VideoBackground />
-      <PlayerDemoLayout />
+      <LinearMediaPlayer />
     </section>
   );
 }
