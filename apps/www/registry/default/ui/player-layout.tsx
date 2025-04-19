@@ -75,7 +75,7 @@ export const RootContainer = React.forwardRef<
         ["--width" as string]: `${width}px`,
         ["--height" as string]: `${height}px`,
         ["--aspect-ratio" as string]: aspectRatio,
-        aspectRatio: aspectRatio
+        aspectRatio: aspectRatio,
       }}
       className={cn("m-auto min-w-80 max-w-[var(--width,1280px)]", className)}
       // Show controls like tabbing over
