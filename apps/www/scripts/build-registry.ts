@@ -13,6 +13,31 @@ import { blocks } from "@/registry/registry-blocks";
 
 const STYLE = "default";
 const DEPRECATED_ITEMS = ["toast"];
+const BASE_URL = "http://localhost:3000/r/styles/default";
+
+// Create a map of all registry items for quick lookup
+const registryItemsMap = new Map();
+[...ui, ...lib, ...hooks, ...examples, ...blocks].forEach((item) => {
+  if (item.name && !DEPRECATED_ITEMS.includes(item.name)) {
+    registryItemsMap.set(item.name, item);
+  }
+});
+
+// Function to convert dependency string to URL if it exists in registry
+function resolveRegistryDependency(dependency: string): string {
+  // Skip if already a URL
+  if (typeof dependency !== "string" || dependency.startsWith("http")) {
+    return dependency;
+  }
+
+  // Check if dependency exists in registry
+  if (registryItemsMap.has(dependency)) {
+    return `${BASE_URL}/${dependency}.json`;
+  }
+
+  // Return original if not found
+  return dependency;
+}
 
 const registry = {
   name: "shadcn/ui",
@@ -41,9 +66,10 @@ const registry = {
         return !DEPRECATED_ITEMS.includes(item.name);
       })
       .map((item) => {
-        // Temporary fix for dashboard-01.
-        if (item.name === "dashboard-01") {
-          item.dependencies?.push("@tabler/icons-react");
+        if (item.registryDependencies?.length) {
+          item.registryDependencies = item.registryDependencies.map(
+            resolveRegistryDependency
+          );
         }
         return item;
       })

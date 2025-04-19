@@ -11,7 +11,7 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "utils"
+        "http://localhost:3000/r/styles/default/utils.json"
       ],
       "files": [],
       "cssVars": {}
@@ -56,6 +56,35 @@
         },
         {
           "path": "registry/default/ui/media-provider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "media-provider",
+      "type": "registry:ui",
+      "dependencies": [
+        "zustand"
+      ],
+      "files": [
+        {
+          "path": "registry/default/ui/media-provider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "media",
+      "type": "registry:ui",
+      "dependencies": [
+        "@radix-ui/react-compose-refs"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/media-provider.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/ui/media.tsx",
           "type": "registry:ui"
         }
       ]
@@ -157,37 +186,52 @@
       "type": "registry:block",
       "dependencies": [
         "zustand",
-        "shaka-player"
+        "shaka-player",
+        "motion"
       ],
-      "registryDependencies": [],
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/media.json"
+      ],
       "files": [
         {
           "path": "registry/default/blocks/linear-player/media-player.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "components/linear-player/media-player.tsx"
         },
         {
           "path": "registry/default/blocks/linear-player/components/volume-state-control.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "components/linear-player/components/volume-state-control.tsx"
+        },
+        {
+          "path": "registry/default/blocks/linear-player/components/playback-state-control.tsx",
+          "type": "registry:ui",
+          "target": "components/linear-player/components/playback-state-control.tsx"
         },
         {
           "path": "registry/default/blocks/linear-player/components/volume-slider-control.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "components/linear-player/components/volume-slider-control.tsx"
         },
         {
           "path": "registry/default/blocks/linear-player/components/timeline-slider-control.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "components/linear-player/components/timeline-slider-control.tsx"
         },
         {
           "path": "registry/default/blocks/linear-player/components/motion-container.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "components/linear-player/components/motion-container.tsx"
         },
         {
           "path": "registry/default/blocks/linear-player/components/custom-player-wrapper.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "components/linear-player/components/custom-player-wrapper.tsx"
         },
         {
           "path": "registry/default/blocks/linear-player/components/bottom-controls.tsx",
-          "type": "registry:ui"
+          "type": "registry:ui",
+          "target": "components/linear-player/components/bottom-controls.tsx"
         }
       ]
     }
