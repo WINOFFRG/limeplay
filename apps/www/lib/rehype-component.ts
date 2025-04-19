@@ -5,7 +5,7 @@ import { UnistNode, UnistTree } from "types/unist";
 import { u } from "unist-builder";
 import { visit } from "unist-util-visit";
 
-import { styles } from "@/registry/registry-styles";
+import { styles } from "@/registry/collection/registry-styles";
 
 export function rehypeComponent() {
   return async (tree: UnistTree) => {
