@@ -70,6 +70,7 @@ export const RootContainer = React.forwardRef<
       data-idle={idle}
       ref={composeRefs(forwardedRef, setPlayerContainerRef)}
       data-status={status}
+      data-theme={"light"}
       style={{
         ["--width" as string]: `${width}px`,
         ["--height" as string]: `${height}px`,

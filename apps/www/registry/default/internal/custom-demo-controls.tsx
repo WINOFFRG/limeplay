@@ -5,17 +5,7 @@ import React from "react";
 
 export function CustomDemoControls({ children }: React.PropsWithChildren) {
   return (
-    <section className="animate-in fade-in-100 relative mt-12 flex w-full flex-row bg-gradient-to-br from-gray-100 to-white px-8 py-3 transition-all duration-500 ease-in-out dark:from-neutral-900 dark:to-neutral-950">
-      <div
-        className="absolute left-0 top-0 size-full"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E\")",
-          backgroundRepeat: "repeat",
-          backgroundSize: "182px",
-          opacity: "0.12",
-        }}
-      ></div>
+    <section className="animate-in fade-in-100 to-primary relative mt-12 flex w-full flex-row bg-gradient-to-br from-gray-100 px-8 py-3 transition-all duration-500 ease-in-out dark:from-neutral-900 dark:to-neutral-950">
       <div
         className="mask-exclude absolute left-[calc(var(--offset)/2*-1)] top-0 z-30 h-[var(--height)] w-[calc(100%+var(--offset))] bg-[linear-gradient(to_right,var(--color),var(--color)_50%,transparent_0,transparent)] [background-size:var(--width)_var(--height)] dark:bg-[linear-gradient(to_right,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]"
         style={{
@@ -28,7 +18,7 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
           "--color-dark": "rgba(255, 255, 255, 0.2)",
           maskComposite: "exclude",
           maskImage:
-            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
+            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)"
         }}
       ></div>
 
@@ -44,7 +34,7 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
           "--color-dark": "rgba(255, 255, 255, 0.2)",
           maskComposite: "exclude",
           maskImage:
-            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
+            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)"
         }}
       ></div>
 
@@ -60,7 +50,7 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
           "--color-dark": "rgba(255, 255, 255, 0.2)",
           maskComposite: "exclude",
           maskImage:
-            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
+            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)"
         }}
       ></div>
 
@@ -76,7 +66,7 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
           "--color-dark": "rgba(255, 255, 255, 0.2)",
           maskComposite: "exclude",
           maskImage:
-            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
+            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)"
         }}
       ></div>
       {children}

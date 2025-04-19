@@ -26,14 +26,14 @@ const COMMON_LINKS: LinkItemType[] = [
     type: "icon",
     url: DISCORD_URL,
     text: "Discord",
-    icon: <DiscordLogo />,
+    icon: <DiscordLogo weight="bold" />,
     external: true
   },
   {
     type: "icon",
     url: X_URL,
     text: "X",
-    icon: <XLogo />,
+    icon: <XLogo weight="bold" />,
     external: true
   }
 ];
