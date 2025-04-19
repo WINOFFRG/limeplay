@@ -40,7 +40,7 @@ export function Navbar(props: HTMLAttributes<HTMLElement>) {
         id="nd-nav"
         {...props}
         className={cn(
-          "max-w-fd-container border-fd-foreground/10 fixed top-(--fd-banner-height) left-1/2 z-40 box-content w-full -translate-x-1/2 border-b transition-colors lg:mt-2 lg:w-[calc(100%-1rem)] lg:rounded-2xl lg:border",
+          "max-w-fd-container border-fd-foreground/10 top-(--fd-banner-height) fixed left-1/2 z-40 box-content w-full -translate-x-1/2 border-b transition-colors lg:mt-2 lg:w-[calc(100%-1rem)] lg:rounded-2xl lg:border",
           value.length > 0 ? "shadow-lg" : "shadow-sm",
           (isTransparent || value.length > 0) &&
             "bg-fd-background/80 backdrop-blur-lg",
