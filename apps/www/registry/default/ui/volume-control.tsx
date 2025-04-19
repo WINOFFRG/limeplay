@@ -58,7 +58,7 @@ export const Track = React.forwardRef<
       {...props}
       ref={forwardRef}
       className={cn(
-        "relative size-full overflow-hidden rounded-md bg-white/20",
+        "bg-primary/20 relative size-full overflow-hidden rounded-md",
         className
       )}
     />
@@ -75,7 +75,7 @@ export const Range = React.forwardRef<
     <SliderPrimitive.Range
       ref={forwardedRef}
       {...etc}
-      className="absolute rounded-s-md bg-white data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full"
+      className="bg-primary absolute rounded-s-md data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full"
     />
   );
 });
@@ -91,7 +91,7 @@ export const Thumb = React.forwardRef<
   return (
     <SliderPrimitive.Thumb
       className={cn(
-        "block size-2 rounded-full bg-white outline-offset-1 outline-white focus-visible:outline-1 focus-visible:ring-0",
+        "bg-primary outline-primary block size-2 rounded-full outline-offset-1 focus-visible:outline-1 focus-visible:ring-0",
         className
       )}
       aria-valuemin={0}

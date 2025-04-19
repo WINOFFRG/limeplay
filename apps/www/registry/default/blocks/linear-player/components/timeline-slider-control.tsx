@@ -1,5 +1,5 @@
 import * as TimelineSlider from "@/registry/default/ui/timeline-control";
-import { useTimelineStates } from "../../hooks/use-timeline-states";
+import { useTimelineStates } from "@/registry/default/hooks/use-timeline-states";
 
 export function TimelineSliderControl() {
   useTimelineStates();
