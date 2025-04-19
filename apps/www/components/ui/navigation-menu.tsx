@@ -1,11 +1,13 @@
-"use client";
-import * as React from "react";
-import * as Primitive from "@radix-ui/react-navigation-menu";
-import { cn } from "@/lib/utils";
+"use client"
 
-const NavigationMenu = Primitive.Root;
+import * as React from "react"
+import * as Primitive from "@radix-ui/react-navigation-menu"
 
-const NavigationMenuList = Primitive.List;
+import { cn } from "@/lib/utils"
+
+const NavigationMenu = Primitive.Root
+
+const NavigationMenuList = Primitive.List
 
 const NavigationMenuItem = React.forwardRef<
   React.ComponentRef<typeof Primitive.NavigationMenuItem>,
@@ -18,9 +20,9 @@ const NavigationMenuItem = React.forwardRef<
   >
     {children}
   </Primitive.NavigationMenuItem>
-));
+))
 
-NavigationMenuItem.displayName = Primitive.NavigationMenuItem.displayName;
+NavigationMenuItem.displayName = Primitive.NavigationMenuItem.displayName
 
 const NavigationMenuTrigger = React.forwardRef<
   React.ComponentRef<typeof Primitive.Trigger>,
@@ -33,8 +35,8 @@ const NavigationMenuTrigger = React.forwardRef<
   >
     {children}
   </Primitive.Trigger>
-));
-NavigationMenuTrigger.displayName = Primitive.Trigger.displayName;
+))
+NavigationMenuTrigger.displayName = Primitive.Trigger.displayName
 
 const NavigationMenuContent = React.forwardRef<
   React.ComponentRef<typeof Primitive.Content>,
@@ -48,10 +50,10 @@ const NavigationMenuContent = React.forwardRef<
     )}
     {...props}
   />
-));
-NavigationMenuContent.displayName = Primitive.Content.displayName;
+))
+NavigationMenuContent.displayName = Primitive.Content.displayName
 
-const NavigationMenuLink = Primitive.Link;
+const NavigationMenuLink = Primitive.Link
 
 const NavigationMenuViewport = React.forwardRef<
   React.ComponentRef<typeof Primitive.Viewport>,
@@ -61,13 +63,13 @@ const NavigationMenuViewport = React.forwardRef<
     <Primitive.Viewport
       {...props}
       className={cn(
-        "h-(--radix-navigation-menu-viewport-height) text-fd-popover-foreground data-[state=closed]:animate-fd-nav-menu-out data-[state=open]:animate-fd-nav-menu-in relative w-full origin-[top_center] overflow-hidden transition-[width,height] duration-300",
+        "text-fd-popover-foreground data-[state=closed]:animate-fd-nav-menu-out data-[state=open]:animate-fd-nav-menu-in h-(--radix-navigation-menu-viewport-height) relative w-full origin-[top_center] overflow-hidden transition-[width,height] duration-300",
         className
       )}
     />
   </div>
-));
-NavigationMenuViewport.displayName = Primitive.Viewport.displayName;
+))
+NavigationMenuViewport.displayName = Primitive.Viewport.displayName
 
 export {
   NavigationMenu,
@@ -76,5 +78,5 @@ export {
   NavigationMenuContent,
   NavigationMenuTrigger,
   NavigationMenuLink,
-  NavigationMenuViewport
-};
+  NavigationMenuViewport,
+}

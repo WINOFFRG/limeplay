@@ -1,10 +1,12 @@
-"use client";
-import AnimatedGradientBackground from "@/components/ui/animated-gradient-background";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+"use client"
+
+import Link from "next/link"
+import { DotLottieReact } from "@lottiefiles/dotlottie-react"
+import { motion } from "framer-motion"
+import { ArrowLeft } from "lucide-react"
+
+import AnimatedGradientBackground from "@/components/ui/animated-gradient-background"
+import { Button } from "@/components/ui/button"
 
 export default function NotFound() {
   return (
@@ -18,7 +20,7 @@ export default function NotFound() {
           "#FF6D00",
           "#FFD600",
           "#00E676",
-          "#3D5AFE"
+          "#3D5AFE",
         ]}
       />
       <div className="relative z-10 mt-32 flex h-full flex-col items-center justify-start px-4 text-center">
@@ -57,5 +59,5 @@ export default function NotFound() {
         </motion.div>
       </div>
     </div>
-  );
+  )
 }

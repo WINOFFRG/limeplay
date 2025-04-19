@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion } from "motion/react"
 
 export function MotionContainer({ children }: { children: React.ReactNode }) {
   return (
@@ -28,5 +28,5 @@ export function MotionContainer({ children }: { children: React.ReactNode }) {
     >
       {children}
     </motion.div>
-  );
+  )
 }
