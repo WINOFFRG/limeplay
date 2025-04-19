@@ -6,3 +6,5 @@ export const PlayerHooks = React.memo(() => {
 
   return null;
 });
+
+PlayerHooks.displayName = "PlayerHooks";
