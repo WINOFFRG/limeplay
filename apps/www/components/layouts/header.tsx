@@ -1,30 +1,28 @@
-import { Fragment } from "react";
+import { Fragment } from "react"
+import Link from "next/link"
+import { ChevronDown } from "lucide-react"
+
 import {
-  BaseLayoutProps,
-  LinkItemType,
-  NavOptions,
-  slot
-} from "@/components/layouts/shared";
+  Menu,
+  MenuContent,
+  MenuLinkItem,
+  MenuTrigger,
+} from "@/components/layouts/home/menu"
 import {
   Navbar,
   NavbarLink,
   NavbarMenu,
   NavbarMenuContent,
   NavbarMenuLink,
-  NavbarMenuTrigger
-} from "@/components/layouts/home/navbar";
-
-import { ThemeToggle } from "@/components/layouts/theme-toggle";
-
-import { ChevronDown } from "lucide-react";
+  NavbarMenuTrigger,
+} from "@/components/layouts/home/navbar"
 import {
-  Menu,
-  MenuContent,
-  MenuLinkItem,
-  MenuTrigger
-} from "@/components/layouts/home/menu";
-
-import Link from "next/link";
+  BaseLayoutProps,
+  LinkItemType,
+  NavOptions,
+  slot,
+} from "@/components/layouts/shared"
+import { ThemeToggle } from "@/components/layouts/theme-toggle"
 
 export interface HomeLayoutProps extends BaseLayoutProps {
   nav?: Partial<
@@ -32,15 +30,15 @@ export interface HomeLayoutProps extends BaseLayoutProps {
       /**
        * Open mobile menu when hovering the trigger
        */
-      enableHoverToOpen?: boolean;
+      enableHoverToOpen?: boolean
     }
-  >;
+  >
 }
 
 export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
   const navItems = links.filter((item) =>
     ["nav", "all"].includes(item.on ?? "all")
-  );
+  )
 
   return (
     <Navbar>
@@ -57,7 +55,7 @@ export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
         {navItems
           .filter((item) => !isSecondary(item))
           .map((item, i) => {
-            return <NavbarLinkItem key={i} item={item} />;
+            return <NavbarLinkItem key={i} item={item} />
           })}
       </ul>
 
@@ -102,22 +100,22 @@ export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
         </Menu>
       </ul>
     </Navbar>
-  );
+  )
 }
 
 function NavbarLinkItem({
   item,
   ...props
 }: {
-  item: LinkItemType;
-  className?: string;
+  item: LinkItemType
+  className?: string
 }) {
-  if (item.type === "custom") return <>{item.children}</>;
+  if (item.type === "custom") return <>{item.children}</>
 
   if (item.type === "menu") {
     const children = item.items.map((child, j) => {
       if (child.type === "custom")
-        return <Fragment key={j}>{child.children}</Fragment>;
+        return <Fragment key={j}>{child.children}</Fragment>
 
       const {
         banner = child.icon ? (
@@ -126,7 +124,7 @@ function NavbarLinkItem({
           </div>
         ) : null,
         ...rest
-      } = child.menu ?? {};
+      } = child.menu ?? {}
 
       return (
         <NavbarMenuLink key={j} href={child.url} {...rest}>
@@ -142,8 +140,8 @@ function NavbarLinkItem({
             </>
           )}
         </NavbarMenuLink>
-      );
-    });
+      )
+    })
 
     return (
       <NavbarMenu>
@@ -152,7 +150,7 @@ function NavbarLinkItem({
         </NavbarMenuTrigger>
         <NavbarMenuContent>{children}</NavbarMenuContent>
       </NavbarMenu>
-    );
+    )
   }
 
   return (
@@ -165,11 +163,11 @@ function NavbarLinkItem({
     >
       {item.type === "icon" ? item.icon : item.text}
     </NavbarLink>
-  );
+  )
 }
 
 function isSecondary(item: LinkItemType): boolean {
   return (
     ("secondary" in item && item.secondary === true) || item.type === "icon"
-  );
+  )
 }

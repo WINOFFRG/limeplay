@@ -1,16 +1,18 @@
-"use client";
-import { BaseLinkItem, type LinkItemType } from "@/components/layouts/links";
+"use client"
+
+import type { ComponentPropsWithoutRef } from "react"
+import Link from "next/link"
+import { cva } from "class-variance-authority"
+
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
 import {
   NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
-  NavigationMenuTrigger
-} from "@/components/ui/navigation-menu";
-import { cva } from "class-variance-authority";
-import { buttonVariants } from "@/components/ui/button";
-import type { ComponentPropsWithoutRef } from "react";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu"
+import { BaseLinkItem, type LinkItemType } from "@/components/layouts/links"
 
 const menuItemVariants = cva("", {
   variants: {
@@ -18,28 +20,28 @@ const menuItemVariants = cva("", {
       main: "hover:text-fd-popover-foreground/50 data-[active=true]:text-fd-primary inline-flex items-center gap-2 py-1.5 transition-colors data-[active=true]:font-medium [&_svg]:size-4",
       icon: buttonVariants({
         size: "icon",
-        variant: "ghost"
+        variant: "ghost",
       }),
       button: buttonVariants({
         variant: "secondary",
-        className: "gap-1.5 [&_svg]:size-4"
-      })
-    }
+        className: "gap-1.5 [&_svg]:size-4",
+      }),
+    },
   },
   defaultVariants: {
-    variant: "main"
-  }
-});
+    variant: "main",
+  },
+})
 
 export function MenuLinkItem({
   item,
   ...props
 }: {
-  item: LinkItemType;
-  className?: string;
+  item: LinkItemType
+  className?: string
 }) {
   if (item.type === "custom")
-    return <div className={cn("grid", props.className)}>{item.children}</div>;
+    return <div className={cn("grid", props.className)}>{item.children}</div>
 
   if (item.type === "menu") {
     const header = (
@@ -47,7 +49,7 @@ export function MenuLinkItem({
         {item.icon}
         {item.text}
       </>
-    );
+    )
 
     return (
       <div className={cn("mb-4 flex flex-col", props.className)}>
@@ -64,7 +66,7 @@ export function MenuLinkItem({
           <MenuLinkItem key={i} item={child} />
         ))}
       </div>
-    );
+    )
   }
 
   return (
@@ -81,10 +83,10 @@ export function MenuLinkItem({
         {item.type === "icon" ? undefined : item.text}
       </BaseLinkItem>
     </NavigationMenuLink>
-  );
+  )
 }
 
-export const Menu = NavigationMenuItem;
+export const Menu = NavigationMenuItem
 
 export function MenuTrigger({
   enableHover = false,
@@ -93,7 +95,7 @@ export function MenuTrigger({
   /**
    * Enable hover to trigger
    */
-  enableHover?: boolean;
+  enableHover?: boolean
 }) {
   return (
     <NavigationMenuTrigger
@@ -102,14 +104,14 @@ export function MenuTrigger({
       className={cn(
         buttonVariants({
           size: "icon",
-          variant: "ghost"
+          variant: "ghost",
         }),
         props.className
       )}
     >
       {props.children}
     </NavigationMenuTrigger>
-  );
+  )
 }
 
 export function MenuContent(
@@ -122,5 +124,5 @@ export function MenuContent(
     >
       {props.children}
     </NavigationMenuContent>
-  );
+  )
 }
