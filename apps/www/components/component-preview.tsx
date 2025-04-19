@@ -9,7 +9,7 @@ import { useConfig } from "@/hooks/use-config";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Icons } from "@/components/icons";
 import { PlayerDemoLayout } from "@/registry/default/examples/player-demo-root";
-import { styles } from "@/registry/registry-styles";
+import { styles } from "@/registry/collection/registry-styles";
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
