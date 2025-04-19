@@ -35,4 +35,3 @@ dist/**
 shaka-player
 .turbo
 .env
-packages/limeplay

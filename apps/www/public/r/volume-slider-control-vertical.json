@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "volume-slider-control-vertical",
+  "type": "registry:example",
+  "registryDependencies": [
+    ""
+  ],
+  "files": [
+    {
+      "path": "registry/default/examples/volume-slider-control-vertical.tsx",
+      "content": "import * as VolumeSlider from \"@/registry/default/ui/volume-control\";\nimport { VolumeStateControl } from \"@/registry/default/examples/volume-state-control\";\n\nexport function VolumeSliderControlVertical() {\n  return (\n    <div className=\"bg-primary/10 my-4 flex h-fit flex-col items-center gap-1 rounded-md pt-2\">\n      <VolumeSlider.Root\n        className=\"focus-area -focus-area-x-12 -focus-area-y-2 relative h-16 w-1 cursor-crosshair rounded-md\"\n        orientation=\"vertical\"\n      >\n        <VolumeSlider.Track />\n        <VolumeSlider.Range />\n        <VolumeSlider.Thumb className=\"size-3\" />\n      </VolumeSlider.Root>\n      <VolumeStateControl />\n    </div>\n  );\n}\n",
+      "type": "registry:example"
+    }
+  ]
+}
