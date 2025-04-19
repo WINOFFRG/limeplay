@@ -1,6 +1,6 @@
-import { type Registry } from "shadcn/registry";
+import { type Registry } from "shadcn/registry"
 
-const BASE_SRC_URL = "blocks/linear-player";
+const BASE_SRC_URL = "blocks/linear-player"
 
 export const blocks: Registry["items"] = [
   {
@@ -55,4 +55,4 @@ export const blocks: Registry["items"] = [
       },
     ],
   },
-];
+]

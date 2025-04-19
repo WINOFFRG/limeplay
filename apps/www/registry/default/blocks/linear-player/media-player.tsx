@@ -1,39 +1,39 @@
-"use client";
+"use client"
 
-import { Media } from "@/registry/default/ui/media";
+import React, { useEffect } from "react"
+
+import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
+import { Media } from "@/registry/default/ui/media"
 import {
   MediaProvider,
-  useMediaStore
-} from "@/registry/default/ui/media-provider";
-import React, { useEffect } from "react";
-import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls";
-import * as Layout from "@/registry/default/ui/player-layout";
-
-import { PlayerHooks } from "@/registry/default/ui/player-hooks";
+  useMediaStore,
+} from "@/registry/default/ui/media-provider"
+import { PlayerHooks } from "@/registry/default/ui/player-hooks"
+import * as Layout from "@/registry/default/ui/player-layout"
 
 function MediaElement() {
-  const player = useMediaStore((state) => state.player);
-  const mediaRef = useMediaStore((state) => state.mediaRef);
+  const player = useMediaStore((state) => state.player)
+  const mediaRef = useMediaStore((state) => state.mediaRef)
 
   useEffect(() => {
-    const mediaElement = mediaRef?.current;
+    const mediaElement = mediaRef?.current
 
     if (player && mediaElement) {
       player.load(
         "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
-      );
+      )
 
       return () => {
         if (mediaElement) {
-          mediaElement.pause();
+          mediaElement.pause()
         }
 
         if (player) {
-          player.destroy();
+          player.destroy()
         }
-      };
+      }
     }
-  }, [player, mediaRef]);
+  }, [player, mediaRef])
 
   return (
     <Media
@@ -45,7 +45,7 @@ function MediaElement() {
       controls={false}
       loop
     />
-  );
+  )
 }
 
 export function MediaPlayer() {
@@ -61,5 +61,5 @@ export function MediaPlayer() {
         </Layout.PlayerContainer>
       </Layout.RootContainer>
     </MediaProvider>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import * as motion from "motion/react-client";
-import React from "react";
+import React from "react"
+import * as motion from "motion/react-client"
 
 export function CustomPlayerWrapper({ children }: React.PropsWithChildren) {
   return (
@@ -14,5 +14,5 @@ export function CustomPlayerWrapper({ children }: React.PropsWithChildren) {
     >
       {children}
     </motion.div>
-  );
+  )
 }
