@@ -3,14 +3,14 @@
 import { Media } from "@/registry/default/ui/media";
 import {
   MediaProvider,
-  useMediaStore
+  useMediaStore,
 } from "@/registry/default/ui/media-provider";
 import React, { useEffect } from "react";
-import { ControlsContainer as CustomControls } from "./controls-container";
+import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls";
 import * as Layout from "@/registry/default/ui/player-layout";
+import { CustomPlayerWrapper } from "@/registry/default/blocks/linear-player/components/custom-player-wrapper";
 
 import { PlayerHooks } from "@/registry/default/ui/player-hooks";
-import { CustomPlayerWrapper } from "./custom-player-wrapper";
 
 function MediaElement() {
   const player = useMediaStore((state) => state.player);
@@ -49,7 +49,7 @@ function MediaElement() {
   );
 }
 
-export function PlayerDemoLayout() {
+export function MediaPlayer() {
   return (
     <CustomPlayerWrapper>
       <MediaProvider>
@@ -58,7 +58,7 @@ export function PlayerDemoLayout() {
           <Layout.PlayerContainer className="mx-auto my-16">
             <MediaElement />
             <Layout.ControlsContainer>
-              <CustomControls />
+              <BottomControls />
             </Layout.ControlsContainer>
           </Layout.PlayerContainer>
         </Layout.RootContainer>
