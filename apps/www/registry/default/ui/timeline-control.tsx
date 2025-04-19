@@ -39,6 +39,8 @@ export const Root = React.forwardRef<
   );
 });
 
+Root.displayName = "Root";
+
 export const Track = React.forwardRef<
   React.ComponentRef<typeof SliderPrimitive.Track>,
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Track>
@@ -50,12 +52,14 @@ export const Track = React.forwardRef<
       {...props}
       ref={forwardRef}
       className={cn(
-        "relative size-full overflow-hidden rounded-md bg-white/20",
+        "bg-primary/20 relative size-full overflow-hidden rounded-md",
         className
       )}
     />
   );
 });
+
+Track.displayName = "Track";
 
 export const Range = React.forwardRef<
   React.ComponentRef<typeof SliderPrimitive.Range>,
@@ -67,10 +71,12 @@ export const Range = React.forwardRef<
     <SliderPrimitive.Range
       ref={forwardedRef}
       {...etc}
-      className="absolute rounded-s-md bg-white data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full"
+      className="bg-primary absolute rounded-s-md data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full"
     />
   );
 });
+
+Range.displayName = "Range";
 
 export const Thumb = React.forwardRef<
   React.ComponentRef<typeof SliderPrimitive.Thumb>,
@@ -96,3 +102,5 @@ export const Thumb = React.forwardRef<
     />
   );
 });
+
+Thumb.displayName = "Thumb";
