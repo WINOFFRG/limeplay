@@ -11,7 +11,7 @@ export const Index: Record<string, any> = {
       name: "index",
       description: "",
       type: "registry:style",
-      registryDependencies: ["utils"],
+      registryDependencies: ["http://localhost:3000/r/styles/default/utils.json"],
       files: [],
       component: null,
       meta: undefined,
@@ -67,6 +67,40 @@ export const Index: Record<string, any> = {
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/ui/player-layout.tsx")
         const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "player-layout"
+        return { default: mod.default || mod[exportName] }
+      }),
+      meta: undefined,
+    },
+    "media-provider": {
+      name: "media-provider",
+      description: "",
+      type: "registry:ui",
+      registryDependencies: undefined,
+      files: [{
+        path: "registry/default/ui/media-provider.tsx",
+        type: "registry:ui",
+        target: ""
+      }],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/default/ui/media-provider.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "media-provider"
+        return { default: mod.default || mod[exportName] }
+      }),
+      meta: undefined,
+    },
+    "media": {
+      name: "media",
+      description: "",
+      type: "registry:ui",
+      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json"],
+      files: [{
+        path: "registry/default/ui/media.tsx",
+        type: "registry:ui",
+        target: ""
+      }],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/default/ui/media.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "media"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -198,35 +232,39 @@ export const Index: Record<string, any> = {
       name: "linear-player",
       description: "",
       type: "registry:block",
-      registryDependencies: [],
+      registryDependencies: ["http://localhost:3000/r/styles/default/media.json"],
       files: [{
         path: "registry/default/blocks/linear-player/media-player.tsx",
         type: "registry:ui",
-        target: ""
+        target: "components/linear-player/media-player.tsx"
       },{
         path: "registry/default/blocks/linear-player/components/volume-state-control.tsx",
         type: "registry:ui",
-        target: ""
+        target: "components/linear-player/components/volume-state-control.tsx"
+      },{
+        path: "registry/default/blocks/linear-player/components/playback-state-control.tsx",
+        type: "registry:ui",
+        target: "components/linear-player/components/playback-state-control.tsx"
       },{
         path: "registry/default/blocks/linear-player/components/volume-slider-control.tsx",
         type: "registry:ui",
-        target: ""
+        target: "components/linear-player/components/volume-slider-control.tsx"
       },{
         path: "registry/default/blocks/linear-player/components/timeline-slider-control.tsx",
         type: "registry:ui",
-        target: ""
+        target: "components/linear-player/components/timeline-slider-control.tsx"
       },{
         path: "registry/default/blocks/linear-player/components/motion-container.tsx",
         type: "registry:ui",
-        target: ""
+        target: "components/linear-player/components/motion-container.tsx"
       },{
         path: "registry/default/blocks/linear-player/components/custom-player-wrapper.tsx",
         type: "registry:ui",
-        target: ""
+        target: "components/linear-player/components/custom-player-wrapper.tsx"
       },{
         path: "registry/default/blocks/linear-player/components/bottom-controls.tsx",
         type: "registry:ui",
-        target: ""
+        target: "components/linear-player/components/bottom-controls.tsx"
       }],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/blocks/linear-player/media-player.tsx")
