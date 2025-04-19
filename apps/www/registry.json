@@ -165,10 +165,6 @@
         {
           "path": "registry/default/lib/create-media-store.ts",
           "type": "registry:lib"
-        },
-        {
-          "path": "registry/default/hooks/use-player-root-store.ts",
-          "type": "registry:hook"
         }
       ]
     },
@@ -224,10 +220,71 @@
       ]
     },
     {
+      "name": "use-timeline-states",
+      "type": "registry:hook",
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/media-provider.json",
+        "http://localhost:3000/r/styles/default/utils.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/hooks/use-timeline-states.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "use-media-state-store",
+      "type": "registry:hook",
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/media-provider.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/hooks/use-media-state-store.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "use-timeline-store",
+      "type": "registry:hook",
+      "dependencies": [
+        "lodash.clamp"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/use-player-root-store.json",
+        "http://localhost:3000/r/styles/default/utils.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/hooks/use-timeline-store.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "use-volume-store",
+      "type": "registry:hook",
+      "dependencies": [
+        "lodash.clamp"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/use-player-root-store.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/hooks/use-volume-store.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
       "name": "playback-state-control",
       "type": "registry:example",
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/media-provider.json"
+        "http://localhost:3000/r/styles/default/media-provider.json",
+        "button"
       ],
       "files": [
         {
@@ -284,7 +341,9 @@
       "author": "Rohan Gupta (@winoffrg)",
       "description": "Modern seamless flat linear.app Media Player",
       "dependencies": [
-        "@phosphor-icons/react"
+        "@phosphor-icons/react",
+        "zustand",
+        "shaka-player"
       ],
       "registryDependencies": [
         "http://localhost:3000/r/styles/default/player-layout.json",
@@ -293,7 +352,13 @@
         "http://localhost:3000/r/styles/default/mute-control.json",
         "http://localhost:3000/r/styles/default/player-hooks.json",
         "http://localhost:3000/r/styles/default/playback-control.json",
-        "http://localhost:3000/r/styles/default/timeline-control.json"
+        "http://localhost:3000/r/styles/default/timeline-control.json",
+        "button",
+        "http://localhost:3000/r/styles/default/volume-control.json",
+        "http://localhost:3000/r/styles/default/use-timeline-states.json",
+        "http://localhost:3000/r/styles/default/use-volume-store.json",
+        "http://localhost:3000/r/styles/default/use-timeline-store.json",
+        "http://localhost:3000/r/styles/default/use-media-state-store.json"
       ],
       "files": [
         {
@@ -322,19 +387,14 @@
           "target": "components/linear-player/components/timeline-slider-control.tsx"
         },
         {
-          "path": "registry/default/blocks/linear-player/components/motion-container.tsx",
-          "type": "registry:component",
-          "target": "components/linear-player/components/motion-container.tsx"
-        },
-        {
-          "path": "registry/default/blocks/linear-player/components/custom-player-wrapper.tsx",
-          "type": "registry:component",
-          "target": "components/linear-player/components/custom-player-wrapper.tsx"
-        },
-        {
           "path": "registry/default/blocks/linear-player/components/bottom-controls.tsx",
           "type": "registry:component",
           "target": "components/linear-player/components/bottom-controls.tsx"
+        },
+        {
+          "path": "registry/default/blocks/linear-player/lib/create-media-store.ts",
+          "type": "registry:lib",
+          "target": "components/linear-player/lib/create-media-store.ts"
         }
       ]
     }

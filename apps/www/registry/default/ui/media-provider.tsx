@@ -7,7 +7,7 @@ import {
   createMediaStore,
   CreateMediaStoreProps,
   TypeMediaStore,
-} from "@/registry/default/lib/create-media-store-demo";
+} from "@/registry/default/internal/create-media-store";
 
 type MediaProviderContext = ReturnType<typeof createMediaStore>;
 
