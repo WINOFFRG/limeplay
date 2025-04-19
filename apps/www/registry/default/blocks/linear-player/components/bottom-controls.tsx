@@ -1,7 +1,7 @@
-import { PlaybackStateControl } from "@/registry/default/blocks/linear-player/components/playback-state-control";
-import { VolumeSliderControlHorizontal } from "@/registry/default/blocks/linear-player/components/volume-slider-control";
-import { VolumeStateControl } from "@/registry/default/blocks/linear-player/components/volume-state-control";
-import { TimelineSliderControl } from "@/registry/default/blocks/linear-player/components/timeline-slider-control";
+import { PlaybackStateControl } from "@/registry/default/blocks/linear-player/components/playback-state-control"
+import { TimelineSliderControl } from "@/registry/default/blocks/linear-player/components/timeline-slider-control"
+import { VolumeSliderControlHorizontal } from "@/registry/default/blocks/linear-player/components/volume-slider-control"
+import { VolumeStateControl } from "@/registry/default/blocks/linear-player/components/volume-state-control"
 
 export function BottomControls() {
   return (
@@ -16,5 +16,5 @@ export function BottomControls() {
       </div>
       <TimelineSliderControl />
     </div>
-  );
+  )
 }

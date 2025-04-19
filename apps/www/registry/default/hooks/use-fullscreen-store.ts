@@ -1,8 +1,9 @@
-import { StateCreator } from "zustand";
-import { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store";
+import { StateCreator } from "zustand"
+
+import { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
 
 export interface FullscreenStore {
-  fullscreen: boolean;
+  fullscreen: boolean
 }
 
 export const createFullscreenStore: StateCreator<
@@ -12,4 +13,4 @@ export const createFullscreenStore: StateCreator<
   FullscreenStore
 > = (set, get) => ({
   fullscreen: false,
-});
+})

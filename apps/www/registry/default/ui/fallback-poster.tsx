@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
-import { ComponentPropsWithoutRef } from "react";
+import { ComponentPropsWithoutRef } from "react"
+
+import { cn } from "@/lib/utils"
 
 /**
  * Inspired from Prime Video player PiP Mode
@@ -19,5 +20,5 @@ export function FallbackPoster({
     >
       {children}
     </div>
-  );
+  )
 }
