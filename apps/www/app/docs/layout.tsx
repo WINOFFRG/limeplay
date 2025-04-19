@@ -1,23 +1,24 @@
-"use client";
+"use client"
 
-import type { ReactNode } from "react";
-import { DocsLayout } from "fumadocs-ui/layouts/docs";
-import { baseOptions } from "@/app/layout.config";
-import { source } from "@/lib/source";
-import { RootProvider } from "fumadocs-ui/provider";
-import { Banner } from "fumadocs-ui/components/banner";
-import Link from "next/link";
-import { useTheme } from "next-themes";
+import type { ReactNode } from "react"
+import Link from "next/link"
+import { Banner } from "fumadocs-ui/components/banner"
+import { DocsLayout } from "fumadocs-ui/layouts/docs"
+import { RootProvider } from "fumadocs-ui/provider"
+import { useTheme } from "next-themes"
+
+import { source } from "@/lib/source"
+import { baseOptions } from "@/app/layout.config"
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const theme = useTheme();
+  const theme = useTheme()
 
   return (
     <RootProvider
       search={{
         options: {
-          type: "static"
-        }
+          type: "static",
+        },
       }}
       theme={theme}
     >
@@ -35,5 +36,5 @@ export default function Layout({ children }: { children: ReactNode }) {
         {children}
       </DocsLayout>
     </RootProvider>
-  );
+  )
 }

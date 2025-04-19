@@ -1,63 +1,64 @@
-import type { ReactNode } from "react";
-import type { LinkItemType } from "@/components/layouts/links";
-import type { NavProviderProps } from "@/components/contexts/layout";
-import { Slot } from "@radix-ui/react-slot";
+import type { ReactNode } from "react"
+import { Slot } from "@radix-ui/react-slot"
+
+import type { NavProviderProps } from "@/components/contexts/layout"
+import type { LinkItemType } from "@/components/layouts/links"
 
 export interface NavOptions extends NavProviderProps {
-  enabled: boolean;
-  component: ReactNode;
+  enabled: boolean
+  component: ReactNode
 
-  title?: ReactNode;
+  title?: ReactNode
 
   /**
    * Redirect url of title
    * @defaultValue '/'
    */
-  url?: string;
+  url?: string
 
-  children?: ReactNode;
+  children?: ReactNode
 }
 
 export interface BaseLayoutProps {
   themeSwitch?: {
-    enabled?: boolean;
-    component?: ReactNode;
-    mode?: "light-dark" | "light-dark-system";
-  };
+    enabled?: boolean
+    component?: ReactNode
+    mode?: "light-dark" | "light-dark-system"
+  }
 
   searchToggle?: Partial<{
-    enabled: boolean;
+    enabled: boolean
     components: Partial<{
-      sm: ReactNode;
-      lg: ReactNode;
-    }>;
-  }>;
+      sm: ReactNode
+      lg: ReactNode
+    }>
+  }>
 
-  links: LinkItemType[];
+  links: LinkItemType[]
   /**
    * Replace or disable navbar
    */
-  nav?: Partial<NavOptions>;
+  nav?: Partial<NavOptions>
 
-  children?: ReactNode;
+  children?: ReactNode
 }
 
-export { type LinkItemType };
+export { type LinkItemType }
 
 export function slot(
   obj:
     | {
-        enabled?: boolean;
-        component?: ReactNode;
+        enabled?: boolean
+        component?: ReactNode
       }
     | undefined,
   def: ReactNode,
   customComponentProps?: object,
   disabled?: ReactNode
 ): ReactNode {
-  if (obj?.enabled === false) return disabled;
+  if (obj?.enabled === false) return disabled
   if (obj?.component !== undefined)
-    return <Slot {...customComponentProps}>{obj.component}</Slot>;
+    return <Slot {...customComponentProps}>{obj.component}</Slot>
 
-  return def;
+  return def
 }
