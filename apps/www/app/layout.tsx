@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import { Metadata } from "next";
 import { PRODUCT_DECSRIPTION, PRODUCT_NAME } from "@/lib/constants";
 import { ThemeProvider } from "next-themes";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({
   subsets: ["latin"]
@@ -22,6 +23,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
       <body className="antialiased">
+        <Analytics />
         <ThemeProvider
           storageKey="limeplay-ui-theme"
           defaultTheme="dark"
