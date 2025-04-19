@@ -24,11 +24,49 @@ export const Index: Record<string, any> = {
       files: [{
         path: "registry/default/ui/mute-control.tsx",
         type: "registry:ui",
-        target: ""
+        target: "components/player/mute-control.tsx"
       }],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/ui/mute-control.tsx")
         const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "mute-control"
+        return { default: mod.default || mod[exportName] }
+      }),
+      meta: undefined,
+    },
+    "media-provider": {
+      name: "media-provider",
+      description: "",
+      type: "registry:ui",
+      registryDependencies: undefined,
+      files: [{
+        path: "registry/default/ui/mute-control.tsx",
+        type: "registry:ui",
+        target: ""
+      }],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/default/ui/mute-control.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "media-provider"
+        return { default: mod.default || mod[exportName] }
+      }),
+      meta: undefined,
+    },
+    "player-layout": {
+      name: "player-layout",
+      description: "",
+      type: "registry:ui",
+      registryDependencies: undefined,
+      files: [{
+        path: "registry/default/ui/player-layout.tsx",
+        type: "registry:ui",
+        target: ""
+      },{
+        path: "registry/default/ui/media-provider.tsx",
+        type: "registry:ui",
+        target: ""
+      }],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/default/ui/player-layout.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "player-layout"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -46,6 +84,44 @@ export const Index: Record<string, any> = {
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/lib/utils.ts")
         const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "utils"
+        return { default: mod.default || mod[exportName] }
+      }),
+      meta: undefined,
+    },
+    "create-media-store": {
+      name: "create-media-store",
+      description: "",
+      type: "registry:lib",
+      registryDependencies: undefined,
+      files: [{
+        path: "registry/default/lib/create-media-store.ts",
+        type: "registry:lib",
+        target: ""
+      },{
+        path: "registry/default/hooks/use-player-root-store.ts",
+        type: "registry:hook",
+        target: ""
+      }],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/default/lib/create-media-store.ts")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "create-media-store"
+        return { default: mod.default || mod[exportName] }
+      }),
+      meta: undefined,
+    },
+    "use-player-root-store": {
+      name: "use-player-root-store",
+      description: "",
+      type: "registry:hook",
+      registryDependencies: undefined,
+      files: [{
+        path: "registry/default/hooks/use-player-root-store.ts",
+        type: "registry:hook",
+        target: ""
+      }],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/default/hooks/use-player-root-store.ts")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "use-player-root-store"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -114,6 +190,47 @@ export const Index: Record<string, any> = {
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/examples/volume-state-control.tsx")
         const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-state-control"
+        return { default: mod.default || mod[exportName] }
+      }),
+      meta: undefined,
+    },
+    "linear-player": {
+      name: "linear-player",
+      description: "",
+      type: "registry:block",
+      registryDependencies: [],
+      files: [{
+        path: "registry/default/blocks/linear-player/media-player.tsx",
+        type: "registry:ui",
+        target: ""
+      },{
+        path: "registry/default/blocks/linear-player/components/volume-state-control.tsx",
+        type: "registry:ui",
+        target: ""
+      },{
+        path: "registry/default/blocks/linear-player/components/volume-slider-control.tsx",
+        type: "registry:ui",
+        target: ""
+      },{
+        path: "registry/default/blocks/linear-player/components/timeline-slider-control.tsx",
+        type: "registry:ui",
+        target: ""
+      },{
+        path: "registry/default/blocks/linear-player/components/motion-container.tsx",
+        type: "registry:ui",
+        target: ""
+      },{
+        path: "registry/default/blocks/linear-player/components/custom-player-wrapper.tsx",
+        type: "registry:ui",
+        target: ""
+      },{
+        path: "registry/default/blocks/linear-player/components/bottom-controls.tsx",
+        type: "registry:ui",
+        target: ""
+      }],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/default/blocks/linear-player/media-player.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "linear-player"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
