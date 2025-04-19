@@ -3,7 +3,7 @@
 import { Media } from "@/registry/default/ui/media";
 import {
   MediaProvider,
-  useMediaStore
+  useMediaStore,
 } from "@/registry/default/ui/media-provider";
 import React, { useEffect } from "react";
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls";
