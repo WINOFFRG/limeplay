@@ -1,6 +1,7 @@
-import { source } from "@/lib/source";
-import { createFromSource } from "fumadocs-core/search/server";
+import { createFromSource } from "fumadocs-core/search/server"
 
-export const revalidate = false;
+import { source } from "@/lib/source"
 
-export const { staticGET: GET } = createFromSource(source);
+export const revalidate = false
+
+export const { staticGET: GET } = createFromSource(source)

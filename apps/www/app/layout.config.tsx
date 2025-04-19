@@ -1,18 +1,19 @@
-import Image from "next/image";
-import Logo from "@/public/product-icon.svg";
-import { DISCORD_URL, GITHUB_URL, PRODUCT_NAME, X_URL } from "@/lib/constants";
-import { BaseLayoutProps } from "@/components/layouts/shared";
+import Image from "next/image"
+import Logo from "@/public/product-icon.svg"
 import {
   Blueprint,
   Book,
   DiscordLogo,
   Question,
   Sparkle,
-  XLogo
-} from "@phosphor-icons/react/dist/ssr";
-import { Icons } from "@/components/icons";
-import { LinkItemType } from "fumadocs-ui/layouts/links";
-import { NavbarLink } from "@/components/layouts/home/navbar";
+  XLogo,
+} from "@phosphor-icons/react/dist/ssr"
+import { LinkItemType } from "fumadocs-ui/layouts/links"
+
+import { DISCORD_URL, GITHUB_URL, PRODUCT_NAME, X_URL } from "@/lib/constants"
+import { Icons } from "@/components/icons"
+import { NavbarLink } from "@/components/layouts/home/navbar"
+import { BaseLayoutProps } from "@/components/layouts/shared"
 
 const COMMON_LINKS: LinkItemType[] = [
   {
@@ -20,23 +21,23 @@ const COMMON_LINKS: LinkItemType[] = [
     url: GITHUB_URL,
     text: "Github",
     icon: <Icons.gitHub />,
-    external: true
+    external: true,
   },
   {
     type: "icon",
     url: DISCORD_URL,
     text: "Discord",
     icon: <DiscordLogo weight="bold" />,
-    external: true
+    external: true,
   },
   {
     type: "icon",
     url: X_URL,
     text: "X",
     icon: <XLogo weight="bold" />,
-    external: true
-  }
-];
+    external: true,
+  },
+]
 
 export const baseOptions: BaseLayoutProps = {
   nav: {
@@ -51,43 +52,43 @@ export const baseOptions: BaseLayoutProps = {
         <span className="text-base font-medium">Limeplay</span>
       </>
     ),
-    transparentMode: "always"
+    transparentMode: "always",
   },
   links: [
     {
       type: "main",
       text: "Getting Started",
       url: "/docs/getting-started",
-      icon: <Sparkle />
+      icon: <Sparkle />,
     },
     {
       type: "main",
       text: "What is Limeplay?",
       url: "/docs/what-is-limeplay",
-      icon: <Question />
+      icon: <Question />,
     },
     {
       type: "main",
       text: "Architecture",
       url: "/docs/architecture",
-      icon: <Blueprint />
+      icon: <Blueprint />,
     },
     {
       type: "main",
       text: "Concepts & Design",
       url: "/docs/concepts-and-design",
-      icon: <Book />
+      icon: <Book />,
     },
-    ...COMMON_LINKS
-  ]
-};
+    ...COMMON_LINKS,
+  ],
+}
 
 export const HEADER_LINKS: LinkItemType[] = [
   {
     type: "main",
     text: "Documentation",
     url: "/docs/getting-started",
-    icon: <Book />
+    icon: <Book />,
   },
   {
     type: "custom",
@@ -96,14 +97,14 @@ export const HEADER_LINKS: LinkItemType[] = [
         <NavbarLink
           item={{
             url: "#",
-            active: "none"
+            active: "none",
           }}
           className="cursor-not-allowed text-sm font-light"
         >
           Themes
         </NavbarLink>
-      );
-    })()
+      )
+    })(),
   },
-  ...COMMON_LINKS
-];
+  ...COMMON_LINKS,
+]

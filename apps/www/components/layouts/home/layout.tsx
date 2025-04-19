@@ -1,14 +1,16 @@
-import { NavProvider } from "@/components/contexts/layout";
-import { cn } from "@/lib/utils";
-import { slot } from "../shared";
-import { Header, HomeLayoutProps } from "../header";
-import { HTMLAttributes } from "react";
-import { HEADER_LINKS } from "@/app/layout.config";
+import { HTMLAttributes } from "react"
+
+import { cn } from "@/lib/utils"
+import { NavProvider } from "@/components/contexts/layout"
+import { HEADER_LINKS } from "@/app/layout.config"
+
+import { Header, HomeLayoutProps } from "../header"
+import { slot } from "../shared"
 
 export function HomeLayout(
   props: HomeLayoutProps & HTMLAttributes<HTMLElement>
 ) {
-  const { nav, ...rest } = props;
+  const { nav, ...rest } = props
 
   return (
     <NavProvider transparentMode={nav?.transparentMode}>
@@ -21,5 +23,5 @@ export function HomeLayout(
         {props.children}
       </main>
     </NavProvider>
-  );
+  )
 }

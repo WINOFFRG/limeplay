@@ -1,4 +1,4 @@
-import * as VolumeSlider from "@/registry/default/ui/volume-control";
+import * as VolumeSlider from "@/registry/default/ui/volume-control"
 
 export function VolumeSliderControlHorizontal() {
   return (
@@ -12,5 +12,5 @@ export function VolumeSliderControlHorizontal() {
         <VolumeSlider.Thumb />
       </VolumeSlider.Root>
     </div>
-  );
+  )
 }

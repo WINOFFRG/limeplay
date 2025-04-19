@@ -1,7 +1,8 @@
-import { cn } from "@/lib/utils";
-import React, { ComponentPropsWithoutRef } from "react";
-import { useMediaStore } from "@/registry/default/ui/media-provider";
-import { composeRefs } from "@radix-ui/react-compose-refs";
+import React, { ComponentPropsWithoutRef } from "react"
+import { composeRefs } from "@radix-ui/react-compose-refs"
+
+import { cn } from "@/lib/utils"
+import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export function PlayerContainer({
   children,
@@ -12,14 +13,14 @@ export function PlayerContainer({
     <div
       data-layout-type="player-container"
       className={cn(
-        "aspect-(--aspect-ratio) relative max-h-[min(var(--height,_720px),_calc(100vh_-_16px_*_2))] w-auto overflow-hidden rounded-lg",
+        "relative aspect-(--aspect-ratio) max-h-[min(var(--height,_720px),_calc(100vh_-_16px_*_2))] w-auto overflow-hidden rounded-lg",
         className
       )}
       {...props}
     >
       {children}
     </div>
-  );
+  )
 }
 
 export function ControlsContainer({
@@ -35,32 +36,32 @@ export function ControlsContainer({
     >
       {children}
     </div>
-  );
+  )
 }
 
 export interface RootContainerProps
   extends React.ComponentPropsWithoutRef<"div"> {
-  height?: number;
-  width?: number;
-  className?: string;
+  height?: number
+  width?: number
+  className?: string
 }
 
 export const RootContainer = React.forwardRef<
   HTMLDivElement,
   RootContainerProps
 >((props, forwardedRef) => {
-  const { children, height, width, className } = props;
-  const idle = useMediaStore((state) => state.idle);
-  const status = useMediaStore((state) => state.status);
+  const { children, height, width, className } = props
+  const idle = useMediaStore((state) => state.idle)
+  const status = useMediaStore((state) => state.status)
   const setPlayerContainerRef = useMediaStore(
     (state) => state.setPlayerContainerRef
-  );
+  )
   const aspectRatio = React.useMemo(
     () => calculateAspectRatio(width, height),
     [height, width]
   )
     ?.split(":")
-    ?.join("/");
+    ?.join("/")
 
   return (
     <div
@@ -77,7 +78,7 @@ export const RootContainer = React.forwardRef<
         ["--aspect-ratio" as string]: aspectRatio,
         aspectRatio: aspectRatio,
       }}
-      className={cn("m-auto min-w-80 max-w-[var(--width,1280px)]", className)}
+      className={cn("m-auto max-w-[var(--width,1280px)] min-w-80", className)}
       // Show controls like tabbing over
       // onKeyDown={}
       // onPointerMove show controls again
@@ -89,17 +90,17 @@ export const RootContainer = React.forwardRef<
     >
       {children}
     </div>
-  );
-});
+  )
+})
 
 function calculateAspectRatio(width?: number, height?: number) {
   if (width && height) {
     const gcd = (a: number, b: number): number => {
-      return b === 0 ? a : gcd(b, a % b);
-    };
-    const divisor = gcd(width, height);
-    const aspectWidth = width / divisor;
-    const aspectHeight = height / divisor;
-    return `${aspectWidth}:${aspectHeight}`;
+      return b === 0 ? a : gcd(b, a % b)
+    }
+    const divisor = gcd(width, height)
+    const aspectWidth = width / divisor
+    const aspectHeight = height / divisor
+    return `${aspectWidth}:${aspectHeight}`
   }
 }

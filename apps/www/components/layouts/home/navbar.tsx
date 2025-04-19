@@ -1,7 +1,19 @@
-"use client";
-import { type ComponentProps, type HTMLAttributes, useState } from "react";
-import { cva, type VariantProps } from "class-variance-authority";
-import { BaseLinkItem } from "@/components/layouts/links";
+"use client"
+
+import React, {
+  useState,
+  type ComponentProps,
+  type HTMLAttributes,
+} from "react"
+import Link, { LinkProps } from "next/link"
+import type {
+  NavigationMenuContentProps,
+  NavigationMenuTriggerProps,
+} from "@radix-ui/react-navigation-menu"
+import { cva, type VariantProps } from "class-variance-authority"
+
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -9,25 +21,18 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport
-} from "@/components/ui/navigation-menu";
-import { useNav } from "@/components/contexts/layout";
-import type {
-  NavigationMenuContentProps,
-  NavigationMenuTriggerProps
-} from "@radix-ui/react-navigation-menu";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import Link, { LinkProps } from "next/link";
-import React from "react";
+  NavigationMenuViewport,
+} from "@/components/ui/navigation-menu"
+import { useNav } from "@/components/contexts/layout"
+import { BaseLinkItem } from "@/components/layouts/links"
 
 const navItemVariants = cva(
   "text-fd-muted-foreground hover:text-fd-accent-foreground data-[active=true]:text-fd-primary inline-flex items-center gap-1 p-2 transition-colors [&_svg]:size-4"
-);
+)
 
 export function Navbar(props: HTMLAttributes<HTMLElement>) {
-  const [value, setValue] = useState("");
-  const { isTransparent } = useNav();
+  const [value, setValue] = useState("")
+  const { isTransparent } = useNav()
 
   return (
     <NavigationMenu value={value} onValueChange={setValue} asChild>
@@ -35,7 +40,7 @@ export function Navbar(props: HTMLAttributes<HTMLElement>) {
         id="nd-nav"
         {...props}
         className={cn(
-          "top-(--fd-banner-height) max-w-fd-container border-fd-foreground/10 fixed left-1/2 z-40 box-content w-full -translate-x-1/2 border-b transition-colors lg:mt-2 lg:w-[calc(100%-1rem)] lg:rounded-2xl lg:border",
+          "max-w-fd-container border-fd-foreground/10 top-(--fd-banner-height) fixed left-1/2 z-40 box-content w-full -translate-x-1/2 border-b transition-colors lg:mt-2 lg:w-[calc(100%-1rem)] lg:rounded-2xl lg:border",
           value.length > 0 ? "shadow-lg" : "shadow-sm",
           (isTransparent || value.length > 0) &&
             "bg-fd-background/80 backdrop-blur-lg",
@@ -51,10 +56,10 @@ export function Navbar(props: HTMLAttributes<HTMLElement>) {
         <NavigationMenuViewport />
       </header>
     </NavigationMenu>
-  );
+  )
 }
 
-export const NavbarMenu = NavigationMenuItem;
+export const NavbarMenu = NavigationMenuItem
 
 export function NavbarMenuContent(props: NavigationMenuContentProps) {
   return (
@@ -67,7 +72,7 @@ export function NavbarMenuContent(props: NavigationMenuContentProps) {
     >
       {props.children}
     </NavigationMenuContent>
-  );
+  )
 }
 
 export function NavbarMenuTrigger(props: NavigationMenuTriggerProps) {
@@ -78,11 +83,11 @@ export function NavbarMenuTrigger(props: NavigationMenuTriggerProps) {
     >
       {props.children}
     </NavigationMenuTrigger>
-  );
+  )
 }
 
 interface NavbarMenuLinkProps extends React.PropsWithChildren<LinkProps> {
-  className?: string;
+  className?: string
 }
 
 export function NavbarMenuLink(props: NavbarMenuLinkProps) {
@@ -98,7 +103,7 @@ export function NavbarMenuLink(props: NavbarMenuLinkProps) {
         {props.children}
       </Link>
     </NavigationMenuLink>
-  );
+  )
 }
 
 const linkVariants = cva("", {
@@ -107,18 +112,18 @@ const linkVariants = cva("", {
       main: navItemVariants(),
       button: buttonVariants({
         variant: "secondary",
-        className: "gap-1.5 [&_svg]:size-4"
+        className: "gap-1.5 [&_svg]:size-4",
       }),
       icon: buttonVariants({
         variant: "ghost",
-        size: "icon"
-      })
-    }
+        size: "icon",
+      }),
+    },
   },
   defaultVariants: {
-    variant: "main"
-  }
-});
+    variant: "main",
+  },
+})
 
 export function NavbarLink({
   item,
@@ -137,5 +142,5 @@ export function NavbarLink({
         </BaseLinkItem>
       </NavigationMenuLink>
     </NavigationMenuItem>
-  );
+  )
 }

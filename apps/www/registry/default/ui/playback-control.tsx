@@ -1,26 +1,26 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
 
-import { useMediaStates } from "@/registry/default/hooks/use-media-state-states";
-import { useMediaStore } from "@/registry/default/ui/media-provider";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
+import { useMediaStates } from "@/registry/default/hooks/use-media-state-states"
+import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export interface PlaybackControlProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  asChild?: boolean;
+  asChild?: boolean
 }
 
 export const PlaybackControl = React.forwardRef<
   HTMLButtonElement,
   PlaybackControlProps
 >((props, forwardedRef) => {
-  useMediaStates();
+  useMediaStates()
 
-  const status = useMediaStore((state) => state.status);
-  const togglePaused = useMediaStore((state) => state.togglePaused);
-  const Comp = props.asChild ? Slot : Button;
+  const status = useMediaStore((state) => state.status)
+  const togglePaused = useMediaStore((state) => state.togglePaused)
+  const Comp = props.asChild ? Slot : Button
 
   return (
     <Comp
@@ -30,7 +30,7 @@ export const PlaybackControl = React.forwardRef<
       aria-keyshortcuts="k"
       onClick={togglePaused}
     />
-  );
-});
+  )
+})
 
-PlaybackControl.displayName = "PlaybackControl";
+PlaybackControl.displayName = "PlaybackControl"
