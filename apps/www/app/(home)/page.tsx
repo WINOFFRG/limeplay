@@ -1,5 +1,5 @@
 import { VideoBackground } from "@/components/video-background";
-import { MediaPlayer as LinearMediaPlayer } from "@/registry/default/blocks/linear-player/media-player";
+import { MediaPlayer as LinearMediaPlayer } from "@/components/media-player";
 
 export default function Home() {
   return (
