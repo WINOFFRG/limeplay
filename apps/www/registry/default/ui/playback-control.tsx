@@ -32,3 +32,5 @@ export const PlaybackControl = React.forwardRef<
     />
   );
 });
+
+PlaybackControl.displayName = "PlaybackControl";

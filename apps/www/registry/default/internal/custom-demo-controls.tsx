@@ -18,7 +18,7 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
           "--color-dark": "rgba(255, 255, 255, 0.2)",
           maskComposite: "exclude",
           maskImage:
-            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)"
+            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
         }}
       ></div>
 
@@ -34,7 +34,7 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
           "--color-dark": "rgba(255, 255, 255, 0.2)",
           maskComposite: "exclude",
           maskImage:
-            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)"
+            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
         }}
       ></div>
 
@@ -50,7 +50,7 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
           "--color-dark": "rgba(255, 255, 255, 0.2)",
           maskComposite: "exclude",
           maskImage:
-            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)"
+            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
         }}
       ></div>
 
@@ -66,7 +66,7 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
           "--color-dark": "rgba(255, 255, 255, 0.2)",
           maskComposite: "exclude",
           maskImage:
-            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)"
+            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
         }}
       ></div>
       {children}

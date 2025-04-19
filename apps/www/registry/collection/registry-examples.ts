@@ -4,7 +4,7 @@ export const examples: Registry["items"] = [
   {
     name: "playback-state-control",
     type: "registry:example",
-    registryDependencies: [""],
+    registryDependencies: ["media-provider"],
     files: [
       {
         path: "examples/playback-state-control.tsx",
@@ -15,7 +15,7 @@ export const examples: Registry["items"] = [
   {
     name: "volume-slider-control-horizontal",
     type: "registry:example",
-    registryDependencies: [""],
+    registryDependencies: ["volume-state-control", "volume-control"],
     files: [
       {
         path: "examples/volume-slider-control-horizontal.tsx",
@@ -26,7 +26,7 @@ export const examples: Registry["items"] = [
   {
     name: "volume-slider-control-vertical",
     type: "registry:example",
-    registryDependencies: [""],
+    registryDependencies: ["volume-state-control", "volume-control"],
     files: [
       {
         path: "examples/volume-slider-control-vertical.tsx",
@@ -37,7 +37,7 @@ export const examples: Registry["items"] = [
   {
     name: "volume-state-control",
     type: "registry:example",
-    registryDependencies: [""],
+    registryDependencies: ["media-provider", "mute-control"],
     files: [
       {
         path: "examples/volume-state-control.tsx",
