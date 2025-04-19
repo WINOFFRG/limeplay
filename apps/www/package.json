@@ -8,7 +8,9 @@
     "start": "next start",
     "postinstall": "fumadocs-mdx",
     "registry:build": "REGISTRY_HOST=https://limeplay.winoffrg.dev tsx --tsconfig ./tsconfig.scripts.json ./scripts/build-registry.ts && prettier --log-level silent --write \"registry/**/*.{ts,tsx,json,mdx}\" --cache",
-    "registry:dev": "REGISTRY_HOST=http://localhost:3000 tsx --watch --tsconfig ./tsconfig.scripts.json ./scripts/build-registry.ts && prettier --log-level silent --write \"registry/**/*.{ts,tsx,json,mdx}\" --cache"
+    "registry:dev": "REGISTRY_HOST=http://localhost:3000 tsx --watch --tsconfig ./tsconfig.scripts.json ./scripts/build-registry.ts && prettier --log-level silent --write \"registry/**/*.{ts,tsx,json,mdx}\" --cache",
+    "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
+    "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache"
   },
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.13.3",
@@ -69,6 +71,51 @@
     "unist": "^0.0.1",
     "unist-builder": "^3.0.1",
     "unist-util-visit": "^5.0.0",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "@ianvs/prettier-plugin-sort-imports": "^3.7.2"
+  },
+  "prettier": {
+    "endOfLine": "lf",
+    "semi": false,
+    "singleQuote": false,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "importOrder": [
+      "^(react/(.*)$)|^(react$)",
+      "^(next/(.*)$)|^(next$)",
+      "<THIRD_PARTY_MODULES>",
+      "",
+      "^@workspace/(.*)$",
+      "",
+      "^types$",
+      "^@/types/(.*)$",
+      "^@/config/(.*)$",
+      "^@/lib/(.*)$",
+      "^@/hooks/(.*)$",
+      "^@/components/ui/(.*)$",
+      "^@/components/(.*)$",
+      "^@/registry/(.*)$",
+      "^@/styles/(.*)$",
+      "^@/app/(.*)$",
+      "^@/www/(.*)$",
+      "",
+      "^[./]"
+    ],
+    "importOrderSeparation": false,
+    "importOrderSortSpecifiers": true,
+    "importOrderBuiltinModulesToTop": true,
+    "importOrderParserPlugins": [
+      "typescript",
+      "jsx",
+      "decorators-legacy"
+    ],
+    "importOrderMergeDuplicateImports": true,
+    "importOrderCombineTypeAndValueImports": true,
+    "plugins": [
+      "@ianvs/prettier-plugin-sort-imports",
+      "prettier-plugin-tailwindcss"
+    ]
   }
 }
