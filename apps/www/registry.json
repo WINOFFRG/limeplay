@@ -1,6 +1,6 @@
 {
-  "name": "shadcn/ui",
-  "homepage": "https://ui.shadcn.com",
+  "name": "winoffrg/limeplay",
+  "homepage": "https://limeplay.winoffrg.com",
   "items": [
     {
       "name": "index",
@@ -11,7 +11,7 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "utils"
+        "http://localhost:3000/r/styles/default/utils.json"
       ],
       "files": [],
       "cssVars": {}
@@ -22,6 +22,10 @@
       "dependencies": [
         "@radix-ui/react-slot"
       ],
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/media-provider.json",
+        "http://localhost:3000/r/styles/default/use-volume-states.json"
+      ],
       "files": [
         {
           "path": "registry/default/ui/mute-control.tsx",
@@ -30,12 +34,117 @@
       ]
     },
     {
+      "name": "media-provider",
+      "type": "registry:ui",
+      "files": [
+        {
+          "path": "registry/default/ui/media-provider.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "player-layout",
+      "type": "registry:ui",
+      "dependencies": [
+        "@radix-ui/react-compose-refs"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/media-provider.json",
+        "http://localhost:3000/r/styles/default/use-player-root-store.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/ui/player-layout.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "media",
+      "type": "registry:ui",
+      "dependencies": [
+        "@radix-ui/react-compose-refs"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/media-provider.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/ui/media.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "volume-control",
+      "type": "registry:ui",
+      "dependencies": [
+        "@radix-ui/react-slider"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/media-provider.json",
+        "http://localhost:3000/r/styles/default/utils.json",
+        "http://localhost:3000/r/styles/default/media-provider.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/ui/volume-control.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "playback-control",
+      "type": "registry:ui",
+      "dependencies": [
+        "@radix-ui/react-slot"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/use-media-state-states.json",
+        "http://localhost:3000/r/styles/default/media-provider.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/ui/playback-control.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "player-hooks",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/use-shaka-player.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/ui/player-hooks.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "timeline-control",
+      "type": "registry:ui",
+      "dependencies": [
+        "@radix-ui/react-slider"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/utils.json",
+        "http://localhost:3000/r/styles/default/media-provider.json",
+        "http://localhost:3000/r/styles/default/utils.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/ui/timeline-control.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "utils",
       "type": "registry:lib",
-      "dependencies": [
-        "clsx",
-        "tailwind-merge"
-      ],
       "files": [
         {
           "path": "registry/default/lib/utils.ts",
@@ -44,10 +153,81 @@
       ]
     },
     {
+      "name": "create-media-store",
+      "type": "registry:lib",
+      "dependencies": [
+        "zustand"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/use-player-root-store.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/lib/create-media-store.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/default/hooks/use-player-root-store.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "use-player-root-store",
+      "type": "registry:hook",
+      "files": [
+        {
+          "path": "registry/default/hooks/use-player-root-store.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "use-volume-states",
+      "type": "registry:hook",
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/media-provider.json",
+        "http://localhost:3000/r/styles/default/utils.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/hooks/use-volume-states.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "use-media-state-states",
+      "type": "registry:hook",
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/utils.json",
+        "http://localhost:3000/r/styles/default/media-provider.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/hooks/use-media-state-states.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "use-shaka-player",
+      "type": "registry:hook",
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/media-provider.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/hooks/use-shaka-player.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
       "name": "playback-state-control",
       "type": "registry:example",
       "registryDependencies": [
-        ""
+        "http://localhost:3000/r/styles/default/media-provider.json"
       ],
       "files": [
         {
@@ -60,7 +240,8 @@
       "name": "volume-slider-control-horizontal",
       "type": "registry:example",
       "registryDependencies": [
-        ""
+        "http://localhost:3000/r/styles/default/volume-state-control.json",
+        "http://localhost:3000/r/styles/default/volume-control.json"
       ],
       "files": [
         {
@@ -73,7 +254,8 @@
       "name": "volume-slider-control-vertical",
       "type": "registry:example",
       "registryDependencies": [
-        ""
+        "http://localhost:3000/r/styles/default/volume-state-control.json",
+        "http://localhost:3000/r/styles/default/volume-control.json"
       ],
       "files": [
         {
@@ -86,12 +268,73 @@
       "name": "volume-state-control",
       "type": "registry:example",
       "registryDependencies": [
-        ""
+        "http://localhost:3000/r/styles/default/media-provider.json",
+        "http://localhost:3000/r/styles/default/mute-control.json"
       ],
       "files": [
         {
           "path": "registry/default/examples/volume-state-control.tsx",
           "type": "registry:example"
+        }
+      ]
+    },
+    {
+      "name": "linear-player",
+      "type": "registry:block",
+      "author": "Rohan Gupta (@winoffrg)",
+      "description": "Modern seamless flat linear.app Media Player",
+      "dependencies": [
+        "@phosphor-icons/react"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/styles/default/player-layout.json",
+        "http://localhost:3000/r/styles/default/media.json",
+        "http://localhost:3000/r/styles/default/media-provider.json",
+        "http://localhost:3000/r/styles/default/mute-control.json",
+        "http://localhost:3000/r/styles/default/player-hooks.json",
+        "http://localhost:3000/r/styles/default/playback-control.json",
+        "http://localhost:3000/r/styles/default/timeline-control.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/blocks/linear-player/media-player.tsx",
+          "type": "registry:component",
+          "target": "components/linear-player/media-player.tsx"
+        },
+        {
+          "path": "registry/default/blocks/linear-player/components/volume-state-control.tsx",
+          "type": "registry:component",
+          "target": "components/linear-player/components/volume-state-control.tsx"
+        },
+        {
+          "path": "registry/default/blocks/linear-player/components/playback-state-control.tsx",
+          "type": "registry:component",
+          "target": "components/linear-player/components/playback-state-control.tsx"
+        },
+        {
+          "path": "registry/default/blocks/linear-player/components/volume-slider-control.tsx",
+          "type": "registry:component",
+          "target": "components/linear-player/components/volume-slider-control.tsx"
+        },
+        {
+          "path": "registry/default/blocks/linear-player/components/timeline-slider-control.tsx",
+          "type": "registry:component",
+          "target": "components/linear-player/components/timeline-slider-control.tsx"
+        },
+        {
+          "path": "registry/default/blocks/linear-player/components/motion-container.tsx",
+          "type": "registry:component",
+          "target": "components/linear-player/components/motion-container.tsx"
+        },
+        {
+          "path": "registry/default/blocks/linear-player/components/custom-player-wrapper.tsx",
+          "type": "registry:component",
+          "target": "components/linear-player/components/custom-player-wrapper.tsx"
+        },
+        {
+          "path": "registry/default/blocks/linear-player/components/bottom-controls.tsx",
+          "type": "registry:component",
+          "target": "components/linear-player/components/bottom-controls.tsx"
         }
       ]
     }
