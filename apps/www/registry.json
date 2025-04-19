@@ -11,7 +11,7 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/utils.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json"
       ],
       "files": [],
       "cssVars": {}
@@ -23,8 +23,8 @@
         "@radix-ui/react-slot"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/media-provider.json",
-        "http://localhost:3000/r/styles/default/use-volume-states.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-volume-states.json"
       ],
       "files": [
         {
@@ -50,8 +50,8 @@
         "@radix-ui/react-compose-refs"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/media-provider.json",
-        "http://localhost:3000/r/styles/default/use-player-root-store.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json"
       ],
       "files": [
         {
@@ -67,7 +67,7 @@
         "@radix-ui/react-compose-refs"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/media-provider.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json"
       ],
       "files": [
         {
@@ -83,9 +83,9 @@
         "@radix-ui/react-slider"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/media-provider.json",
-        "http://localhost:3000/r/styles/default/utils.json",
-        "http://localhost:3000/r/styles/default/media-provider.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json"
       ],
       "files": [
         {
@@ -101,8 +101,8 @@
         "@radix-ui/react-slot"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/use-media-state-states.json",
-        "http://localhost:3000/r/styles/default/media-provider.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/use-media-state-states.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json"
       ],
       "files": [
         {
@@ -115,7 +115,7 @@
       "name": "player-hooks",
       "type": "registry:ui",
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/use-shaka-player.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/use-shaka-player.json"
       ],
       "files": [
         {
@@ -131,9 +131,9 @@
         "@radix-ui/react-slider"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/utils.json",
-        "http://localhost:3000/r/styles/default/media-provider.json",
-        "http://localhost:3000/r/styles/default/utils.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json"
       ],
       "files": [
         {
@@ -159,7 +159,7 @@
         "zustand"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/use-player-root-store.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json"
       ],
       "files": [
         {
@@ -182,8 +182,8 @@
       "name": "use-volume-states",
       "type": "registry:hook",
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/media-provider.json",
-        "http://localhost:3000/r/styles/default/utils.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json"
       ],
       "files": [
         {
@@ -196,8 +196,8 @@
       "name": "use-media-state-states",
       "type": "registry:hook",
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/utils.json",
-        "http://localhost:3000/r/styles/default/media-provider.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json"
       ],
       "files": [
         {
@@ -210,7 +210,7 @@
       "name": "use-shaka-player",
       "type": "registry:hook",
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/media-provider.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json"
       ],
       "files": [
         {
@@ -223,8 +223,8 @@
       "name": "use-timeline-states",
       "type": "registry:hook",
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/media-provider.json",
-        "http://localhost:3000/r/styles/default/utils.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json"
       ],
       "files": [
         {
@@ -237,7 +237,7 @@
       "name": "use-media-state-store",
       "type": "registry:hook",
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/media-provider.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json"
       ],
       "files": [
         {
@@ -253,8 +253,8 @@
         "lodash.clamp"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/use-player-root-store.json",
-        "http://localhost:3000/r/styles/default/utils.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json"
       ],
       "files": [
         {
@@ -270,7 +270,7 @@
         "lodash.clamp"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/use-player-root-store.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json"
       ],
       "files": [
         {
@@ -283,7 +283,7 @@
       "name": "playback-state-control",
       "type": "registry:example",
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
         "button"
       ],
       "files": [
@@ -297,8 +297,8 @@
       "name": "volume-slider-control-horizontal",
       "type": "registry:example",
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/volume-state-control.json",
-        "http://localhost:3000/r/styles/default/volume-control.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/volume-state-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/volume-control.json"
       ],
       "files": [
         {
@@ -311,8 +311,8 @@
       "name": "volume-slider-control-vertical",
       "type": "registry:example",
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/volume-state-control.json",
-        "http://localhost:3000/r/styles/default/volume-control.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/volume-state-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/volume-control.json"
       ],
       "files": [
         {
@@ -325,8 +325,8 @@
       "name": "volume-state-control",
       "type": "registry:example",
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/media-provider.json",
-        "http://localhost:3000/r/styles/default/mute-control.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/mute-control.json"
       ],
       "files": [
         {
@@ -346,19 +346,19 @@
         "shaka-player"
       ],
       "registryDependencies": [
-        "http://localhost:3000/r/styles/default/player-layout.json",
-        "http://localhost:3000/r/styles/default/media.json",
-        "http://localhost:3000/r/styles/default/media-provider.json",
-        "http://localhost:3000/r/styles/default/mute-control.json",
-        "http://localhost:3000/r/styles/default/player-hooks.json",
-        "http://localhost:3000/r/styles/default/playback-control.json",
-        "http://localhost:3000/r/styles/default/timeline-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/player-layout.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/mute-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/player-hooks.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/playback-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/timeline-control.json",
         "button",
-        "http://localhost:3000/r/styles/default/volume-control.json",
-        "http://localhost:3000/r/styles/default/use-timeline-states.json",
-        "http://localhost:3000/r/styles/default/use-volume-store.json",
-        "http://localhost:3000/r/styles/default/use-timeline-store.json",
-        "http://localhost:3000/r/styles/default/use-media-state-store.json"
+        "https://limeplay.winoffrg.dev/r/styles/default/volume-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-timeline-states.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-volume-store.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-timeline-store.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-media-state-store.json"
       ],
       "files": [
         {
