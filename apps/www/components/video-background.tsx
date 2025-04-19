@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import Image from "next/image";
+import Image from "next/image"
+import background from "@/public/bg-7.jpg"
+import { motion } from "motion/react"
 
-import { motion } from "motion/react";
-import styles from "./video-background.module.css";
-import background from "@/public/bg-7.jpg";
+import styles from "./video-background.module.css"
 
 export function VideoBackground() {
-  const randomImageNumber = Math.floor(Math.random() * 20);
+  const randomImageNumber = Math.floor(Math.random() * 20)
   const parsedNumber =
-    randomImageNumber > 9 ? randomImageNumber : "0" + randomImageNumber;
+    randomImageNumber > 9 ? randomImageNumber : "0" + randomImageNumber
 
   return (
     <motion.div
@@ -31,5 +31,5 @@ export function VideoBackground() {
       <div className="absolute inset-[0_auto_0_0] w-2/6 bg-gradient-to-r from-black to-transparent opacity-50" />
       <div className="absolute inset-[0_0_0_auto] w-1/4 bg-gradient-to-l from-black to-transparent opacity-50" />
     </motion.div>
-  );
+  )
 }

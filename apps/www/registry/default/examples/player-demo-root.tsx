@@ -1,20 +1,20 @@
-"use client";
+"use client"
 
-import { Media } from "@/registry/default/ui/media";
+import React, { useEffect } from "react"
+import { useControls } from "leva"
+
+import { LevaControls } from "@/components/leva-controls"
+import { CustomDemoControls } from "@/registry/default/internal/custom-demo-controls"
+import { Media } from "@/registry/default/ui/media"
 import {
   MediaProvider,
   useMediaStore,
-} from "@/registry/default/ui/media-provider";
-import React, { useEffect } from "react";
-import { useControls } from "leva";
-import * as Layout from "@/registry/default/ui/player-layout";
-import { PlayerHooks } from "@/registry/default/ui/player-hooks";
-
-import { CustomDemoControls } from "@/registry/default/internal/custom-demo-controls";
-import { LevaControls } from "@/components/leva-controls";
+} from "@/registry/default/ui/media-provider"
+import { PlayerHooks } from "@/registry/default/ui/player-hooks"
+import * as Layout from "@/registry/default/ui/player-layout"
 
 function MediaElement() {
-  const player = useMediaStore((state) => state.player);
+  const player = useMediaStore((state) => state.player)
 
   const { streamUrl } = useControls({
     streamUrl: {
@@ -22,23 +22,23 @@ function MediaElement() {
         "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8",
       label: "Stream URL",
     },
-  });
+  })
 
   useEffect(() => {
     if (player) {
       try {
-        const url = new URL(streamUrl);
+        const url = new URL(streamUrl)
 
         if (url.protocol === "http:" || url.protocol === "https:") {
-          player.load(streamUrl);
+          player.load(streamUrl)
         } else {
-          console.warn("Invalid stream URL protocol. Must be http or https.");
+          console.warn("Invalid stream URL protocol. Must be http or https.")
         }
       } catch (error) {
-        console.error("Invalid stream URL format:", streamUrl);
+        console.error("Invalid stream URL format:", streamUrl)
       }
     }
-  }, [player, streamUrl]);
+  }, [player, streamUrl])
 
   return (
     <Media
@@ -48,7 +48,7 @@ function MediaElement() {
       muted
       autoPlay
     />
-  );
+  )
 }
 
 export function PlayerDemoLayout({ children }: React.PropsWithChildren) {
@@ -66,5 +66,5 @@ export function PlayerDemoLayout({ children }: React.PropsWithChildren) {
         <CustomDemoControls>{children}</CustomDemoControls>
       </Layout.RootContainer>
     </MediaProvider>
-  );
+  )
 }
