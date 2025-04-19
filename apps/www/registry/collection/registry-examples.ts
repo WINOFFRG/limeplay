@@ -4,7 +4,7 @@ export const examples: Registry["items"] = [
   {
     name: "playback-state-control",
     type: "registry:example",
-    registryDependencies: ["media-provider"],
+    registryDependencies: ["media-provider", "button"],
     files: [
       {
         path: "examples/playback-state-control.tsx",

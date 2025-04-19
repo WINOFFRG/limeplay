@@ -6,8 +6,9 @@ import {
   useMediaStore
 } from "@/registry/default/ui/media-provider";
 import React, { useEffect } from "react";
-import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls";
+import { BottomControls } from "@/components/player/bottom-controls";
 import * as Layout from "@/registry/default/ui/player-layout";
+import { CustomPlayerWrapper } from "@/components/player/custom-player-wrapper";
 
 import { PlayerHooks } from "@/registry/default/ui/player-hooks";
 
@@ -50,16 +51,18 @@ function MediaElement() {
 
 export function MediaPlayer() {
   return (
-    <MediaProvider>
-      <PlayerHooks />
-      <Layout.RootContainer height={720} width={1280} className="container">
-        <Layout.PlayerContainer className="mx-auto my-16">
-          <MediaElement />
-          <Layout.ControlsContainer>
-            <BottomControls />
-          </Layout.ControlsContainer>
-        </Layout.PlayerContainer>
-      </Layout.RootContainer>
-    </MediaProvider>
+    <CustomPlayerWrapper>
+      <MediaProvider>
+        <PlayerHooks />
+        <Layout.RootContainer height={720} width={1280} className="container">
+          <Layout.PlayerContainer className="mx-auto my-16">
+            <MediaElement />
+            <Layout.ControlsContainer>
+              <BottomControls />
+            </Layout.ControlsContainer>
+          </Layout.PlayerContainer>
+        </Layout.RootContainer>
+      </MediaProvider>
+    </CustomPlayerWrapper>
   );
 }

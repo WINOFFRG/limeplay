@@ -21,10 +21,6 @@ export const lib: Registry["items"] = [
         path: "lib/create-media-store.ts",
         type: "registry:lib",
       },
-      {
-        path: "hooks/use-player-root-store.ts",
-        type: "registry:hook",
-      },
     ],
   },
 ];
