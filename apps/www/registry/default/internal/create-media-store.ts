@@ -13,12 +13,12 @@ import {
 import {
   createMediaStateStore,
   MediaStateStore,
-} from "../hooks/use-media-state-store";
+} from "@/registry/default/hooks/use-media-state-store";
 
 import {
   createTimelineStore,
   TimelineStore,
-} from "../hooks/use-timeline-store";
+} from "@/registry/default/hooks/use-timeline-store";
 
 export type TypeMediaStore = PlayerRootStore &
   VolumeStore &
