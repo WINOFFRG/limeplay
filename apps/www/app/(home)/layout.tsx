@@ -1,11 +1,11 @@
-import { HomeLayout } from "@/components/layouts/home/layout";
+import { HomeLayout } from "@/components/layouts/home/layout"
 
-import { baseOptions } from "../layout.config";
+import { baseOptions } from "../layout.config"
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
-  return <HomeLayout {...baseOptions}>{children}</HomeLayout>;
+  return <HomeLayout {...baseOptions}>{children}</HomeLayout>
 }

@@ -1,5 +1,5 @@
-import * as VolumeSlider from "@/registry/default/ui/volume-control";
-import { VolumeStateControl } from "@/registry/default/examples/volume-state-control";
+import { VolumeStateControl } from "@/registry/default/examples/volume-state-control"
+import * as VolumeSlider from "@/registry/default/ui/volume-control"
 
 export function VolumeSliderControlVertical() {
   return (
@@ -14,5 +14,5 @@ export function VolumeSliderControlVertical() {
       </VolumeSlider.Root>
       <VolumeStateControl />
     </div>
-  );
+  )
 }

@@ -1,25 +1,25 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import Image from "next/image";
-import { Index } from "@/__registry__";
+import * as React from "react"
+import Image from "next/image"
+import { Index } from "@/__registry__"
 
-import { cn } from "@/lib/utils";
-import { useConfig } from "@/hooks/use-config";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Icons } from "@/components/icons";
-import { PlayerDemoLayout } from "@/registry/default/examples/player-demo-root";
-import { styles } from "@/registry/collection/registry-styles";
+import { cn } from "@/lib/utils"
+import { useConfig } from "@/hooks/use-config"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Icons } from "@/components/icons"
+import { styles } from "@/registry/collection/registry-styles"
+import { PlayerDemoLayout } from "@/registry/default/examples/player-demo-root"
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
-  name: string;
-  extractClassname?: boolean;
-  extractedClassNames?: string;
-  align?: "center" | "start" | "end";
-  description?: string;
-  hideCode?: boolean;
-  type?: "block" | "component" | "example";
-  withPlayer?: boolean;
+  name: string
+  extractClassname?: boolean
+  extractedClassNames?: string
+  align?: "center" | "start" | "end"
+  description?: string
+  hideCode?: boolean
+  type?: "block" | "component" | "example"
+  withPlayer?: boolean
 }
 
 export function ComponentPreview({
@@ -35,18 +35,18 @@ export function ComponentPreview({
   withPlayer = false,
   ...props
 }: ComponentPreviewProps) {
-  const [config] = useConfig();
-  const index = styles.findIndex((style) => style.name === config.style);
+  const [config] = useConfig()
+  const index = styles.findIndex((style) => style.name === config.style)
 
-  const Codes = React.Children.toArray(children) as React.ReactElement[];
-  const Code = Codes[index];
+  const Codes = React.Children.toArray(children) as React.ReactElement[]
+  const Code = Codes[index]
 
   if (!name) {
-    throw new Error("component name is required");
+    throw new Error("component name is required")
   }
 
   const Preview = React.useMemo(() => {
-    const Component = Index[config.style][name]?.component;
+    const Component = Index[config.style][name]?.component
 
     if (!Component) {
       return (
@@ -57,11 +57,11 @@ export function ComponentPreview({
           </code>{" "}
           not found in registry.
         </p>
-      );
+      )
     }
 
-    return <Component />;
-  }, [name, config.style]);
+    return <Component />
+  }, [name, config.style])
 
   if (type === "block") {
     return (
@@ -71,14 +71,14 @@ export function ComponentPreview({
           alt={name}
           width={1440}
           height={900}
-          className="bg-background absolute left-0 top-0 z-20 w-[970px] max-w-none sm:w-[1280px] md:hidden dark:hidden md:dark:hidden"
+          className="bg-background absolute top-0 left-0 z-20 w-[970px] max-w-none sm:w-[1280px] md:hidden dark:hidden md:dark:hidden"
         />
         <Image
           src={`/r/styles/${config.style}/${name}-dark.png`}
           alt={name}
           width={1440}
           height={900}
-          className="bg-background absolute left-0 top-0 z-20 hidden w-[970px] max-w-none sm:w-[1280px] md:hidden dark:block md:dark:hidden"
+          className="bg-background absolute top-0 left-0 z-20 hidden w-[970px] max-w-none sm:w-[1280px] md:hidden dark:block md:dark:hidden"
         />
         <div className="bg-background absolute inset-0 hidden w-[1600px] md:block">
           <iframe
@@ -87,7 +87,7 @@ export function ComponentPreview({
           />
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -101,13 +101,13 @@ export function ComponentPreview({
             <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">
               <TabsTrigger
                 value="preview"
-                className="text-muted-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold shadow-none transition-none data-[state=active]:shadow-none"
+                className="text-muted-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pt-2 pb-3 font-semibold shadow-none transition-none data-[state=active]:shadow-none"
               >
                 Preview
               </TabsTrigger>
               <TabsTrigger
                 value="code"
-                className="text-muted-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold shadow-none transition-none data-[state=active]:shadow-none"
+                className="text-muted-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pt-2 pb-3 font-semibold shadow-none transition-none data-[state=active]:shadow-none"
               >
                 Code
               </TabsTrigger>
@@ -139,5 +139,5 @@ export function ComponentPreview({
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

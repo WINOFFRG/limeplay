@@ -1,32 +1,29 @@
-import { create } from "zustand";
+import { create } from "zustand"
 
 import {
-  createPlayerRootStore,
-  PlayerRootStore,
-} from "@/registry/default/hooks/use-player-root-store";
-
-import {
-  createVolumeStore,
-  VolumeStore,
-} from "@/registry/default/hooks/use-volume-store";
-
-import {
-  createMediaStateStore,
   MediaStateStore,
-} from "@/registry/default/hooks/use-media-state-store";
-
+  createMediaStateStore,
+} from "@/registry/default/hooks/use-media-state-store"
 import {
-  createTimelineStore,
+  PlayerRootStore,
+  createPlayerRootStore,
+} from "@/registry/default/hooks/use-player-root-store"
+import {
   TimelineStore,
-} from "@/registry/default/hooks/use-timeline-store";
+  createTimelineStore,
+} from "@/registry/default/hooks/use-timeline-store"
+import {
+  VolumeStore,
+  createVolumeStore,
+} from "@/registry/default/hooks/use-volume-store"
 
 export type TypeMediaStore = PlayerRootStore &
   VolumeStore &
   MediaStateStore &
-  TimelineStore & {};
+  TimelineStore & {}
 
 export interface CreateMediaStoreProps {
-  debug?: boolean;
+  debug?: boolean
 }
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
@@ -36,6 +33,6 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
     ...createMediaStateStore(...etc),
     ...createTimelineStore(...etc),
     ...initProps,
-  }));
-  return mediaStore;
+  }))
+  return mediaStore
 }

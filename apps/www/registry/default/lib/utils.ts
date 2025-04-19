@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 /**
  * Type-safe event handler utility function
@@ -7,17 +7,17 @@ import React from "react";
 
 // Helper type to extract valid event names from an element type
 type EventNames<T> = {
-  [K in keyof T]: K extends `on${infer E}` ? Lowercase<E> : never;
-}[keyof T];
+  [K in keyof T]: K extends `on${infer E}` ? Lowercase<E> : never
+}[keyof T]
 
 // Helper type to get the event type for a given event name and element
 type EventType<T, E> = T extends {
-  addEventListener: (event: any, handler: infer H) => any;
+  addEventListener: (event: any, handler: infer H) => any
 }
   ? H extends (event: infer Event) => any
     ? Event
     : never
-  : never;
+  : never
 
 /**
  * Overloaded function for React synthetic events
@@ -26,7 +26,7 @@ export function on<E extends string | string[], R extends HTMLElement>(
   element: EventTarget,
   events: E,
   callback: (event: React.SyntheticEvent<R, Event>) => void
-): EventTarget;
+): EventTarget
 
 /**
  * Implementation
@@ -38,13 +38,13 @@ export function on(
 ): EventTarget {
   if (Array.isArray(events)) {
     events.forEach((event) => {
-      element.addEventListener(event, callback as EventListener);
-    });
+      element.addEventListener(event, callback as EventListener)
+    })
   } else {
-    element.addEventListener(events, callback as EventListener);
+    element.addEventListener(events, callback as EventListener)
   }
 
-  return element;
+  return element
 }
 
 /**
@@ -54,7 +54,7 @@ export function off<E extends string | string[], R extends HTMLElement>(
   element: EventTarget,
   events: E,
   callback: (event: React.SyntheticEvent<R, Event>) => void
-): EventTarget;
+): EventTarget
 
 /**
  * Implementation
@@ -66,13 +66,13 @@ export function off(
 ): EventTarget {
   if (Array.isArray(events)) {
     events.forEach((event) => {
-      element.removeEventListener(event, callback as EventListener);
-    });
+      element.removeEventListener(event, callback as EventListener)
+    })
   } else {
-    element.removeEventListener(events, callback as EventListener);
+    element.removeEventListener(events, callback as EventListener)
   }
 
-  return element;
+  return element
 }
 
 /**
@@ -82,6 +82,6 @@ export function off(
 export function noop() {}
 
 export function toFixedNumber(num: number, digits: number, base = 10) {
-  const pow = Math.pow(base, digits);
-  return Math.round(num * pow) / pow;
+  const pow = Math.pow(base, digits)
+  return Math.round(num * pow) / pow
 }
