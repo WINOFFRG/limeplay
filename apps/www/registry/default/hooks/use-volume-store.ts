@@ -1,19 +1,19 @@
-import clamp from "lodash.clamp";
-import { StateCreator } from "zustand";
+import clamp from "lodash.clamp"
+import { StateCreator } from "zustand"
 
-import { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store";
+import { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
 
 export interface VolumeStore {
-  volume: number;
-  setVolume: (volume: number, progress?: number, delta?: number) => void;
-  muted: boolean;
-  setMuted: (muted: boolean) => void;
-  toggleMute: () => void;
-  hasAudio: boolean;
-  setHasAudio: (hasAudio: boolean) => void;
+  volume: number
+  setVolume: (volume: number, progress?: number, delta?: number) => void
+  muted: boolean
+  setMuted: (muted: boolean) => void
+  toggleMute: () => void
+  hasAudio: boolean
+  setHasAudio: (hasAudio: boolean) => void
 }
 
-const BASE_RESET_VOLUME = 0.05;
+const BASE_RESET_VOLUME = 0.05
 
 export const createVolumeStore: StateCreator<
   VolumeStore & PlayerRootStore,
@@ -36,19 +36,19 @@ export const createVolumeStore: StateCreator<
     // DEV: Fix the self calling issue in case of delta useVolumeState listens
     // to the new updated value of volume and increases the volume until reaches
     // to 1
-    const value = typeof delta === "number" ? volume + delta : progress;
+    const value = typeof delta === "number" ? volume + delta : progress
 
     if (value === undefined || Number.isNaN(value)) {
-      return;
+      return
     }
 
-    const _volume = clamp(value, 0, 1);
-    const _muted = _volume === 0;
+    const _volume = clamp(value, 0, 1)
+    const _muted = _volume === 0
 
-    set({ volume: _volume, muted: _muted });
+    set({ volume: _volume, muted: _muted })
   },
   hasAudio: true,
   setHasAudio: (hasAudio) => {
-    set({ hasAudio: hasAudio });
+    set({ hasAudio: hasAudio })
   },
-});
+})

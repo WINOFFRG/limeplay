@@ -1,21 +1,21 @@
-import React from "react";
-import shaka from "shaka-player";
-import type { StateCreator } from "zustand";
+import React from "react"
+import shaka from "shaka-player"
+import type { StateCreator } from "zustand"
 
 export interface PlayerRootStore {
-  idle: boolean;
-  setIdle: (idle: boolean) => void;
-  status: MediaStatus;
-  setStatus: (status: MediaStatus) => void;
-  mediaRef: React.RefObject<HTMLMediaElement>;
-  setMediaRef: (mediaRef: React.RefObject<HTMLMediaElement>) => void;
+  idle: boolean
+  setIdle: (idle: boolean) => void
+  status: MediaStatus
+  setStatus: (status: MediaStatus) => void
+  mediaRef: React.RefObject<HTMLMediaElement>
+  setMediaRef: (mediaRef: React.RefObject<HTMLMediaElement>) => void
   // Player Engine
-  player: shaka.Player | null;
-  setPlayer: (player: shaka.Player | null) => void;
-  debug: boolean;
-  setDebug: (value: boolean) => void;
-  playerContainerRef: HTMLDivElement | null;
-  setPlayerContainerRef: (instance: HTMLDivElement | null) => void;
+  player: shaka.Player | null
+  setPlayer: (player: shaka.Player | null) => void
+  debug: boolean
+  setDebug: (value: boolean) => void
+  playerContainerRef: HTMLDivElement | null
+  setPlayerContainerRef: (instance: HTMLDivElement | null) => void
 }
 
 export type MediaStatus =
@@ -25,7 +25,7 @@ export type MediaStatus =
   | "error"
   | "paused"
   | "playing"
-  | "stopped";
+  | "stopped"
 
 export const createPlayerRootStore: StateCreator<
   PlayerRootStore,
@@ -46,4 +46,4 @@ export const createPlayerRootStore: StateCreator<
   setDebug: (value) => set({ debug: value }),
   playerContainerRef: null,
   setPlayerContainerRef: (instance) => set({ playerContainerRef: instance }),
-});
+})

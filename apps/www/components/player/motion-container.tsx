@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion } from "motion/react"
 
 export function MotionContainer({ children }: { children: React.ReactNode }) {
   return (
@@ -24,9 +24,9 @@ export function MotionContainer({ children }: { children: React.ReactNode }) {
           duration: 0.4,
         },
       }}
-      className="z-100 fixed left-1/2 top-1/2 max-h-[calc(100vh-24px-24px)] w-screen max-w-[calc(100vw-var(--page-padding-left)-var(--page-padding-right))]"
+      className="fixed top-1/2 left-1/2 z-100 max-h-[calc(100vh-24px-24px)] w-screen max-w-[calc(100vw-var(--page-padding-left)-var(--page-padding-right))]"
     >
       {children}
     </motion.div>
-  );
+  )
 }

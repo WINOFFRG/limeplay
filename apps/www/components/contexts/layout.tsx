@@ -1,12 +1,13 @@
-"use client";
-import { type ReactNode, useEffect, useMemo, useState } from "react";
-import { createContext } from "fumadocs-core/framework";
+"use client"
+
+import { useEffect, useMemo, useState, type ReactNode } from "react"
+import { createContext } from "fumadocs-core/framework"
 
 export interface PageStyles {
-  tocNav?: string;
-  toc?: string;
-  page?: string;
-  article?: string;
+  tocNav?: string
+  toc?: string
+  page?: string
+  article?: string
 }
 
 /**
@@ -14,11 +15,11 @@ export interface PageStyles {
  */
 const StylesContext = createContext<PageStyles>("StylesContext", {
   tocNav: "xl:hidden",
-  toc: "max-xl:hidden"
-});
+  toc: "max-xl:hidden",
+})
 
 export function usePageStyles() {
-  return StylesContext.use();
+  return StylesContext.use()
 }
 
 export function StylesProvider({
@@ -27,7 +28,7 @@ export function StylesProvider({
 }: PageStyles & { children: ReactNode }) {
   return (
     <StylesContext.Provider value={value}>{children}</StylesContext.Provider>
-  );
+  )
 }
 
 export interface NavProviderProps {
@@ -36,36 +37,36 @@ export interface NavProviderProps {
    *
    * @defaultValue none
    */
-  transparentMode?: "always" | "top" | "none";
+  transparentMode?: "always" | "top" | "none"
 }
 
 interface NavContextType {
-  isTransparent: boolean;
+  isTransparent: boolean
 }
 
 const NavContext = createContext<NavContextType>("NavContext", {
-  isTransparent: false
-});
+  isTransparent: false,
+})
 
 export function NavProvider({
   transparentMode = "none",
-  children
+  children,
 }: NavProviderProps & { children: ReactNode }) {
-  const [transparent, setTransparent] = useState(transparentMode !== "none");
+  const [transparent, setTransparent] = useState(transparentMode !== "none")
 
   useEffect(() => {
-    if (transparentMode !== "top") return;
+    if (transparentMode !== "top") return
 
     const listener = () => {
-      setTransparent(window.scrollY < 10);
-    };
+      setTransparent(window.scrollY < 10)
+    }
 
-    listener();
-    window.addEventListener("scroll", listener);
+    listener()
+    window.addEventListener("scroll", listener)
     return () => {
-      window.removeEventListener("scroll", listener);
-    };
-  }, [transparentMode]);
+      window.removeEventListener("scroll", listener)
+    }
+  }, [transparentMode])
 
   return (
     <NavContext.Provider
@@ -73,9 +74,9 @@ export function NavProvider({
     >
       {children}
     </NavContext.Provider>
-  );
+  )
 }
 
 export function useNav(): NavContextType {
-  return NavContext.use();
+  return NavContext.use()
 }

@@ -1,8 +1,8 @@
-import * as TimelineSlider from "@/registry/default/ui/timeline-control";
-import { useTimelineStates } from "@/registry/default/hooks/use-timeline-states";
+import { useTimelineStates } from "@/registry/default/hooks/use-timeline-states"
+import * as TimelineSlider from "@/registry/default/ui/timeline-control"
 
 export function TimelineSliderControl() {
-  useTimelineStates();
+  useTimelineStates()
 
   return (
     <div className="my-auto w-full">
@@ -15,5 +15,5 @@ export function TimelineSliderControl() {
         {/* <TimelineSlider.Thumb /> */}
       </TimelineSlider.Root>
     </div>
-  );
+  )
 }
