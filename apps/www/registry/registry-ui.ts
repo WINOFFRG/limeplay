@@ -39,4 +39,27 @@ export const ui: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "media-provider",
+    type: "registry:ui",
+    dependencies: ["zustand"],
+    files: [
+      {
+        path: "ui/media-provider.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "media",
+    type: "registry:ui",
+    dependencies: ["@radix-ui/react-compose-refs"],
+    registryDependencies: ["media-provider"],
+    files: [
+      {
+        path: "ui/media.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ];
