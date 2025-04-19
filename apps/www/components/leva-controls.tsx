@@ -91,7 +91,7 @@ export function LevaControls() {
   }
 
   return (
-    <div className="absolute right-0 z-100 me-2 mt-2 overflow-hidden rounded-lg">
+    <div className="z-100 absolute right-0 me-2 mt-2 overflow-hidden rounded-lg">
       <Leva
         titleBar={{
           title: "Player Controls",

@@ -63,7 +63,7 @@ const NavigationMenuViewport = React.forwardRef<
     <Primitive.Viewport
       {...props}
       className={cn(
-        "text-fd-popover-foreground data-[state=closed]:animate-fd-nav-menu-out data-[state=open]:animate-fd-nav-menu-in relative h-(--radix-navigation-menu-viewport-height) w-full origin-[top_center] overflow-hidden transition-[width,height] duration-300",
+        "text-fd-popover-foreground data-[state=closed]:animate-fd-nav-menu-out data-[state=open]:animate-fd-nav-menu-in h-(--radix-navigation-menu-viewport-height) relative w-full origin-[top_center] overflow-hidden transition-[width,height] duration-300",
         className
       )}
     />

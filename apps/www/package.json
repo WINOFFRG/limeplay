@@ -9,8 +9,8 @@
     "postinstall": "fumadocs-mdx",
     "registry:build": "REGISTRY_HOST=https://limeplay.winoffrg.dev tsx --tsconfig ./tsconfig.scripts.json ./scripts/build-registry.ts && prettier --log-level silent --write \"registry/**/*.{ts,tsx,json,mdx}\" --cache",
     "registry:dev": "REGISTRY_HOST=http://localhost:3000 tsx --watch --tsconfig ./tsconfig.scripts.json ./scripts/build-registry.ts && prettier --log-level silent --write \"registry/**/*.{ts,tsx,json,mdx}\" --cache",
-    "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
-    "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache"
+    "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache --config ../../prettier.config.cjs && next lint",
+    "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache --config ../../prettier.config.cjs"
   },
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.13.3",
