@@ -8,7 +8,7 @@ export const blocks: Registry["items"] = [
     type: "registry:block",
     author: "Rohan Gupta (@winoffrg)",
     description: "Modern seamless flat linear.app Media Player",
-    dependencies: ["@phosphor-icons/react"],
+    dependencies: ["@phosphor-icons/react", "zustand", "shaka-player"],
     registryDependencies: [
       "player-layout",
       "media",
@@ -17,6 +17,12 @@ export const blocks: Registry["items"] = [
       "player-hooks",
       "playback-control",
       "timeline-control",
+      "button",
+      "volume-control",
+      "use-timeline-states",
+      "use-volume-store",
+      "use-timeline-store",
+      "use-media-state-store",
     ],
     files: [
       {
@@ -40,16 +46,12 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/motion-container.tsx`,
-        type: "registry:component",
-      },
-      {
-        path: `${BASE_SRC_URL}/components/custom-player-wrapper.tsx`,
-        type: "registry:component",
-      },
-      {
         path: `${BASE_SRC_URL}/components/bottom-controls.tsx`,
         type: "registry:component",
+      },
+      {
+        path: `${BASE_SRC_URL}/lib/create-media-store.ts`,
+        type: "registry:lib",
       },
     ],
   },
