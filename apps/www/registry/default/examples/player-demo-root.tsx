@@ -56,7 +56,7 @@ export function PlayerDemoLayout({ children }: React.PropsWithChildren) {
     <MediaProvider>
       <PlayerHooks />
       <LevaControls />
-      <Layout.RootContainer height={720} width={1280} className="container">
+      <Layout.RootContainer height={720} width={1280} className="container p-0">
         <Layout.PlayerContainer className="my-16">
           <MediaElement />
           <Layout.ControlsContainer>

@@ -21,8 +21,6 @@ index: true
 
 ## Component Hierarchy
 
-### MediaProvider
-
 ![Player Architecture Diagram](/docs/player-architecture.svg)
 
 1. [`MediaProvider`](./components/media-provider.mdx) component sets the isolated store of React Context and Zustand. In case you don't want the isolation of player you can update the reference of `useMediaStore` in the code from `useMediaStoreWithContext` => `useMediaStoreWithoutContext`.
@@ -36,10 +34,3 @@ index: true
 5. [`MediaElement`](./components/media.mdx) component is the native media element
 
 6. [`PlayerHooks`](./components/player-hooks.mdx) component is the central memoized component to mount hooks optimising the performance. Since limeplay hooks are mostly singleton and calling them everytime during a re-render would cause an additional overhead.
-
-
-### State Flow
-
-1. User interactions trigger state updates in the Zustand store
-2. State changes propagate through the component tree via context
-3. Components react to state changes and update the UI accordingly
