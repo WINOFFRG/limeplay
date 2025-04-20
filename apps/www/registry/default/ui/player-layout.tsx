@@ -13,7 +13,7 @@ export function PlayerContainer({
     <div
       data-layout-type="player-container"
       className={cn(
-        "relative aspect-(--aspect-ratio) max-h-[min(var(--height,_720px),_calc(100vh_-_16px_*_2))] w-auto overflow-hidden rounded-lg",
+        "aspect-(--aspect-ratio) relative max-h-[min(var(--height,_720px),_calc(100vh_-_16px_*_2))] w-auto overflow-hidden rounded-lg",
         className
       )}
       {...props}
@@ -78,7 +78,7 @@ export const RootContainer = React.forwardRef<
         ["--aspect-ratio" as string]: aspectRatio,
         aspectRatio: aspectRatio,
       }}
-      className={cn("m-auto max-w-[var(--width,1280px)] min-w-80", className)}
+      className={cn("m-auto min-w-80 max-w-[var(--width,1280px)]", className)}
       // Show controls like tabbing over
       // onKeyDown={}
       // onPointerMove show controls again
@@ -92,6 +92,8 @@ export const RootContainer = React.forwardRef<
     </div>
   )
 })
+
+RootContainer.displayName = "RootContainer"
 
 function calculateAspectRatio(width?: number, height?: number) {
   if (width && height) {
