@@ -1,6 +1,7 @@
 import React from "react"
 import { notFound } from "next/navigation"
 import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock"
+import { ImageZoom } from "fumadocs-ui/components/image-zoom"
 import defaultMdxComponents, { createRelativeLink } from "fumadocs-ui/mdx"
 import {
   DocsBody,
@@ -34,6 +35,7 @@ export default async function Page(props: {
             // @ts-ignore Fix me later
             a: createRelativeLink(source, page),
             ComponentPreview,
+            img: (props) => <ImageZoom {...(props as any)} />,
             pre: ({
               ref: _ref,
               ...props
