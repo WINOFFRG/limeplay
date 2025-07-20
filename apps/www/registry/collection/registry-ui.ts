@@ -2,10 +2,21 @@ import { type Registry } from "shadcn/registry"
 
 export const ui: Registry["items"] = [
   {
+    name: "fallback-poster",
+    type: "registry:ui",
+    registryDependencies: ["media-provider"],
+    files: [
+      {
+        path: "ui/fallback-poster.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
     name: "mute-control",
     type: "registry:ui",
     dependencies: ["@radix-ui/react-slot"],
-    registryDependencies: ["media-provider", "use-volume-states"],
+    registryDependencies: ["media-provider", "use-volume"],
     files: [
       {
         path: "ui/mute-control.tsx",
@@ -16,10 +27,15 @@ export const ui: Registry["items"] = [
   {
     name: "media-provider",
     type: "registry:ui",
+    dependencies: ["zustand"],
     files: [
       {
         path: "ui/media-provider.tsx",
         type: "registry:ui",
+      },
+      {
+        path: "internal/create-media-store.ts",
+        type: "registry:lib",
       },
     ],
   },
@@ -50,8 +66,13 @@ export const ui: Registry["items"] = [
   {
     name: "volume-control",
     type: "registry:ui",
-    dependencies: ["@radix-ui/react-slider"],
-    registryDependencies: ["media-provider", "utils", "media-provider"],
+    dependencies: ["@base-ui-components/react/slider"],
+    registryDependencies: [
+      "media-provider",
+      "utils",
+      "use-volume",
+      "use-track-events",
+    ],
     files: [
       {
         path: "ui/volume-control.tsx",
@@ -63,10 +84,21 @@ export const ui: Registry["items"] = [
     name: "playback-control",
     type: "registry:ui",
     dependencies: ["@radix-ui/react-slot"],
-    registryDependencies: ["use-media-state-states", "media-provider"],
+    registryDependencies: ["use-media-state", "media-provider"],
     files: [
       {
         path: "ui/playback-control.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
+  {
+    name: "timeline-labels",
+    type: "registry:ui",
+    registryDependencies: ["media-provider", "utils"],
+    files: [
+      {
+        path: "ui/timeline-labels.tsx",
         type: "registry:ui",
       },
     ],
@@ -83,13 +115,18 @@ export const ui: Registry["items"] = [
     ],
   },
   {
-    name: "timeline-control",
+    name: "timeline-slider",
     type: "registry:ui",
-    dependencies: ["@radix-ui/react-slider"],
-    registryDependencies: ["utils", "media-provider", "utils"],
+    dependencies: ["@base-ui-components/react/slider"],
+    registryDependencies: [
+      "media-provider",
+      "utils",
+      "use-timeline",
+      "use-track-events",
+    ],
     files: [
       {
-        path: "ui/timeline-control.tsx",
+        path: "ui/timeline-slider.tsx",
         type: "registry:ui",
       },
     ],
