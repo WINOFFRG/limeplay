@@ -1,6 +1,8 @@
 import * as React from "react"
 import { composeRefs } from "@radix-ui/react-compose-refs"
 
+import { useVolume } from "@/registry/default/hooks/use-volume"
+
 import { useMediaStore } from "./media-provider"
 
 // Define a discriminated union type for the component props
@@ -15,7 +17,8 @@ export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
     const setMediaRef = useMediaStore((state) => state.setMediaRef)
     const status = useMediaStore((state) => state.status)
     const setStatus = useMediaStore((state) => state.setStatus)
-    const setMuted = useMediaStore((state) => state.setMuted)
+
+    const { setMuted } = useVolume()
 
     React.useEffect(() => {
       if (!mediaRef?.current) {

@@ -40,9 +40,9 @@ export function useShakaPlayer({ ...props }: UseShakaPlayerProps = {}) {
       playerInstance.current.attach(mediaElement)
       setPlayer(playerInstance.current)
 
-      if (debug) {
-        window.shaka_player = playerInstance.current
-      }
+      // if (debug) {
+      window.shaka_player = playerInstance.current
+      // }
     }
 
     loadPlayer()

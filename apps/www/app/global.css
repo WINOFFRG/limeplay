@@ -5,8 +5,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@source '../node_modules/fumadocs-ui/dist/**/*.js';
-
 :root {
   --fd-layout-width: 1400px;
   --fd-nav-height: 57px;
@@ -22,6 +20,8 @@
     var(--page-padding-inline)
   );
   --radius: 0.625rem;
+  --speed-regularTransition: 150ms;
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -54,6 +54,15 @@
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --limeplay-controls: oklch(0.205 0 0);
+
+  --lp-background: oklch(1 0 0 / 16%);
+  --lp-timeline-track-height: 4px;
+  --lp-timeline-track-height-active: 7px;
+
+  --lp-transition-speed-regular: 150ms;
+  --lp-transition-ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  --lp-outline-color: oklch(0.922 0 0 / 0.5);
 }
 
 html {
@@ -93,6 +102,8 @@ html {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
   --limeplay-controls: oklch(0.205 0 0);
+
+  --lp-background: oklch(1 0 0 / 16%);
 }
 
 @theme inline {
@@ -131,11 +142,14 @@ html {
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-lp-background: var(--lp-background);
+  --color-outline: var(--lp-outline-color);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
