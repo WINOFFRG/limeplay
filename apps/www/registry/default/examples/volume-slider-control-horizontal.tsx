@@ -10,7 +10,7 @@ export function VolumeSliderControlHorizontal() {
         orientation="horizontal"
       >
         <VolumeSlider.Track />
-        <VolumeSlider.Range />
+        {/* <VolumeSlider.Range /> */}
         <VolumeSlider.Thumb className="size-3" />
       </VolumeSlider.Root>
     </div>

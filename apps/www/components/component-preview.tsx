@@ -2,12 +2,12 @@
 
 import * as React from "react"
 import Image from "next/image"
-import { Index } from "@/__registry__"
 
 import { cn } from "@/lib/utils"
 import { useConfig } from "@/hooks/use-config"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Icons } from "@/components/icons"
+import { Index } from "@/registry/__index__"
 import { styles } from "@/registry/collection/registry-styles"
 import { PlayerDemoLayout } from "@/registry/default/examples/player-demo-root"
 
