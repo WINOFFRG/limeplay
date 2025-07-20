@@ -3,7 +3,7 @@ import { create } from "zustand"
 import {
   MediaStateStore,
   createMediaStateStore,
-} from "@/registry/default/hooks/use-media-state-store"
+} from "@/registry/default/hooks/use-media-state"
 import {
   PlayerRootStore,
   createPlayerRootStore,
@@ -11,16 +11,17 @@ import {
 import {
   TimelineStore,
   createTimelineStore,
-} from "@/registry/default/hooks/use-timeline-store"
+} from "@/registry/default/hooks/use-timeline"
 import {
   VolumeStore,
   createVolumeStore,
-} from "@/registry/default/hooks/use-volume-store"
+} from "@/registry/default/hooks/use-volume"
 
 export type TypeMediaStore = PlayerRootStore &
   VolumeStore &
   MediaStateStore &
-  TimelineStore & {}
+  TimelineStore
+// & {}
 
 export interface CreateMediaStoreProps {
   debug?: boolean

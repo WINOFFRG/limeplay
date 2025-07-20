@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 
 import { BottomControls } from "@/components/player/bottom-controls"
 import { CustomPlayerWrapper } from "@/components/player/custom-player-wrapper"
@@ -15,14 +16,35 @@ import * as Layout from "@/registry/default/ui/player-layout"
 function MediaElement() {
   const player = useMediaStore((state) => state.player)
   const mediaRef = useMediaStore((state) => state.mediaRef)
+  const searchParams = useSearchParams()
+  const playbackUrl = searchParams.get("playbackUrl")
 
   useEffect(() => {
     const mediaElement = mediaRef?.current
 
     if (player && mediaElement) {
-      player.load(
+      let finalUrl =
         "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
-      )
+
+      if (playbackUrl) {
+        try {
+          const parsedUrl = new URL(playbackUrl)
+          finalUrl = parsedUrl.toString()
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      const config = {
+        streaming: {
+          // DEV: To debug the buffer values in timeline slider
+          bufferingGoal: 100,
+        },
+      } as shaka.extern.PlayerConfiguration
+
+      player.configure(config)
+
+      player.load(finalUrl)
 
       return () => {
         if (mediaElement) {
@@ -41,7 +63,7 @@ function MediaElement() {
       as="video"
       className="size-full bg-black object-cover"
       autoPlay={false}
-      poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
+      // poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
       muted
       controls={false}
       loop
