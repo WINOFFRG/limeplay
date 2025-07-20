@@ -1,18 +1,15 @@
 import { PlaybackStateControl } from "@/components/player/playback-state-control"
 import { TimelineSliderControl } from "@/components/player/timeline-slider-control"
-import { VolumeSliderControlHorizontal } from "@/components/player/volume-slider-control"
+import { VolumeSliderControl } from "@/components/player/volume-slider-control"
 import { VolumeStateControl } from "@/components/player/volume-state-control"
 
 export function BottomControls() {
   return (
-    <div
-      id="controls_container"
-      className="absolute inset-x-0 bottom-8 mx-auto flex items-end gap-2 px-[min(80px,10%)]"
-    >
+    <div className="absolute inset-x-0 bottom-8 mx-auto flex items-end gap-2 px-[min(80px,10%)]">
       <PlaybackStateControl />
-      <div className="bg-secondary/10 flex h-fit flex-row gap-1 rounded-md pe-4">
+      <div className="flex gap-1 rounded-md me-4">
         <VolumeStateControl />
-        <VolumeSliderControlHorizontal />
+        <VolumeSliderControl />
       </div>
       <TimelineSliderControl />
     </div>

@@ -40,7 +40,7 @@ function MediaElement() {
       as="video"
       className="size-full bg-black object-cover"
       autoPlay={false}
-      poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
+      // poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
       muted
       controls={false}
       loop
@@ -50,7 +50,7 @@ function MediaElement() {
 
 export function MediaPlayer() {
   return (
-    <MediaProvider>
+    <MediaProvider debug={true}>
       <PlayerHooks />
       <Layout.RootContainer height={720} width={1280} className="container">
         <Layout.PlayerContainer className="mx-auto my-16">

@@ -441,13 +441,13 @@ export const Index: Record<string, any> = {
   }
 }`
 
-  // Create __registry__ directory if it doesn't exist
-  const registryDir = path.join(process.cwd(), "__registry__")
+  // Create registry directory if it doesn't exist
+  const registryDir = path.join(process.cwd(), "registry")
   await fs.mkdir(registryDir, { recursive: true })
 
   // Write style index.
-  rimraf.sync(path.join(registryDir, "index.tsx"))
-  await fs.writeFile(path.join(registryDir, "index.tsx"), index)
+  rimraf.sync(path.join(registryDir, "__index__.tsx"))
+  await fs.writeFile(path.join(registryDir, "__index__.tsx"), index)
 }
 
 async function buildRegistryJsonFile() {

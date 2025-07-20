@@ -35,7 +35,7 @@ export default async function Page(props: {
             // @ts-ignore Fix me later
             a: createRelativeLink(source, page),
             ComponentPreview,
-            img: (props) => <ImageZoom {...(props as any)} />,
+            img: (props: any) => <ImageZoom {...props} />,
             pre: ({
               ref: _ref,
               ...props

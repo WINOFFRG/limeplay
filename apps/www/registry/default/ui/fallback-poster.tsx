@@ -13,7 +13,7 @@ export function FallbackPoster({
   return (
     <div
       className={cn(
-        "bg-background items-ce absolute inset-0 flex flex-col items-center justify-center",
+        "bg-background absolute inset-0 flex flex-col items-center justify-center",
         className
       )}
       {...props}
