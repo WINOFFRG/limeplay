@@ -1,3 +1,5 @@
+"use client"
+
 import React, { ComponentPropsWithoutRef } from "react"
 import { composeRefs } from "@radix-ui/react-compose-refs"
 
@@ -13,7 +15,7 @@ export function PlayerContainer({
     <div
       data-layout-type="player-container"
       className={cn(
-        "aspect-(--aspect-ratio) relative max-h-[min(var(--height,_720px),_calc(100vh_-_16px_*_2))] w-auto overflow-hidden rounded-lg",
+        "relative z-20 aspect-(--aspect-ratio) max-h-[min(var(--height,_720px),_calc(100vh_-_16px_*_2))] w-full overflow-hidden rounded-lg",
         className
       )}
       {...props}
@@ -43,7 +45,6 @@ export interface RootContainerProps
   extends React.ComponentPropsWithoutRef<"div"> {
   height?: number
   width?: number
-  className?: string
 }
 
 export const RootContainer = React.forwardRef<
@@ -78,7 +79,7 @@ export const RootContainer = React.forwardRef<
         ["--aspect-ratio" as string]: aspectRatio,
         aspectRatio: aspectRatio,
       }}
-      className={cn("m-auto min-w-80 max-w-[var(--width,1280px)]", className)}
+      className={cn("m-auto max-w-[var(--width,1280px)] min-w-80", className)}
       // Show controls like tabbing over
       // onKeyDown={}
       // onPointerMove show controls again
