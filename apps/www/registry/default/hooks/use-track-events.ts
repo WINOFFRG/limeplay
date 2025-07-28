@@ -88,5 +88,14 @@ export function useTrackEvents<E extends HTMLElement>(
     [props.onPointerUp]
   )
 
-  return { onPointerDown, onPointerMove, onPointerUp }
+  const onPointerOut = React.useCallback(
+    (e: React.PointerEvent<E>) => {
+      e.stopPropagation()
+      e.preventDefault()
+      props.onPointerOut?.(e)
+    },
+    [props.onPointerOut]
+  )
+
+  return { onPointerDown, onPointerMove, onPointerUp, onPointerOut }
 }

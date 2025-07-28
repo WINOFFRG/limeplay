@@ -1,7 +1,7 @@
-import "./global.css"
+import "@/app/global.css"
 import type { ReactNode } from "react"
 import { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { ThemeProvider } from "next-themes"
@@ -12,7 +12,13 @@ import {
   PROD_BASE_HOST,
 } from "@/lib/constants"
 
-const inter = Inter({
+const geist = Geist({
+  variable: "--font-sans",
+  subsets: ["latin"],
+})
+
+const mono = Geist_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
 })
 
@@ -67,7 +73,11 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${geist.variable} ${mono.variable}`}
+      suppressHydrationWarning
+    >
       <body className="antialiased">
         <Analytics />
         <SpeedInsights />

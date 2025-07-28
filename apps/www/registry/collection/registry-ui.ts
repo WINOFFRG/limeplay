@@ -95,7 +95,7 @@ export const ui: Registry["items"] = [
   {
     name: "timeline-labels",
     type: "registry:ui",
-    registryDependencies: ["media-provider", "utils"],
+    registryDependencies: ["media-provider", "utils", "time"],
     files: [
       {
         path: "ui/timeline-labels.tsx",
@@ -115,7 +115,7 @@ export const ui: Registry["items"] = [
     ],
   },
   {
-    name: "timeline-slider",
+    name: "timeline-control",
     type: "registry:ui",
     dependencies: ["@base-ui-components/react/slider"],
     registryDependencies: [
@@ -126,7 +126,7 @@ export const ui: Registry["items"] = [
     ],
     files: [
       {
-        path: "ui/timeline-slider.tsx",
+        path: "ui/timeline-control.tsx",
         type: "registry:ui",
       },
     ],

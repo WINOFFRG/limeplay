@@ -1,6 +1,11 @@
 "use client"
 
-import { CircleNotch, Pause, Play, Repeat } from "@phosphor-icons/react"
+import {
+  CircleNotchIcon,
+  PauseIcon,
+  PlayIcon,
+  RepeatIcon,
+} from "@phosphor-icons/react"
 
 import { Button } from "@/components/ui/button"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
@@ -13,13 +18,13 @@ export function PlaybackStateControl() {
     <Button size="icon" variant="glass" asChild>
       <PlaybackControl>
         {status === "playing" ? (
-          <Pause weight="fill" size={18} />
+          <PauseIcon weight="fill" size={18} />
         ) : status === "ended" ? (
-          <Repeat size={18} />
+          <RepeatIcon size={18} />
         ) : status === "buffering" ? (
-          <CircleNotch className="animate-spin" size={18} weight="bold" />
+          <CircleNotchIcon className="animate-spin" size={18} weight="bold" />
         ) : (
-          <Play weight="fill" size={18} />
+          <PlayIcon weight="fill" size={18} />
         )}
       </PlaybackControl>
     </Button>

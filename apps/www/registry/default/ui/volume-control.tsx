@@ -4,10 +4,9 @@ import React, { useImperativeHandle, useRef, useState } from "react"
 import { Slider as SliderPrimitive } from "@base-ui-components/react/slider"
 
 import { cn } from "@/lib/utils"
+import { useTrackEvents } from "@/registry/default/hooks/use-track-events"
 import { useVolume } from "@/registry/default/hooks/use-volume"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
-
-import { useTrackEvents } from "../hooks/use-track-events"
 
 const VOLUME_RESET_BASE = 0.05
 
@@ -74,7 +73,7 @@ export const Root = React.forwardRef<
       step={0.01}
       value={[currentVolumeValue]}
       className={cn(
-        "relative flex touch-none select-none items-center justify-center",
+        "relative flex touch-none items-center justify-center select-none",
         className
       )}
       orientation={orientation}
@@ -116,15 +115,16 @@ export const Progress = React.forwardRef<
   const currentValue = muted ? 0 : volume
 
   return (
-    <SliderPrimitive.Track
+    <SliderPrimitive.Indicator
       ref={ref}
       className={cn(
-        "bg-primary absolute h-full w-[var(--lp-volume-width)] rounded-s-md data-[orientation=vertical]:w-full",
+        "bg-primary h-full w-(--lp-volume-value)",
+        "data-[orientation=vertical]:h-(--lp-volume-value) data-[orientation=vertical]:w-full",
         className
       )}
       style={
         {
-          "--lp-volume-width": `${currentValue * 100}%`,
+          "--lp-volume-value": `${currentValue * 100}%`,
         } as React.CSSProperties
       }
       {...etc}
@@ -152,7 +152,7 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
       <SliderPrimitive.Thumb
         ref={ref}
         className={cn(
-          "bg-primary outline-primary block size-2 rounded-full outline-offset-1 focus-visible:outline-1 focus-visible:ring-0",
+          "bg-primary outline-primary block size-2 rounded-full outline-offset-1 focus-visible:ring-0 focus-visible:outline-1",
           className
         )}
         aria-valuemin={0}
