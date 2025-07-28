@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@import "fumadocs-ui/css/black.css";
+@import "fumadocs-ui/css/preset.css";
+
+:root {
+  --fd-layout-width: 1400px;
+  --fd-nav-height: 57px;
+}

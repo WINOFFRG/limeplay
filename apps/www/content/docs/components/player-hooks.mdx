@@ -3,4 +3,34 @@ title: Player Hooks
 description: Central top level memoized hook for component level state management
 ---
 
-TODO
+This library uses Shaka Player as the default player engine, most components rely on custom hooks like `useShakaPlayer` to setup the player engine or `useMediaStates` to setup the media state are all singleton. Adding the hooks in `<PlayerHooks />` component prevents re-initialization of the hooks on every render. Ideally, we can have those hooks parallel to each molecular component without any issues but as a best practice we memoize the hooks in a single place.
+
+You can add as many hooks as you want in `<PlayerHooks />` component.
+
+## Usage
+
+Add in your existing `MediaPlayer` component.
+
+```tsx lineNumbers=6 title="components/player/media-player.tsx"
+ import { PlayerHooks } from "@/registry/default/ui/player-hooks"    // [!code ++]
+// ... other imports
+
+export function MediaPlayer() {
+  return (
+      <MediaProvider>
+        // [!code ++]
+        <PlayerHooks />
+        <Suspense>
+          <Layout.RootContainer height={720} width={1280}>
+            <Layout.PlayerContainer>
+              <MediaElement />
+              <Layout.ControlsContainer>
+                <BottomControls />
+              </Layout.ControlsContainer>
+            </Layout.PlayerContainer>
+          </Layout.RootContainer>
+        </Suspense>
+      </MediaProvider>
+  )
+}
+```

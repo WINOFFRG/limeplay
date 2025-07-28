@@ -10,14 +10,14 @@ import { slot } from "../shared"
 export function HomeLayout(
   props: HomeLayoutProps & HTMLAttributes<HTMLElement>
 ) {
-  const { nav, ...rest } = props
+  const { nav, links, ...rest } = props
 
   return (
     <NavProvider transparentMode={nav?.transparentMode}>
       <main
         id="nd-home-layout"
         {...rest}
-        className={cn("flex flex-1 flex-col pt-14", rest.className)}
+        className={cn("w-dvw pt-7", rest.className)}
       >
         {slot(nav, <Header links={HEADER_LINKS} nav={nav} />)}
         {props.children}

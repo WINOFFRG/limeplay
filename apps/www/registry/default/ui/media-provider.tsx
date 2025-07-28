@@ -13,12 +13,10 @@ type MediaProviderContext = ReturnType<typeof createMediaStore>
 
 const MediaProviderContext = createContext<MediaProviderContext | null>(null)
 
-type MediaProviderProps = CreateMediaStoreProps
-
 export function MediaProvider({
   children,
   ...props
-}: React.PropsWithChildren<MediaProviderProps>) {
+}: React.PropsWithChildren<CreateMediaStoreProps>) {
   const store = useRef(createMediaStore(props)).current
 
   return (
@@ -52,6 +50,16 @@ function useMediaStoreWithoutContext<T>(
   }
 
   return useStore(globalStore, selector)
+}
+
+export function useGetStore() {
+  const storeFromCtx = useContext(MediaProviderContext)
+
+  if (!storeFromCtx) {
+    throw new Error("Missing MediaProvider in root")
+  }
+
+  return storeFromCtx
 }
 
 export const useMediaStore = useMediaStoreWithContext

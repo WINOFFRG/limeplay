@@ -1,8 +1,5 @@
-import React from "react"
 import { notFound } from "next/navigation"
-import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock"
-import { ImageZoom } from "fumadocs-ui/components/image-zoom"
-import defaultMdxComponents, { createRelativeLink } from "fumadocs-ui/mdx"
+import { createRelativeLink } from "fumadocs-ui/mdx"
 import {
   DocsBody,
   DocsDescription,
@@ -11,7 +8,7 @@ import {
 } from "fumadocs-ui/page"
 
 import { source } from "@/lib/source"
-import { ComponentPreview } from "@/components/component-preview"
+import { getMDXComponents } from "@/components/mdx-components"
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>
@@ -28,23 +25,10 @@ export default async function Page(props: {
       <DocsDescription>{page.data.description}</DocsDescription>
       <DocsBody>
         <MDXContent
-          components={{
-            ...defaultMdxComponents,
-            // this allows you to link to other pages with relative file paths
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore Fix me later
+          components={getMDXComponents({
+            // @ts-expect-error - createRelativeLink is not typed
             a: createRelativeLink(source, page),
-            ComponentPreview,
-            img: (props) => <ImageZoom {...(props as any)} />,
-            pre: ({
-              ref: _ref,
-              ...props
-            }: React.ComponentPropsWithRef<any>) => (
-              <CodeBlock keepBackground className="" {...props}>
-                <Pre>{props.children}</Pre>
-              </CodeBlock>
-            ),
-          }}
+          })}
         />
       </DocsBody>
     </DocsPage>

@@ -131,7 +131,7 @@ function NavbarLinkItem({
           {rest.children ?? (
             <>
               {banner}
-              <p className="-mb-1 text-sm font-medium">{child.text}</p>
+              <p className="-mb-1 text-base font-medium">{child.text}</p>
               {child.description ? (
                 <p className="text-fd-muted-foreground text-[13px]">
                   {child.description}
@@ -145,7 +145,7 @@ function NavbarLinkItem({
 
     return (
       <NavbarMenu>
-        <NavbarMenuTrigger {...props} className="text-sm">
+        <NavbarMenuTrigger {...props} className="text-base">
           {item.url ? <Link href={item.url}>{item.text}</Link> : item.text}
         </NavbarMenuTrigger>
         <NavbarMenuContent>{children}</NavbarMenuContent>
@@ -155,7 +155,7 @@ function NavbarLinkItem({
 
   return (
     <NavbarLink
-      className="text-sm"
+      className="text-sm font-medium"
       {...props}
       item={item}
       variant={item.type}

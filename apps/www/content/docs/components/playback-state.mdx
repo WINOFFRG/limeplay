@@ -1,8 +1,67 @@
 ---
 title: Playback State
-description: Controls the play/pause state of the Media. The `status` field provides
+description: Controls the play/pause state of the Media.
 ---
+
+<ComponentPreview name="playback-state-control-demo" withPlayer />
 
 ## Installation
 
-<ComponentPreview name="playback-state-control" withPlayer />
+1. Install the `playback-control` component:
+```npm
+npx shadcn add https://limeplay.winoffrg.dev/r/styles/default/playback-control.json
+```
+
+2. Add Event & Action Bridge
+
+Import the `useMediaStates` hook in your existing `PlayerHooks` component. This hook setups the required events and action bridge for the playback state control to work.
+
+```tsx lineNumbers title="components/player/player-hooks.tsx"
+import React from "react"
+
+import { useShakaPlayer } from "@/registry/default/hooks/use-shaka-player"
+ import { useMediaStates } from "@/registry/default/hooks/use-media-state"    // [!code ++]
+
+export const PlayerHooks = React.memo(() => {
+  useShakaPlayer()
+  useMediaStates()    // [!code ++]
+
+  return null
+})
+
+```
+
+3. Add the Store States
+
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+import { PlayerRootStore, createPlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
+import { MediaStateStore, createMediaStateStore } from "@/registry/default/hooks/use-media-state"    // [!code ++]
+
+export type TypeMediaStore = PlayerRootStore &
+  MediaStateStore &    // [!code ++]
+  {}
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlayerRootStore(...etc),
+    ...createMediaStateStore(...etc),    // [!code ++]
+    ...initProps,
+  }))
+  return mediaStore
+}
+
+```
+
+## Understanding
+You can use the `status` field from media store to get the current status of the media. List of possible values are:
+
+| Status | Description |
+| --- | --- |
+| `playing` | The media is playing |
+| `paused` | The media is paused |
+| `ended` | The media has reached the end |
+| `buffering` | The media is buffering |
+| `error` | The media has encountered an error |
+| `init` | The media is initializing or has readyState 0 |
+| `stopped` | The media has been stopped |

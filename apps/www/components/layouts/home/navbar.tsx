@@ -27,7 +27,7 @@ import { useNav } from "@/components/contexts/layout"
 import { BaseLinkItem } from "@/components/layouts/links"
 
 const navItemVariants = cva(
-  "text-fd-muted-foreground hover:text-fd-accent-foreground data-[active=true]:text-fd-primary inline-flex items-center gap-1 p-2 transition-colors [&_svg]:size-4"
+  "hover:text-fd-accent-foreground data-[active=true]:text-fd-primary inline-flex items-center gap-1 p-2 transition-colors [&_svg]:size-4"
 )
 
 export function Navbar(props: HTMLAttributes<HTMLElement>) {
@@ -40,7 +40,7 @@ export function Navbar(props: HTMLAttributes<HTMLElement>) {
         id="nd-nav"
         {...props}
         className={cn(
-          "max-w-fd-container border-fd-foreground/10 top-(--fd-banner-height) fixed left-1/2 z-40 box-content w-full -translate-x-1/2 border-b transition-colors lg:mt-2 lg:w-[calc(100%-1rem)] lg:rounded-2xl lg:border",
+          "border-fd-foreground/10 top-(--fd-banner-height) relative left-1/2 z-40 box-content w-full max-w-[calc(100%-1rem)] -translate-x-1/2 border-b transition-colors lg:w-[calc(100%-20rem)] lg:rounded-2xl lg:border",
           value.length > 0 ? "shadow-lg" : "shadow-sm",
           (isTransparent || value.length > 0) &&
             "bg-fd-background/80 backdrop-blur-lg",

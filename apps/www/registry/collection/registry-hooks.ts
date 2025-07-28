@@ -4,6 +4,7 @@ export const hooks: Registry["items"] = [
   {
     name: "use-player-root-store",
     type: "registry:hook",
+    dependencies: ["zustand"],
     files: [
       {
         path: "hooks/use-player-root-store.ts",
@@ -12,23 +13,48 @@ export const hooks: Registry["items"] = [
     ],
   },
   {
-    name: "use-volume-states",
+    name: "use-volume",
     type: "registry:hook",
-    registryDependencies: ["media-provider", "utils"],
+    dependencies: ["lodash.clamp", "zustand"],
+    registryDependencies: ["use-player-root-store", "utils", "media-provider"],
     files: [
       {
-        path: "hooks/use-volume-states.ts",
+        path: "hooks/use-volume.ts",
         type: "registry:hook",
       },
     ],
   },
   {
-    name: "use-media-state-states",
+    name: "use-track-events",
     type: "registry:hook",
-    registryDependencies: ["utils", "media-provider"],
+    dependencies: ["lodash.clamp"],
     files: [
       {
-        path: "hooks/use-media-state-states.ts",
+        path: "hooks/use-track-events.ts",
+        type: "registry:hook",
+      },
+    ],
+  },
+  {
+    name: "use-timeline",
+    type: "registry:hook",
+    dependencies: ["lodash.clamp", "zustand"],
+    registryDependencies: ["use-player-root-store", "utils", "media-provider"],
+    files: [
+      {
+        path: "hooks/use-timeline.ts",
+        type: "registry:hook",
+      },
+    ],
+  },
+  {
+    name: "use-media-state",
+    type: "registry:hook",
+    dependencies: ["zustand"],
+    registryDependencies: ["use-player-root-store", "utils", "media-provider"],
+    files: [
+      {
+        path: "hooks/use-media-state.ts",
         type: "registry:hook",
       },
     ],
@@ -36,56 +62,11 @@ export const hooks: Registry["items"] = [
   {
     name: "use-shaka-player",
     type: "registry:hook",
+    dependencies: ["shaka-player"],
     registryDependencies: ["media-provider"],
     files: [
       {
         path: "hooks/use-shaka-player.ts",
-        type: "registry:hook",
-      },
-    ],
-  },
-  {
-    name: "use-timeline-states",
-    type: "registry:hook",
-    registryDependencies: ["media-provider", "utils"],
-    files: [
-      {
-        path: "hooks/use-timeline-states.ts",
-        type: "registry:hook",
-      },
-    ],
-  },
-  {
-    name: "use-media-state-store",
-    type: "registry:hook",
-    registryDependencies: ["media-provider"],
-    files: [
-      {
-        path: "hooks/use-media-state-store.ts",
-        type: "registry:hook",
-      },
-    ],
-  },
-  {
-    name: "use-timeline-store",
-    type: "registry:hook",
-    dependencies: ["lodash.clamp"],
-    registryDependencies: ["use-player-root-store", "utils"],
-    files: [
-      {
-        path: "hooks/use-timeline-store.ts",
-        type: "registry:hook",
-      },
-    ],
-  },
-  {
-    name: "use-volume-store",
-    type: "registry:hook",
-    dependencies: ["lodash.clamp"],
-    registryDependencies: ["use-player-root-store"],
-    files: [
-      {
-        path: "hooks/use-volume-store.ts",
         type: "registry:hook",
       },
     ],
