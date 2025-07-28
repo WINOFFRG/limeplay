@@ -1,12 +1,16 @@
 "use client"
 
-import { SpeakerHigh, SpeakerLow, SpeakerX } from "@phosphor-icons/react"
+import {
+  SpeakerHighIcon,
+  SpeakerLowIcon,
+  SpeakerXIcon,
+} from "@phosphor-icons/react"
 
 import { Button } from "@/components/ui/button"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 import { MuteControl } from "@/registry/default/ui/mute-control"
 
-export function VolumeStateControl() {
+export function VolumeStateControlDemo() {
   const muted = useMediaStore((state) => state.muted)
   const volume = useMediaStore((state) => state.volume)
 
@@ -14,11 +18,11 @@ export function VolumeStateControl() {
     <Button size="icon" variant="glass" asChild>
       <MuteControl>
         {muted || volume === 0 ? (
-          <SpeakerX size={20} weight="fill" />
+          <SpeakerXIcon size={20} weight="fill" />
         ) : volume < 0.5 ? (
-          <SpeakerLow size={20} weight="fill" />
+          <SpeakerLowIcon size={20} weight="fill" />
         ) : (
-          <SpeakerHigh size={20} weight="fill" />
+          <SpeakerHighIcon size={20} weight="fill" />
         )}
       </MuteControl>
     </Button>

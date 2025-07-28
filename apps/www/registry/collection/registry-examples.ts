@@ -2,67 +2,82 @@ import { type Registry } from "shadcn/registry"
 
 export const examples: Registry["items"] = [
   {
-    name: "fallback-poster",
+    name: "fallback-poster-demo",
     type: "registry:example",
     registryDependencies: ["fallback-poster"],
     files: [
       {
-        path: "examples/fallback-poster.tsx",
+        path: "examples/fallback-poster-demo.tsx",
         type: "registry:example",
       },
     ],
   },
   {
-    name: "playback-state-control",
+    name: "playback-state-control-demo",
     type: "registry:example",
     registryDependencies: ["media-provider", "playback-control"],
     files: [
       {
-        path: "examples/playback-state-control.tsx",
+        path: "examples/playback-state-control-demo.tsx",
         type: "registry:example",
       },
     ],
   },
   {
-    name: "player-demo-root",
-    type: "registry:example",
-    registryDependencies: ["media-provider", "media", "player-layout"],
-    files: [
-      {
-        path: "examples/player-demo-root.tsx",
-        type: "registry:example",
-      },
-    ],
-  },
-  {
-    name: "volume-slider-control-horizontal",
+    name: "volume-slider-control-horizontal-demo",
     type: "registry:example",
     registryDependencies: ["volume-state-control", "volume-control"],
     files: [
       {
-        path: "examples/volume-slider-control-horizontal.tsx",
+        path: "examples/volume-slider-control-horizontal-demo.tsx",
         type: "registry:example",
       },
     ],
   },
   {
-    name: "volume-slider-control-vertical",
+    name: "volume-slider-control-vertical-demo",
     type: "registry:example",
     registryDependencies: ["volume-state-control", "volume-control"],
     files: [
       {
-        path: "examples/volume-slider-control-vertical.tsx",
+        path: "examples/volume-slider-control-vertical-demo.tsx",
         type: "registry:example",
       },
     ],
   },
   {
-    name: "volume-state-control",
+    name: "volume-state-control-demo",
     type: "registry:example",
     registryDependencies: ["media-provider", "mute-control"],
     files: [
       {
-        path: "examples/volume-state-control.tsx",
+        path: "examples/volume-state-control-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "timeline-control-demo",
+    type: "registry:example",
+    registryDependencies: ["media-provider", "timeline-control"],
+    files: [
+      {
+        path: "examples/timeline-control-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "timeline-labels-demo",
+    type: "registry:example",
+    registryDependencies: [
+      "media-provider",
+      "timeline-control",
+      "timeline-labels",
+    ],
+    files: [
+      {
+        path: "examples/timeline-labels-demo.tsx",
         type: "registry:example",
       },
     ],
