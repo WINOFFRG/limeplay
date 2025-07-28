@@ -1,11 +1,14 @@
-import { MediaPlayer as LinearMediaPlayer } from "@/components/media-player"
+import { MotionContainer } from "@/components/motion-container"
 import { VideoBackground } from "@/components/video-background"
+import { MediaPlayer as LinearMediaPlayer } from "@/registry/default/blocks/linear-player/media-player"
 
 export default function Home() {
   return (
-    <section>
+    <section className="mt-16">
       <VideoBackground />
-      <LinearMediaPlayer />
+      <MotionContainer>
+        <LinearMediaPlayer />
+      </MotionContainer>
     </section>
   )
 }
