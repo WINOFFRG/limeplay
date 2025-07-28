@@ -63,10 +63,8 @@ export function MediaElement() {
     <Media
       as="video"
       className="size-full bg-black object-cover"
-      autoPlay={false}
-      // poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
+      autoPlay={true}
       muted
-      controls={false}
       loop
     />
   )
