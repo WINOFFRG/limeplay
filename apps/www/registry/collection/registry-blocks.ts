@@ -57,10 +57,6 @@ export const blocks: Registry["items"] = [
         path: `${BASE_SRC_URL}/components/bottom-controls.tsx`,
         type: "registry:component",
       },
-      {
-        path: `${BASE_SRC_URL}/lib/create-media-store.ts`,
-        type: "registry:lib",
-      },
     ],
   },
 ]

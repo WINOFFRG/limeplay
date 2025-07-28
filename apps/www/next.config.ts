@@ -9,6 +9,7 @@ const config: NextConfig = {
   images: {
     unoptimized: true,
   },
+  productionBrowserSourceMaps: true,
 }
 
 export default withMDX(config)

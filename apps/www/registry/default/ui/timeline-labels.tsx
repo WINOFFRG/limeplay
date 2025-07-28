@@ -1,7 +1,7 @@
 import React from "react"
 
-import { durationDateTime, formatTimestamp } from "../lib/time"
-import { useMediaStore } from "./media-provider"
+import { durationDateTime, formatTimestamp } from "@/registry/default/lib/time"
+import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 const HOURS_IN_SECONDS = 60 * 60
 
@@ -78,3 +78,23 @@ export const Duration = React.forwardRef<
 })
 
 Duration.displayName = "Duration"
+
+export const HoverTime = React.forwardRef<
+  HTMLTimeElement,
+  React.HTMLProps<HTMLTimeElement>
+>((props, forwardedRef) => {
+  const hoveringTime = useMediaStore((s) => s.hoveringTime)
+
+  return (
+    <time
+      dateTime={durationDateTime(hoveringTime)}
+      ref={forwardedRef}
+      {...props}
+    >
+      <span className="sr-only">Seek To:</span>
+      {formatTimestamp(hoveringTime)}
+    </time>
+  )
+})
+
+HoverTime.displayName = "HoverTime"

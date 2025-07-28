@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useRef } from "react"
 
 import { useMediaStore } from "@/registry/default/ui/media-provider"

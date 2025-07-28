@@ -26,14 +26,14 @@
 
 Limeplay is a React based Headless UI library made to work with HTML5 & [Shaka Player](https://github.com/shaka-project/shaka-player) that allows you to build stunning, accessible and modern looking Media Players with ease. It exposes several hooks and highly configurable components using which you can build any functional Media Player like Netflix, Youtube, Hulu, Hotstar, without having to worry about the underlying player logic while adhering to accessibility best practices.
 
-> [!TIP]  
+> [!TIP]
 > Limeplay v1 (`master`) has now been depreceated, v2 in under active development (`dev`)
 
 ## Documentation
 
 👉 It's the https://docs.limeplay.me website for the latest version of Limeplay.
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > Documentation is still under development, Contributions are welcome!
 
 ## Codesandbox Template
@@ -58,11 +58,4 @@ specification. Contributions of any kind welcome!
 MIT © [WINOFFRG](https://github.com/winoffrg)
 
 
-player root -
-  player container - 
-    fallback poster
-    Media Element
-    Controls Container
-      Top Controls
-      Middle Grow Controls
-      Bottom Controls
+<!-- TODO: Tailwind eslint plugin is not supported in v4 use https://github.com/schoero/eslint-plugin-better-tailwindcss?tab=readme-ov-file#parsers rather -->
