@@ -143,7 +143,7 @@ export const Index: Record<string, any> = {
       name: "timeline-labels",
       description: "",
       type: "registry:ui",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/utils.json"],
+      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/utils.json","http://localhost:3000/r/styles/default/time.json"],
       files: [{
         path: "registry/default/ui/timeline-labels.tsx",
         type: "registry:ui",
@@ -173,19 +173,19 @@ export const Index: Record<string, any> = {
       }),
       meta: undefined,
     },
-    "timeline-slider": {
-      name: "timeline-slider",
+    "timeline-control": {
+      name: "timeline-control",
       description: "",
       type: "registry:ui",
       registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/utils.json","http://localhost:3000/r/styles/default/use-timeline.json","http://localhost:3000/r/styles/default/use-track-events.json"],
       files: [{
-        path: "registry/default/ui/timeline-slider.tsx",
+        path: "registry/default/ui/timeline-control.tsx",
         type: "registry:ui",
         target: ""
       }],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/ui/timeline-slider.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "timeline-slider"
+        const mod = await import("@/registry/default/ui/timeline-control.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "timeline-control"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -343,104 +343,121 @@ export const Index: Record<string, any> = {
       }),
       meta: undefined,
     },
-    "fallback-poster": {
-      name: "fallback-poster",
+    "fallback-poster-demo": {
+      name: "fallback-poster-demo",
       description: "",
       type: "registry:example",
       registryDependencies: ["http://localhost:3000/r/styles/default/fallback-poster.json"],
       files: [{
-        path: "registry/default/examples/fallback-poster.tsx",
+        path: "registry/default/examples/fallback-poster-demo.tsx",
         type: "registry:example",
         target: ""
       }],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/fallback-poster.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "fallback-poster"
+        const mod = await import("@/registry/default/examples/fallback-poster-demo.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "fallback-poster-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
     },
-    "playback-state-control": {
-      name: "playback-state-control",
+    "playback-state-control-demo": {
+      name: "playback-state-control-demo",
       description: "",
       type: "registry:example",
       registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/playback-control.json"],
       files: [{
-        path: "registry/default/examples/playback-state-control.tsx",
+        path: "registry/default/examples/playback-state-control-demo.tsx",
         type: "registry:example",
         target: ""
       }],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/playback-state-control.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "playback-state-control"
+        const mod = await import("@/registry/default/examples/playback-state-control-demo.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "playback-state-control-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
     },
-    "player-demo-root": {
-      name: "player-demo-root",
+    "volume-slider-control-horizontal-demo": {
+      name: "volume-slider-control-horizontal-demo",
       description: "",
       type: "registry:example",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/media.json","http://localhost:3000/r/styles/default/player-layout.json"],
+      registryDependencies: ["volume-state-control","http://localhost:3000/r/styles/default/volume-control.json"],
       files: [{
-        path: "registry/default/examples/player-demo-root.tsx",
+        path: "registry/default/examples/volume-slider-control-horizontal-demo.tsx",
         type: "registry:example",
         target: ""
       }],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/player-demo-root.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "player-demo-root"
+        const mod = await import("@/registry/default/examples/volume-slider-control-horizontal-demo.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-slider-control-horizontal-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
     },
-    "volume-slider-control-horizontal": {
-      name: "volume-slider-control-horizontal",
+    "volume-slider-control-vertical-demo": {
+      name: "volume-slider-control-vertical-demo",
       description: "",
       type: "registry:example",
-      registryDependencies: ["http://localhost:3000/r/styles/default/volume-state-control.json","http://localhost:3000/r/styles/default/volume-control.json"],
+      registryDependencies: ["volume-state-control","http://localhost:3000/r/styles/default/volume-control.json"],
       files: [{
-        path: "registry/default/examples/volume-slider-control-horizontal.tsx",
+        path: "registry/default/examples/volume-slider-control-vertical-demo.tsx",
         type: "registry:example",
         target: ""
       }],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/volume-slider-control-horizontal.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-slider-control-horizontal"
+        const mod = await import("@/registry/default/examples/volume-slider-control-vertical-demo.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-slider-control-vertical-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
     },
-    "volume-slider-control-vertical": {
-      name: "volume-slider-control-vertical",
-      description: "",
-      type: "registry:example",
-      registryDependencies: ["http://localhost:3000/r/styles/default/volume-state-control.json","http://localhost:3000/r/styles/default/volume-control.json"],
-      files: [{
-        path: "registry/default/examples/volume-slider-control-vertical.tsx",
-        type: "registry:example",
-        target: ""
-      }],
-      component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/volume-slider-control-vertical.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-slider-control-vertical"
-        return { default: mod.default || mod[exportName] }
-      }),
-      meta: undefined,
-    },
-    "volume-state-control": {
-      name: "volume-state-control",
+    "volume-state-control-demo": {
+      name: "volume-state-control-demo",
       description: "",
       type: "registry:example",
       registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/mute-control.json"],
       files: [{
-        path: "registry/default/examples/volume-state-control.tsx",
+        path: "registry/default/examples/volume-state-control-demo.tsx",
         type: "registry:example",
         target: ""
       }],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/volume-state-control.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-state-control"
+        const mod = await import("@/registry/default/examples/volume-state-control-demo.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-state-control-demo"
+        return { default: mod.default || mod[exportName] }
+      }),
+      meta: undefined,
+    },
+    "timeline-control-demo": {
+      name: "timeline-control-demo",
+      description: "",
+      type: "registry:example",
+      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/timeline-control.json"],
+      files: [{
+        path: "registry/default/examples/timeline-control-demo.tsx",
+        type: "registry:example",
+        target: ""
+      }],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/default/examples/timeline-control-demo.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "timeline-control-demo"
+        return { default: mod.default || mod[exportName] }
+      }),
+      meta: undefined,
+    },
+    "timeline-labels-demo": {
+      name: "timeline-labels-demo",
+      description: "",
+      type: "registry:example",
+      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/timeline-control.json","http://localhost:3000/r/styles/default/timeline-labels.json"],
+      files: [{
+        path: "registry/default/examples/timeline-labels-demo.tsx",
+        type: "registry:example",
+        target: ""
+      }],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/default/examples/timeline-labels-demo.tsx")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "timeline-labels-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -449,7 +466,7 @@ export const Index: Record<string, any> = {
       name: "linear-player",
       description: "Modern seamless flat linear.app Media Player",
       type: "registry:block",
-      registryDependencies: ["http://localhost:3000/r/styles/default/player-layout.json","http://localhost:3000/r/styles/default/media.json","http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/mute-control.json","http://localhost:3000/r/styles/default/player-hooks.json","http://localhost:3000/r/styles/default/playback-control.json","http://localhost:3000/r/styles/default/timeline-slider.json","http://localhost:3000/r/styles/default/volume-control.json","http://localhost:3000/r/styles/default/use-timeline.json","http://localhost:3000/r/styles/default/use-volume.json","http://localhost:3000/r/styles/default/use-media-state.json","http://localhost:3000/r/styles/default/use-track-events.json","http://localhost:3000/r/styles/default/use-player-root-store.json","http://localhost:3000/r/styles/default/utils.json","http://localhost:3000/r/styles/default/create-media-store.json"],
+      registryDependencies: ["http://localhost:3000/r/styles/default/player-layout.json","http://localhost:3000/r/styles/default/media.json","http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/mute-control.json","http://localhost:3000/r/styles/default/player-hooks.json","http://localhost:3000/r/styles/default/playback-control.json","timeline-slider","http://localhost:3000/r/styles/default/volume-control.json","http://localhost:3000/r/styles/default/use-timeline.json","http://localhost:3000/r/styles/default/use-volume.json","http://localhost:3000/r/styles/default/use-media-state.json","http://localhost:3000/r/styles/default/use-track-events.json","http://localhost:3000/r/styles/default/use-player-root-store.json","http://localhost:3000/r/styles/default/utils.json","http://localhost:3000/r/styles/default/create-media-store.json"],
       files: [{
         path: "registry/default/blocks/linear-player/media-player.tsx",
         type: "registry:component",
@@ -474,10 +491,6 @@ export const Index: Record<string, any> = {
         path: "registry/default/blocks/linear-player/components/bottom-controls.tsx",
         type: "registry:component",
         target: "components/linear-player/components/bottom-controls.tsx"
-      },{
-        path: "registry/default/blocks/linear-player/lib/create-media-store.ts",
-        type: "registry:lib",
-        target: "components/linear-player/lib/create-media-store.ts"
       }],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/blocks/linear-player/media-player.tsx")

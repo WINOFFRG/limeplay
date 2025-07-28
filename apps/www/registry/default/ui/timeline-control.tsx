@@ -1,11 +1,12 @@
+"use client"
+
 import React, { useImperativeHandle, useRef } from "react"
 import { Slider as SliderPrimitive } from "@base-ui-components/react/slider"
 
 import { cn } from "@/lib/utils"
-
-import { useTimeline } from "../hooks/use-timeline"
-import { useTrackEvents } from "../hooks/use-track-events"
-import { useMediaStore } from "./media-provider"
+import { useTimeline } from "@/registry/default/hooks/use-timeline"
+import { useTrackEvents } from "@/registry/default/hooks/use-track-events"
+import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export const Root = React.forwardRef<
   HTMLDivElement,
@@ -72,7 +73,7 @@ export const Track = React.forwardRef<
   const { className, ...etc } = props
 
   return (
-    <SliderPrimitive.Control
+    <SliderPrimitive.Track
       ref={ref}
       tabIndex={0}
       className={cn(
@@ -95,10 +96,10 @@ export const Progress = React.forwardRef<
   const progress = useMediaStore((s) => s.progress)
 
   return (
-    <SliderPrimitive.Track
+    <SliderPrimitive.Indicator
       ref={ref}
       className={cn(
-        "absolute! h-full w-[var(--lp-played-width)] rounded-s-full bg-white",
+        "h-full w-(--lp-played-width) rounded-s-full bg-white",
         className
       )}
       style={
@@ -223,16 +224,16 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
     return (
       <SliderPrimitive.Thumb
         className={cn(
-          "start-(--lp-timeline-thumb-position)! size-4 rounded-full bg-white",
+          "left-(--lp-timeline-thumb-position)! size-4 rounded-full bg-white",
           className
         )}
         ref={ref}
+        {...etc}
         style={
           {
             "--lp-timeline-thumb-position": `${finalPosition}%`,
           } as React.CSSProperties
         }
-        {...etc}
       />
     )
   }

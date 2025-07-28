@@ -1,8 +1,7 @@
 import Script from "next/script"
 
 import { HomeLayout } from "@/components/layouts/home/layout"
-
-import { baseOptions } from "../layout.config"
+import { baseOptions } from "@/app/layout.config"
 
 export default function RootLayout({
   children,
@@ -11,13 +10,10 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <head>
-        <Script
-          crossOrigin="anonymous"
-          src="//unpkg.com/react-scan/dist/auto.global.js"
-        />
-        {/* rest of your scripts go under */}
-      </head>{" "}
+      <Script
+        crossOrigin="anonymous"
+        src="//unpkg.com/react-scan/dist/auto.global.js"
+      />
       <HomeLayout {...baseOptions}>{children}</HomeLayout>
     </>
   )
