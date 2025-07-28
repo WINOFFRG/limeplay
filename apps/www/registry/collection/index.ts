@@ -34,8 +34,8 @@ export const registry = {
       ...blocks,
       ...lib,
       ...hooks,
-      ...examples,
       ...internal,
+      ...examples,
     ].filter((item) => {
       return !DEPRECATED_ITEMS.includes(item.name)
     })

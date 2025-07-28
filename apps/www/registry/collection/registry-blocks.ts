@@ -22,7 +22,7 @@ export const blocks: Registry["items"] = [
       "mute-control",
       "player-hooks",
       "playback-control",
-      "timeline-slider",
+      "timeline-control",
       "volume-control",
       "use-timeline",
       "use-volume",
@@ -31,6 +31,9 @@ export const blocks: Registry["items"] = [
       "use-player-root-store",
       "utils",
       "create-media-store",
+      "fallback-poster",
+      "timeline-labels",
+      "use-shaka-player",
     ],
     files: [
       {
@@ -55,6 +58,18 @@ export const blocks: Registry["items"] = [
       },
       {
         path: `${BASE_SRC_URL}/components/bottom-controls.tsx`,
+        type: "registry:component",
+      },
+      {
+        path: `${BASE_SRC_URL}/components/media-element.tsx`,
+        type: "registry:component",
+      },
+      {
+        path: `${BASE_SRC_URL}/components/player-hooks.tsx`,
+        type: "registry:component",
+      },
+      {
+        path: `${BASE_SRC_URL}/components/custom-player-wrapper.tsx`,
         type: "registry:component",
       },
     ],

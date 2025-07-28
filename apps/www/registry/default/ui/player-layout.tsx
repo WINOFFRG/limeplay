@@ -15,7 +15,7 @@ export function PlayerContainer({
     <div
       data-layout-type="player-container"
       className={cn(
-        "relative z-20 aspect-(--aspect-ratio) max-h-[min(var(--height,_720px),_calc(100vh_-_16px_*_2))] w-full overflow-hidden rounded-lg",
+        `relative z-20 aspect-(--aspect-ratio) max-h-[min(var(--height,_720px),_calc(100vh_-_16px_*_2))] w-full overflow-hidden rounded-lg`,
         className
       )}
       {...props}
