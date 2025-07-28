@@ -1,20 +1,20 @@
 import { create } from "zustand"
 
 import {
-  MediaStateStore,
   createMediaStateStore,
+  MediaStateStore,
 } from "@/registry/default/hooks/use-media-state"
 import {
-  PlayerRootStore,
   createPlayerRootStore,
+  PlayerRootStore,
 } from "@/registry/default/hooks/use-player-root-store"
 import {
-  TimelineStore,
   createTimelineStore,
+  TimelineStore,
 } from "@/registry/default/hooks/use-timeline"
 import {
-  VolumeStore,
   createVolumeStore,
+  VolumeStore,
 } from "@/registry/default/hooks/use-volume"
 
 export type TypeMediaStore = PlayerRootStore &
