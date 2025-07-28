@@ -3,25 +3,30 @@ import clamp from "lodash.clamp"
 import { StateCreator } from "zustand"
 
 import { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
-import { off, on } from "@/registry/default/lib/utils"
-import { useGetStore } from "@/registry/default/ui/media-provider"
+import { noop, off, on } from "@/registry/default/lib/utils"
+import {
+  useGetStore,
+  useMediaStore,
+} from "@/registry/default/ui/media-provider"
 
 export function useVolumeStates() {
   const store = useGetStore()
+  const mediaRef = useMediaStore((state) => state.mediaRef)
+  const player = useMediaStore((state) => state.player)
 
   React.useEffect(() => {
-    const mediaElement = store.getState().mediaRef.current
+    if (!mediaRef?.current) return noop
+
+    const media = mediaRef.current
 
     const volumeHandler = () => {
       store.setState({
-        volume: mediaElement.volume,
-        muted: mediaElement.muted,
+        volume: media.volume,
+        muted: media.muted,
       })
     }
 
     const audioTracksChangedHandler = () => {
-      const player = store.getState().player
-
       if (player) {
         const hasAudioTracks = player.getAudioTracks().length > 0
 
@@ -31,14 +36,18 @@ export function useVolumeStates() {
       }
     }
 
-    on(mediaElement, "volumechange", volumeHandler)
-    on(mediaElement, "audiotrackschanged", audioTracksChangedHandler)
+    on(media, "volumechange", volumeHandler)
+    on(media, "audiotrackschanged", audioTracksChangedHandler)
+
+    volumeHandler()
 
     return () => {
-      off(mediaElement, "volumechange", volumeHandler)
-      off(mediaElement, "audiotrackschanged", audioTracksChangedHandler)
+      if (media) {
+        off(media, "volumechange", volumeHandler)
+        off(media, "audiotrackschanged", audioTracksChangedHandler)
+      }
     }
-  }, [store])
+  }, [store, mediaRef, player])
 }
 
 export interface VolumeStore {
@@ -62,8 +71,11 @@ export const createVolumeStore: StateCreator<
 
 export function useVolume() {
   const store = useGetStore()
+  const mediaRef = useMediaStore((state) => state.mediaRef)
 
   function setVolume(volume: number, progress = 0, delta = 0) {
+    if (!mediaRef?.current) return
+
     const value = typeof delta === "number" ? volume + delta : progress
 
     if (value === undefined || Number.isNaN(value)) {
@@ -73,7 +85,7 @@ export function useVolume() {
     const clampedVolume = clamp(value, 0, 1)
     const muted = clampedVolume === 0
 
-    const media = store.getState().mediaRef.current
+    const media = mediaRef.current
     media.volume = clampedVolume
     media.muted = muted
 
@@ -83,8 +95,9 @@ export function useVolume() {
   }
 
   function toggleMute() {
-    const media = store.getState().mediaRef.current
+    if (!mediaRef?.current) return
 
+    const media = mediaRef.current
     media.muted = !media.muted
     // DEV: Volume 0 and muted are equivalent, to prevent collision in UI
     // set to some small value to prevent stuck toggling state of UI.
@@ -98,7 +111,9 @@ export function useVolume() {
   }
 
   function setMuted(muted: boolean) {
-    const media = store.getState().mediaRef.current
+    if (!mediaRef?.current) return
+
+    const media = mediaRef.current
 
     media.muted = muted
     media.volume = muted ? BASE_RESET_VOLUME : media.volume

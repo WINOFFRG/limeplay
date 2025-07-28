@@ -3,15 +3,20 @@ import { StateCreator } from "zustand"
 
 import { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
 import { noop, off, on } from "@/registry/default/lib/utils"
-import { useGetStore } from "@/registry/default/ui/media-provider"
+import {
+  useGetStore,
+  useMediaStore,
+} from "@/registry/default/ui/media-provider"
 
 export function useMediaStates() {
   const store = useGetStore()
+  const mediaRef = useMediaStore((state) => state.mediaRef)
+  const player = useMediaStore((state) => state.player)
 
   React.useEffect(() => {
-    const mediaElement = store.getState().mediaRef?.current
+    if (!mediaRef?.current) return noop
 
-    if (!mediaElement) return noop
+    const media = mediaRef.current
 
     const pauseHandler = () => {
       store.setState({
@@ -29,7 +34,7 @@ export function useMediaStates() {
 
     const endedHandler = () => {
       // DEV: Whenever in looping ended would never happen, so prevent UI from showing ended state
-      if (mediaElement?.loop) {
+      if (media.loop) {
         return
       }
       store.setState({
@@ -46,35 +51,39 @@ export function useMediaStates() {
 
     const loopChangeHandler = () => {
       store.setState({
-        loop: mediaElement.loop,
+        loop: media.loop,
       })
     }
 
-    on(mediaElement, "pause", pauseHandler)
-    on(mediaElement, "play", playHandler)
-    on(mediaElement, "ended", endedHandler)
-    on(mediaElement, "loadeddata", loadedDataHandler)
-    on(mediaElement, "loopchange", loopChangeHandler)
+    on(media, "pause", pauseHandler)
+    on(media, "play", playHandler)
+    on(media, "ended", endedHandler)
+    on(media, "loadeddata", loadedDataHandler)
+    on(media, "loopchange", loopChangeHandler)
 
     return () => {
-      off(mediaElement, "pause", pauseHandler)
-      off(mediaElement, "play", playHandler)
-      off(mediaElement, "ended", endedHandler)
-      off(mediaElement, "loadeddata", loadedDataHandler)
-      off(mediaElement, "loopchange", loopChangeHandler)
+      if (media) {
+        off(media, "pause", pauseHandler)
+        off(media, "play", playHandler)
+        off(media, "ended", endedHandler)
+        off(media, "loadeddata", loadedDataHandler)
+        off(media, "loopchange", loopChangeHandler)
+      }
     }
-  }, [store])
+  }, [store, mediaRef])
 
   // Handle buffering states
   React.useEffect(() => {
-    const mediaElement = store.getState().mediaRef?.current
-    const player = store.getState().player
+    if (!mediaRef?.current) return noop
+
+    const media = mediaRef.current
 
     const bufferingHandler = () => {
       if (player?.isBuffering()) {
         store.setState({ status: "buffering" })
       } else {
-        store.setState({ status: "playing" })
+        const isPlaying = media.paused
+        store.setState({ status: isPlaying ? "paused" : "playing" })
       }
     }
 
@@ -86,9 +95,9 @@ export function useMediaStates() {
       store.setState({ status: "playing" })
     }
 
-    if (mediaElement) {
-      on(mediaElement, "waiting", waitingHandler)
-      on(mediaElement, "playing", onPlayingHandler)
+    if (media) {
+      on(media, "waiting", waitingHandler)
+      on(media, "playing", onPlayingHandler)
     }
 
     if (player) {
@@ -97,9 +106,9 @@ export function useMediaStates() {
     }
 
     return () => {
-      if (mediaElement) {
-        off(mediaElement, "waiting", waitingHandler)
-        off(mediaElement, "playing", onPlayingHandler)
+      if (media) {
+        off(media, "waiting", waitingHandler)
+        off(media, "playing", onPlayingHandler)
       }
 
       if (player) {
@@ -107,7 +116,7 @@ export function useMediaStates() {
         player.removeEventListener("loading", bufferingHandler)
       }
     }
-  }, [store])
+  }, [store, mediaRef, player])
 }
 
 export interface MediaStateStore {

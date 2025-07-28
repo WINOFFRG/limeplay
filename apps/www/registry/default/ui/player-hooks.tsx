@@ -2,14 +2,10 @@
 
 import React from "react"
 
-import { useMediaStates } from "@/registry/default/hooks/use-media-state"
 import { useShakaPlayer } from "@/registry/default/hooks/use-shaka-player"
-import { useVolumeStates } from "@/registry/default/hooks/use-volume"
 
 export const PlayerHooks = React.memo(() => {
-  useMediaStates()
   useShakaPlayer()
-  useVolumeStates()
 
   return null
 })

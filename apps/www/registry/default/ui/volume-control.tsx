@@ -152,7 +152,7 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
       <SliderPrimitive.Thumb
         ref={ref}
         className={cn(
-          "bg-primary outline-primary block size-2 rounded-full outline-offset-1 focus-visible:ring-0 focus-visible:outline-1",
+          `bg-primary outline-primary block size-2 rounded-full outline-offset-1 focus-visible:ring-0 focus-visible:outline-1`,
           className
         )}
         aria-valuemin={0}

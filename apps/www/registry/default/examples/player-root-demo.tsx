@@ -5,12 +5,12 @@ import { useControls } from "leva"
 
 import { LevaControls } from "@/components/leva-controls"
 import { CustomDemoControls } from "@/registry/default/internal/custom-demo-controls"
+import { PlayerHooks } from "@/registry/default/internal/player-hooks-demo"
 import { Media } from "@/registry/default/ui/media"
 import {
   MediaProvider,
   useMediaStore,
 } from "@/registry/default/ui/media-provider"
-import { PlayerHooks } from "@/registry/default/ui/player-hooks"
 import * as Layout from "@/registry/default/ui/player-layout"
 
 function MediaElement() {
