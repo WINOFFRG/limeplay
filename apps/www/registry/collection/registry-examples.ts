@@ -2,6 +2,23 @@ import { type Registry } from "shadcn/registry"
 
 export const examples: Registry["items"] = [
   {
+    name: "player-root-demo",
+    type: "registry:example",
+    registryDependencies: [
+      "player-layout",
+      "media-provider",
+      "media",
+      "custom-demo-controls",
+      "player-hooks-demo",
+    ],
+    files: [
+      {
+        path: "examples/player-root-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
     name: "fallback-poster-demo",
     type: "registry:example",
     registryDependencies: ["fallback-poster"],
@@ -26,7 +43,7 @@ export const examples: Registry["items"] = [
   {
     name: "volume-slider-control-horizontal-demo",
     type: "registry:example",
-    registryDependencies: ["volume-state-control", "volume-control"],
+    registryDependencies: ["volume-control", "volume-state-control-demo"],
     files: [
       {
         path: "examples/volume-slider-control-horizontal-demo.tsx",
@@ -37,7 +54,7 @@ export const examples: Registry["items"] = [
   {
     name: "volume-slider-control-vertical-demo",
     type: "registry:example",
-    registryDependencies: ["volume-state-control", "volume-control"],
+    registryDependencies: ["volume-control", "volume-state-control-demo"],
     files: [
       {
         path: "examples/volume-slider-control-vertical-demo.tsx",
@@ -59,7 +76,11 @@ export const examples: Registry["items"] = [
   {
     name: "timeline-control-demo",
     type: "registry:example",
-    registryDependencies: ["media-provider", "timeline-control"],
+    registryDependencies: [
+      "media-provider",
+      "timeline-control",
+      "timeline-labels",
+    ],
     files: [
       {
         path: "examples/timeline-control-demo.tsx",
@@ -74,6 +95,7 @@ export const examples: Registry["items"] = [
       "media-provider",
       "timeline-control",
       "timeline-labels",
+      "use-timeline",
     ],
     files: [
       {

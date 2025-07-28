@@ -28,6 +28,13 @@ export const ui: Registry["items"] = [
     name: "media-provider",
     type: "registry:ui",
     dependencies: ["zustand"],
+    registryDependencies: [
+      "create-media-store",
+      "use-media-state",
+      "use-player-root-store",
+      "use-timeline",
+      "use-volume",
+    ],
     files: [
       {
         path: "ui/media-provider.tsx",
@@ -42,7 +49,7 @@ export const ui: Registry["items"] = [
   {
     name: "player-layout",
     type: "registry:ui",
-    dependencies: ["@radix-ui/react-compose-refs"],
+    dependencies: ["@radix-ui/react-compose-refs", "@radix-ui/react-slot"],
     registryDependencies: ["media-provider", "use-player-root-store"],
     files: [
       {
@@ -54,7 +61,7 @@ export const ui: Registry["items"] = [
   {
     name: "media",
     type: "registry:ui",
-    dependencies: ["@radix-ui/react-compose-refs"],
+    dependencies: ["@radix-ui/react-compose-refs", "@radix-ui/react-slot"],
     registryDependencies: ["media-provider"],
     files: [
       {
