@@ -8,7 +8,7 @@ import { z } from "zod"
 import { blocks } from "@/registry/collection/registry-blocks"
 import { examples } from "@/registry/collection/registry-examples"
 import { hooks } from "@/registry/collection/registry-hooks"
-import { lib } from "@/registry/collection/registry-lib"
+import { internal, lib } from "@/registry/collection/registry-lib"
 import { ui } from "@/registry/collection/registry-ui"
 
 // Log level configuration
@@ -62,22 +62,26 @@ const PATH_MAPPINGS = [
 
 // Create a map of all registry items for quick lookup
 const registryItemsMap = new Map()
-;[...ui, ...lib, ...hooks, ...examples, ...blocks].forEach((item) => {
-  if (item.name && !DEPRECATED_ITEMS.includes(item.name)) {
-    registryItemsMap.set(item.name, item)
+;[...ui, ...lib, ...hooks, ...examples, ...blocks, ...internal].forEach(
+  (item) => {
+    if (item.name && !DEPRECATED_ITEMS.includes(item.name)) {
+      registryItemsMap.set(item.name, item)
+    }
   }
-})
+)
 
 // Create a map of all file paths to their corresponding items
 const filePathToItemMap = new Map()
-;[...ui, ...lib, ...hooks, ...examples, ...blocks].forEach((item) => {
-  if (item.files) {
-    item.files.forEach((file) => {
-      const filePath = typeof file === "string" ? file : file.path
-      filePathToItemMap.set(filePath, item.name)
-    })
+;[...ui, ...lib, ...hooks, ...examples, ...blocks, ...internal].forEach(
+  (item) => {
+    if (item.files) {
+      item.files.forEach((file) => {
+        const filePath = typeof file === "string" ? file : file.path
+        filePathToItemMap.set(filePath, item.name)
+      })
+    }
   }
-})
+)
 
 // Function to convert dependency string to URL if it exists in registry
 function resolveRegistryDependency(dependency: string): string {
@@ -112,6 +116,7 @@ const registryItems = [
   ...ui,
   ...lib,
   ...hooks,
+  ...internal,
   ...examples,
   ...blocks,
 ]
@@ -441,13 +446,13 @@ export const Index: Record<string, any> = {
   }
 }`
 
-  // Create __registry__ directory if it doesn't exist
-  const registryDir = path.join(process.cwd(), "__registry__")
+  // Create registry directory if it doesn't exist
+  const registryDir = path.join(process.cwd(), "registry")
   await fs.mkdir(registryDir, { recursive: true })
 
   // Write style index.
-  rimraf.sync(path.join(registryDir, "index.tsx"))
-  await fs.writeFile(path.join(registryDir, "index.tsx"), index)
+  rimraf.sync(path.join(registryDir, "__index__.tsx"))
+  await fs.writeFile(path.join(registryDir, "__index__.tsx"), index)
 }
 
 async function buildRegistryJsonFile() {

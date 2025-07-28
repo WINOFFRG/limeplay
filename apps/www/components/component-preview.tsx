@@ -1,94 +1,55 @@
-"use client"
-
-import * as React from "react"
-import Image from "next/image"
-import { Index } from "@/__registry__"
+import fs from "fs"
+import path from "path"
+import React from "react"
+import { highlight } from "fumadocs-core/highlight"
+import { Pre } from "fumadocs-ui/components/codeblock"
 
 import { cn } from "@/lib/utils"
-import { useConfig } from "@/hooks/use-config"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Icons } from "@/components/icons"
-import { styles } from "@/registry/collection/registry-styles"
-import { PlayerDemoLayout } from "@/registry/default/examples/player-demo-root"
+import { Index } from "@/registry/__index__"
+import { PlayerLayoutDemo } from "@/registry/default/examples/player-root-demo"
+
+import { CodeBlock as CustomCodeBlock } from "./codeblock"
+import { PreviewTabComponent } from "./preview-tab-component"
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
-  name: string
-  extractClassname?: boolean
-  extractedClassNames?: string
-  align?: "center" | "start" | "end"
-  description?: string
   hideCode?: boolean
-  type?: "block" | "component" | "example"
+  type?: "overlay" | "block"
   withPlayer?: boolean
+  name: string
 }
 
-export function ComponentPreview({
+export async function ComponentPreview({
   name,
-  type,
-  children,
   className,
-  extractClassname,
-  extractedClassNames,
-  align = "center",
-  description,
-  hideCode = false,
   withPlayer = false,
+  hideCode = false,
+  type = "block",
   ...props
 }: ComponentPreviewProps) {
-  const [config] = useConfig()
-  const index = styles.findIndex((style) => style.name === config.style)
+  const Component = Index["default"][name]
 
-  const Codes = React.Children.toArray(children) as React.ReactElement[]
-  const Code = Codes[index]
-
-  if (!name) {
-    throw new Error("component name is required")
+  if (!Component) {
+    throw new Error(`Component ${name} not found in registry`)
   }
 
-  const Preview = React.useMemo(() => {
-    const Component = Index[config.style][name]?.component
+  const filePath = path.join(Component.files?.[0]?.path)
+  const fileContent = await fs.promises.readFile(filePath, "utf-8")
+  const fileName = path.basename(filePath)
+  const PreviewComponent = withPlayer ? PlayerLayoutDemo : React.Fragment
 
-    if (!Component) {
-      return (
-        <p className="text-muted-foreground text-sm">
-          Component{" "}
-          <code className="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm">
-            {name}
-          </code>{" "}
-          not found in registry.
-        </p>
-      )
-    }
-
-    return <Component />
-  }, [name, config.style])
-
-  if (type === "block") {
-    return (
-      <div className="relative aspect-[4/2.5] w-full overflow-hidden rounded-md border">
-        <Image
-          src={`/r/styles/${config.style}/${name}-light.png`}
-          alt={name}
-          width={1440}
-          height={900}
-          className="bg-background absolute left-0 top-0 z-20 w-[970px] max-w-none sm:w-[1280px] md:hidden dark:hidden md:dark:hidden"
-        />
-        <Image
-          src={`/r/styles/${config.style}/${name}-dark.png`}
-          alt={name}
-          width={1440}
-          height={900}
-          className="bg-background absolute left-0 top-0 z-20 hidden w-[970px] max-w-none sm:w-[1280px] md:hidden dark:block md:dark:hidden"
-        />
-        <div className="bg-background absolute inset-0 hidden w-[1600px] md:block">
-          <iframe
-            src={`/view/styles/${config.style}/${name}`}
-            className="size-full"
-          />
-        </div>
-      </div>
-    )
-  }
+  const rendered = await highlight(fileContent, {
+    lang: "tsx",
+    themes: {
+      light: "github-light",
+      dark: "min-dark",
+    },
+    components: {
+      // @ts-ignore
+      pre: (props) => <Pre {...props} />,
+    },
+  })
 
   return (
     <div
@@ -104,20 +65,24 @@ export function ComponentPreview({
             <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">
               <TabsTrigger
                 value="preview"
-                className="text-muted-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold shadow-none transition-none data-[state=active]:shadow-none"
+                className="text-muted-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground relative h-9 cursor-pointer rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold shadow-none transition-none data-[state=active]:shadow-none"
               >
                 Preview
               </TabsTrigger>
               <TabsTrigger
                 value="code"
-                className="text-muted-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold shadow-none transition-none data-[state=active]:shadow-none"
+                className="text-muted-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground relative h-9 cursor-pointer rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold shadow-none transition-none data-[state=active]:shadow-none"
               >
                 Code
               </TabsTrigger>
             </TabsList>
           )}
         </div>
-        <TabsContent value="preview" className="relative">
+        <TabsContent
+          value="preview"
+          className="relative hidden data-[state=active]:block"
+          forceMount
+        >
           <React.Suspense
             fallback={
               <div className="text-muted-foreground flex w-full items-center justify-center text-sm">
@@ -126,19 +91,20 @@ export function ComponentPreview({
               </div>
             }
           >
-            {withPlayer ? (
-              <PlayerDemoLayout>{Preview}</PlayerDemoLayout>
-            ) : (
-              Preview
-            )}
+            <PreviewComponent type={type}>
+              <PreviewTabComponent componentName={name} />
+            </PreviewComponent>
           </React.Suspense>
         </TabsContent>
         <TabsContent value="code">
-          <div className="flex flex-col space-y-4">
-            <div className="w-full rounded-md [&_pre]:my-0 [&_pre]:max-h-[350px] [&_pre]:overflow-auto">
-              {Code}
-            </div>
-          </div>
+          <CustomCodeBlock
+            title={fileName}
+            data-line-numbers
+            data-line-numbers-start={1}
+            {...props}
+          >
+            {rendered}
+          </CustomCodeBlock>
         </TabsContent>
       </Tabs>
     </div>

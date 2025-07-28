@@ -5,12 +5,12 @@ import { useControls } from "leva"
 
 import { LevaControls } from "@/components/leva-controls"
 import { CustomDemoControls } from "@/registry/default/internal/custom-demo-controls"
+import { PlayerHooks } from "@/registry/default/internal/player-hooks-demo"
 import { Media } from "@/registry/default/ui/media"
 import {
   MediaProvider,
   useMediaStore,
 } from "@/registry/default/ui/media-provider"
-import { PlayerHooks } from "@/registry/default/ui/player-hooks"
 import * as Layout from "@/registry/default/ui/player-layout"
 
 function MediaElement() {
@@ -46,25 +46,29 @@ function MediaElement() {
       className="m-0! size-full rounded-lg bg-black object-cover"
       poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
       muted
-      autoPlay
+      autoPlay={false}
     />
   )
 }
 
-export function PlayerDemoLayout({ children }: React.PropsWithChildren) {
+interface PlayerDemoLayoutProps extends React.PropsWithChildren {
+  type: "overlay" | "block"
+}
+
+export function PlayerLayoutDemo({ children, type }: PlayerDemoLayoutProps) {
   return (
     <MediaProvider>
-      <PlayerHooks />
       <LevaControls />
       <Layout.RootContainer height={720} width={1280} className="container p-0">
-        <Layout.PlayerContainer className="my-16">
+        <Layout.PlayerContainer className="my-4">
           <MediaElement />
+          <PlayerHooks />
           <Layout.ControlsContainer>
-            {/* We don't need any overlay controls here as we have custom controls for docs */}
+            {type === "overlay" && children}
           </Layout.ControlsContainer>
         </Layout.PlayerContainer>
-        <CustomDemoControls>{children}</CustomDemoControls>
       </Layout.RootContainer>
+      {type === "block" && <CustomDemoControls>{children}</CustomDemoControls>}
     </MediaProvider>
   )
 }

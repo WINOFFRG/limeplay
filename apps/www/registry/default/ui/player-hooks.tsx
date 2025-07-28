@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react"
 
 import { useShakaPlayer } from "@/registry/default/hooks/use-shaka-player"
