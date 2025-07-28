@@ -1,0 +1,61 @@
+---
+title: Timeline Labels
+description: Timeline Labels provide semantic time display components for media players. These components automatically format time based on duration and provide proper accessibility attributes.
+---
+
+<ComponentPreview name="timeline-labels-demo" withPlayer />
+
+## Installation
+
+1. Install the `timeline-labels` component:
+```npm
+npx shadcn add https://limeplay.winoffrg.dev/r/styles/default/timeline-labels.json
+```
+
+2. Add Event & Action Bridge
+
+Import the `useMediaStates` hook in your existing `PlayerHooks` component. This hook setups the required events and action bridge for the playback state control to work.
+
+```tsx lineNumbers title="components/player/player-hooks.tsx"
+import React from "react"
+
+import { useShakaPlayer } from "@/registry/default/hooks/use-shaka-player"
+ import { useTimelineStates } from "@/registry/default/hooks/use-timeline"    // [!code ++]
+
+export const PlayerHooks = React.memo(() => {
+  useShakaPlayer()
+  useTimelineStates()    // [!code ++]
+
+  return null
+})
+
+```
+
+3. Add the Store States
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+import { PlayerRootStore, createPlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
+import { TimelineStore, createTimelineStore } from "@/registry/default/hooks/use-timeline"    // [!code ++]
+
+export type TypeMediaStore = PlayerRootStore &
+  TimelineStore &    // [!code ++]
+  {}
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlayerRootStore(...etc),
+    ...createTimelineStore(...etc),    // [!code ++]
+    ...initProps,
+  }))
+  return mediaStore
+}
+
+```
+
+## Components
+
+- `<Elapsed />` component shows current playback time
+- `<Remaining />` component shows remaining time (with minus sign)
+- `<Duration />` component shows total media duration
+- `<HoverTime />` component shows time at hover position on timeline
+

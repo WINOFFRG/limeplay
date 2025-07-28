@@ -1,11 +1,19 @@
 import * as React from "react"
 import { composeRefs } from "@radix-ui/react-compose-refs"
 
-import { useMediaStore } from "./media-provider"
+import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-// Define a discriminated union type for the component props
-type MediaProps =
-  | ({ as: "video" } & React.VideoHTMLAttributes<HTMLVideoElement>)
+export type MediaPropsDocs = Pick<MediaProps, "as">
+
+export type MediaProps =
+  | ({
+      /**
+       * Type of Media Element to Render
+       *
+       * @default video
+       */
+      as: "video"
+    } & React.VideoHTMLAttributes<HTMLVideoElement>)
   | ({ as: "audio" } & React.AudioHTMLAttributes<HTMLAudioElement>)
 
 export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
@@ -14,36 +22,18 @@ export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
     const mediaRef = React.useRef<HTMLMediaElement>(null)
     const setMediaRef = useMediaStore((state) => state.setMediaRef)
     const status = useMediaStore((state) => state.status)
-    const setStatus = useMediaStore((state) => state.setStatus)
-    const setMuted = useMediaStore((state) => state.setMuted)
 
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
       if (!mediaRef?.current) {
         return
       }
 
       setMediaRef(mediaRef as React.RefObject<HTMLMediaElement>)
-
-      if (mediaRef.current.error) {
-        console.error(mediaRef.current.error)
-        return
-      }
-
-      if (mediaRef.current.readyState >= 2) {
-        const shouldAutoplay = mediaRef.current.autoplay
-        setStatus(shouldAutoplay ? "playing" : "paused")
-      }
-    }, [])
-
-    React.useEffect(() => {
-      if (mediaRef.current) {
-        const defaultMuted = mediaRef.current.muted
-        setMuted(defaultMuted)
-      }
-    }, [])
+    }, [mediaRef, setMediaRef])
 
     return (
       <Element
+        controls={false}
         ref={composeRefs(forwardedRef, mediaRef)}
         aria-busy={status === "buffering"}
         {...etc}

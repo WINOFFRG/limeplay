@@ -2,9 +2,6 @@ import { ComponentPropsWithoutRef } from "react"
 
 import { cn } from "@/lib/utils"
 
-/**
- * Inspired from Prime Video player PiP Mode
- */
 export function FallbackPoster({
   children,
   className,
@@ -13,7 +10,7 @@ export function FallbackPoster({
   return (
     <div
       className={cn(
-        "bg-background items-ce absolute inset-0 flex flex-col items-center justify-center",
+        "bg-background absolute inset-0 -z-1 flex flex-col items-center justify-center",
         className
       )}
       {...props}
