@@ -4,7 +4,10 @@ import { StateCreator } from "zustand"
 
 import { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
 import { noop, off, on, toFixedNumber } from "@/registry/default/lib/utils"
-import { useGetStore } from "@/registry/default/ui/media-provider"
+import {
+  useGetStore,
+  useMediaStore,
+} from "@/registry/default/ui/media-provider"
 
 export interface TimelineStore {
   duration: number
@@ -33,35 +36,28 @@ export const createTimelineStore: StateCreator<
 
 export function useTimelineStates() {
   const store = useGetStore()
-
-  const { setState, getState } = store
-  const player = store((s) => s.player)
-  const mediaRef = store((s) => s.mediaRef)
+  const player = useMediaStore((s) => s.player)
+  const mediaRef = useMediaStore((state) => state.mediaRef)
 
   const onTimeUpdate = () => {
-    const { mediaRef } = getState()
-    const mediaElement = mediaRef.current
-    if (!mediaElement) return
+    if (!mediaRef?.current) return
 
-    const { duration, currentTime } = mediaElement
+    const { duration, currentTime } = mediaRef.current
     const progress = toFixedNumber(currentTime / duration, 4)
 
-    setState({ currentTime, progress: progress || 0 })
+    store.setState({ currentTime, progress: progress || 0 })
   }
 
   const onDurationChange = React.useCallback(() => {
-    const { mediaRef } = getState()
-    const mediaElement = mediaRef.current
-    if (!mediaElement) return
+    if (!mediaRef?.current) return
 
-    const { duration } = mediaElement
+    const { duration } = mediaRef.current
     if (duration && Number.isFinite(duration)) {
-      setState({ duration })
+      store.setState({ duration })
     }
-  }, [getState, setState])
+  }, [store, mediaRef])
 
   const onBuffer = React.useCallback(() => {
-    const { player } = getState()
     if (!player) return
 
     const bufferedInfo = player.getBufferedInfo()
@@ -70,37 +66,41 @@ export function useTimelineStates() {
       return
     }
 
-    setState({ buffered: bufferedInfo.total })
-  }, [getState, setState])
+    store.setState({ buffered: bufferedInfo.total })
+  }, [store, player])
 
   React.useEffect(() => {
-    const mediaElement = mediaRef?.current
+    if (!mediaRef?.current || !player) return noop
 
-    if (!mediaElement || !player) return noop
+    const media = mediaRef.current
 
-    // if (mediaElement.readyState >= 1) {
-    //   onDurationChange()
-    //   onBuffer()
-    // }
+    if (media.readyState >= 1) {
+      onTimeUpdate()
+      onDurationChange()
+      onBuffer()
+    }
 
-    on(mediaElement, "timeupdate", onTimeUpdate)
-    on(mediaElement, ["durationchange", "loadedmetadata"], onDurationChange)
-    on(mediaElement, "progress", onBuffer)
+    on(media, "timeupdate", onTimeUpdate)
+    on(media, ["durationchange", "loadedmetadata"], onDurationChange)
+    on(media, "progress", onBuffer)
     on(player, "trackschanged", onBuffer)
 
     return () => {
-      off(mediaElement, "timeupdate", onTimeUpdate)
-      off(mediaElement, ["durationchange", "loadedmetadata"], onDurationChange)
-      off(mediaElement, "progress", onBuffer)
-      off(player, "trackschanged", onBuffer)
+      if (media) {
+        off(media, "timeupdate", onTimeUpdate)
+        off(media, ["durationchange", "loadedmetadata"], onDurationChange)
+        off(media, "progress", onBuffer)
+        off(player, "trackschanged", onBuffer)
+      }
     }
-  }, [getState, onBuffer, onDurationChange, player])
+  }, [store, mediaRef, player])
 }
 
 // 4. ACTION HOOK
 export function useTimeline() {
   const store = useGetStore()
-  const { mediaRef, duration } = store.getState()
+  const mediaRef = useMediaStore((state) => state.mediaRef)
+  const duration = useMediaStore((state) => state.duration)
 
   const getTimeFromEvent = useCallback(
     (event: React.PointerEvent) => {
@@ -113,9 +113,9 @@ export function useTimeline() {
   )
 
   function seek(time: number) {
-    const media = mediaRef.current
+    if (!mediaRef?.current || !Number.isFinite(duration)) return
 
-    if (!media || !Number.isFinite(duration)) return
+    const media = mediaRef.current
 
     const clampedTime = clamp(time, 0, duration)
 
@@ -124,7 +124,7 @@ export function useTimeline() {
       currentTime: clampedTime,
     })
 
-    mediaRef.current.currentTime = time
+    media.currentTime = time
   }
 
   function setHoveringTime(time: number) {
