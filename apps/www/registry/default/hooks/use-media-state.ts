@@ -9,7 +9,8 @@ export function useMediaStates() {
   const store = useGetStore()
 
   React.useEffect(() => {
-    const mediaElement = store.getState().mediaRef.current
+    const mediaElement = store.getState().mediaRef?.current
+
     if (!mediaElement) return noop
 
     const pauseHandler = () => {
@@ -66,12 +67,10 @@ export function useMediaStates() {
 
   // Handle buffering states
   React.useEffect(() => {
-    const mediaElement = store.getState().mediaRef.current
+    const mediaElement = store.getState().mediaRef?.current
     const player = store.getState().player
 
     const bufferingHandler = () => {
-      console.log("Shaka Buffering", player?.isBuffering())
-
       if (player?.isBuffering()) {
         store.setState({ status: "buffering" })
       } else {

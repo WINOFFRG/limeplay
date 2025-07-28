@@ -1,4 +1,54 @@
 ---
 title: Media Provider
-description: Media
+description: Setup zustand singleton store for media player accessible via hooks.
 ---
+
+`<MediaProvider />` is a composition of React's `context` and `zustand` store. This component exposes a hook `useMediaStore` which is an implementation of zustand store getter.
+
+As we keep on adding bound slices to the store in `lib/create-media-store.ts` file this hook will act as a getter for those values.
+
+## Usage
+
+1. Setup the provider in the root
+
+```tsx lineNumbers=6 title="components/player/media-player.tsx"
+ import { MediaProvider } from "@/registry/default/ui/media-provider"    // [!code ++]
+// ... other imports
+
+export function MediaPlayer() {
+  return (
+    // [!code ++]
+      <MediaProvider>
+        <PlayerHooks />
+        <Suspense>
+          <Layout.RootContainer height={720} width={1280}>
+            <Layout.PlayerContainer>
+              <MediaElement />
+              <Layout.ControlsContainer>
+                <BottomControls />
+              </Layout.ControlsContainer>
+            </Layout.PlayerContainer>
+          </Layout.RootContainer>
+        </Suspense>
+      </MediaProvider>
+  )
+}
+```
+
+2. Call the store anywhere inside the component tree
+
+```tsx lineNumbers=6
+import { useMediaStore } from "@/registry/default/ui/media-provider"    // [!code ++]
+
+
+export function VolumeStateControlDemo() {
+  const muted = useMediaStore((state) => state.muted)    // [!code ++]
+  const volume = useMediaStore((state) => state.volume)    // [!code ++]
+
+  return (
+    // ...
+  )
+}
+```
+
+<Callout title="Prerequisites">The above example relies on volume slice which should be added first.</Callout>

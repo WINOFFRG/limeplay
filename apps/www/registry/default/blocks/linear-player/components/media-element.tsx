@@ -1,19 +1,12 @@
 "use client"
 
-import React, { useEffect } from "react"
+import { useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 
-import { BottomControls } from "@/components/player/bottom-controls"
-import { CustomPlayerWrapper } from "@/components/player/custom-player-wrapper"
 import { Media } from "@/registry/default/ui/media"
-import {
-  MediaProvider,
-  useMediaStore,
-} from "@/registry/default/ui/media-provider"
-import { PlayerHooks } from "@/registry/default/ui/player-hooks"
-import * as Layout from "@/registry/default/ui/player-layout"
+import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-function MediaElement() {
+export function MediaElement() {
   const player = useMediaStore((state) => state.player)
   const mediaRef = useMediaStore((state) => state.mediaRef)
   const searchParams = useSearchParams()
@@ -29,9 +22,17 @@ function MediaElement() {
       if (playbackUrl) {
         try {
           const parsedUrl = new URL(playbackUrl)
+
+          if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+            throw new Error("Invalid URL protocol")
+          }
+
           finalUrl = parsedUrl.toString()
         } catch (error) {
-          console.error(error)
+          console.error(
+            "Invalid playback URL:",
+            error instanceof Error ? error.message : "Unknown error"
+          )
         }
       }
 
@@ -68,23 +69,5 @@ function MediaElement() {
       controls={false}
       loop
     />
-  )
-}
-
-export function MediaPlayer() {
-  return (
-    <CustomPlayerWrapper>
-      <MediaProvider>
-        <PlayerHooks />
-        <Layout.RootContainer height={720} width={1280} className="container">
-          <Layout.PlayerContainer className="mx-auto my-16">
-            <MediaElement />
-            <Layout.ControlsContainer>
-              <BottomControls />
-            </Layout.ControlsContainer>
-          </Layout.PlayerContainer>
-        </Layout.RootContainer>
-      </MediaProvider>
-    </CustomPlayerWrapper>
   )
 }

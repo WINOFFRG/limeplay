@@ -5,9 +5,17 @@ import { useVolume } from "@/registry/default/hooks/use-volume"
 
 import { useMediaStore } from "./media-provider"
 
-// Define a discriminated union type for the component props
-type MediaProps =
-  | ({ as: "video" } & React.VideoHTMLAttributes<HTMLVideoElement>)
+export type MediaPropsDocs = Pick<MediaProps, "as">
+
+export type MediaProps =
+  | ({
+      /**
+       * Type of Media Element to Render
+       *
+       * @default video
+       */
+      as: "video"
+    } & React.VideoHTMLAttributes<HTMLVideoElement>)
   | ({ as: "audio" } & React.AudioHTMLAttributes<HTMLAudioElement>)
 
 export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
@@ -20,11 +28,13 @@ export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
 
     const { setMuted } = useVolume()
 
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
+      console.log("media ref >> ", mediaRef)
       if (!mediaRef?.current) {
         return
       }
 
+      console.log("setting media ref")
       setMediaRef(mediaRef as React.RefObject<HTMLMediaElement>)
 
       if (mediaRef.current.error) {
