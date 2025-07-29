@@ -5,26 +5,26 @@ import type React from "react"
  * Provides autocomplete for available events based on element type
  */
 
-// Helper type to extract valid event names from an element type
-type EventNames<T> = {
-  [K in keyof T]: K extends `on${infer E}` ? Lowercase<E> : never
-}[keyof T]
+// // Helper type to extract valid event names from an element type
+// type EventNames<T> = {
+//   [K in keyof T]: K extends `on${infer E}` ? Lowercase<E> : never
+// }[keyof T]
 
-// Helper type to get the event type for a given event name and element
-type EventType<T, E> = T extends {
-  addEventListener: (event: any, handler: infer H) => any
-}
-  ? H extends (event: infer Event) => any
-    ? Event
-    : never
-  : never
+// // Helper type to get the event type for a given event name and element
+// type EventType<T, E> = T extends {
+//   addEventListener: (event: any, handler: infer H) => any
+// }
+//   ? H extends (event: infer Event) => any
+//     ? Event
+//     : never
+//   : never
 
 /**
  * Overloaded function for React synthetic events
  */
-export function on<E extends string | string[], R extends HTMLElement>(
+export function on<R extends HTMLElement>(
   element: EventTarget,
-  events: E,
+  events: string | string[],
   callback: (event: React.SyntheticEvent<R>) => void
 ): EventTarget
 
@@ -50,9 +50,9 @@ export function on(
 /**
  * Overloaded function for React synthetic events
  */
-export function off<E extends string | string[], R extends HTMLElement>(
+export function off<R extends HTMLElement>(
   element: EventTarget,
-  events: E,
+  events: string | string[],
   callback: (event: React.SyntheticEvent<R>) => void
 ): EventTarget
 
@@ -79,7 +79,9 @@ export function off(
  * No-op function
  * @returns undefined
  */
-export function noop() {}
+export function noop() {
+  // noop
+}
 
 export function toFixedNumber(num: number, digits: number, base = 10) {
   const pow = Math.pow(base, digits)

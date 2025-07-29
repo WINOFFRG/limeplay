@@ -5,28 +5,61 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "ring-offset-background inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  `
+    inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap ring-offset-background
+    transition-colors
+    focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none
+    disabled:pointer-events-none disabled:opacity-50
+    [&_svg]:pointer-events-none [&_svg]:shrink-0
+    [&_svg:not([class*='size-'])]:size-4
+  `,
   {
     variants: {
       variant: {
-        default:
-          "bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90 focus-visible:ring-destructive",
-        outline:
-          "border-input bg-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring border",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-visible:ring-secondary",
-        ghost:
-          "hover:bg-accent hover:text-accent-foreground focus-visible:ring-accent",
-        link: "text-primary focus-visible:ring-primary underline-offset-4 hover:underline",
-        glass:
-          "text-foreground hover:bg-primary/10 focus-visible:bg-primary/10 focus-visible:ring-primary/50 bg-transparent hover:backdrop-blur-sm active:scale-[0.97]",
+        default: `
+          bg-primary text-primary-foreground
+          hover:bg-primary/90
+          focus-visible:ring-primary
+        `,
+        outline: `
+          border border-input bg-background
+          hover:bg-accent hover:text-accent-foreground
+          focus-visible:ring-ring
+        `,
+        secondary: `
+          bg-secondary text-secondary-foreground
+          hover:bg-secondary/80
+          focus-visible:ring-secondary
+        `,
+        ghost: `
+          hover:bg-accent hover:text-accent-foreground
+          focus-visible:ring-accent
+        `,
+        link: `
+          text-primary underline-offset-4
+          hover:underline
+          focus-visible:ring-primary
+        `,
+        glass: `
+          bg-transparent text-foreground
+          hover:bg-primary/10 hover:backdrop-blur-sm
+          focus-visible:bg-primary/10 focus-visible:ring-primary/50
+          active:scale-[0.97]
+        `,
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
+        default: `
+          h-9 px-4 py-2
+          has-[>svg]:px-3
+        `,
+        sm: `
+          h-8 gap-1.5 rounded-md px-3
+          has-[>svg]:px-2.5
+        `,
+        lg: `
+          h-10 rounded-md px-6
+          has-[>svg]:px-4
+        `,
         icon: "size-8 rounded-md p-2",
       },
     },

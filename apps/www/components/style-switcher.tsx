@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import type { Style} from "@/registry/collection/registry-styles";
+import type { Style } from "@/registry/collection/registry-styles"
 import { styles } from "@/registry/collection/registry-styles"
 
 export function StyleSwitcher({ className, ...props }: SelectTriggerProps) {
@@ -21,12 +21,12 @@ export function StyleSwitcher({ className, ...props }: SelectTriggerProps) {
   return (
     <Select
       value={config.style}
-      onValueChange={(value: Style["name"]) =>
-        { setConfig({
+      onValueChange={(value: Style["name"]) => {
+        setConfig({
           ...config,
           style: value,
-        }); }
-      }
+        })
+      }}
     >
       <SelectTrigger
         className={cn(

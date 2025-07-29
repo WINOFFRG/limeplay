@@ -41,6 +41,7 @@ function useMediaStoreWithContext<T>(
 let globalStore: ReturnType<typeof createMediaStore> | null = null
 
 // DEV: Migrate to conditional calling without context
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function useMediaStoreWithoutContext<T>(
   selector: (state: TypeMediaStore) => T,
   options?: CreateMediaStoreProps
