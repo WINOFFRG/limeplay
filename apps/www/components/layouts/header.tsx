@@ -19,10 +19,9 @@ import {
 import type {
   BaseLayoutProps,
   LinkItemType,
-  NavOptions} from "@/components/layouts/shared";
-import {
-  slot,
+  NavOptions,
 } from "@/components/layouts/shared"
+import { slot } from "@/components/layouts/shared"
 import { ThemeToggle } from "@/components/layouts/theme-toggle"
 
 export interface HomeLayoutProps extends BaseLayoutProps {
@@ -52,7 +51,12 @@ export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
       </Link>
       {nav.children}
 
-      <ul className="flex flex-1 flex-row items-center gap-2 px-6 max-sm:hidden">
+      <ul
+        className={`
+          flex flex-1 flex-row items-center gap-2 px-6
+          max-sm:hidden
+        `}
+      >
         {navItems
           .filter((item) => !isSecondary(item))
           .map((item, i) => {
@@ -72,7 +76,10 @@ export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
           <NavbarLinkItem
             key={i}
             item={item}
-            className="-me-1.5 max-lg:hidden"
+            className={`
+              -me-1.5
+              max-lg:hidden
+            `}
           />
         ))}
         <Menu className="lg:hidden">
@@ -81,7 +88,12 @@ export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
             className="group -me-2"
             enableHover={nav.enableHoverToOpen}
           >
-            <ChevronDown className="size-3 transition-transform duration-300 group-data-[state=open]:rotate-180" />
+            <ChevronDown
+              className={`
+                size-3 transition-transform duration-300
+                group-data-[state=open]:rotate-180
+              `}
+            />
           </MenuTrigger>
           <MenuContent className="sm:flex-row sm:items-center sm:justify-end">
             {navItems
@@ -89,7 +101,12 @@ export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
               .map((item, i) => (
                 <MenuLinkItem key={i} item={item} className="sm:hidden" />
               ))}
-            <div className="-ms-1.5 flex flex-row items-center gap-1.5 max-sm:mt-2">
+            <div
+              className={`
+                -ms-1.5 flex flex-row items-center gap-1.5
+                max-sm:mt-2
+              `}
+            >
               {navItems.filter(isSecondary).map((item, i) => (
                 <MenuLinkItem key={i} item={item} className="-me-1.5" />
               ))}
@@ -120,7 +137,12 @@ function NavbarLinkItem({
 
       const {
         banner = child.icon ? (
-          <div className="bg-fd-muted w-fit rounded-md border p-1 [&_svg]:size-5">
+          <div
+            className={`
+              w-fit rounded-md border bg-fd-muted p-1
+              [&_svg]:size-5
+            `}
+          >
             {child.icon}
           </div>
         ) : null,
@@ -134,7 +156,7 @@ function NavbarLinkItem({
               {banner}
               <p className="-mb-1 text-base font-medium">{child.text}</p>
               {child.description ? (
-                <p className="text-fd-muted-foreground text-[13px]">
+                <p className="text-[13px] text-fd-muted-foreground">
                   {child.description}
                 </p>
               ) : null}

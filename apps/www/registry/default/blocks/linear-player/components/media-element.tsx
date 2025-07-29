@@ -45,11 +45,11 @@ export function MediaElement() {
 
       player.configure(config)
 
-      player.load(finalUrl)
+      void player.load(finalUrl)
 
       return () => {
         mediaElement.pause()
-        player.destroy()
+        void player.destroy()
       }
     }
   }, [player, mediaRef])

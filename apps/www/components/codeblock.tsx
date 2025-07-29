@@ -74,7 +74,11 @@ export function CodeBlock({
   allowCopy ??= !isTab
   const bg = cn(
     "bg-fd-secondary",
-    keepBackground && "bg-(--shiki-light-bg) dark:bg-(--shiki-dark-bg)"
+    keepBackground &&
+      `
+        bg-(--shiki-light-bg)
+        dark:bg-(--shiki-dark-bg)
+      `
   )
 
   return (
@@ -83,7 +87,8 @@ export function CodeBlock({
       dir="ltr"
       {...props}
       className={cn(
-        isTab ? [bg, "rounded-lg shadow-sm"] : "bg-fd-card my-4 rounded-xl p-1",
+        isTab ? [bg, "rounded-lg shadow-sm"] : "my-4 rounded-xl bg-fd-card p-1",
+        // eslint-disable-next-line better-tailwindcss/no-unregistered-classes
         "shiki not-prose relative overflow-hidden border text-sm outline-none",
         props.className
       )}
@@ -91,7 +96,7 @@ export function CodeBlock({
       {title ? (
         <div
           className={cn(
-            "text-fd-muted-foreground flex h-9.5 items-center gap-2 ps-3",
+            "flex h-9.5 items-center gap-2 ps-3 text-fd-muted-foreground",
             isTab && "border-b"
           )}
         >
@@ -125,7 +130,7 @@ export function CodeBlock({
         ref={areaRef}
         {...viewportProps}
         className={cn(
-          !isTab && [bg, "border-editor-border rounded-lg"],
+          !isTab && [bg, "rounded-lg"],
           "fd-scroll-container max-h-[calc(530px-44px)] overflow-auto py-3.5 text-[13px]",
           viewportProps.className
         )}

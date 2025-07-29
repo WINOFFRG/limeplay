@@ -11,7 +11,7 @@ const config: NextConfig = {
   },
   productionBrowserSourceMaps: true,
   eslint: {
-    ignoreDuringBuilds: true,
+    // ignoreDuringBuilds: true,
   },
 }
 
