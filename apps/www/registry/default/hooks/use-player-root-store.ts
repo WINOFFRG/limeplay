@@ -1,5 +1,5 @@
 import React from "react"
-import shaka from "shaka-player"
+import type shaka from "shaka-player"
 import type { StateCreator } from "zustand"
 
 export interface PlayerRootStore {
@@ -7,7 +7,7 @@ export interface PlayerRootStore {
   setIdle: (idle: boolean) => void
   status: MediaStatus
   setStatus: (status: MediaStatus) => void
-  mediaRef: React.RefObject<HTMLMediaElement>
+  mediaRef: React.RefObject<HTMLMediaElement | null>
   setMediaRef: (mediaRef: React.RefObject<HTMLMediaElement>) => void
   // Player Engine
   player: shaka.Player | null
@@ -34,16 +34,27 @@ export const createPlayerRootStore: StateCreator<
   PlayerRootStore
 > = (set) => ({
   idle: false,
-  setIdle: (idle: boolean) => set({ idle }),
+  setIdle: (idle: boolean) => {
+    set({ idle })
+  },
   status: "init",
-  setStatus: (status: MediaStatus) => set({ status }),
-  mediaRef: null!,
-  setMediaRef: (mediaRef: React.RefObject<HTMLMediaElement>) =>
-    set({ mediaRef }),
+  setStatus: (status: MediaStatus) => {
+    set({ status })
+  },
+  mediaRef: React.createRef<HTMLMediaElement>(),
+  setMediaRef: (mediaRef: React.RefObject<HTMLMediaElement>) => {
+    set({ mediaRef })
+  },
   player: null,
-  setPlayer: (player: shaka.Player | null) => set({ player }),
+  setPlayer: (player: shaka.Player | null) => {
+    set({ player })
+  },
   debug: false,
-  setDebug: (value) => set({ debug: value }),
+  setDebug: (value) => {
+    set({ debug: value })
+  },
   playerContainerRef: null,
-  setPlayerContainerRef: (instance) => set({ playerContainerRef: instance }),
+  setPlayerContainerRef: (instance) => {
+    set({ playerContainerRef: instance })
+  },
 })

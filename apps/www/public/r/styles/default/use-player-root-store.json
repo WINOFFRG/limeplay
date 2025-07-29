@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-player-root-store",
+  "type": "registry:hook",
+  "dependencies": [
+    "zustand"
+  ],
+  "files": [
+    {
+      "path": "registry/default/hooks/use-player-root-store.ts",
+      "content": "import React from \"react\"\nimport type shaka from \"shaka-player\"\nimport type { StateCreator } from \"zustand\"\n\nexport interface PlayerRootStore {\n  idle: boolean\n  setIdle: (idle: boolean) => void\n  status: MediaStatus\n  setStatus: (status: MediaStatus) => void\n  mediaRef: React.RefObject<HTMLMediaElement | null>\n  setMediaRef: (mediaRef: React.RefObject<HTMLMediaElement>) => void\n  // Player Engine\n  player: shaka.Player | null\n  setPlayer: (player: shaka.Player | null) => void\n  debug: boolean\n  setDebug: (value: boolean) => void\n  playerContainerRef: HTMLDivElement | null\n  setPlayerContainerRef: (instance: HTMLDivElement | null) => void\n}\n\nexport type MediaStatus =\n  | \"init\"\n  | \"buffering\"\n  | \"ended\"\n  | \"error\"\n  | \"paused\"\n  | \"playing\"\n  | \"stopped\"\n\nexport const createPlayerRootStore: StateCreator<\n  PlayerRootStore,\n  [],\n  [],\n  PlayerRootStore\n> = (set) => ({\n  idle: false,\n  setIdle: (idle: boolean) => {\n    set({ idle })\n  },\n  status: \"init\",\n  setStatus: (status: MediaStatus) => {\n    set({ status })\n  },\n  mediaRef: React.createRef<HTMLMediaElement>(),\n  setMediaRef: (mediaRef: React.RefObject<HTMLMediaElement>) => {\n    set({ mediaRef })\n  },\n  player: null,\n  setPlayer: (player: shaka.Player | null) => {\n    set({ player })\n  },\n  debug: false,\n  setDebug: (value) => {\n    set({ debug: value })\n  },\n  playerContainerRef: null,\n  setPlayerContainerRef: (instance) => {\n    set({ playerContainerRef: instance })\n  },\n})\n",
+      "type": "registry:hook"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef } from "react"
+import type { ComponentPropsWithoutRef } from "react"
 
 import { cn } from "@/lib/utils"
 
@@ -10,7 +10,7 @@ export function FallbackPoster({
   return (
     <div
       className={cn(
-        "bg-background absolute inset-0 -z-1 flex flex-col items-center justify-center",
+        "absolute inset-0 -z-1 flex flex-col items-center justify-center bg-background",
         className
       )}
       {...props}

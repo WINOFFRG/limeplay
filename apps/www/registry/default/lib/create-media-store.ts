@@ -1,9 +1,7 @@
 import { create } from "zustand"
 
-import {
-  PlayerRootStore,
-  createPlayerRootStore,
-} from "@/registry/default/hooks/use-player-root-store"
+import type { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
+import { createPlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
 
 export type TypeMediaStore = PlayerRootStore & {}
 

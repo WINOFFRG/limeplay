@@ -35,3 +35,9 @@ dist/**
 shaka-player
 .turbo
 .env
+
+# apps/www
+.next
+out
+build
+.source

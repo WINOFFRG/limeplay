@@ -1,0 +1,90 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "linear-player",
+  "type": "registry:block",
+  "author": "Rohan Gupta (@winoffrg)",
+  "description": "Modern seamless flat linear.app Media Player",
+  "dependencies": [
+    "@phosphor-icons/react",
+    "@base-ui-components/react/slider",
+    "zustand",
+    "shaka-player",
+    "lodash.clamp"
+  ],
+  "registryDependencies": [
+    "https://limeplay.winoffrg.dev/r/styles/default/player-layout.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/media.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/mute-control.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/player-hooks.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/playback-control.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/timeline-control.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/volume-control.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/use-timeline.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/use-volume.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/use-media-state.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/use-track-events.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/create-media-store.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/fallback-poster.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/timeline-labels.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/use-shaka-player.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/blocks/linear-player/media-player.tsx",
+      "content": "import { Suspense } from \"react\"\nimport Image from \"next/image\"\nimport Logo from \"@/public/product-icon.svg\"\n\nimport { PRODUCT_NAME } from \"@/lib/constants\"\nimport { BottomControls } from \"@/registry/default/blocks/linear-player/components/bottom-controls\"\nimport { CustomPlayerWrapper } from \"@/registry/default/blocks/linear-player/components/custom-player-wrapper\"\nimport { MediaElement } from \"@/registry/default/blocks/linear-player/components/media-element\"\nimport { PlayerHooks } from \"@/registry/default/blocks/linear-player/components/player-hooks\"\nimport { FallbackPoster } from \"@/registry/default/ui/fallback-poster\"\nimport { MediaProvider } from \"@/registry/default/ui/media-provider\"\nimport * as Layout from \"@/registry/default/ui/player-layout\"\n\nexport function MediaPlayer() {\n  return (\n    <CustomPlayerWrapper>\n      <MediaProvider>\n        <Layout.RootContainer height={720} width={1280}>\n          <Layout.PlayerContainer>\n            <FallbackPoster className=\"bg-stone-900\">\n              <Image\n                alt={PRODUCT_NAME}\n                src={Logo}\n                className=\"size-52\"\n                aria-label={PRODUCT_NAME}\n              />\n            </FallbackPoster>\n            <Suspense>\n              <MediaElement />\n            </Suspense>\n            <PlayerHooks />\n            <Layout.ControlsContainer>\n              <BottomControls />\n            </Layout.ControlsContainer>\n          </Layout.PlayerContainer>\n        </Layout.RootContainer>\n      </MediaProvider>\n    </CustomPlayerWrapper>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/linear-player/media-player.tsx"
+    },
+    {
+      "path": "registry/default/blocks/linear-player/components/volume-state-control.tsx",
+      "content": "\"use client\"\n\nimport {\n  SpeakerHighIcon,\n  SpeakerLowIcon,\n  SpeakerXIcon,\n} from \"@phosphor-icons/react\"\n\nimport { Button } from \"@/components/ui/button\"\nimport { useMediaStore } from \"@/registry/default/ui/media-provider\"\nimport { MuteControl } from \"@/registry/default/ui/mute-control\"\n\nexport function VolumeStateControl() {\n  const muted = useMediaStore((state) => state.muted)\n  const volume = useMediaStore((state) => state.volume)\n\n  return (\n    <Button size=\"icon\" variant=\"glass\" asChild>\n      <MuteControl>\n        {muted || volume === 0 ? (\n          <SpeakerXIcon size={18} weight=\"fill\" />\n        ) : volume < 0.5 ? (\n          <SpeakerLowIcon size={18} weight=\"fill\" />\n        ) : (\n          <SpeakerHighIcon size={18} weight=\"fill\" />\n        )}\n      </MuteControl>\n    </Button>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/linear-player/components/volume-state-control.tsx"
+    },
+    {
+      "path": "registry/default/blocks/linear-player/components/playback-state-control.tsx",
+      "content": "\"use client\"\n\nimport {\n  CircleNotchIcon,\n  PauseIcon,\n  PlayIcon,\n  RepeatIcon,\n} from \"@phosphor-icons/react\"\n\nimport { Button } from \"@/components/ui/button\"\nimport { useMediaStore } from \"@/registry/default/ui/media-provider\"\nimport { PlaybackControl } from \"@/registry/default/ui/playback-control\"\n\nexport function PlaybackStateControl() {\n  const status = useMediaStore((state) => state.status)\n\n  return (\n    <Button size=\"icon\" variant=\"glass\" asChild>\n      <PlaybackControl>\n        {status === \"playing\" ? (\n          <PauseIcon weight=\"fill\" size={18} />\n        ) : status === \"ended\" ? (\n          <RepeatIcon size={18} />\n        ) : status === \"buffering\" ? (\n          <CircleNotchIcon className=\"animate-spin\" size={18} weight=\"bold\" />\n        ) : (\n          <PlayIcon weight=\"fill\" size={18} />\n        )}\n      </PlaybackControl>\n    </Button>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/linear-player/components/playback-state-control.tsx"
+    },
+    {
+      "path": "registry/default/blocks/linear-player/components/volume-slider-control.tsx",
+      "content": "import * as VolumeSlider from \"@/registry/default/ui/volume-control\"\n\nexport function VolumeSliderControl() {\n  return (\n    <div className=\"flex min-w-10 grow items-center\">\n      <VolumeSlider.Root\n        className=\"focus-area -focus-area-x-2 -focus-area-y-12 relative h-1 grow cursor-crosshair rounded-md\"\n        orientation=\"horizontal\"\n      >\n        <VolumeSlider.Track>\n          <VolumeSlider.Progress />\n        </VolumeSlider.Track>\n        <VolumeSlider.Thumb />\n      </VolumeSlider.Root>\n    </div>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/linear-player/components/volume-slider-control.tsx"
+    },
+    {
+      "path": "registry/default/blocks/linear-player/components/timeline-slider-control.tsx",
+      "content": "\"use client\"\n\nimport { useState } from \"react\"\n\nimport { Button } from \"@/components/ui/button\"\nimport * as TimelineSlider from \"@/registry/default/ui/timeline-control\"\nimport {\n  Duration,\n  Elapsed,\n  HoverTime,\n  Remaining,\n} from \"@/registry/default/ui/timeline-labels\"\n\nexport function TimelineSliderControl() {\n  const [showRemaining, setShowRemaining] = useState(false)\n\n  return (\n    <div className=\"my-auto flex grow items-center gap-3 select-none\">\n      <Elapsed className=\"text-xs font-medium text-white tabular-nums\" />\n      <div className=\"group/timeline relative w-full grow\">\n        <TimelineSlider.Root className=\"focus-area -focus-area-x-2 -focus-area-y-14 group cursor-crosshair\">\n          <TimelineSlider.Track className=\"overflow-hidden\">\n            <TimelineSlider.Progress />\n            <TimelineSlider.Buffered variant=\"from-zero\" />\n          </TimelineSlider.Track>\n          <TimelineSlider.Thumb\n            showWithHover\n            className=\"absolute h-8 w-px rounded-full bg-white/60 opacity-0 transition-opacity duration-[var(--lp-transition-speed-regular)] group-hover/timeline:opacity-100 group-active/timeline:bg-white\"\n          />\n          <TimelineSlider.Thumb\n            showWithHover\n            className=\"top-auto! bottom-[calc(100%+16px)]! flex size-0 h-auto w-fit items-center bg-transparent text-xs font-medium tabular-nums opacity-0 transition-opacity duration-[var(--lp-transition-speed-regular)] group-hover/timeline:opacity-100\"\n          >\n            <HoverTime />\n            &nbsp;/&nbsp;\n            <Duration className=\"text-gray-400\" />\n          </TimelineSlider.Thumb>\n        </TimelineSlider.Root>\n      </div>\n      <Button\n        variant=\"glass\"\n        size=\"icon\"\n        className=\"h-6 w-14 cursor-pointer\"\n        onClick={() => {\n          setShowRemaining(!showRemaining)\n        }}\n        aria-label={\n          showRemaining ? \"Show total duration\" : \"Show remaining time\"\n        }\n        aria-pressed={showRemaining}\n      >\n        {showRemaining ? (\n          <Remaining className=\"text-xs font-medium text-white tabular-nums\" />\n        ) : (\n          <Duration className=\"text-xs font-medium text-white tabular-nums\" />\n        )}\n      </Button>\n    </div>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/linear-player/components/timeline-slider-control.tsx"
+    },
+    {
+      "path": "registry/default/blocks/linear-player/components/bottom-controls.tsx",
+      "content": "import { PlaybackStateControl } from \"@/registry/default/blocks/linear-player/components/playback-state-control\"\nimport { TimelineSliderControl } from \"@/registry/default/blocks/linear-player/components/timeline-slider-control\"\nimport { VolumeSliderControl } from \"@/registry/default/blocks/linear-player/components/volume-slider-control\"\nimport { VolumeStateControl } from \"@/registry/default/blocks/linear-player/components/volume-state-control\"\n\nexport function BottomControls() {\n  return (\n    <div className=\"absolute inset-x-0 bottom-8 mx-auto flex items-end gap-2 px-[min(80px,10%)]\">\n      <PlaybackStateControl />\n      <div className=\"me-4 flex gap-1 rounded-md\">\n        <VolumeStateControl />\n        <VolumeSliderControl />\n      </div>\n      <TimelineSliderControl />\n    </div>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/linear-player/components/bottom-controls.tsx"
+    },
+    {
+      "path": "registry/default/blocks/linear-player/components/media-element.tsx",
+      "content": "\"use client\"\n\nimport { useEffect } from \"react\"\nimport { useSearchParams } from \"next/navigation\"\n\nimport { Media } from \"@/registry/default/ui/media\"\nimport { useMediaStore } from \"@/registry/default/ui/media-provider\"\n\nexport function MediaElement() {\n  const player = useMediaStore((state) => state.player)\n  const mediaRef = useMediaStore((state) => state.mediaRef)\n  const searchParams = useSearchParams()\n  const playbackUrl = searchParams.get(\"playbackUrl\")\n\n  useEffect(() => {\n    const mediaElement = mediaRef.current\n\n    if (player && mediaElement) {\n      let finalUrl =\n        \"https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8\"\n\n      if (playbackUrl) {\n        try {\n          const parsedUrl = new URL(playbackUrl)\n\n          if (![\"http:\", \"https:\"].includes(parsedUrl.protocol)) {\n            throw new Error(\"Invalid URL protocol\")\n          }\n\n          finalUrl = parsedUrl.toString()\n        } catch (error) {\n          console.error(\n            \"Invalid playback URL:\",\n            error instanceof Error ? error.message : \"Unknown error\"\n          )\n        }\n      }\n\n      const config = {\n        streaming: {\n          // DEV: To debug the buffer values in timeline slider\n          bufferingGoal: 100,\n        },\n      } as shaka.extern.PlayerConfiguration\n\n      player.configure(config)\n\n      player.load(finalUrl)\n\n      return () => {\n        mediaElement.pause()\n        player.destroy()\n      }\n    }\n  }, [player, mediaRef])\n\n  return (\n    <Media\n      as=\"video\"\n      className=\"size-full bg-black object-cover\"\n      autoPlay={true}\n      muted\n      loop\n    />\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/linear-player/components/media-element.tsx"
+    },
+    {
+      "path": "registry/default/blocks/linear-player/components/player-hooks.tsx",
+      "content": "\"use client\"\n\nimport React from \"react\"\n\nimport { useMediaStates } from \"@/registry/default/hooks/use-media-state\"\nimport { useShakaPlayer } from \"@/registry/default/hooks/use-shaka-player\"\nimport { useTimelineStates } from \"@/registry/default/hooks/use-timeline\"\nimport { useVolumeStates } from \"@/registry/default/hooks/use-volume\"\n\nexport const PlayerHooks = React.memo(() => {\n  useShakaPlayer()\n  useMediaStates()\n  useTimelineStates()\n  useVolumeStates()\n\n  return null\n})\n\nPlayerHooks.displayName = \"PlayerHooks\"\n",
+      "type": "registry:component",
+      "target": "components/linear-player/components/player-hooks.tsx"
+    },
+    {
+      "path": "registry/default/blocks/linear-player/components/custom-player-wrapper.tsx",
+      "content": "import React from \"react\"\nimport * as motion from \"motion/react-client\"\n\nexport function CustomPlayerWrapper({ children }: React.PropsWithChildren) {\n  return (\n    <motion.div\n      initial={{ opacity: 0, scale: 0.8 }}\n      animate={{ opacity: 1, scale: 1 }}\n      transition={{\n        duration: 0.2,\n        scale: { type: \"spring\", visualDuration: 0.4, bounce: 0.5 },\n        ease: [0, 0.71, 0.2, 1.01],\n      }}\n    >\n      {children}\n    </motion.div>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/linear-player/components/custom-player-wrapper.tsx"
+    }
+  ]
+}

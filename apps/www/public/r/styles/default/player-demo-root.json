@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "player-demo-root",
+  "type": "registry:example",
+  "registryDependencies": [
+    "http://localhost:3000/r/styles/default/media-provider.json",
+    "http://localhost:3000/r/styles/default/media.json",
+    "http://localhost:3000/r/styles/default/player-layout.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/examples/player-demo-root.tsx",
+      "content": "\"use client\"\n\nimport React, { useEffect } from \"react\"\nimport { useControls } from \"leva\"\n\nimport { LevaControls } from \"@/components/leva-controls\"\nimport { CustomDemoControls } from \"@/registry/default/internal/custom-demo-controls\"\nimport { Media } from \"@/registry/default/ui/media\"\nimport {\n  MediaProvider,\n  useMediaStore,\n} from \"@/registry/default/ui/media-provider\"\nimport { PlayerHooks } from \"@/registry/default/ui/player-hooks\"\nimport * as Layout from \"@/registry/default/ui/player-layout\"\n\nfunction MediaElement() {\n  const player = useMediaStore((state) => state.player)\n\n  const { streamUrl } = useControls({\n    streamUrl: {\n      value:\n        \"https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8\",\n      label: \"Stream URL\",\n    },\n  })\n\n  useEffect(() => {\n    if (player) {\n      try {\n        const url = new URL(streamUrl)\n\n        if (url.protocol === \"http:\" || url.protocol === \"https:\") {\n          player.load(streamUrl)\n        } else {\n          console.warn(\"Invalid stream URL protocol. Must be http or https.\")\n        }\n      } catch (error) {\n        console.error(\"Invalid stream URL format:\", streamUrl)\n      }\n    }\n  }, [player, streamUrl])\n\n  return (\n    <Media\n      as=\"video\"\n      className=\"m-0! size-full rounded-lg bg-black object-cover\"\n      poster={\"https://files.vidstack.io/sprite-fight/poster.webp\"}\n      muted\n      autoPlay={false}\n    />\n  )\n}\n\ninterface PlayerDemoLayoutProps extends React.PropsWithChildren {\n  type: \"overlay\" | \"block\"\n}\n\nexport function PlayerDemoLayout({ children, type }: PlayerDemoLayoutProps) {\n  return (\n    <MediaProvider>\n      <PlayerHooks />\n      <LevaControls />\n      <Layout.RootContainer height={720} width={1280} className=\"container p-0\">\n        <Layout.PlayerContainer className=\"my-4\">\n          <MediaElement />\n          <Layout.ControlsContainer>\n            {type === \"overlay\" && children}\n          </Layout.ControlsContainer>\n        </Layout.PlayerContainer>\n        {type === \"block\" && (\n          <CustomDemoControls>{children}</CustomDemoControls>\n        )}\n      </Layout.RootContainer>\n    </MediaProvider>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ]
+}

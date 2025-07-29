@@ -26,7 +26,6 @@ export default async function Page(props: {
       <DocsBody>
         <MDXContent
           components={getMDXComponents({
-            // @ts-expect-error - createRelativeLink is not typed
             a: createRelativeLink(source, page),
           })}
         />
@@ -35,7 +34,7 @@ export default async function Page(props: {
   )
 }
 
-export async function generateStaticParams() {
+export function generateStaticParams() {
   return source.generateParams()
 }
 
@@ -47,7 +46,7 @@ export async function generateMetadata(props: {
   if (!page) notFound()
 
   return {
-    title: `${page.data.title}`,
+    title: page.data.title,
     description: page.data.description,
   }
 }
