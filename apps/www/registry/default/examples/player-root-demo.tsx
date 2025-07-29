@@ -30,12 +30,12 @@ function MediaElement() {
         const url = new URL(streamUrl)
 
         if (url.protocol === "http:" || url.protocol === "https:") {
-          player.load(streamUrl)
+          void player.load(streamUrl)
         } else {
           console.warn("Invalid stream URL protocol. Must be http or https.")
         }
       } catch (error) {
-        console.error("Invalid stream URL format:", streamUrl)
+        console.error("Invalid stream URL format:", streamUrl, error)
       }
     }
   }, [player, streamUrl])

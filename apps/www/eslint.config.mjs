@@ -3,7 +3,6 @@ import eslintPluginBetterTailwindcss from "eslint-plugin-better-tailwindcss"
 import baseConfig, { compat, defineConfig } from "../../eslint.config.mjs"
 
 const eslintConfig = [
-  ...baseConfig,
   {
     files: ["**/*.{jsx,tsx}"],
     languageOptions: {
@@ -47,6 +46,7 @@ const eslintConfig = [
       },
     },
   }),
+  ...baseConfig,
 ]
 
 export default defineConfig(...eslintConfig)
