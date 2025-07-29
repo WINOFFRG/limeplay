@@ -45,9 +45,7 @@ function useMediaStoreWithoutContext<T>(
   selector: (state: TypeMediaStore) => T,
   options?: CreateMediaStoreProps
 ): T {
-  if (!globalStore) {
-    globalStore = createMediaStore(options || {})
-  }
+  globalStore ??= createMediaStore(options ?? {})
 
   return useStore(globalStore, selector)
 }
