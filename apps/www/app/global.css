@@ -1,7 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./docs/docs.css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&: is(.dark *));
 
 :root {
   --safe-area-inset-left: max(env(safe-area-inset-left), 24px);

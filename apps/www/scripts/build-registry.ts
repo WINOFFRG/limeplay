@@ -1,3 +1,6 @@
+// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+
 import { exec } from "child_process"
 import { promises as fs } from "fs"
 import path from "path"

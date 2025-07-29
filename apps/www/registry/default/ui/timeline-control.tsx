@@ -42,7 +42,7 @@ export const Root = React.forwardRef<
         }
       }
     },
-    onPointerUp: (event) => {
+    onPointerUp: () => {
       setIsHovering(false)
     },
     orientation,
@@ -52,7 +52,11 @@ export const Root = React.forwardRef<
     <SliderPrimitive.Root
       value={[currentValue]}
       className={cn(
-        `relative h-1 rounded-full transition-[height] duration-[var(--speed-regularTransition)] ease-[var(--ease-out-quad)] data-[orientation=horizontal]:h-[var(--lp-timeline-track-height)] active:data-[orientation=horizontal]:h-[var(--lp-timeline-track-height-active)]`,
+        `
+          relative h-1 rounded-full transition-[height] duration-[var(--speed-regularTransition)] ease-[var(--ease-out-quad)]
+          data-[orientation=horizontal]:h-[var(--lp-timeline-track-height)]
+          active:data-[orientation=horizontal]:h-[var(--lp-timeline-track-height-active)]
+        `,
         className
       )}
       aria-label="Timeline Slider"
@@ -77,7 +81,10 @@ export const Track = React.forwardRef<
       ref={ref}
       tabIndex={0}
       className={cn(
-        `focus-visible:outline-primary/50 relative h-full grow rounded-full bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2`,
+        `
+          relative h-full grow rounded-full bg-white/20
+          focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50
+        `,
         className
       )}
       {...etc}
@@ -138,7 +145,7 @@ export const Buffered = React.forwardRef<HTMLDivElement, BufferedProps>(
     const buffered = useMediaStore((s) => s.buffered)
     const duration = useMediaStore((s) => s.duration)
 
-    if (!duration || !buffered?.length) {
+    if (!duration || !buffered.length) {
       return null
     }
 

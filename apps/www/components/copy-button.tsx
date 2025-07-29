@@ -206,8 +206,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
         size="icon"
         className={cn(
           `
-            relative size-8 cursor-pointer bg-none text-muted-foreground transition duration-300
-            ease-out
+            relative size-8 cursor-pointer bg-none text-muted-foreground transition duration-300 ease-out
             hover:scale-105 hover:bg-transparent hover:text-white
           `,
           className
