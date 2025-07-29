@@ -28,14 +28,10 @@ export function VideoBackground() {
       {/* </BlurFade> */}
       <div className="absolute inset-0 opacity-50 backdrop-blur-sm" />
       <div
-        className={`
-          absolute inset-[0_auto_0_0] w-2/6 bg-gradient-to-r from-black to-transparent opacity-50
-        `}
+        className={`absolute inset-[0_auto_0_0] w-2/6 bg-gradient-to-r from-black to-transparent opacity-50`}
       />
       <div
-        className={`
-          absolute inset-[0_0_0_auto] w-1/4 bg-gradient-to-l from-black to-transparent opacity-50
-        `}
+        className={`absolute inset-[0_0_0_auto] w-1/4 bg-gradient-to-l from-black to-transparent opacity-50`}
       />
     </motion.div>
   )

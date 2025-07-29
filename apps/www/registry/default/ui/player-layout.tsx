@@ -63,7 +63,7 @@ export const RootContainer = React.forwardRef<
     [height, width]
   )
     ?.split(":")
-    ?.join("/")
+    .join("/")
 
   return (
     <div
