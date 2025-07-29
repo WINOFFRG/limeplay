@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useCallback, useRef, useState } from "react"
-import type { Variants} from "framer-motion";
+import type { Variants } from "framer-motion"
 import { motion } from "framer-motion"
 import { Copy } from "lucide-react"
 
@@ -73,7 +73,6 @@ const MotionButton = motion.create(Button)
 export const CopyButton: React.FC<CopyButtonProps> = ({
   onCopy,
   className,
-  containerRef,
 }) => {
   const [status, setStatus] = useState<"idle" | "copying" | "copied">("idle")
   const [backgroundState, setBackgroundState] = useState<
@@ -195,7 +194,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   return (
     <div className="relative z-10 mb-1 ml-1">
       <motion.div
-        className="-z-1 absolute inset-0 rounded-md bg-[#252525]"
+        className="absolute inset-0 -z-1 rounded-md bg-[#252525]"
         animate={getBackgroundAnimation()}
       />
       <MotionButton
@@ -206,7 +205,11 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
         variant="ghost"
         size="icon"
         className={cn(
-          "text-muted-foreground relative size-8 cursor-pointer bg-none transition duration-300 ease-out hover:scale-105 hover:bg-transparent hover:text-white",
+          `
+            relative size-8 cursor-pointer bg-none text-muted-foreground transition duration-300
+            ease-out
+            hover:scale-105 hover:bg-transparent hover:text-white
+          `,
           className
         )}
         aria-label="Copy code"

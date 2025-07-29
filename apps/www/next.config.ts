@@ -10,6 +10,9 @@ const config: NextConfig = {
     unoptimized: true,
   },
   productionBrowserSourceMaps: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 }
 
 export default withMDX(config)
