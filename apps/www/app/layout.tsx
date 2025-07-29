@@ -1,15 +1,16 @@
 import "@/app/global.css"
+
 import type { ReactNode } from "react"
-import { Metadata } from "next"
+import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { ThemeProvider } from "next-themes"
 
 import {
+  PROD_BASE_HOST,
   PRODUCT_DECSRIPTION,
   PRODUCT_NAME,
-  PROD_BASE_HOST,
 } from "@/lib/constants"
 
 const geist = Geist({
@@ -75,7 +76,10 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${geist.variable} ${mono.variable}`}
+      className={`
+        ${geist.variable}
+        ${mono.variable}
+      `}
       suppressHydrationWarning
     >
       <body className="antialiased">

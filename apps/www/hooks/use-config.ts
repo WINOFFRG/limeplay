@@ -1,9 +1,9 @@
 import { useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
 
-import { Style } from "@/registry/collection/registry-styles"
+import type { Style } from "@/registry/collection/registry-styles"
 
-type Config = {
+interface Config {
   style: Style["name"]
   radius: number
   packageManager: "npm" | "yarn" | "pnpm" | "bun"

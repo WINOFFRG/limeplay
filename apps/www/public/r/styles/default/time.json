@@ -1,0 +1,12 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "time",
+  "type": "registry:lib",
+  "files": [
+    {
+      "path": "registry/default/lib/time.ts",
+      "content": "import { intervalToDuration } from \"date-fns\"\n\nconst MAX_SAFE_SECONDS = 8.64e12\n\nexport function formatTimestamp(seconds: number, showHours = false): string {\n  if (!Number.isFinite(seconds) || seconds <= 0 || seconds > MAX_SAFE_SECONDS) {\n    return showHours ? \"00:00:00\" : \"00:00\"\n  }\n\n  const totalSeconds = Math.floor(seconds)\n  const HH = Math.floor(totalSeconds / 3600)\n    .toString()\n    .padStart(2, \"0\")\n  const MM = Math.floor((totalSeconds % 3600) / 60)\n    .toString()\n    .padStart(2, \"0\")\n  const SS = Math.floor(totalSeconds % 60)\n    .toString()\n    .padStart(2, \"0\")\n\n  return showHours ? `${HH}:${MM}:${SS}` : `${MM}:${SS}`\n}\n\nexport function durationDateTime(durationSeconds: number) {\n  if (!Number.isFinite(durationSeconds) || durationSeconds < 0) {\n    return \"PT0S\"\n  }\n\n  const duration = intervalToDuration({\n    start: 0,\n    end: durationSeconds * 1000,\n  })\n\n  const weeks = Math.floor((duration.days ?? 0) / 7)\n  const days = (duration.days ?? 0) % 7\n  const hours = duration.hours ?? 0\n  const minutes = duration.minutes ?? 0\n  const seconds = duration.seconds ?? 0\n\n  const dateParts = [weeks > 0 ? `${weeks}W` : \"\", days > 0 ? `${days}D` : \"\"]\n  const timeParts = [\n    hours > 0 ? `${hours}H` : \"\",\n    minutes > 0 ? `${minutes}M` : \"\",\n    seconds > 0 ? `${seconds}S` : \"\",\n  ]\n\n  const dateStr = dateParts.join(\"\")\n  const timeStr = timeParts.join(\"\")\n\n  if (!dateStr && !timeStr) {\n    return \"PT0S\"\n  }\n\n  return \"P\" + dateStr + \"T\" + timeStr\n}\n",
+      "type": "registry:lib"
+    }
+  ]
+}

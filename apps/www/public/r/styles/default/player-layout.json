@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "player-layout",
+  "type": "registry:ui",
+  "dependencies": [
+    "@radix-ui/react-compose-refs",
+    "@radix-ui/react-slot"
+  ],
+  "registryDependencies": [
+    "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/ui/player-layout.tsx",
+      "content": "\"use client\"\n\nimport type { ComponentPropsWithoutRef } from \"react\"\nimport React from \"react\"\nimport { composeRefs } from \"@radix-ui/react-compose-refs\"\n\nimport { cn } from \"@/lib/utils\"\nimport { useMediaStore } from \"@/registry/default/ui/media-provider\"\n\nexport function PlayerContainer({\n  children,\n  className,\n  ...props\n}: ComponentPropsWithoutRef<\"div\">) {\n  return (\n    <div\n      data-layout-type=\"player-container\"\n      className={cn(\n        `relative z-20 aspect-(--aspect-ratio) max-h-[min(var(--height,_720px),_calc(100vh_-_16px_*_2))] w-full overflow-hidden rounded-lg`,\n        className\n      )}\n      {...props}\n    >\n      {children}\n    </div>\n  )\n}\n\nexport function ControlsContainer({\n  children,\n  className,\n  ...props\n}: ComponentPropsWithoutRef<\"div\">) {\n  return (\n    <div\n      data-layout-type=\"controls-container\"\n      className={cn(\"pointer-events-auto absolute inset-0\", className)}\n      {...props}\n    >\n      {children}\n    </div>\n  )\n}\n\nexport interface RootContainerProps\n  extends React.ComponentPropsWithoutRef<\"div\"> {\n  height?: number\n  width?: number\n}\n\nexport const RootContainer = React.forwardRef<\n  HTMLDivElement,\n  RootContainerProps\n>((props, forwardedRef) => {\n  const { children, height, width, className } = props\n  const idle = useMediaStore((state) => state.idle)\n  const status = useMediaStore((state) => state.status)\n  const setPlayerContainerRef = useMediaStore(\n    (state) => state.setPlayerContainerRef\n  )\n  const aspectRatio = React.useMemo(\n    () => calculateAspectRatio(width, height),\n    [height, width]\n  )\n    ?.split(\":\")\n    ?.join(\"/\")\n\n  return (\n    <div\n      tabIndex={0}\n      aria-label=\"Media player\"\n      role=\"region\"\n      data-idle={idle}\n      ref={composeRefs(forwardedRef, setPlayerContainerRef)}\n      data-status={status}\n      data-theme={\"light\"}\n      style={{\n        [\"--width\" as string]: `${width}px`,\n        [\"--height\" as string]: `${height}px`,\n        [\"--aspect-ratio\" as string]: aspectRatio,\n        aspectRatio: aspectRatio,\n      }}\n      className={cn(\"m-auto max-w-[var(--width,1280px)] min-w-80\", className)}\n      // Show controls like tabbing over\n      // onKeyDown={}\n      // onPointerMove show controls again\n      // onPointerUp IDK yet, but probably\n      // onPointerLeave hide controls now, maybe with timeout?\n      // onFocus show controls and set focus true so that keyboard shortcuts are triggered\n      // onBlur hide controls and set focus to false\n      {...props}\n    >\n      {children}\n    </div>\n  )\n})\n\nRootContainer.displayName = \"RootContainer\"\n\nfunction calculateAspectRatio(width?: number, height?: number) {\n  if (width && height) {\n    const gcd = (a: number, b: number): number => {\n      return b === 0 ? a : gcd(b, a % b)\n    }\n    const divisor = gcd(width, height)\n    const aspectWidth = width / divisor\n    const aspectHeight = height / divisor\n    return `${aspectWidth}:${aspectHeight}`\n  }\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

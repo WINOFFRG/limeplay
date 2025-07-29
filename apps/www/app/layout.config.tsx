@@ -1,19 +1,19 @@
 import Image from "next/image"
 import Logo from "@/public/product-icon.svg"
 import {
-  Blueprint,
-  Book,
-  DiscordLogo,
-  Question,
-  Sparkle,
-  XLogo,
+  BlueprintIcon,
+  BookIcon,
+  DiscordLogoIcon,
+  QuestionIcon,
+  SparkleIcon,
+  XLogoIcon,
 } from "@phosphor-icons/react/dist/ssr"
-import { LinkItemType } from "fumadocs-ui/layouts/links"
+import type { LinkItemType } from "fumadocs-ui/layouts/links"
 
 import { DISCORD_URL, GITHUB_URL, PRODUCT_NAME, X_URL } from "@/lib/constants"
 import { Icons } from "@/components/icons"
 import { NavbarLink } from "@/components/layouts/home/navbar"
-import { BaseLayoutProps } from "@/components/layouts/shared"
+import type { BaseLayoutProps } from "@/components/layouts/shared"
 
 const COMMON_LINKS: LinkItemType[] = [
   {
@@ -27,14 +27,14 @@ const COMMON_LINKS: LinkItemType[] = [
     type: "icon",
     url: DISCORD_URL,
     text: "Discord",
-    icon: <DiscordLogo weight="bold" />,
+    icon: <DiscordLogoIcon weight="bold" />,
     external: true,
   },
   {
     type: "icon",
     url: X_URL,
     text: "X",
-    icon: <XLogo weight="bold" />,
+    icon: <XLogoIcon weight="bold" />,
     external: true,
   },
 ]
@@ -59,25 +59,25 @@ export const baseOptions: BaseLayoutProps = {
       type: "main",
       text: "Getting Started",
       url: "/docs/getting-started",
-      icon: <Sparkle />,
+      icon: <SparkleIcon />,
     },
     {
       type: "main",
       text: "What is Limeplay?",
       url: "/docs/what-is-limeplay",
-      icon: <Question />,
+      icon: <QuestionIcon />,
     },
     {
       type: "main",
       text: "Architecture",
       url: "/docs/architecture",
-      icon: <Blueprint />,
+      icon: <BlueprintIcon />,
     },
     {
       type: "main",
       text: "Concepts & Design",
       url: "/docs/concepts-and-design",
-      icon: <Book />,
+      icon: <BookIcon />,
     },
     ...COMMON_LINKS,
   ],
@@ -88,7 +88,7 @@ export const HEADER_LINKS: LinkItemType[] = [
     type: "main",
     text: "Documentation",
     url: "/docs/getting-started",
-    icon: <Book />,
+    icon: <BookIcon />,
   },
   {
     type: "custom",

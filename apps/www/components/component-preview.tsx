@@ -28,13 +28,14 @@ export async function ComponentPreview({
   type = "block",
   ...props
 }: ComponentPreviewProps) {
-  const Component = Index["default"][name]
+  const Component = (Index.default as Record<string, any>)[name]
 
   if (!Component) {
     throw new Error(`Component ${name} not found in registry`)
   }
 
-  const filePath = path.join(Component.files?.[0]?.path)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+  const filePath = path.join(Component?.files?.[0]?.path)
   const fileContent = await fs.promises.readFile(filePath, "utf-8")
   const fileName = path.basename(filePath)
   const PreviewComponent = withPlayer ? PlayerLayoutDemo : React.Fragment
@@ -46,7 +47,6 @@ export async function ComponentPreview({
       dark: "min-dark",
     },
     components: {
-      // @ts-ignore
       pre: (props) => <Pre {...props} />,
     },
   })
@@ -65,13 +65,21 @@ export async function ComponentPreview({
             <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">
               <TabsTrigger
                 value="preview"
-                className="text-muted-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground relative h-9 cursor-pointer rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold shadow-none transition-none data-[state=active]:shadow-none"
+                className={`
+                  relative h-9 cursor-pointer rounded-none border-b-2 border-b-transparent bg-transparent px-4 pt-2 pb-3 font-semibold
+                  text-muted-foreground shadow-none transition-none
+                  data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none
+                `}
               >
                 Preview
               </TabsTrigger>
               <TabsTrigger
                 value="code"
-                className="text-muted-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground relative h-9 cursor-pointer rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold shadow-none transition-none data-[state=active]:shadow-none"
+                className={`
+                  relative h-9 cursor-pointer rounded-none border-b-2 border-b-transparent bg-transparent px-4 pt-2 pb-3 font-semibold
+                  text-muted-foreground shadow-none transition-none
+                  data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none
+                `}
               >
                 Code
               </TabsTrigger>
@@ -80,12 +88,15 @@ export async function ComponentPreview({
         </div>
         <TabsContent
           value="preview"
-          className="relative hidden data-[state=active]:block"
+          className={`
+            relative hidden
+            data-[state=active]:block
+          `}
           forceMount
         >
           <React.Suspense
             fallback={
-              <div className="text-muted-foreground flex w-full items-center justify-center text-sm">
+              <div className="flex w-full items-center justify-center text-sm text-muted-foreground">
                 <Icons.spinner className="mr-2 size-4 animate-spin" />
                 Loading...
               </div>

@@ -1,8 +1,8 @@
 import React, { useCallback } from "react"
 import clamp from "lodash.clamp"
-import { StateCreator } from "zustand"
+import type { StateCreator } from "zustand"
 
-import { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
+import type { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
 import { noop, off, on, toFixedNumber } from "@/registry/default/lib/utils"
 import {
   useGetStore,
@@ -40,7 +40,7 @@ export function useTimelineStates() {
   const mediaRef = useMediaStore((state) => state.mediaRef)
 
   const onTimeUpdate = () => {
-    if (!mediaRef?.current) return
+    if (!mediaRef.current) return
 
     const { duration, currentTime } = mediaRef.current
     const progress = toFixedNumber(currentTime / duration, 4)
@@ -49,7 +49,7 @@ export function useTimelineStates() {
   }
 
   const onDurationChange = React.useCallback(() => {
-    if (!mediaRef?.current) return
+    if (!mediaRef.current) return
 
     const { duration } = mediaRef.current
     if (duration && Number.isFinite(duration)) {
@@ -70,7 +70,7 @@ export function useTimelineStates() {
   }, [store, player])
 
   React.useEffect(() => {
-    if (!mediaRef?.current || !player) return noop
+    if (!mediaRef.current || !player) return noop
 
     const media = mediaRef.current
 
@@ -86,17 +86,14 @@ export function useTimelineStates() {
     on(player, "trackschanged", onBuffer)
 
     return () => {
-      if (media) {
-        off(media, "timeupdate", onTimeUpdate)
-        off(media, ["durationchange", "loadedmetadata"], onDurationChange)
-        off(media, "progress", onBuffer)
-        off(player, "trackschanged", onBuffer)
-      }
+      off(media, "timeupdate", onTimeUpdate)
+      off(media, ["durationchange", "loadedmetadata"], onDurationChange)
+      off(media, "progress", onBuffer)
+      off(player, "trackschanged", onBuffer)
     }
-  }, [store, mediaRef, player])
+  }, [mediaRef, player])
 }
 
-// 4. ACTION HOOK
 export function useTimeline() {
   const store = useGetStore()
   const mediaRef = useMediaStore((state) => state.mediaRef)
@@ -113,7 +110,7 @@ export function useTimeline() {
   )
 
   function seek(time: number) {
-    if (!mediaRef?.current || !Number.isFinite(duration)) return
+    if (!mediaRef.current || !Number.isFinite(duration)) return
 
     const media = mediaRef.current
 

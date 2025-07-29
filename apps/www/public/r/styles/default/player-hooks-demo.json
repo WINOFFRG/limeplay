@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "player-hooks-demo",
+  "type": "registry:ui",
+  "registryDependencies": [
+    "https://limeplay.winoffrg.dev/r/styles/default/use-media-state.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/use-shaka-player.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/use-timeline.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/use-volume.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/internal/player-hooks-demo.tsx",
+      "content": "\"use client\"\n\nimport React from \"react\"\n\nimport { useMediaStates } from \"@/registry/default/hooks/use-media-state\"\nimport { useShakaPlayer } from \"@/registry/default/hooks/use-shaka-player\"\nimport { useTimelineStates } from \"@/registry/default/hooks/use-timeline\"\nimport { useVolumeStates } from \"@/registry/default/hooks/use-volume\"\n\nexport const PlayerHooks = React.memo(() => {\n  useMediaStates()\n  useShakaPlayer()\n  useVolumeStates()\n  useTimelineStates()\n\n  return null\n})\n\nPlayerHooks.displayName = \"PlayerHooks\"\n",
+      "type": "registry:ui"
+    }
+  ]
+}

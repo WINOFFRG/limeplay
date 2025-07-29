@@ -13,11 +13,11 @@ export function TimelineControlDemo() {
   const [showRemaining, setShowRemaining] = useState(false)
 
   return (
-    <div className="bg-primary/10 my-4 flex h-fit w-full flex-row items-center gap-3 rounded-md p-3">
+    <div className="my-4 flex h-fit w-full flex-row items-center gap-3 rounded-md bg-primary/10 p-3">
       <Elapsed className="text-xs font-medium text-white tabular-nums" />
       <div className="group/timeline relative w-full grow">
         <TimelineControlPrimitive.Root
-          className="group focus-area -focus-area-x-2 -focus-area-y-14 cursor-crosshair"
+          className="group focus-area cursor-crosshair -focus-area-x-2 -focus-area-y-14"
           orientation="horizontal"
         >
           <TimelineControlPrimitive.Track className="overflow-hidden">
@@ -26,13 +26,22 @@ export function TimelineControlDemo() {
           </TimelineControlPrimitive.Track>
           <TimelineControlPrimitive.Thumb
             showWithHover
-            className={`absolute h-8 w-px rounded-full bg-white/60 opacity-0 transition-opacity duration-[var(--lp-transition-speed-regular)] group-hover/timeline:opacity-100 group-active/timeline:bg-white`}
+            className={`
+              absolute h-8 w-px rounded-full bg-white/60 opacity-0 transition-opacity duration-[var(--lp-transition-speed-regular)]
+              group-hover/timeline:opacity-100
+              group-active/timeline:bg-white
+            `}
           />
         </TimelineControlPrimitive.Root>
       </div>
       <button
-        className={`text-xs font-medium text-white tabular-nums transition-colors hover:text-white/80`}
-        onClick={() => setShowRemaining(!showRemaining)}
+        className={`
+          text-xs font-medium text-white tabular-nums transition-colors
+          hover:text-white/80
+        `}
+        onClick={() => {
+          setShowRemaining(!showRemaining)
+        }}
         aria-label={
           showRemaining ? "Show total duration" : "Show remaining time"
         }

@@ -1,3 +1,6 @@
+// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+
 import { exec } from "child_process"
 import { promises as fs } from "fs"
 import path from "path"
@@ -13,7 +16,7 @@ import { ui } from "@/registry/collection/registry-ui"
 
 // Log level configuration
 type LogLevel = "error" | "warn" | "info" | "debug"
-const LOG_LEVEL: LogLevel = (process.env.LOG_LEVEL || "info") as LogLevel
+const LOG_LEVEL: LogLevel = (process.env.LOG_LEVEL ?? "info") as LogLevel
 
 const logLevels: Record<LogLevel, number> = {
   error: 0,
@@ -27,16 +30,24 @@ const shouldLog = (level: LogLevel): boolean => {
 }
 
 const logger = {
-  error: (message: string) => console.error(message),
-  warn: (message: string) => shouldLog("warn") && console.warn(message),
-  info: (message: string) => shouldLog("info") && console.log(message),
-  debug: (message: string) => shouldLog("debug") && console.debug(message),
+  error: (message: string) => {
+    console.error(message)
+  },
+  warn: (message: string) => {
+    shouldLog("warn") && console.warn(message)
+  },
+  info: (message: string) => {
+    shouldLog("info") && console.log(message)
+  },
+  debug: (message: string) => {
+    shouldLog("debug") && console.debug(message)
+  },
 }
 
 const STYLE = "default"
 const DEPRECATED_ITEMS = ["test"]
 // Get registry host from env variable or use default
-const REGISTRY_HOST = process.env.REGISTRY_HOST || "http://localhost:3000"
+const REGISTRY_HOST = process.env.REGISTRY_HOST ?? "http://localhost:3000"
 const BASE_URL = `${REGISTRY_HOST}/r/styles/default`
 
 logger.info(`🌐 Using registry host: ${REGISTRY_HOST}`)
@@ -47,7 +58,7 @@ const PATH_MAPPINGS = [
     pattern: "blocks/",
     targetFn: (path: string) => {
       // Extract the part after "blocks/"
-      const match = path.match(/blocks\/([^/]+)\/(.+)/)
+      const match = /blocks\/([^/]+)\/(.+)/.exec(path)
       if (match) {
         const [, blockName, filePath] = match
         return `components/${blockName}/${filePath}`
@@ -71,7 +82,7 @@ const registryItemsMap = new Map()
 )
 
 // Create a map of all file paths to their corresponding items
-const filePathToItemMap = new Map()
+const filePathToItemMap = new Map<string, string>()
 ;[...ui, ...lib, ...hooks, ...examples, ...blocks, ...internal].forEach(
   (item) => {
     if (item.files) {
@@ -216,7 +227,7 @@ async function validateDependencies() {
   for (const item of registry.items) {
     if (!item.files) continue
 
-    const declaredDependencies = new Set(item.registryDependencies || [])
+    const declaredDependencies = new Set(item.registryDependencies ?? [])
     logger.debug(
       `📦 Checking ${item.name} with dependencies: ${
         declaredDependencies.size
@@ -250,7 +261,7 @@ async function validateDependencies() {
         const namespaceImports = [...content.matchAll(namespaceImportRegex)]
 
         logger.debug(
-          `  - Found ${regularImports.length} regular imports, ${namespaceImports.length} namespace imports`
+          `  - Found ${regularImports.length.toString()} regular imports, ${namespaceImports.length.toString()} namespace imports`
         )
 
         const allMatches = [...regularImports, ...namespaceImports]
@@ -310,12 +321,12 @@ async function validateDependencies() {
             `    - Looking for components with path: ${componentPath}`
           )
           logger.debug(
-            `    - Found ${possibleFilePaths.length} possible matches`
+            `    - Found ${possibleFilePaths.length.toString()} possible matches`
           )
 
           if (possibleFilePaths.length > 0) {
             for (const filePath of possibleFilePaths) {
-              const componentName = filePathToItemMap.get(filePath)
+              const componentName = filePathToItemMap.get(filePath) ?? ""
               logger.debug(
                 `      - Matched file: ${filePath} → component: ${componentName}`
               )
@@ -343,7 +354,7 @@ async function validateDependencies() {
           }
         }
       } catch (error) {
-        logger.error(`Error reading file ${file.path}: ${error}`)
+        logger.error(`Error reading file ${file.path}: ${error as string}`)
       }
     }
 
@@ -492,12 +503,12 @@ async function buildRegistry() {
 
     // Capture stdout
     process.stdout?.on("data", (data) => {
-      console.log(`${data.toString().trim()}`)
+      console.log(data)
     })
 
     // Capture stderr
     process.stderr?.on("data", (data) => {
-      console.error(`${data.toString().trim()}`)
+      console.error(data)
     })
 
     process.on("exit", (code) => {
@@ -524,3 +535,10 @@ async function main() {
 }
 
 main()
+  .then(() => {
+    process.exit(0)
+  })
+  .catch((error: unknown) => {
+    logger.error(`${error}`)
+    process.exit(1)
+  })
