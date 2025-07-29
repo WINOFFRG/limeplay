@@ -10,7 +10,6 @@ import { ComponentPreview } from "@/components/component-preview"
 const generator = createGenerator()
 
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
-  // @ts-ignore
   return {
     ...defaultComponents,
     AutoTypeTable: (props) => (

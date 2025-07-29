@@ -1,16 +1,17 @@
-import { HTMLAttributes } from "react"
+import type { HTMLAttributes } from "react"
 
 import { cn } from "@/lib/utils"
 import { NavProvider } from "@/components/contexts/layout"
 import { HEADER_LINKS } from "@/app/layout.config"
 
-import { Header, HomeLayoutProps } from "../header"
+import type { HomeLayoutProps } from "../header"
+import { Header } from "../header"
 import { slot } from "../shared"
 
 export function HomeLayout(
   props: HomeLayoutProps & HTMLAttributes<HTMLElement>
 ) {
-  const { nav, links, ...rest } = props
+  const { nav, ...rest } = props
 
   return (
     <NavProvider transparentMode={nav?.transparentMode}>

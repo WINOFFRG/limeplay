@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "playback-control",
+  "type": "registry:ui",
+  "dependencies": [
+    "@radix-ui/react-slot"
+  ],
+  "registryDependencies": [
+    "https://limeplay.winoffrg.dev/r/styles/default/use-media-state-states.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/ui/playback-control.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { Slot } from \"@radix-ui/react-slot\"\n\nimport { Button } from \"@/components/ui/button\"\nimport {\n  useMediaState,\n  useMediaStates,\n} from \"@/registry/default/hooks/use-media-state\"\nimport { useMediaStore } from \"@/registry/default/ui/media-provider\"\n\nexport interface PlaybackControlProps\n  extends React.ButtonHTMLAttributes<HTMLButtonElement> {\n  asChild?: boolean\n}\n\nexport const PlaybackControl = React.forwardRef<\n  HTMLButtonElement,\n  PlaybackControlProps\n>((props, forwardedRef) => {\n  useMediaStates()\n\n  const status = useMediaStore((state) => state.status)\n  const Comp = props.asChild ? Slot : Button\n\n  const { togglePaused } = useMediaState()\n\n  return (\n    <Comp\n      {...props}\n      ref={forwardedRef}\n      aria-label={[\"paused\", \"ended\"].includes(status) ? `Play` : `Pause`}\n      aria-keyshortcuts=\"k\"\n      onClick={togglePaused}\n    />\n  )\n})\n\nPlaybackControl.displayName = \"PlaybackControl\"\n",
+      "type": "registry:ui"
+    }
+  ]
+}

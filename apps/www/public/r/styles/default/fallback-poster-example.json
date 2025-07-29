@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "fallback-poster-example",
+  "type": "registry:example",
+  "registryDependencies": [
+    "http://localhost:3000/r/styles/default/fallback-poster.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/examples/fallback-poster.tsx",
+      "content": "import Image from \"next/image\"\nimport Logo from \"@/public/product-icon.svg\"\n\nimport { PRODUCT_NAME } from \"@/lib/constants\"\nimport { FallbackPoster } from \"@/registry/default/ui/fallback-poster\"\n\nexport function FallbackPosterExample() {\n  return (\n    <FallbackPoster className=\"bg-stone-900\">\n      <Image\n        alt={PRODUCT_NAME}\n        src={Logo}\n        className=\"size-52\"\n        aria-label={PRODUCT_NAME}\n      />\n    </FallbackPoster>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ]
+}

@@ -28,7 +28,7 @@ export async function ComponentPreview({
   type = "block",
   ...props
 }: ComponentPreviewProps) {
-  const Component = Index["default"][name]
+  const Component = Index.default[name]
 
   if (!Component) {
     throw new Error(`Component ${name} not found in registry`)
