@@ -130,7 +130,7 @@ const AnimatedGradientBackground: React.FC<AnimatedGradientBackgroundProps> = ({
 
     animationFrame = requestAnimationFrame(animateGradient)
 
-    return () => cancelAnimationFrame(animationFrame) // Cleanup animation
+    return () => { cancelAnimationFrame(animationFrame); } // Cleanup animation
   }, [
     startingGap,
     Breathing,

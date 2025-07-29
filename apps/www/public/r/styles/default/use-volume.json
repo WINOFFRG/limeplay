@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-volume",
+  "type": "registry:hook",
+  "dependencies": [
+    "lodash.clamp",
+    "zustand"
+  ],
+  "registryDependencies": [
+    "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/hooks/use-volume.ts",
+      "content": "import React from \"react\"\nimport clamp from \"lodash.clamp\"\nimport type { StateCreator } from \"zustand\"\n\nimport type { PlayerRootStore } from \"@/registry/default/hooks/use-player-root-store\"\nimport { noop, off, on } from \"@/registry/default/lib/utils\"\nimport {\n  useGetStore,\n  useMediaStore,\n} from \"@/registry/default/ui/media-provider\"\n\nexport function useVolumeStates() {\n  const store = useGetStore()\n  const mediaRef = useMediaStore((state) => state.mediaRef)\n  const player = useMediaStore((state) => state.player)\n\n  React.useEffect(() => {\n    if (!mediaRef.current) return noop\n\n    const media = mediaRef.current\n\n    const volumeHandler = () => {\n      store.setState({\n        volume: media.volume,\n        muted: media.muted,\n      })\n    }\n\n    const audioTracksChangedHandler = () => {\n      if (player) {\n        const hasAudioTracks = player.getAudioTracks().length > 0\n\n        store.setState({\n          hasAudio: hasAudioTracks,\n        })\n      }\n    }\n\n    on(media, \"volumechange\", volumeHandler)\n    on(media, \"audiotrackschanged\", audioTracksChangedHandler)\n\n    volumeHandler()\n\n    return () => {\n      off(media, \"volumechange\", volumeHandler)\n      off(media, \"audiotrackschanged\", audioTracksChangedHandler)\n    }\n  }, [store, mediaRef, player])\n}\n\nexport interface VolumeStore {\n  volume: number\n  muted: boolean\n  hasAudio: boolean\n}\n\nconst BASE_RESET_VOLUME = 0.05\n\nexport const createVolumeStore: StateCreator<\n  VolumeStore & PlayerRootStore,\n  [],\n  [],\n  VolumeStore\n> = () => ({\n  volume: 1,\n  muted: false,\n  hasAudio: true,\n})\n\nexport function useVolume() {\n  const store = useGetStore()\n  const mediaRef = useMediaStore((state) => state.mediaRef)\n\n  function setVolume(volume: number, progress = 0, delta = 0) {\n    if (!mediaRef.current) return\n\n    const value = typeof delta === \"number\" ? volume + delta : progress\n\n    if (Number.isNaN(value)) {\n      return\n    }\n\n    const clampedVolume = clamp(value, 0, 1)\n    const muted = clampedVolume === 0\n\n    const media = mediaRef.current\n    media.volume = clampedVolume\n    media.muted = muted\n\n    store.setState({\n      idle: false,\n    })\n  }\n\n  function toggleMute() {\n    if (!mediaRef.current) return\n\n    const media = mediaRef.current\n    media.muted = !media.muted\n    // DEV: Volume 0 and muted are equivalent, to prevent collision in UI\n    // set to some small value to prevent stuck toggling state of UI.\n    if (!media.muted) {\n      media.volume = media.volume === 0 ? BASE_RESET_VOLUME : media.volume\n    }\n\n    store.setState({\n      idle: false,\n    })\n  }\n\n  function setMuted(muted: boolean) {\n    if (!mediaRef.current) return\n\n    const media = mediaRef.current\n\n    media.muted = muted\n    media.volume = muted ? BASE_RESET_VOLUME : media.volume\n\n    store.setState({\n      idle: false,\n    })\n  }\n\n  return {\n    setVolume,\n    toggleMute,\n    setMuted,\n  }\n}\n",
+      "type": "registry:hook"
+    }
+  ]
+}

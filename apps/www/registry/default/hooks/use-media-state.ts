@@ -1,7 +1,7 @@
 import React from "react"
-import { StateCreator } from "zustand"
+import type { StateCreator } from "zustand"
 
-import { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
+import type { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
 import { noop, off, on } from "@/registry/default/lib/utils"
 import {
   useGetStore,
@@ -14,7 +14,7 @@ export function useMediaStates() {
   const player = useMediaStore((state) => state.player)
 
   React.useEffect(() => {
-    if (!mediaRef?.current) return noop
+    if (!mediaRef.current) return noop
 
     const media = mediaRef.current
 
@@ -62,19 +62,17 @@ export function useMediaStates() {
     on(media, "loopchange", loopChangeHandler)
 
     return () => {
-      if (media) {
-        off(media, "pause", pauseHandler)
-        off(media, "play", playHandler)
-        off(media, "ended", endedHandler)
-        off(media, "loadeddata", loadedDataHandler)
-        off(media, "loopchange", loopChangeHandler)
-      }
+      off(media, "pause", pauseHandler)
+      off(media, "play", playHandler)
+      off(media, "ended", endedHandler)
+      off(media, "loadeddata", loadedDataHandler)
+      off(media, "loopchange", loopChangeHandler)
     }
   }, [store, mediaRef])
 
   // Handle buffering states
   React.useEffect(() => {
-    if (!mediaRef?.current) return noop
+    if (!mediaRef.current) return noop
 
     const media = mediaRef.current
 
@@ -95,10 +93,8 @@ export function useMediaStates() {
       store.setState({ status: "playing" })
     }
 
-    if (media) {
-      on(media, "waiting", waitingHandler)
-      on(media, "playing", onPlayingHandler)
-    }
+    on(media, "waiting", waitingHandler)
+    on(media, "playing", onPlayingHandler)
 
     if (player) {
       player.addEventListener("buffering", bufferingHandler)
@@ -106,10 +102,8 @@ export function useMediaStates() {
     }
 
     return () => {
-      if (media) {
-        off(media, "waiting", waitingHandler)
-        off(media, "playing", onPlayingHandler)
-      }
+      off(media, "waiting", waitingHandler)
+      off(media, "playing", onPlayingHandler)
 
       if (player) {
         player.removeEventListener("buffering", bufferingHandler)
@@ -143,7 +137,7 @@ export function useMediaState() {
     const media = store.getState().mediaRef.current
     if (!media) return
 
-    media.play().catch((error) => {
+    media.play().catch((error: unknown) => {
       console.error("Error playing media", error)
       store.setState({
         status: "error",
