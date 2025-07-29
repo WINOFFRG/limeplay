@@ -56,6 +56,3 @@ specification. Contributions of any kind welcome!
 ## License
 
 MIT © [WINOFFRG](https://github.com/winoffrg)
-
-
-<!-- TODO: Tailwind eslint plugin is not supported in v4 use https://github.com/schoero/eslint-plugin-better-tailwindcss?tab=readme-ov-file#parsers rather -->
