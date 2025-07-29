@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "index",
+  "type": "registry:style",
+  "dependencies": [
+    "tw-animate-css",
+    "class-variance-authority",
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "https://limeplay.winoffrg.dev/r/styles/default/utils.json"
+  ],
+  "files": [],
+  "cssVars": {}
+}

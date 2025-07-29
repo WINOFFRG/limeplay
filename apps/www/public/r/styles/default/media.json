@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "media",
+  "type": "registry:ui",
+  "dependencies": [
+    "@radix-ui/react-compose-refs",
+    "@radix-ui/react-slot"
+  ],
+  "registryDependencies": [
+    "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/ui/media.tsx",
+      "content": "import * as React from \"react\"\nimport { composeRefs } from \"@radix-ui/react-compose-refs\"\n\nimport { useMediaStore } from \"@/registry/default/ui/media-provider\"\n\nexport type MediaPropsDocs = Pick<MediaProps, \"as\">\n\nexport type MediaProps =\n  | ({\n      /**\n       * Type of Media Element to Render\n       *\n       * @default video\n       */\n      as: \"video\"\n    } & React.VideoHTMLAttributes<HTMLVideoElement>)\n  | ({ as: \"audio\" } & React.AudioHTMLAttributes<HTMLAudioElement>)\n\nexport const Media = React.forwardRef<HTMLMediaElement, MediaProps>(\n  (props, forwardedRef) => {\n    const { as: Element = \"video\", ...etc } = props\n    const mediaRef = React.useRef<HTMLMediaElement>(null)\n    const setMediaRef = useMediaStore((state) => state.setMediaRef)\n    const status = useMediaStore((state) => state.status)\n\n    React.useLayoutEffect(() => {\n      if (!mediaRef.current) {\n        return\n      }\n\n      setMediaRef(mediaRef as React.RefObject<HTMLMediaElement>)\n    }, [mediaRef, setMediaRef])\n\n    return (\n      <Element\n        controls={false}\n        ref={composeRefs(forwardedRef, mediaRef)}\n        aria-busy={status === \"buffering\"}\n        {...etc}\n      />\n    )\n  }\n)\n\nMedia.displayName = \"Media\"\n",
+      "type": "registry:ui"
+    }
+  ]
+}

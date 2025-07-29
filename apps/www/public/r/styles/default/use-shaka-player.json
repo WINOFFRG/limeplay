@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-shaka-player",
+  "type": "registry:hook",
+  "dependencies": [
+    "shaka-player"
+  ],
+  "registryDependencies": [
+    "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/hooks/use-shaka-player.ts",
+      "content": "\"use client\"\n\nimport React, { useRef } from \"react\"\n\nimport { useMediaStore } from \"@/registry/default/ui/media-provider\"\n\ndeclare global {\n  interface Window {\n    shaka_player: shaka.Player\n  }\n}\n\nexport function useShakaPlayer() {\n  const setPlayer = useMediaStore((state) => state.setPlayer)\n  const mediaRef = useMediaStore((state) => state.mediaRef)\n  const debug = useMediaStore((state) => state.debug)\n  const isServer = typeof window === \"undefined\"\n  const playerInstance = useRef<shaka.Player | null>(null)\n\n  React.useEffect(() => {\n    if (isServer) {\n      console.warn(\"skipping shaka load on server\")\n      return\n    }\n\n    const mediaElement = mediaRef.current\n\n    async function loadPlayer() {\n      const shakaLib = debug\n        ? await import(\"shaka-player/dist/shaka-player.compiled.debug\")\n        : await import(\"shaka-player\")\n\n      if (!mediaElement) {\n        return\n      }\n\n      playerInstance.current = new shakaLib.Player()\n      setPlayer(playerInstance.current)\n\n      await playerInstance.current.attach(mediaElement)\n\n      if (debug) {\n        window.shaka_player = playerInstance.current\n      }\n    }\n\n    void loadPlayer()\n\n    return () => {\n      if (playerInstance.current) {\n        if (mediaElement) {\n          mediaElement.pause()\n        }\n        void playerInstance.current.destroy()\n      }\n    }\n  }, [isServer, mediaRef, debug, setPlayer])\n\n  return playerInstance.current\n}\n",
+      "type": "registry:hook"
+    }
+  ]
+}

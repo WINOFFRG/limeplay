@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useCallback, useRef, useState } from "react"
-import { Variants, motion } from "framer-motion"
+import type { Variants} from "framer-motion";
+import { motion } from "framer-motion"
 import { Copy } from "lucide-react"
 
 import { cn } from "@/lib/utils"

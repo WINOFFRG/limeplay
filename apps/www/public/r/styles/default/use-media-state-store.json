@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-media-state-store",
+  "type": "registry:hook",
+  "registryDependencies": [
+    "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/hooks/use-media-state-store.ts",
+      "content": "import { StateCreator } from \"zustand\"\n\nimport { PlayerRootStore } from \"@/registry/default/hooks/use-player-root-store\"\n\nexport interface MediaStateStore {\n  paused: boolean\n  setPaused: (paused: boolean) => void\n  togglePaused: () => void\n  ended: boolean\n  setEnded: (ended: boolean) => void\n  loop: boolean\n  setLoop: (loop: boolean) => void\n}\n\nexport const createMediaStateStore: StateCreator<\n  MediaStateStore & PlayerRootStore,\n  [],\n  [],\n  MediaStateStore\n> = (set, get) => ({\n  paused: false,\n  setPaused: (paused: boolean) => {\n    const _status = get().status\n    if (paused) {\n      set({\n        paused: true,\n        status: _status === \"playing\" ? \"paused\" : _status,\n        idle: false,\n      })\n    } else {\n      set({\n        paused: false,\n        status: [\"buffering\", \"error\", \"ended\", \"stopped\"].includes(_status)\n          ? \"playing\"\n          : _status,\n      })\n    }\n  },\n  togglePaused: () => {\n    const _status = get().status\n    let newStatus = _status\n\n    if ([\"ended\", \"stopped\", \"paused\", \"error\"].includes(_status)) {\n      newStatus = \"playing\"\n    } else if (_status === \"playing\") {\n      newStatus = \"paused\"\n    }\n    set({\n      status: newStatus,\n    })\n  },\n  ended: false,\n  setEnded: (ended: boolean) => set({ ended }),\n  loop: false,\n  setLoop: (loop: boolean) => set({ loop }),\n})\n",
+      "type": "registry:hook"
+    }
+  ]
+}

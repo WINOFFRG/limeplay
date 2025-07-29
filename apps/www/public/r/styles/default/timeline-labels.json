@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "timeline-labels",
+  "type": "registry:ui",
+  "registryDependencies": [
+    "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/time.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/ui/timeline-labels.tsx",
+      "content": "import React from \"react\"\n\nimport { durationDateTime, formatTimestamp } from \"@/registry/default/lib/time\"\nimport { useMediaStore } from \"@/registry/default/ui/media-provider\"\n\nconst HOURS_IN_SECONDS = 60 * 60\n\n/**\n * Elapsed time\n * @note formatted as HH:MM:SS where HH only shows if > 1 hour\n */\nexport const Elapsed = React.forwardRef<\n  HTMLTimeElement,\n  React.HTMLProps<HTMLTimeElement>\n>((props, forwardedRef) => {\n  const currentTime = useMediaStore((s) => s.currentTime)\n  const duration = useMediaStore((s) => s.duration)\n\n  return (\n    <time\n      dateTime={durationDateTime(currentTime)}\n      role=\"timer\"\n      {...props}\n      ref={forwardedRef}\n    >\n      <span className=\"sr-only\">Elapsed</span>\n      {formatTimestamp(currentTime, duration > HOURS_IN_SECONDS)}\n    </time>\n  )\n})\n\nElapsed.displayName = \"Elapsed\"\n\n/**\n * Remaining time\n * @note formatted as HH:MM:SS where HH only shows if > 1 hour\n */\nexport const Remaining = React.forwardRef<\n  HTMLTimeElement,\n  React.HTMLProps<HTMLTimeElement>\n>((props, forwardedRef) => {\n  const duration = useMediaStore((s) => s.duration)\n  const currentTime = useMediaStore((s) => s.currentTime)\n\n  return (\n    <time\n      dateTime={durationDateTime(duration - currentTime)}\n      role=\"timer\"\n      {...props}\n      ref={forwardedRef}\n    >\n      <span className=\"sr-only\">Remaining</span>\n      <span aria-hidden>&minus;</span>\n      {formatTimestamp(duration - currentTime, duration > HOURS_IN_SECONDS)}\n    </time>\n  )\n})\n\nRemaining.displayName = \"Remaining\"\n\n/**\n * Total Duration of the content\n * @note formatted as HH:MM:SS where HH only shows if > 1 hour\n * @description Time is formatted as HH:MM:SS where HH will only be shown if time has hour\n */\nexport const Duration = React.forwardRef<\n  HTMLTimeElement,\n  React.HTMLProps<HTMLTimeElement>\n>((props, forwardedRef) => {\n  const duration = useMediaStore((s) => s.duration)\n\n  return (\n    <time dateTime={durationDateTime(duration)} ref={forwardedRef} {...props}>\n      <span className=\"sr-only\">Duration</span>\n      {formatTimestamp(duration)}\n    </time>\n  )\n})\n\nDuration.displayName = \"Duration\"\n\nexport const HoverTime = React.forwardRef<\n  HTMLTimeElement,\n  React.HTMLProps<HTMLTimeElement>\n>((props, forwardedRef) => {\n  const hoveringTime = useMediaStore((s) => s.hoveringTime)\n\n  return (\n    <time\n      dateTime={durationDateTime(hoveringTime)}\n      ref={forwardedRef}\n      {...props}\n    >\n      <span className=\"sr-only\">Seek To:</span>\n      {formatTimestamp(hoveringTime)}\n    </time>\n  )\n})\n\nHoverTime.displayName = \"HoverTime\"\n",
+      "type": "registry:ui"
+    }
+  ]
+}

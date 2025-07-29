@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-timeline-store",
+  "type": "registry:hook",
+  "dependencies": [
+    "lodash.clamp"
+  ],
+  "registryDependencies": [
+    "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/utils.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/hooks/use-timeline-store.ts",
+      "content": "import clamp from \"lodash.clamp\"\nimport { StateCreator } from \"zustand\"\n\nimport { PlayerRootStore } from \"@/registry/default/hooks/use-player-root-store\"\nimport { toFixedNumber } from \"@/registry/default/lib/utils\"\n\nexport interface SeekToProps {\n  progress?: number\n}\n\nexport interface TimelineStore {\n  duration: number\n  setDuration: (value: number) => void\n  currentTime: number\n  setCurrentTime: (value: number) => void\n  progress: number\n  seekTo: ({ progress }: SeekToProps) => void\n}\n\nexport const createTimelineStore: StateCreator<\n  TimelineStore & PlayerRootStore,\n  [],\n  [],\n  TimelineStore\n> = (set, get) => ({\n  duration: 0,\n  setDuration: (value) => {\n    set({ duration: value })\n  },\n  currentTime: 0,\n  setCurrentTime: (value) => {\n    const _currentTime = clamp(value, 0, get().duration)\n    const _progress = toFixedNumber(get().currentTime / get().duration, 4)\n    set({ currentTime: _currentTime, progress: _progress })\n  },\n  progress: 0,\n  seekTo: ({ progress }) => {\n    if (progress) {\n      const newTime = progress * get().duration\n      get().setCurrentTime(newTime)\n\n      const mediaElement = get().mediaRef?.current\n\n      mediaElement.currentTime = get().currentTime\n    }\n  },\n})\n",
+      "type": "registry:hook"
+    }
+  ]
+}
