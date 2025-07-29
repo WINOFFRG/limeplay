@@ -99,7 +99,7 @@ export const HEADER_LINKS: LinkItemType[] = [
             url: "#",
             active: "none",
           }}
-          className="text-sm cursor-not-allowed font-light"
+          className="cursor-not-allowed text-sm font-light"
         >
           Themes
         </NavbarLink>

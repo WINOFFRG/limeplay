@@ -91,7 +91,7 @@ export function CodeBlock({
       {title ? (
         <div
           className={cn(
-            "text-fd-muted-foreground h-9.5 flex items-center gap-2 ps-3",
+            "text-fd-muted-foreground flex h-9.5 items-center gap-2 ps-3",
             isTab && "border-b"
           )}
         >
