@@ -1,4 +1,4 @@
-import React from "react"
+import type React from "react"
 
 /**
  * Type-safe event handler utility function
@@ -25,7 +25,7 @@ type EventType<T, E> = T extends {
 export function on<E extends string | string[], R extends HTMLElement>(
   element: EventTarget,
   events: E,
-  callback: (event: React.SyntheticEvent<R, Event>) => void
+  callback: (event: React.SyntheticEvent<R>) => void
 ): EventTarget
 
 /**
@@ -53,7 +53,7 @@ export function on(
 export function off<E extends string | string[], R extends HTMLElement>(
   element: EventTarget,
   events: E,
-  callback: (event: React.SyntheticEvent<R, Event>) => void
+  callback: (event: React.SyntheticEvent<R>) => void
 ): EventTarget
 
 /**

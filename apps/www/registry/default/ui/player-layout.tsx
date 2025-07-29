@@ -1,6 +1,7 @@
 "use client"
 
-import React, { ComponentPropsWithoutRef } from "react"
+import type { ComponentPropsWithoutRef } from "react"
+import React from "react"
 import { composeRefs } from "@radix-ui/react-compose-refs"
 
 import { cn } from "@/lib/utils"

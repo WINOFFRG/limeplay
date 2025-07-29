@@ -24,7 +24,7 @@ export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
     const status = useMediaStore((state) => state.status)
 
     React.useLayoutEffect(() => {
-      if (!mediaRef?.current) {
+      if (!mediaRef.current) {
         return
       }
 

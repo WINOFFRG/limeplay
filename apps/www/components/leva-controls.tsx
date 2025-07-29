@@ -41,11 +41,11 @@ export function LevaControls() {
   }, [])
 
   useEffect(() => {
-    if (mediaRef && mediaRef.current) {
+    if (mediaRef.current) {
       if (paused) {
         mediaRef.current.pause()
       } else {
-        mediaRef.current.play().catch((error) => {
+        mediaRef.current.play().catch((error: unknown) => {
           console.warn("Error playing media:", error)
         })
       }
@@ -53,19 +53,19 @@ export function LevaControls() {
   }, [paused, mediaRef])
 
   useEffect(() => {
-    if (mediaRef && mediaRef.current) {
+    if (mediaRef.current) {
       mediaRef.current.muted = muted
     }
   }, [muted, mediaRef])
 
   useEffect(() => {
-    if (mediaRef && mediaRef.current) {
+    if (mediaRef.current) {
       mediaRef.current.volume = volume
     }
   }, [volume, mediaRef])
 
   useEffect(() => {
-    if (mediaRef && mediaRef.current) {
+    if (mediaRef.current) {
       mediaRef.current.loop = loop
     }
   }, [loop, mediaRef])
@@ -91,7 +91,7 @@ export function LevaControls() {
   }
 
   return (
-    <div className="z-100 absolute right-0 me-2 mt-2 overflow-hidden rounded-lg">
+    <div className="absolute right-0 z-100 me-2 mt-2 overflow-hidden rounded-lg">
       <Leva
         titleBar={{
           title: "Player Controls",

@@ -3,11 +3,11 @@
 import React, { createContext, useContext, useRef } from "react"
 import { useStore } from "zustand"
 
-import {
-  createMediaStore,
+import type {
   CreateMediaStoreProps,
   TypeMediaStore,
 } from "@/registry/default/internal/create-media-store"
+import { createMediaStore } from "@/registry/default/internal/create-media-store"
 
 type MediaProviderContext = ReturnType<typeof createMediaStore>
 

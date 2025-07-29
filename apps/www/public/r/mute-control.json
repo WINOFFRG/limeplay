@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "mute-control",
+  "type": "registry:ui",
+  "dependencies": [
+    "@radix-ui/react-slot"
+  ],
+  "registryDependencies": [
+    "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/use-volume-states.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/ui/mute-control.tsx",
+      "content": "import React from \"react\"\nimport { Slot } from \"@radix-ui/react-slot\"\n\nimport { Button } from \"@/components/ui/button\"\nimport { useVolume, useVolumeStates } from \"@/registry/default/hooks/use-volume\"\n\nexport interface MuteControlProps\n  extends React.ButtonHTMLAttributes<HTMLButtonElement> {\n  asChild?: boolean\n}\n\nexport const MuteControl = React.forwardRef<\n  HTMLButtonElement,\n  MuteControlProps\n>((props, forwardedRef) => {\n  useVolumeStates()\n\n  const Comp = props.asChild ? Slot : Button\n  const { toggleMute } = useVolume()\n\n  return (\n    <Comp\n      data-slot=\"mute-control\"\n      {...props}\n      ref={forwardedRef}\n      onClick={toggleMute}\n    />\n  )\n})\n\nMuteControl.displayName = \"MuteControl\"\n",
+      "type": "registry:ui"
+    }
+  ]
+}

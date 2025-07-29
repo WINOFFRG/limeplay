@@ -16,10 +16,11 @@ import {
   NavbarMenuLink,
   NavbarMenuTrigger,
 } from "@/components/layouts/home/navbar"
-import {
+import type {
   BaseLayoutProps,
   LinkItemType,
-  NavOptions,
+  NavOptions} from "@/components/layouts/shared";
+import {
   slot,
 } from "@/components/layouts/shared"
 import { ThemeToggle } from "@/components/layouts/theme-toggle"

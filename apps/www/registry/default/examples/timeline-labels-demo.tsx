@@ -1,4 +1,3 @@
-import { useTimelineStates } from "@/registry/default/hooks/use-timeline"
 import * as TimelineControlPrimitive from "@/registry/default/ui/timeline-control"
 import {
   Duration,
@@ -9,11 +8,11 @@ import {
 
 export function TimelineLabelsDemo() {
   return (
-    <div className="bg-primary/10 my-4 flex h-fit w-full flex-col gap-4 rounded-md p-4 pt-6">
+    <div className="my-4 flex h-fit w-full flex-col gap-4 rounded-md bg-primary/10 p-4 pt-6">
       <div className="flex flex-row items-center gap-3">
         <div className="group/timeline relative w-full grow">
           <TimelineControlPrimitive.Root
-            className="group focus-area -focus-area-x-2 -focus-area-y-14 cursor-crosshair"
+            className="group focus-area cursor-crosshair -focus-area-x-2 -focus-area-y-14"
             orientation="horizontal"
           >
             <TimelineControlPrimitive.Track className="overflow-hidden">
@@ -22,7 +21,12 @@ export function TimelineLabelsDemo() {
             </TimelineControlPrimitive.Track>
             <TimelineControlPrimitive.Thumb
               showWithHover
-              className={`absolute h-8 w-px rounded-full bg-white/60 opacity-0 transition-opacity duration-[var(--lp-transition-speed-regular)] group-hover/timeline:opacity-100 group-active/timeline:bg-white`}
+              className={`
+                absolute h-8 w-px rounded-full bg-white/60 opacity-0 transition-opacity
+                duration-[var(--lp-transition-speed-regular)]
+                group-hover/timeline:opacity-100
+                group-active/timeline:bg-white
+              `}
             />
           </TimelineControlPrimitive.Root>
         </div>
