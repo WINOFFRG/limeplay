@@ -95,7 +95,7 @@ export const Track = React.forwardRef<
     <SliderPrimitive.Track
       ref={ref}
       className={cn(
-        "bg-primary/20 relative size-full overflow-hidden rounded-md",
+        "relative size-full overflow-hidden rounded-md bg-primary/20",
         className
       )}
       {...etc}
@@ -118,13 +118,13 @@ export const Progress = React.forwardRef<
     <SliderPrimitive.Indicator
       ref={ref}
       className={cn(
-        "bg-primary h-full w-(--lp-volume-value)",
+        "h-full w-(--lp-volume-value) bg-primary",
         "data-[orientation=vertical]:h-(--lp-volume-value) data-[orientation=vertical]:w-full",
         className
       )}
       style={
         {
-          "--lp-volume-value": `${currentValue * 100}%`,
+          "--lp-volume-value": `${(currentValue * 100).toString()}%`,
         } as React.CSSProperties
       }
       {...etc}
@@ -152,13 +152,18 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
       <SliderPrimitive.Thumb
         ref={ref}
         className={cn(
-          `bg-primary outline-primary block size-2 rounded-full outline-offset-1 focus-visible:ring-0 focus-visible:outline-1`,
+          `
+            block size-2 rounded-full bg-primary outline-offset-1 outline-primary
+            focus-visible:ring-0 focus-visible:outline-1
+          `,
           className
         )}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={displayValue}
-        aria-valuetext={showVolumeText ? `${displayValue}% volume` : undefined}
+        aria-valuetext={
+          showVolumeText ? `${displayValue.toString()}% volume` : undefined
+        }
         aria-label="Volume"
         {...etc}
       />

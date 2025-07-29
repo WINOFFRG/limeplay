@@ -1,21 +1,13 @@
 import { create } from "zustand"
 
-import {
-  MediaStateStore,
-  createMediaStateStore,
-} from "@/registry/default/hooks/use-media-state"
-import {
-  PlayerRootStore,
-  createPlayerRootStore,
-} from "@/registry/default/hooks/use-player-root-store"
-import {
-  TimelineStore,
-  createTimelineStore,
-} from "@/registry/default/hooks/use-timeline"
-import {
-  VolumeStore,
-  createVolumeStore,
-} from "@/registry/default/hooks/use-volume"
+import type { MediaStateStore } from "@/registry/default/hooks/use-media-state"
+import { createMediaStateStore } from "@/registry/default/hooks/use-media-state"
+import type { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
+import { createPlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
+import type { TimelineStore } from "@/registry/default/hooks/use-timeline"
+import { createTimelineStore } from "@/registry/default/hooks/use-timeline"
+import type { VolumeStore } from "@/registry/default/hooks/use-volume"
+import { createVolumeStore } from "@/registry/default/hooks/use-volume"
 
 export type TypeMediaStore = PlayerRootStore &
   VolumeStore &

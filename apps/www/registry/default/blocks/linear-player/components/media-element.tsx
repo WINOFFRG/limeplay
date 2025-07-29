@@ -13,7 +13,7 @@ export function MediaElement() {
   const playbackUrl = searchParams.get("playbackUrl")
 
   useEffect(() => {
-    const mediaElement = mediaRef?.current
+    const mediaElement = mediaRef.current
 
     if (player && mediaElement) {
       let finalUrl =
@@ -45,16 +45,11 @@ export function MediaElement() {
 
       player.configure(config)
 
-      player.load(finalUrl)
+      void player.load(finalUrl)
 
       return () => {
-        if (mediaElement) {
-          mediaElement.pause()
-        }
-
-        if (player) {
-          player.destroy()
-        }
+        mediaElement.pause()
+        void player.destroy()
       }
     }
   }, [player, mediaRef])
