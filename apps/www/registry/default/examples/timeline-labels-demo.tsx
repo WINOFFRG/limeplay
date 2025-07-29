@@ -22,8 +22,7 @@ export function TimelineLabelsDemo() {
             <TimelineControlPrimitive.Thumb
               showWithHover
               className={`
-                absolute h-8 w-px rounded-full bg-white/60 opacity-0 transition-opacity
-                duration-[var(--lp-transition-speed-regular)]
+                absolute h-8 w-px rounded-full bg-white/60 opacity-0 transition-opacity duration-[var(--lp-transition-speed-regular)]
                 group-hover/timeline:opacity-100
                 group-active/timeline:bg-white
               `}

@@ -17,7 +17,12 @@ import { BaseLinkItem, type LinkItemType } from "@/components/layouts/links"
 const menuItemVariants = cva("", {
   variants: {
     variant: {
-      main: "hover:text-fd-popover-foreground/50 data-[active=true]:text-fd-primary inline-flex items-center gap-2 py-1.5 transition-colors data-[active=true]:font-medium [&_svg]:size-4",
+      main: `
+        inline-flex items-center gap-2 py-1.5 transition-colors
+        hover:text-fd-popover-foreground/50
+        data-[active=true]:font-medium data-[active=true]:text-fd-primary
+        [&_svg]:size-4
+      `,
       icon: buttonVariants({
         size: "icon",
         variant: "ghost",
@@ -53,7 +58,7 @@ export function MenuLinkItem({
 
     return (
       <div className={cn("mb-4 flex flex-col", props.className)}>
-        <p className="text-fd-muted-foreground mb-1 text-sm">
+        <p className="mb-1 text-sm text-fd-muted-foreground">
           {item.url ? (
             <NavigationMenuLink asChild>
               <Link href={item.url}>{header}</Link>
@@ -100,7 +105,13 @@ export function MenuTrigger({
   return (
     <NavigationMenuTrigger
       {...props}
-      onPointerMove={enableHover ? undefined : (e) => { e.preventDefault(); }}
+      onPointerMove={
+        enableHover
+          ? undefined
+          : (e) => {
+              e.preventDefault()
+            }
+      }
       className={cn(
         buttonVariants({
           size: "icon",

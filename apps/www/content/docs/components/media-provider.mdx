@@ -12,25 +12,26 @@ As we keep on adding bound slices to the store in `lib/create-media-store.ts` fi
 1. Setup the provider in the root
 
 ```tsx lineNumbers=6 title="components/player/media-player.tsx"
- import { MediaProvider } from "@/registry/default/ui/media-provider"    // [!code ++]
+import { MediaProvider } from "@/registry/default/ui/media-provider" // [!code ++]
+
 // ... other imports
 
 export function MediaPlayer() {
   return (
     // [!code ++]
-      <MediaProvider>
-        <PlayerHooks />
-        <Suspense>
-          <Layout.RootContainer height={720} width={1280}>
-            <Layout.PlayerContainer>
-              <MediaElement />
-              <Layout.ControlsContainer>
-                <BottomControls />
-              </Layout.ControlsContainer>
-            </Layout.PlayerContainer>
-          </Layout.RootContainer>
-        </Suspense>
-      </MediaProvider>
+    <MediaProvider>
+      <PlayerHooks />
+      <Suspense>
+        <Layout.RootContainer height={720} width={1280}>
+          <Layout.PlayerContainer>
+            <MediaElement />
+            <Layout.ControlsContainer>
+              <BottomControls />
+            </Layout.ControlsContainer>
+          </Layout.PlayerContainer>
+        </Layout.RootContainer>
+      </Suspense>
+    </MediaProvider>
   )
 }
 ```
@@ -51,4 +52,6 @@ export function VolumeStateControlDemo() {
 }
 ```
 
-<Callout title="Prerequisites">The above example relies on volume slice which should be added first.</Callout>
+<Callout title="Prerequisites">
+  The above example relies on volume slice which should be added first.
+</Callout>

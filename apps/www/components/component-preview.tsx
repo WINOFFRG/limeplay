@@ -34,7 +34,7 @@ export async function ComponentPreview({
     throw new Error(`Component ${name} not found in registry`)
   }
 
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
   const filePath = path.join(Component?.files?.[0]?.path)
   const fileContent = await fs.promises.readFile(filePath, "utf-8")
   const fileName = path.basename(filePath)
@@ -66,11 +66,9 @@ export async function ComponentPreview({
               <TabsTrigger
                 value="preview"
                 className={`
-                  relative h-9 cursor-pointer rounded-none border-b-2 border-b-transparent
-                  bg-transparent px-4 pt-2 pb-3 font-semibold text-muted-foreground shadow-none
-                  transition-none
-                  data-[state=active]:border-b-primary data-[state=active]:text-foreground
-                  data-[state=active]:shadow-none
+                  relative h-9 cursor-pointer rounded-none border-b-2 border-b-transparent bg-transparent px-4 pt-2 pb-3 font-semibold
+                  text-muted-foreground shadow-none transition-none
+                  data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none
                 `}
               >
                 Preview
@@ -78,11 +76,9 @@ export async function ComponentPreview({
               <TabsTrigger
                 value="code"
                 className={`
-                  relative h-9 cursor-pointer rounded-none border-b-2 border-b-transparent
-                  bg-transparent px-4 pt-2 pb-3 font-semibold text-muted-foreground shadow-none
-                  transition-none
-                  data-[state=active]:border-b-primary data-[state=active]:text-foreground
-                  data-[state=active]:shadow-none
+                  relative h-9 cursor-pointer rounded-none border-b-2 border-b-transparent bg-transparent px-4 pt-2 pb-3 font-semibold
+                  text-muted-foreground shadow-none transition-none
+                  data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none
                 `}
               >
                 Code
