@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "volume-slider-control-horizontal-demo",
+  "type": "registry:example",
+  "registryDependencies": [
+    "https://limeplay.winoffrg.dev/r/styles/default/volume-control.json",
+    "https://limeplay.winoffrg.dev/r/styles/default/volume-state-control-demo.json"
+  ],
+  "files": [
+    {
+      "path": "registry/default/examples/volume-slider-control-horizontal-demo.tsx",
+      "content": "import { VolumeStateControlDemo } from \"@/registry/default/examples/volume-state-control-demo\"\nimport * as VolumeSlider from \"@/registry/default/ui/volume-control\"\n\nexport function VolumeSliderControlHorizontalDemo() {\n  return (\n    <div className=\"bg-primary/10 my-4 flex h-fit flex-row items-center gap-1 rounded-md pe-3\">\n      <VolumeStateControlDemo />\n      <VolumeSlider.Root\n        className={`focus-area -focus-area-x-12 -focus-area-y-2 relative h-1 w-16 cursor-crosshair rounded-md`}\n        orientation=\"horizontal\"\n      >\n        <VolumeSlider.Track>\n          <VolumeSlider.Progress />\n        </VolumeSlider.Track>\n        <VolumeSlider.Thumb className=\"size-3\" />\n      </VolumeSlider.Root>\n    </div>\n  )\n}\n",
+      "type": "registry:example"
+    }
+  ]
+}

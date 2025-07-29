@@ -1,8 +1,8 @@
 import React from "react"
 import clamp from "lodash.clamp"
-import { StateCreator } from "zustand"
+import type { StateCreator } from "zustand"
 
-import { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
+import type { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
 import { noop, off, on } from "@/registry/default/lib/utils"
 import {
   useGetStore,
@@ -15,7 +15,7 @@ export function useVolumeStates() {
   const player = useMediaStore((state) => state.player)
 
   React.useEffect(() => {
-    if (!mediaRef?.current) return noop
+    if (!mediaRef.current) return noop
 
     const media = mediaRef.current
 
@@ -42,10 +42,8 @@ export function useVolumeStates() {
     volumeHandler()
 
     return () => {
-      if (media) {
-        off(media, "volumechange", volumeHandler)
-        off(media, "audiotrackschanged", audioTracksChangedHandler)
-      }
+      off(media, "volumechange", volumeHandler)
+      off(media, "audiotrackschanged", audioTracksChangedHandler)
     }
   }, [store, mediaRef, player])
 }
@@ -74,11 +72,11 @@ export function useVolume() {
   const mediaRef = useMediaStore((state) => state.mediaRef)
 
   function setVolume(volume: number, progress = 0, delta = 0) {
-    if (!mediaRef?.current) return
+    if (!mediaRef.current) return
 
     const value = typeof delta === "number" ? volume + delta : progress
 
-    if (value === undefined || Number.isNaN(value)) {
+    if (Number.isNaN(value)) {
       return
     }
 
@@ -95,7 +93,7 @@ export function useVolume() {
   }
 
   function toggleMute() {
-    if (!mediaRef?.current) return
+    if (!mediaRef.current) return
 
     const media = mediaRef.current
     media.muted = !media.muted
@@ -111,7 +109,7 @@ export function useVolume() {
   }
 
   function setMuted(muted: boolean) {
-    if (!mediaRef?.current) return
+    if (!mediaRef.current) return
 
     const media = mediaRef.current
 

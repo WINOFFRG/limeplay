@@ -41,7 +41,9 @@ export function TimelineSliderControl() {
         variant="glass"
         size="icon"
         className="h-6 w-14 cursor-pointer"
-        onClick={() => setShowRemaining(!showRemaining)}
+        onClick={() => {
+          setShowRemaining(!showRemaining)
+        }}
         aria-label={
           showRemaining ? "Show total duration" : "Show remaining time"
         }

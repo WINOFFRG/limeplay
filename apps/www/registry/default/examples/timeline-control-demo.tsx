@@ -32,7 +32,9 @@ export function TimelineControlDemo() {
       </div>
       <button
         className={`text-xs font-medium text-white tabular-nums transition-colors hover:text-white/80`}
-        onClick={() => setShowRemaining(!showRemaining)}
+        onClick={() => {
+          setShowRemaining(!showRemaining)
+        }}
         aria-label={
           showRemaining ? "Show total duration" : "Show remaining time"
         }
