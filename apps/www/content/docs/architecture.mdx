@@ -12,7 +12,6 @@ index: true
    ### State Management Implementation
 
    We integrate Zustand with React Context to create proper isolation between Media Player instances. This approach addresses several architectural challenges:
-
    - **Singleton Pattern**: Zustand uses a singleton store where states are shared across components, unlike React Hooks which maintain separate state in each component.
 
    - **Multiple Player Support**: To support multiple Media Player instances on the same page, we implemented an isolation layer using React Context, ensuring each player maintains its own state.

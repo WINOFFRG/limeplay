@@ -3,11 +3,11 @@
 import React, { createContext, useContext, useRef } from "react"
 import { useStore } from "zustand"
 
-import {
+import type {
   CreateMediaStoreProps,
   TypeMediaStore,
-  createMediaStore,
 } from "@/registry/default/internal/create-media-store"
+import { createMediaStore } from "@/registry/default/internal/create-media-store"
 
 type MediaProviderContext = ReturnType<typeof createMediaStore>
 
@@ -41,13 +41,12 @@ function useMediaStoreWithContext<T>(
 let globalStore: ReturnType<typeof createMediaStore> | null = null
 
 // DEV: Migrate to conditional calling without context
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function useMediaStoreWithoutContext<T>(
   selector: (state: TypeMediaStore) => T,
   options?: CreateMediaStoreProps
 ): T {
-  if (!globalStore) {
-    globalStore = createMediaStore(options || {})
-  }
+  globalStore ??= createMediaStore(options ?? {})
 
   return useStore(globalStore, selector)
 }

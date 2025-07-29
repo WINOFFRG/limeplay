@@ -37,7 +37,10 @@ export default function NotFound() {
           />
         </motion.div>
         <motion.p
-          className="mt-4 max-w-lg text-lg text-gray-300 md:text-xl"
+          className={`
+            mt-4 max-w-lg text-lg text-gray-300
+            md:text-xl
+          `}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.8 }}

@@ -10,7 +10,6 @@ import { ComponentPreview } from "@/components/component-preview"
 const generator = createGenerator()
 
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
-  // @ts-ignore
   return {
     ...defaultComponents,
     AutoTypeTable: (props) => (
@@ -20,6 +19,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     ComponentPreview,
     pre: ({ ref: _ref, ...props }: React.ComponentPropsWithRef<any>) => (
       <CodeBlock {...props} keepBackground>
+        {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
         <Pre>{props.children}</Pre>
       </CodeBlock>
     ),

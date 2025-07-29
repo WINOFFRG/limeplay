@@ -5,7 +5,8 @@ import React, {
   type ComponentProps,
   type HTMLAttributes,
 } from "react"
-import Link, { LinkProps } from "next/link"
+import type { LinkProps } from "next/link"
+import Link from "next/link"
 import type {
   NavigationMenuContentProps,
   NavigationMenuTriggerProps,
@@ -27,7 +28,12 @@ import { useNav } from "@/components/contexts/layout"
 import { BaseLinkItem } from "@/components/layouts/links"
 
 const navItemVariants = cva(
-  "hover:text-fd-accent-foreground data-[active=true]:text-fd-primary inline-flex items-center gap-1 p-2 transition-colors [&_svg]:size-4"
+  `
+    inline-flex items-center gap-1 p-2 transition-colors
+    hover:text-fd-accent-foreground
+    data-[active=true]:text-fd-primary
+    [&_svg]:size-4
+  `
 )
 
 export function Navbar(props: HTMLAttributes<HTMLElement>) {
@@ -40,7 +46,11 @@ export function Navbar(props: HTMLAttributes<HTMLElement>) {
         id="nd-nav"
         {...props}
         className={cn(
-          "border-fd-foreground/10 top-(--fd-banner-height) relative left-1/2 z-40 box-content w-full max-w-[calc(100%-1rem)] -translate-x-1/2 border-b transition-colors lg:w-[calc(100%-20rem)] lg:rounded-2xl lg:border",
+          `
+            relative top-(--fd-banner-height) left-1/2 z-40 box-content w-full max-w-[calc(100%-1rem)] -translate-x-1/2 border-b
+            border-fd-foreground/10 transition-colors
+            lg:w-[calc(100%-20rem)] lg:rounded-2xl lg:border
+          `,
           value.length > 0 ? "shadow-lg" : "shadow-sm",
           (isTransparent || value.length > 0) &&
             "bg-fd-background/80 backdrop-blur-lg",
@@ -48,7 +58,10 @@ export function Navbar(props: HTMLAttributes<HTMLElement>) {
         )}
       >
         <NavigationMenuList
-          className="flex h-14 w-full flex-row items-center px-6 lg:h-12"
+          className={`
+            flex h-14 w-full flex-row items-center px-6
+            lg:h-12
+          `}
           asChild
         >
           <nav>{props.children}</nav>
@@ -66,7 +79,11 @@ export function NavbarMenuContent(props: NavigationMenuContentProps) {
     <NavigationMenuContent
       {...props}
       className={cn(
-        "grid grid-cols-1 gap-3 px-4 pb-4 md:grid-cols-2 lg:grid-cols-3",
+        `
+          grid grid-cols-1 gap-3 px-4 pb-4
+          md:grid-cols-2
+          lg:grid-cols-3
+        `,
         props.className
       )}
     >
@@ -96,7 +113,10 @@ export function NavbarMenuLink(props: NavbarMenuLinkProps) {
       <Link
         {...props}
         className={cn(
-          "bg-fd-card hover:bg-fd-accent/80 hover:text-fd-accent-foreground flex flex-col gap-2 rounded-lg border p-3 transition-colors",
+          `
+            flex flex-col gap-2 rounded-lg border bg-fd-card p-3 transition-colors
+            hover:bg-fd-accent/80 hover:text-fd-accent-foreground
+          `,
           props.className
         )}
       >

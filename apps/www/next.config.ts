@@ -1,4 +1,4 @@
-import { NextConfig } from "next"
+import type { NextConfig } from "next"
 import { createMDX } from "fumadocs-mdx/next"
 
 const withMDX = createMDX()
@@ -10,6 +10,9 @@ const config: NextConfig = {
     unoptimized: true,
   },
   productionBrowserSourceMaps: true,
+  eslint: {
+    // ignoreDuringBuilds: true,
+  },
 }
 
 export default withMDX(config)
