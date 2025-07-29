@@ -1,5 +1,4 @@
 import type { ReactNode } from "react"
-import Link from "next/link"
 import { Banner } from "fumadocs-ui/components/banner"
 import { DocsLayout } from "fumadocs-ui/layouts/docs"
 import { RootProvider } from "fumadocs-ui/provider"
