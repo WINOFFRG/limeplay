@@ -153,8 +153,8 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
         ref={ref}
         className={cn(
           `
-            block size-2 rounded-full bg-primary outline-offset-1 outline-primary
-            focus-visible:ring-0 focus-visible:outline-1
+            block size-2 rounded-full bg-primary
+            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50
           `,
           className
         )}

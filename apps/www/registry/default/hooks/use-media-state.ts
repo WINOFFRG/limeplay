@@ -18,6 +18,16 @@ export function useMediaStates() {
 
     const media = mediaRef.current
 
+    // DEV: Handle more cases like player destroyed
+    const setInitialState = () => {
+      const isBuffering = player?.isBuffering()
+
+      store.setState({
+        paused: media.paused,
+        status: isBuffering ? "buffering" : media.paused ? "paused" : "playing",
+      })
+    }
+
     const pauseHandler = () => {
       store.setState({
         paused: true,
@@ -61,6 +71,8 @@ export function useMediaStates() {
     on(media, "loadeddata", loadedDataHandler)
     on(media, "loopchange", loopChangeHandler)
 
+    setInitialState()
+
     return () => {
       off(media, "pause", pauseHandler)
       off(media, "play", playHandler)
@@ -68,7 +80,7 @@ export function useMediaStates() {
       off(media, "loadeddata", loadedDataHandler)
       off(media, "loopchange", loopChangeHandler)
     }
-  }, [store, mediaRef])
+  }, [store, mediaRef, player])
 
   // Handle buffering states
   React.useEffect(() => {
