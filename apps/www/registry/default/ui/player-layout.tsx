@@ -34,11 +34,26 @@ export function ControlsContainer({
   return (
     <div
       data-layout-type="controls-container"
-      className={cn("pointer-events-auto absolute inset-0", className)}
+      className={cn(
+        `pointer-events-none absolute inset-0 isolate contain-strict`,
+        className
+      )}
       {...props}
     >
       {children}
     </div>
+  )
+}
+
+export function ControlsOverlayContainer() {
+  return (
+    <div
+      className={`
+        pointer-events-none absolute inset-0 bg-black/30 bg-linear-to-t from-black/30 to-transparent to-[120px] transition-opacity duration-300
+        ease-out
+        group-data-[idle=true]/root:opacity-0
+      `}
+    />
   )
 }
 
@@ -54,7 +69,9 @@ export const RootContainer = React.forwardRef<
 >((props, forwardedRef) => {
   const { children, height, width, className } = props
   const idle = useMediaStore((state) => state.idle)
+  const setIdle = useMediaStore((state) => state.setIdle)
   const status = useMediaStore((state) => state.status)
+
   const setPlayerContainerRef = useMediaStore(
     (state) => state.setPlayerContainerRef
   )
@@ -80,7 +97,13 @@ export const RootContainer = React.forwardRef<
         ["--aspect-ratio" as string]: aspectRatio,
         aspectRatio: aspectRatio,
       }}
-      className={cn("m-auto max-w-[var(--width,1280px)] min-w-80", className)}
+      className={cn(
+        `
+          group/root m-auto max-w-[var(--width,1280px)] min-w-80
+          focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50
+        `,
+        className
+      )}
       // Show controls like tabbing over
       // onKeyDown={}
       // onPointerMove show controls again
@@ -88,6 +111,24 @@ export const RootContainer = React.forwardRef<
       // onPointerLeave hide controls now, maybe with timeout?
       // onFocus show controls and set focus true so that keyboard shortcuts are triggered
       // onBlur hide controls and set focus to false
+      onPointerUp={() => {
+        setIdle(false)
+      }}
+      onPointerLeave={() => {
+        setIdle(true)
+      }}
+      onPointerMove={() => {
+        setIdle(false)
+      }}
+      onPointerEnter={() => {
+        setIdle(false)
+      }}
+      onFocus={() => {
+        setIdle(false)
+      }}
+      onBlur={() => {
+        setIdle(true)
+      }}
       {...props}
     >
       {children}
