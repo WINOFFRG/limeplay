@@ -45,14 +45,16 @@ export function MediaElement() {
 
       player.configure(config)
 
-      void player.load(finalUrl)
-
-      return () => {
-        mediaElement.pause()
-        void player.destroy()
-      }
+      void player
+        .load(finalUrl)
+        .then(() => {
+          console.debug("[limeplayer] media loaded")
+        })
+        .catch((error: unknown) => {
+          console.error("[limeplayer] error loading media:", error)
+        })
     }
-  }, [player, mediaRef])
+  }, [player, mediaRef, playbackUrl])
 
   return (
     <Media
