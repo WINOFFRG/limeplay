@@ -6,13 +6,7 @@ const withMDX = createMDX()
 const config: NextConfig = {
   reactStrictMode: true,
   output: "export",
-  images: {
-    unoptimized: true,
-  },
   productionBrowserSourceMaps: true,
-  eslint: {
-    // ignoreDuringBuilds: true,
-  },
 }
 
 export default withMDX(config)
