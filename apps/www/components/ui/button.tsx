@@ -6,9 +6,8 @@ import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
   `
-    inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap ring-offset-background
-    transition-colors
-    focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none
+    inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors
+    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50
     disabled:pointer-events-none disabled:opacity-50
     [&_svg]:pointer-events-none [&_svg]:shrink-0
     [&_svg:not([class*='size-'])]:size-4
@@ -19,31 +18,23 @@ const buttonVariants = cva(
         default: `
           bg-primary text-primary-foreground
           hover:bg-primary/90
-          focus-visible:ring-primary
         `,
         outline: `
           border border-input bg-background
           hover:bg-accent hover:text-accent-foreground
-          focus-visible:ring-ring
         `,
         secondary: `
           bg-secondary text-secondary-foreground
           hover:bg-secondary/80
-          focus-visible:ring-secondary
         `,
-        ghost: `
-          hover:bg-accent hover:text-accent-foreground
-          focus-visible:ring-accent
-        `,
+        ghost: `hover:bg-accent hover:text-accent-foreground`,
         link: `
           text-primary underline-offset-4
           hover:underline
-          focus-visible:ring-primary
         `,
         glass: `
           bg-transparent text-foreground
           hover:bg-primary/10 hover:backdrop-blur-sm
-          focus-visible:bg-primary/10 focus-visible:ring-primary/50
           active:scale-[0.97]
         `,
       },
