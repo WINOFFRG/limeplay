@@ -8,7 +8,7 @@
   "files": [
     {
       "path": "registry/default/ui/fallback-poster.tsx",
-      "content": "import type { ComponentPropsWithoutRef } from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\nexport function FallbackPoster({\n  children,\n  className,\n  ...props\n}: ComponentPropsWithoutRef<\"div\">) {\n  return (\n    <div\n      className={cn(\n        \"bg-background absolute inset-0 -z-1 flex flex-col items-center justify-center\",\n        className\n      )}\n      {...props}\n    >\n      {children}\n    </div>\n  )\n}\n",
+      "content": "import type { ComponentPropsWithoutRef } from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\nexport function FallbackPoster({\n  children,\n  className,\n  ...props\n}: ComponentPropsWithoutRef<\"div\">) {\n  return (\n    <div\n      className={cn(\n        \"absolute inset-0 -z-1 flex flex-col items-center justify-center bg-background\",\n        className\n      )}\n      {...props}\n    >\n      {children}\n    </div>\n  )\n}\n",
       "type": "registry:ui"
     }
   ]
