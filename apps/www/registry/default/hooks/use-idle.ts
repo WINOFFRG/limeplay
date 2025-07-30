@@ -59,6 +59,7 @@ const useIdle = (
 
     return () => {
       mounted = false
+      clearTimeout(timeout)
 
       for (const event of events) {
         off(window, event, onEvent)
