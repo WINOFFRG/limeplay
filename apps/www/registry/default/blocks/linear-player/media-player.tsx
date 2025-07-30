@@ -29,6 +29,7 @@ export function MediaPlayer() {
               <MediaElement />
             </Suspense>
             <PlayerHooks />
+            <Layout.ControlsOverlayContainer />
             <Layout.ControlsContainer>
               <BottomControls />
             </Layout.ControlsContainer>
