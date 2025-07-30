@@ -80,7 +80,7 @@ export function useMediaStates() {
       off(media, "loadeddata", loadedDataHandler)
       off(media, "loopchange", loopChangeHandler)
     }
-  }, [store, mediaRef, player])
+  }, [store, mediaRef])
 
   // Handle buffering states
   React.useEffect(() => {
