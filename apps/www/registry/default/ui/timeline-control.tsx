@@ -82,7 +82,7 @@ export const Track = React.forwardRef<
       tabIndex={0}
       className={cn(
         `
-          relative h-full grow rounded-full bg-white/20
+          relative flex h-full grow flex-row rounded-full bg-white/20
           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50
         `,
         className
@@ -188,9 +188,13 @@ export const Buffered = React.forwardRef<HTMLDivElement, BufferedProps>(
           const startPercent = (range.start / duration) * 100
           const widthPercent = ((range.end - range.start) / duration) * 100
           return (
-            <SliderPrimitive.Track
+            <SliderPrimitive.Indicator
               key={i}
-              className={`absolute left-[var(--lp-buffered-start)] h-full w-[var(--lp-buffered-width)] rounded-e-full bg-white/40`}
+              className={cn(
+                `left-[var(--lp-buffered-start)]! h-full w-[var(--lp-buffered-width)]! bg-white/40`,
+                variant === "from-zero" && "rounded-e-full",
+                className
+              )}
               style={
                 {
                   "--lp-buffered-start": `${startPercent}%`,
