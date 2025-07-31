@@ -13,7 +13,6 @@ export type TypeMediaStore = PlayerRootStore &
   VolumeStore &
   MediaStateStore &
   TimelineStore
-// & {}
 
 export interface CreateMediaStoreProps {
   debug?: boolean
