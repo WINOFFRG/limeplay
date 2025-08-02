@@ -16,6 +16,7 @@ export const hooks: Registry["items"] = [
     name: "use-volume",
     type: "registry:hook",
     dependencies: ["lodash.clamp", "zustand"],
+    devDependencies: ["@types/lodash.clamp"],
     registryDependencies: ["use-player-root-store", "utils", "media-provider"],
     files: [
       {
@@ -27,7 +28,8 @@ export const hooks: Registry["items"] = [
   {
     name: "use-track-events",
     type: "registry:hook",
-    dependencies: ["lodash.clamp"],
+    dependencies: ["lodash.clamp", "zustand"],
+    devDependencies: ["@types/lodash.clamp"],
     files: [
       {
         path: "hooks/use-track-events.ts",
@@ -39,6 +41,7 @@ export const hooks: Registry["items"] = [
     name: "use-timeline",
     type: "registry:hook",
     dependencies: ["lodash.clamp", "zustand"],
+    devDependencies: ["@types/lodash.clamp"],
     registryDependencies: ["use-player-root-store", "utils", "media-provider"],
     files: [
       {
