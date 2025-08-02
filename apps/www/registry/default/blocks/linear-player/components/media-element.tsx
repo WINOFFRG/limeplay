@@ -17,7 +17,7 @@ export function MediaElement() {
 
     if (player && mediaElement) {
       let finalUrl =
-        "https://prod-live-ygx-s1-7k3m-stream-in-edge.ygxworld.in/hungama/rewind-86400.m3u8?token=65454d6347fa1c425fadb87786be5530961b5430-59a2c1fd-1754158821-1754153921"
+        "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
 
       if (playbackUrl) {
         try {
