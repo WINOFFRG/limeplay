@@ -16,7 +16,7 @@ export function PlayerContainer({
     <div
       data-layout-type="player-container"
       className={cn(
-        `relative z-20 aspect-(--aspect-ratio) max-h-[min(var(--height,_720px),_calc(100vh_-_16px_*_2))] w-full overflow-hidden rounded-lg`,
+        `relative z-20 aspect-(--aspect-ratio) w-full overflow-hidden rounded-lg`,
         className
       )}
       {...props}
@@ -48,10 +48,12 @@ export function ControlsContainer({
 export function ControlsOverlayContainer() {
   return (
     <div
+      data-layout-type="controls-overlay-container"
       className={`
         pointer-events-none absolute inset-0 bg-black/30 bg-linear-to-t from-black/30 to-transparent to-[120px] transition-opacity duration-300
         ease-out
         group-data-[idle=true]/root:opacity-0
+        group-data-[status=paused]/root:opacity-100
       `}
     />
   )
@@ -67,7 +69,7 @@ export const RootContainer = React.forwardRef<
   HTMLDivElement,
   RootContainerProps
 >((props, forwardedRef) => {
-  const { children, height, width, className } = props
+  const { children, height, width, className, ...etc } = props
   const idle = useMediaStore((state) => state.idle)
   const setIdle = useMediaStore((state) => state.setIdle)
   const status = useMediaStore((state) => state.status)
@@ -90,19 +92,15 @@ export const RootContainer = React.forwardRef<
       data-idle={idle}
       ref={composeRefs(forwardedRef, setPlayerContainerRef)}
       data-status={status}
-      data-theme={"light"}
       style={{
-        ["--width" as string]: `${width}px`,
-        ["--height" as string]: `${height}px`,
         ["--aspect-ratio" as string]: aspectRatio,
-        aspectRatio: aspectRatio,
       }}
       className={cn(
+        className,
         `
-          group/root m-auto max-w-[var(--width,1280px)] min-w-80
+          group/root aspect-(--aspect-ratio)
           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50
-        `,
-        className
+        `
       )}
       // Show controls like tabbing over
       // onKeyDown={}
@@ -129,7 +127,7 @@ export const RootContainer = React.forwardRef<
       onBlur={() => {
         setIdle(true)
       }}
-      {...props}
+      {...etc}
     >
       {children}
     </div>
