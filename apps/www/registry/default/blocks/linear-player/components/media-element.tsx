@@ -39,7 +39,7 @@ export function MediaElement() {
       const config = {
         streaming: {
           // DEV: To debug the buffer values in timeline slider
-          bufferingGoal: 100,
+          bufferingGoal: 120,
         },
       } as shaka.extern.PlayerConfiguration
 
@@ -48,10 +48,10 @@ export function MediaElement() {
       void player
         .load(finalUrl)
         .then(() => {
-          console.debug("[limeplayer] media loaded")
+          console.debug("[limeplay] media loaded")
         })
         .catch((error: unknown) => {
-          console.error("[limeplayer] error loading media:", error)
+          console.error("[limeplay] error loading media:", error)
         })
     }
   }, [player, mediaRef, playbackUrl])

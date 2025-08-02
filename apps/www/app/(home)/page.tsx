@@ -4,7 +4,7 @@ import { MediaPlayer as LinearMediaPlayer } from "@/registry/default/blocks/line
 
 export default function Home() {
   return (
-    <section className="mt-16">
+    <section className="lg:mt-16">
       <VideoBackground />
       <MotionContainer>
         <LinearMediaPlayer />
