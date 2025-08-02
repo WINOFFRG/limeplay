@@ -9,6 +9,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/fallback-poster.tsx",
         type: "registry:ui",
+        target: "components/player/fallback-poster.tsx",
       },
     ],
   },
@@ -21,6 +22,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/mute-control.tsx",
         type: "registry:ui",
+        target: "components/player/mute-control.tsx",
       },
     ],
   },
@@ -39,10 +41,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/media-provider.tsx",
         type: "registry:ui",
-      },
-      {
-        path: "internal/create-media-store.ts",
-        type: "registry:lib",
+        target: "components/player/media-provider.tsx",
       },
     ],
   },
@@ -55,6 +54,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/player-layout.tsx",
         type: "registry:ui",
+        target: "components/player/player-layout.tsx",
       },
     ],
   },
@@ -67,13 +67,14 @@ export const ui: Registry["items"] = [
       {
         path: "ui/media.tsx",
         type: "registry:ui",
+        target: "components/player/media.tsx",
       },
     ],
   },
   {
     name: "volume-control",
     type: "registry:ui",
-    dependencies: ["@base-ui-components/react/slider"],
+    dependencies: ["@base-ui-components/react"],
     registryDependencies: [
       "media-provider",
       "utils",
@@ -84,6 +85,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/volume-control.tsx",
         type: "registry:ui",
+        target: "components/player/volume-control.tsx",
       },
     ],
   },
@@ -96,6 +98,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/playback-control.tsx",
         type: "registry:ui",
+        target: "components/player/playback-control.tsx",
       },
     ],
   },
@@ -107,6 +110,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/timeline-labels.tsx",
         type: "registry:ui",
+        target: "components/player/timeline-labels.tsx",
       },
     ],
   },
@@ -118,13 +122,14 @@ export const ui: Registry["items"] = [
       {
         path: "ui/player-hooks.tsx",
         type: "registry:ui",
+        target: "components/player/player-hooks.tsx",
       },
     ],
   },
   {
     name: "timeline-control",
     type: "registry:ui",
-    dependencies: ["@base-ui-components/react/slider"],
+    dependencies: ["@base-ui-components/react"],
     registryDependencies: [
       "media-provider",
       "utils",
@@ -135,6 +140,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/timeline-control.tsx",
         type: "registry:ui",
+        target: "components/player/timeline-control.tsx",
       },
     ],
   },
