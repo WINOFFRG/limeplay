@@ -21,7 +21,7 @@ export function TimelineSliderControl() {
         <TimelineSlider.Root className="group focus-area cursor-crosshair -focus-area-x-2 -focus-area-y-14">
           <TimelineSlider.Track className="overflow-hidden">
             <TimelineSlider.Progress />
-            <TimelineSlider.Buffered variant="from-zero" />
+            <TimelineSlider.Buffered variant="combined" />
           </TimelineSlider.Track>
           <TimelineSlider.Thumb
             showWithHover

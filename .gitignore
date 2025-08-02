@@ -41,3 +41,4 @@ shaka-player
 out
 build
 .source
+apps/www/public/r/*

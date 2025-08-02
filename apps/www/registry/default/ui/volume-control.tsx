@@ -17,7 +17,7 @@ export const Root = React.forwardRef<
   const internalRef = useRef<HTMLDivElement>(
     null
   ) as React.RefObject<HTMLDivElement>
-  const { className, orientation = "horizontal", ...etc } = props
+  const { className, orientation = "horizontal", disabled, ...etc } = props
   const volume = useMediaStore((state) => state.volume)
   const hasAudio = useMediaStore((state) => state.hasAudio)
   const muted = useMediaStore((state) => state.muted)
@@ -41,11 +41,13 @@ export const Root = React.forwardRef<
 
   const trackEvents = useTrackEvents({
     onPointerDown: (progress, event) => {
+      if (disabled) return
       const newVolume = getVolumeFromEvent(event)
       setCurrentValue(newVolume)
       setVolume(newVolume)
     },
     onPointerMove: (progress, isPointerDown, event) => {
+      if (disabled) return
       if (isPointerDown) {
         const newVolume = getVolumeFromEvent(event)
         setCurrentValue(newVolume)
@@ -77,6 +79,7 @@ export const Root = React.forwardRef<
         className
       )}
       orientation={orientation}
+      disabled={disabled}
       {...trackEvents}
       {...etc}
     />
@@ -118,7 +121,10 @@ export const Progress = React.forwardRef<
     <SliderPrimitive.Indicator
       ref={ref}
       className={cn(
-        "h-full w-(--lp-volume-value) bg-primary",
+        `
+          h-full w-(--lp-volume-value) bg-primary
+          data-[disabled]:bg-primary/20
+        `,
         "data-[orientation=vertical]:h-(--lp-volume-value) data-[orientation=vertical]:w-full",
         className
       )}

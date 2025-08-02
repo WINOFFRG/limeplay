@@ -10,7 +10,7 @@ export const blocks: Registry["items"] = [
     description: "Modern seamless flat linear.app Media Player",
     dependencies: [
       "@phosphor-icons/react",
-      "@base-ui-components/react/slider",
+      "@base-ui-components/react",
       "zustand",
       "shaka-player",
       "lodash.clamp",
@@ -66,10 +66,6 @@ export const blocks: Registry["items"] = [
       },
       {
         path: `${BASE_SRC_URL}/components/player-hooks.tsx`,
-        type: "registry:component",
-      },
-      {
-        path: `${BASE_SRC_URL}/components/custom-player-wrapper.tsx`,
         type: "registry:component",
       },
     ],

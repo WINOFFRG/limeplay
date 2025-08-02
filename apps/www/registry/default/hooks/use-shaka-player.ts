@@ -39,9 +39,9 @@ export function useShakaPlayer() {
 
       await playerInstance.current.attach(mediaElement)
 
-      if (debug) {
-        window.shaka_player = playerInstance.current
-      }
+      // if (debug) {
+      window.shaka_player = playerInstance.current
+      // }
     }
 
     void loadPlayer()
