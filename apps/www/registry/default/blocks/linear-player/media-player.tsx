@@ -1,10 +1,6 @@
 import { Suspense } from "react"
-import Image from "next/image"
-import Logo from "@/public/product-icon.svg"
 
-import { PRODUCT_NAME } from "@/lib/constants"
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
-import { CustomPlayerWrapper } from "@/registry/default/blocks/linear-player/components/custom-player-wrapper"
 import { MediaElement } from "@/registry/default/blocks/linear-player/components/media-element"
 import { PlayerHooks } from "@/registry/default/blocks/linear-player/components/player-hooks"
 import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
@@ -13,29 +9,45 @@ import * as Layout from "@/registry/default/ui/player-layout"
 
 export function MediaPlayer() {
   return (
-    <CustomPlayerWrapper>
-      <MediaProvider>
-        <Layout.RootContainer height={720} width={1280}>
-          <Layout.PlayerContainer>
-            <FallbackPoster className="bg-stone-900">
-              <Image
-                alt={PRODUCT_NAME}
-                src={Logo}
-                className="size-52"
-                aria-label={PRODUCT_NAME}
-              />
-            </FallbackPoster>
-            <Suspense>
-              <MediaElement />
-            </Suspense>
-            <PlayerHooks />
-            <Layout.ControlsOverlayContainer />
-            <Layout.ControlsContainer>
-              <BottomControls />
-            </Layout.ControlsContainer>
-          </Layout.PlayerContainer>
-        </Layout.RootContainer>
-      </MediaProvider>
-    </CustomPlayerWrapper>
+    <MediaProvider>
+      <Layout.RootContainer
+        height={720}
+        width={1280}
+        className="m-auto max-w-[var(--width,1280px)] min-w-80"
+      >
+        <Layout.PlayerContainer>
+          <FallbackPoster className="bg-stone-900">
+            <div className="size-48">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xmlnsXlink="http://www.w3.org/1999/xlink"
+                viewBox="248.92 245.57 243.13 238.13"
+              >
+                <g fill="#FFFFFF" transform="scale(0.921622 0.921622)">
+                  <path d="M431.379 400.665C461.344 400.75 488.286 398.172 512.104 420.733C537.51 444.798 533.218 467.261 533.899 498.049L533.532 498.12C529.556 495.92 520.482 485.621 516.698 481.84L470.908 435.943Q452.044 417.295 431.379 400.665Z" />
+                  <path d="M406.387 425.964C409.155 428.438 411.523 431.555 413.933 434.371Q419.539 441.02 425.558 447.298C430.437 452.293 435.603 457.018 440.58 461.918L476.869 497.598C481.146 501.779 502.896 521.469 504.475 524.594C493.421 524.952 481.818 524.944 470.773 524.314C451.249 523.202 435.15 514.904 422.215 500.257C408.218 484.408 406.168 465.814 406.096 445.498C406.072 439.014 405.996 432.434 406.387 425.964Z" />
+                  <path d="M316.363 266.819C319.679 266.584 323.046 266.448 326.372 266.45C346.36 266.464 363.786 272.567 377.983 286.958C400.581 309.864 398.552 335.286 398.252 364.845C395.605 361.76 392.725 358.849 389.938 355.889C375.905 340.96 360.902 326.931 346.268 312.598C330.792 297.44 315.625 282.005 299.904 267.096Q308.135 267.022 316.363 266.819Z" />
+                  <path d="M491.396 285.983C495.208 286.12 499.04 285.861 502.855 285.826C512.957 285.732 523.123 285.575 533.217 285.94C526.756 291.659 520.778 298.037 514.567 304.031L468.068 349.357C461.208 356.063 454.519 363.398 447.248 369.626C442.944 370.55 438.044 370.176 433.639 370.17C424.281 370.159 414.898 369.786 405.546 370.066C413.588 360.8 422.4 352.314 431.074 343.651L465.759 309.179Q472.499 302.625 479.081 295.912C481.914 292.999 484.848 289.432 488.074 286.974C488.981 286.283 490.3 286.155 491.396 285.983Z" />
+                  <path d="M270.545 293.247C281.025 304.333 292.028 314.918 302.711 325.808C319.709 343.135 336.743 360.905 355.339 376.524C359.242 379.802 368.767 385.832 371.106 389.564C356.84 389.639 342.224 390.157 328.073 388.111C309.46 385.421 294.55 375.566 283.408 360.513C271.752 344.764 270.17 327.459 270.173 308.488C270.174 303.51 269.822 298.168 270.545 293.247Z" />
+                  <path d="M355.193 419.594C360.19 419.257 365.314 419.508 370.327 419.513L398.087 419.535C377.457 440.66 355.965 461.073 334.698 481.562Q327.575 488.514 320.615 495.63C317.983 498.289 315.357 501.295 312.347 503.527C306.217 504.425 299.545 503.995 293.342 503.895L270.141 503.655C275.277 497.923 281.085 492.656 286.548 487.231L319.189 454.847L343.586 430.551C347.125 427.044 350.961 422.206 355.193 419.594Z" />
+                  <path d="M529.777 334.434C531.014 334.39 531.992 334.395 532.98 335.177C534.484 340.834 533.585 350.593 533.564 356.595L533.483 392.358C514.162 391.497 494.654 391.662 475.311 391.542C472.507 391.498 469.683 391.705 466.881 391.835C469.964 391.07 472.932 390.161 475.898 389.021C494.284 381.952 511.077 369.415 521.222 352.319C524.649 346.544 527.085 340.546 529.777 334.434Z" />
+                  <path d="M270.523 396.411Q302.598 396.13 334.672 396.433C320.693 400.842 306.987 407.999 296.556 418.425C291.015 423.631 285.96 430.872 282.404 437.54C278.364 445.115 276.502 450.085 270.54 456.705C270.243 436.625 270.542 416.496 270.523 396.411Z" />
+                  <path d="M400.766 459.333C402.538 461.633 401.859 517.699 401.861 524.557L341.02 524.512L340.215 524.314C341.353 522.344 348.727 520.459 351.099 519.4C369.251 511.295 385.161 496.191 393.675 478.252C396.606 472.078 398.364 465.681 400.766 459.333Z" />
+                  <path d="M444.22 266.765C450.383 267.24 456.65 267.219 462.832 267.312Q456.029 268.907 449.686 271.836C428.622 281.489 415.432 298.348 407.602 319.721Q405.583 325.87 404.123 332.175C403.569 328.37 402.75 324.649 402.381 320.81C400.671 303.034 401.368 284.884 401.509 267.045L426.14 266.971C432.15 266.982 438.224 267.19 444.22 266.765Z" />
+                </g>
+              </svg>
+            </div>
+          </FallbackPoster>
+          <Suspense>
+            <MediaElement />
+          </Suspense>
+          <PlayerHooks />
+          <Layout.ControlsOverlayContainer />
+          <Layout.ControlsContainer>
+            <BottomControls />
+          </Layout.ControlsContainer>
+        </Layout.PlayerContainer>
+      </Layout.RootContainer>
+    </MediaProvider>
   )
 }
