@@ -17,12 +17,14 @@ export const PlaybackControl = React.forwardRef<
   PlaybackControlProps
 >((props, forwardedRef) => {
   const status = useMediaStore((state) => state.status)
+  const mediaRef = useMediaStore((state) => state.mediaRef)
   const Comp = props.asChild ? Slot : Button
 
   const { togglePaused } = useMediaState()
 
   return (
     <Comp
+      disabled={!mediaRef.current || mediaRef.current.readyState === 0}
       ref={forwardedRef}
       aria-label={["paused", "ended"].includes(status) ? `Play` : `Pause`}
       aria-keyshortcuts="k"
