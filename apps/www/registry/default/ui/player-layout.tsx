@@ -73,6 +73,7 @@ export const RootContainer = React.forwardRef<
   const idle = useMediaStore((state) => state.idle)
   const setIdle = useMediaStore((state) => state.setIdle)
   const status = useMediaStore((state) => state.status)
+  const debug = useMediaStore((state) => state.debug)
 
   const setPlayerContainerRef = useMediaStore(
     (state) => state.setPlayerContainerRef
@@ -89,7 +90,7 @@ export const RootContainer = React.forwardRef<
       tabIndex={0}
       aria-label="Media player"
       role="region"
-      data-idle={idle}
+      data-idle={debug ? "false" : idle}
       ref={composeRefs(forwardedRef, setPlayerContainerRef)}
       data-status={status}
       style={{
