@@ -6,7 +6,7 @@ import { Pre } from "fumadocs-ui/components/codeblock"
 
 import { cn } from "@/lib/utils"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Icons } from "@/components/icons"
+// import { Icons } from "@/components/icons"
 import { Index } from "@/registry/__index__"
 import { PlayerLayoutDemo } from "@/registry/default/examples/player-root-demo"
 
@@ -94,18 +94,18 @@ export async function ComponentPreview({
           `}
           forceMount
         >
-          <React.Suspense
+          {/* <React.Suspense
             fallback={
               <div className="flex w-full items-center justify-center text-sm text-muted-foreground">
                 <Icons.spinner className="mr-2 size-4 animate-spin" />
                 Loading...
               </div>
             }
-          >
-            <PreviewComponent type={type}>
-              <PreviewTabComponent componentName={name} />
-            </PreviewComponent>
-          </React.Suspense>
+          > */}
+          <PreviewComponent type={type}>
+            <PreviewTabComponent componentName={name} />
+          </PreviewComponent>
+          {/* </React.Suspense> */}
         </TabsContent>
         <TabsContent value="code">
           <CustomCodeBlock

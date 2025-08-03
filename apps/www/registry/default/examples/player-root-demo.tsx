@@ -3,9 +3,10 @@
 import React, { useEffect } from "react"
 import { useControls } from "leva"
 
-import { LevaControls } from "@/components/leva-controls"
 import { CustomDemoControls } from "@/registry/default/internal/custom-demo-controls"
 import { PlayerHooks } from "@/registry/default/internal/player-hooks-demo"
+import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
+import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 import { Media } from "@/registry/default/ui/media"
 import {
   MediaProvider,
@@ -43,6 +44,7 @@ function MediaElement() {
   return (
     <Media
       as="video"
+      controls={true}
       className="m-0! size-full rounded-lg bg-black object-cover"
       poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
       muted
@@ -58,9 +60,11 @@ interface PlayerDemoLayoutProps extends React.PropsWithChildren {
 export function PlayerLayoutDemo({ children, type }: PlayerDemoLayoutProps) {
   return (
     <MediaProvider>
-      <LevaControls />
       <Layout.RootContainer height={720} width={1280} className="container p-0">
         <Layout.PlayerContainer className="my-4">
+          <FallbackPoster className="bg-stone-900">
+            <LimeplayLogo />
+          </FallbackPoster>
           <MediaElement />
           <PlayerHooks />
           <Layout.ControlsContainer>
