@@ -6,12 +6,14 @@
 import * as React from "react"
 
 export const Index: Record<string, any> = {
-  "default": {
-    "index": {
+  default: {
+    index: {
       name: "index",
       description: "",
       type: "registry:style",
-      registryDependencies: ["http://localhost:3000/r/styles/default/utils.json"],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+      ],
       files: [],
       component: null,
       meta: undefined,
@@ -20,15 +22,23 @@ export const Index: Record<string, any> = {
       name: "fallback-poster",
       description: "",
       type: "registry:ui",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json"],
-      files: [{
-        path: "registry/default/ui/fallback-poster.tsx",
-        type: "registry:ui",
-        target: "components/player/fallback-poster.tsx"
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+      ],
+      files: [
+        {
+          path: "registry/default/ui/fallback-poster.tsx",
+          type: "registry:ui",
+          target: "components/player/fallback-poster.tsx",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/ui/fallback-poster.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "fallback-poster"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "fallback-poster"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -37,15 +47,24 @@ export const Index: Record<string, any> = {
       name: "mute-control",
       description: "",
       type: "registry:ui",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/use-volume.json"],
-      files: [{
-        path: "registry/default/ui/mute-control.tsx",
-        type: "registry:ui",
-        target: "components/player/mute-control.tsx"
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-volume.json",
+      ],
+      files: [
+        {
+          path: "registry/default/ui/mute-control.tsx",
+          type: "registry:ui",
+          target: "components/player/mute-control.tsx",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/ui/mute-control.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "mute-control"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "mute-control"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -54,15 +73,27 @@ export const Index: Record<string, any> = {
       name: "media-provider",
       description: "",
       type: "registry:ui",
-      registryDependencies: ["http://localhost:3000/r/styles/default/create-media-store.json","http://localhost:3000/r/styles/default/use-media-state.json","http://localhost:3000/r/styles/default/use-player-root-store.json","http://localhost:3000/r/styles/default/use-timeline.json","http://localhost:3000/r/styles/default/use-volume.json"],
-      files: [{
-        path: "registry/default/ui/media-provider.tsx",
-        type: "registry:ui",
-        target: "components/player/media-provider.tsx"
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/create-media-store.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-media-state.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-timeline.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-volume.json",
+      ],
+      files: [
+        {
+          path: "registry/default/ui/media-provider.tsx",
+          type: "registry:ui",
+          target: "components/player/media-provider.tsx",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/ui/media-provider.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "media-provider"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "media-provider"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -71,32 +102,49 @@ export const Index: Record<string, any> = {
       name: "player-layout",
       description: "",
       type: "registry:ui",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/use-player-root-store.json"],
-      files: [{
-        path: "registry/default/ui/player-layout.tsx",
-        type: "registry:ui",
-        target: "components/player/player-layout.tsx"
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json",
+      ],
+      files: [
+        {
+          path: "registry/default/ui/player-layout.tsx",
+          type: "registry:ui",
+          target: "components/player/player-layout.tsx",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/ui/player-layout.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "player-layout"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "player-layout"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
     },
-    "media": {
+    media: {
       name: "media",
       description: "",
       type: "registry:ui",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json"],
-      files: [{
-        path: "registry/default/ui/media.tsx",
-        type: "registry:ui",
-        target: "components/player/media.tsx"
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+      ],
+      files: [
+        {
+          path: "registry/default/ui/media.tsx",
+          type: "registry:ui",
+          target: "components/player/media.tsx",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/ui/media.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "media"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "media"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -105,15 +153,26 @@ export const Index: Record<string, any> = {
       name: "volume-control",
       description: "",
       type: "registry:ui",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/utils.json","http://localhost:3000/r/styles/default/use-volume.json","http://localhost:3000/r/styles/default/use-track-events.json"],
-      files: [{
-        path: "registry/default/ui/volume-control.tsx",
-        type: "registry:ui",
-        target: "components/player/volume-control.tsx"
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-volume.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-track-events.json",
+      ],
+      files: [
+        {
+          path: "registry/default/ui/volume-control.tsx",
+          type: "registry:ui",
+          target: "components/player/volume-control.tsx",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/ui/volume-control.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-control"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "volume-control"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -122,15 +181,24 @@ export const Index: Record<string, any> = {
       name: "playback-control",
       description: "",
       type: "registry:ui",
-      registryDependencies: ["http://localhost:3000/r/styles/default/use-media-state.json","http://localhost:3000/r/styles/default/media-provider.json"],
-      files: [{
-        path: "registry/default/ui/playback-control.tsx",
-        type: "registry:ui",
-        target: "components/player/playback-control.tsx"
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/use-media-state.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+      ],
+      files: [
+        {
+          path: "registry/default/ui/playback-control.tsx",
+          type: "registry:ui",
+          target: "components/player/playback-control.tsx",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/ui/playback-control.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "playback-control"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "playback-control"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -139,15 +207,25 @@ export const Index: Record<string, any> = {
       name: "timeline-labels",
       description: "",
       type: "registry:ui",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/utils.json","http://localhost:3000/r/styles/default/time.json"],
-      files: [{
-        path: "registry/default/ui/timeline-labels.tsx",
-        type: "registry:ui",
-        target: "components/player/timeline-labels.tsx"
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/time.json",
+      ],
+      files: [
+        {
+          path: "registry/default/ui/timeline-labels.tsx",
+          type: "registry:ui",
+          target: "components/player/timeline-labels.tsx",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/ui/timeline-labels.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "timeline-labels"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "timeline-labels"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -156,15 +234,23 @@ export const Index: Record<string, any> = {
       name: "player-hooks",
       description: "",
       type: "registry:ui",
-      registryDependencies: ["http://localhost:3000/r/styles/default/use-shaka-player.json"],
-      files: [{
-        path: "registry/default/ui/player-hooks.tsx",
-        type: "registry:ui",
-        target: "components/player/player-hooks.tsx"
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/use-shaka-player.json",
+      ],
+      files: [
+        {
+          path: "registry/default/ui/player-hooks.tsx",
+          type: "registry:ui",
+          target: "components/player/player-hooks.tsx",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/ui/player-hooks.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "player-hooks"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "player-hooks"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -173,32 +259,72 @@ export const Index: Record<string, any> = {
       name: "timeline-control",
       description: "",
       type: "registry:ui",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/utils.json","http://localhost:3000/r/styles/default/use-timeline.json","http://localhost:3000/r/styles/default/use-track-events.json"],
-      files: [{
-        path: "registry/default/ui/timeline-control.tsx",
-        type: "registry:ui",
-        target: "components/player/timeline-control.tsx"
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-timeline.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-track-events.json",
+      ],
+      files: [
+        {
+          path: "registry/default/ui/timeline-control.tsx",
+          type: "registry:ui",
+          target: "components/player/timeline-control.tsx",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/ui/timeline-control.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "timeline-control"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "timeline-control"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
     },
-    "utils": {
+    "limeplay-logo": {
+      name: "limeplay-logo",
+      description: "",
+      type: "registry:ui",
+      registryDependencies: undefined,
+      files: [
+        {
+          path: "registry/default/ui/limeplay-logo.tsx",
+          type: "registry:ui",
+          target: "",
+        },
+      ],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/default/ui/limeplay-logo.tsx")
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "limeplay-logo"
+        return { default: mod.default || mod[exportName] }
+      }),
+      meta: undefined,
+    },
+    utils: {
       name: "utils",
       description: "",
       type: "registry:lib",
       registryDependencies: undefined,
-      files: [{
-        path: "registry/default/lib/utils.ts",
-        type: "registry:lib",
-        target: ""
-      }],
+      files: [
+        {
+          path: "registry/default/lib/utils.ts",
+          type: "registry:lib",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/lib/utils.ts")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "utils"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "utils"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -207,32 +333,46 @@ export const Index: Record<string, any> = {
       name: "create-media-store",
       description: "",
       type: "registry:lib",
-      registryDependencies: ["http://localhost:3000/r/styles/default/use-player-root-store.json"],
-      files: [{
-        path: "registry/default/lib/create-media-store.ts",
-        type: "registry:lib",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json",
+      ],
+      files: [
+        {
+          path: "registry/default/lib/create-media-store.ts",
+          type: "registry:lib",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/lib/create-media-store.ts")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "create-media-store"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "create-media-store"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
     },
-    "time": {
+    time: {
       name: "time",
       description: "",
       type: "registry:lib",
       registryDependencies: undefined,
-      files: [{
-        path: "registry/default/lib/time.ts",
-        type: "registry:lib",
-        target: ""
-      }],
+      files: [
+        {
+          path: "registry/default/lib/time.ts",
+          type: "registry:lib",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/lib/time.ts")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "time"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "time"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -242,14 +382,22 @@ export const Index: Record<string, any> = {
       description: "",
       type: "registry:hook",
       registryDependencies: undefined,
-      files: [{
-        path: "registry/default/hooks/use-player-root-store.ts",
-        type: "registry:hook",
-        target: ""
-      }],
+      files: [
+        {
+          path: "registry/default/hooks/use-player-root-store.ts",
+          type: "registry:hook",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/hooks/use-player-root-store.ts")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "use-player-root-store"
+        const mod = await import(
+          "@/registry/default/hooks/use-player-root-store.ts"
+        )
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "use-player-root-store"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -258,15 +406,25 @@ export const Index: Record<string, any> = {
       name: "use-volume",
       description: "",
       type: "registry:hook",
-      registryDependencies: ["http://localhost:3000/r/styles/default/use-player-root-store.json","http://localhost:3000/r/styles/default/utils.json","http://localhost:3000/r/styles/default/media-provider.json"],
-      files: [{
-        path: "registry/default/hooks/use-volume.ts",
-        type: "registry:hook",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+      ],
+      files: [
+        {
+          path: "registry/default/hooks/use-volume.ts",
+          type: "registry:hook",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/hooks/use-volume.ts")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "use-volume"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "use-volume"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -276,14 +434,20 @@ export const Index: Record<string, any> = {
       description: "",
       type: "registry:hook",
       registryDependencies: undefined,
-      files: [{
-        path: "registry/default/hooks/use-track-events.ts",
-        type: "registry:hook",
-        target: ""
-      }],
+      files: [
+        {
+          path: "registry/default/hooks/use-track-events.ts",
+          type: "registry:hook",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/hooks/use-track-events.ts")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "use-track-events"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "use-track-events"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -292,15 +456,25 @@ export const Index: Record<string, any> = {
       name: "use-timeline",
       description: "",
       type: "registry:hook",
-      registryDependencies: ["http://localhost:3000/r/styles/default/use-player-root-store.json","http://localhost:3000/r/styles/default/utils.json","http://localhost:3000/r/styles/default/media-provider.json"],
-      files: [{
-        path: "registry/default/hooks/use-timeline.ts",
-        type: "registry:hook",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+      ],
+      files: [
+        {
+          path: "registry/default/hooks/use-timeline.ts",
+          type: "registry:hook",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/hooks/use-timeline.ts")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "use-timeline"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "use-timeline"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -309,15 +483,25 @@ export const Index: Record<string, any> = {
       name: "use-media-state",
       description: "",
       type: "registry:hook",
-      registryDependencies: ["http://localhost:3000/r/styles/default/use-player-root-store.json","http://localhost:3000/r/styles/default/utils.json","http://localhost:3000/r/styles/default/media-provider.json"],
-      files: [{
-        path: "registry/default/hooks/use-media-state.ts",
-        type: "registry:hook",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+      ],
+      files: [
+        {
+          path: "registry/default/hooks/use-media-state.ts",
+          type: "registry:hook",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/hooks/use-media-state.ts")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "use-media-state"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "use-media-state"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -326,15 +510,23 @@ export const Index: Record<string, any> = {
       name: "use-shaka-player",
       description: "",
       type: "registry:hook",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json"],
-      files: [{
-        path: "registry/default/hooks/use-shaka-player.ts",
-        type: "registry:hook",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+      ],
+      files: [
+        {
+          path: "registry/default/hooks/use-shaka-player.ts",
+          type: "registry:hook",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/default/hooks/use-shaka-player.ts")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "use-shaka-player"
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "use-shaka-player"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -344,14 +536,22 @@ export const Index: Record<string, any> = {
       description: "",
       type: "registry:ui",
       registryDependencies: undefined,
-      files: [{
-        path: "registry/default/internal/custom-demo-controls.tsx",
-        type: "registry:ui",
-        target: ""
-      }],
+      files: [
+        {
+          path: "registry/default/internal/custom-demo-controls.tsx",
+          type: "registry:ui",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/internal/custom-demo-controls.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "custom-demo-controls"
+        const mod = await import(
+          "@/registry/default/internal/custom-demo-controls.tsx"
+        )
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "custom-demo-controls"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -360,15 +560,28 @@ export const Index: Record<string, any> = {
       name: "player-hooks-demo",
       description: "",
       type: "registry:ui",
-      registryDependencies: ["http://localhost:3000/r/styles/default/use-media-state.json","http://localhost:3000/r/styles/default/use-shaka-player.json","http://localhost:3000/r/styles/default/use-timeline.json","http://localhost:3000/r/styles/default/use-volume.json"],
-      files: [{
-        path: "registry/default/internal/player-hooks-demo.tsx",
-        type: "registry:ui",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/use-media-state.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-shaka-player.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-timeline.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-volume.json",
+      ],
+      files: [
+        {
+          path: "registry/default/internal/player-hooks-demo.tsx",
+          type: "registry:ui",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/internal/player-hooks-demo.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "player-hooks-demo"
+        const mod = await import(
+          "@/registry/default/internal/player-hooks-demo.tsx"
+        )
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "player-hooks-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -377,15 +590,31 @@ export const Index: Record<string, any> = {
       name: "player-root-demo",
       description: "",
       type: "registry:example",
-      registryDependencies: ["http://localhost:3000/r/styles/default/player-layout.json","http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/media.json","http://localhost:3000/r/styles/default/custom-demo-controls.json","http://localhost:3000/r/styles/default/player-hooks-demo.json"],
-      files: [{
-        path: "registry/default/examples/player-root-demo.tsx",
-        type: "registry:example",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/player-layout.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/custom-demo-controls.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/player-hooks-demo.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/limeplay-logo.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/fallback-poster.json",
+      ],
+      files: [
+        {
+          path: "registry/default/examples/player-root-demo.tsx",
+          type: "registry:example",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/player-root-demo.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "player-root-demo"
+        const mod = await import(
+          "@/registry/default/examples/player-root-demo.tsx"
+        )
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "player-root-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -394,15 +623,25 @@ export const Index: Record<string, any> = {
       name: "fallback-poster-demo",
       description: "",
       type: "registry:example",
-      registryDependencies: ["http://localhost:3000/r/styles/default/fallback-poster.json"],
-      files: [{
-        path: "registry/default/examples/fallback-poster-demo.tsx",
-        type: "registry:example",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/fallback-poster.json",
+      ],
+      files: [
+        {
+          path: "registry/default/examples/fallback-poster-demo.tsx",
+          type: "registry:example",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/fallback-poster-demo.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "fallback-poster-demo"
+        const mod = await import(
+          "@/registry/default/examples/fallback-poster-demo.tsx"
+        )
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "fallback-poster-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -411,15 +650,26 @@ export const Index: Record<string, any> = {
       name: "playback-state-control-demo",
       description: "",
       type: "registry:example",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/playback-control.json"],
-      files: [{
-        path: "registry/default/examples/playback-state-control-demo.tsx",
-        type: "registry:example",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/playback-control.json",
+      ],
+      files: [
+        {
+          path: "registry/default/examples/playback-state-control-demo.tsx",
+          type: "registry:example",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/playback-state-control-demo.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "playback-state-control-demo"
+        const mod = await import(
+          "@/registry/default/examples/playback-state-control-demo.tsx"
+        )
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "playback-state-control-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -428,15 +678,26 @@ export const Index: Record<string, any> = {
       name: "volume-slider-control-horizontal-demo",
       description: "",
       type: "registry:example",
-      registryDependencies: ["http://localhost:3000/r/styles/default/volume-control.json","http://localhost:3000/r/styles/default/volume-state-control-demo.json"],
-      files: [{
-        path: "registry/default/examples/volume-slider-control-horizontal-demo.tsx",
-        type: "registry:example",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/volume-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/volume-state-control-demo.json",
+      ],
+      files: [
+        {
+          path: "registry/default/examples/volume-slider-control-horizontal-demo.tsx",
+          type: "registry:example",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/volume-slider-control-horizontal-demo.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-slider-control-horizontal-demo"
+        const mod = await import(
+          "@/registry/default/examples/volume-slider-control-horizontal-demo.tsx"
+        )
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "volume-slider-control-horizontal-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -445,15 +706,26 @@ export const Index: Record<string, any> = {
       name: "volume-slider-control-vertical-demo",
       description: "",
       type: "registry:example",
-      registryDependencies: ["http://localhost:3000/r/styles/default/volume-control.json","http://localhost:3000/r/styles/default/volume-state-control-demo.json"],
-      files: [{
-        path: "registry/default/examples/volume-slider-control-vertical-demo.tsx",
-        type: "registry:example",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/volume-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/volume-state-control-demo.json",
+      ],
+      files: [
+        {
+          path: "registry/default/examples/volume-slider-control-vertical-demo.tsx",
+          type: "registry:example",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/volume-slider-control-vertical-demo.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-slider-control-vertical-demo"
+        const mod = await import(
+          "@/registry/default/examples/volume-slider-control-vertical-demo.tsx"
+        )
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "volume-slider-control-vertical-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -462,15 +734,26 @@ export const Index: Record<string, any> = {
       name: "volume-state-control-demo",
       description: "",
       type: "registry:example",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/mute-control.json"],
-      files: [{
-        path: "registry/default/examples/volume-state-control-demo.tsx",
-        type: "registry:example",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/mute-control.json",
+      ],
+      files: [
+        {
+          path: "registry/default/examples/volume-state-control-demo.tsx",
+          type: "registry:example",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/volume-state-control-demo.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "volume-state-control-demo"
+        const mod = await import(
+          "@/registry/default/examples/volume-state-control-demo.tsx"
+        )
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "volume-state-control-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -479,15 +762,27 @@ export const Index: Record<string, any> = {
       name: "timeline-control-demo",
       description: "",
       type: "registry:example",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/timeline-control.json","http://localhost:3000/r/styles/default/timeline-labels.json"],
-      files: [{
-        path: "registry/default/examples/timeline-control-demo.tsx",
-        type: "registry:example",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/timeline-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/timeline-labels.json",
+      ],
+      files: [
+        {
+          path: "registry/default/examples/timeline-control-demo.tsx",
+          type: "registry:example",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/timeline-control-demo.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "timeline-control-demo"
+        const mod = await import(
+          "@/registry/default/examples/timeline-control-demo.tsx"
+        )
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "timeline-control-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -496,15 +791,28 @@ export const Index: Record<string, any> = {
       name: "timeline-labels-demo",
       description: "",
       type: "registry:example",
-      registryDependencies: ["http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/timeline-control.json","http://localhost:3000/r/styles/default/timeline-labels.json","http://localhost:3000/r/styles/default/use-timeline.json"],
-      files: [{
-        path: "registry/default/examples/timeline-labels-demo.tsx",
-        type: "registry:example",
-        target: ""
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/timeline-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/timeline-labels.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-timeline.json",
+      ],
+      files: [
+        {
+          path: "registry/default/examples/timeline-labels-demo.tsx",
+          type: "registry:example",
+          target: "",
+        },
+      ],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/examples/timeline-labels-demo.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "timeline-labels-demo"
+        const mod = await import(
+          "@/registry/default/examples/timeline-labels-demo.tsx"
+        )
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "timeline-labels-demo"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
@@ -513,46 +821,85 @@ export const Index: Record<string, any> = {
       name: "linear-player",
       description: "Modern seamless flat linear.app Media Player",
       type: "registry:block",
-      registryDependencies: ["http://localhost:3000/r/styles/default/player-layout.json","http://localhost:3000/r/styles/default/media.json","http://localhost:3000/r/styles/default/media-provider.json","http://localhost:3000/r/styles/default/mute-control.json","http://localhost:3000/r/styles/default/player-hooks.json","http://localhost:3000/r/styles/default/playback-control.json","http://localhost:3000/r/styles/default/timeline-control.json","http://localhost:3000/r/styles/default/volume-control.json","http://localhost:3000/r/styles/default/use-timeline.json","http://localhost:3000/r/styles/default/use-volume.json","http://localhost:3000/r/styles/default/use-media-state.json","http://localhost:3000/r/styles/default/use-track-events.json","http://localhost:3000/r/styles/default/use-player-root-store.json","http://localhost:3000/r/styles/default/utils.json","http://localhost:3000/r/styles/default/create-media-store.json","http://localhost:3000/r/styles/default/fallback-poster.json","http://localhost:3000/r/styles/default/timeline-labels.json","http://localhost:3000/r/styles/default/use-shaka-player.json"],
-      files: [{
-        path: "registry/default/blocks/linear-player/media-player.tsx",
-        type: "registry:component",
-        target: "components/linear-player/media-player.tsx"
-      },{
-        path: "registry/default/blocks/linear-player/components/volume-state-control.tsx",
-        type: "registry:component",
-        target: "components/linear-player/components/volume-state-control.tsx"
-      },{
-        path: "registry/default/blocks/linear-player/components/playback-state-control.tsx",
-        type: "registry:component",
-        target: "components/linear-player/components/playback-state-control.tsx"
-      },{
-        path: "registry/default/blocks/linear-player/components/volume-slider-control.tsx",
-        type: "registry:component",
-        target: "components/linear-player/components/volume-slider-control.tsx"
-      },{
-        path: "registry/default/blocks/linear-player/components/timeline-slider-control.tsx",
-        type: "registry:component",
-        target: "components/linear-player/components/timeline-slider-control.tsx"
-      },{
-        path: "registry/default/blocks/linear-player/components/bottom-controls.tsx",
-        type: "registry:component",
-        target: "components/linear-player/components/bottom-controls.tsx"
-      },{
-        path: "registry/default/blocks/linear-player/components/media-element.tsx",
-        type: "registry:component",
-        target: "components/linear-player/components/media-element.tsx"
-      },{
-        path: "registry/default/blocks/linear-player/components/player-hooks.tsx",
-        type: "registry:component",
-        target: "components/linear-player/components/player-hooks.tsx"
-      }],
+      registryDependencies: [
+        "https://limeplay.winoffrg.dev/r/styles/default/player-layout.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/media-provider.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/mute-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/player-hooks.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/playback-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/timeline-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/volume-control.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-timeline.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-volume.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-media-state.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-track-events.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-player-root-store.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/utils.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/create-media-store.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/fallback-poster.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/timeline-labels.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/use-shaka-player.json",
+        "https://limeplay.winoffrg.dev/r/styles/default/limeplay-logo.json",
+      ],
+      files: [
+        {
+          path: "registry/default/blocks/linear-player/media-player.tsx",
+          type: "registry:component",
+          target: "components/linear-player/media-player.tsx",
+        },
+        {
+          path: "registry/default/blocks/linear-player/components/volume-state-control.tsx",
+          type: "registry:component",
+          target:
+            "components/linear-player/components/volume-state-control.tsx",
+        },
+        {
+          path: "registry/default/blocks/linear-player/components/playback-state-control.tsx",
+          type: "registry:component",
+          target:
+            "components/linear-player/components/playback-state-control.tsx",
+        },
+        {
+          path: "registry/default/blocks/linear-player/components/volume-slider-control.tsx",
+          type: "registry:component",
+          target:
+            "components/linear-player/components/volume-slider-control.tsx",
+        },
+        {
+          path: "registry/default/blocks/linear-player/components/timeline-slider-control.tsx",
+          type: "registry:component",
+          target:
+            "components/linear-player/components/timeline-slider-control.tsx",
+        },
+        {
+          path: "registry/default/blocks/linear-player/components/bottom-controls.tsx",
+          type: "registry:component",
+          target: "components/linear-player/components/bottom-controls.tsx",
+        },
+        {
+          path: "registry/default/blocks/linear-player/components/media-element.tsx",
+          type: "registry:component",
+          target: "components/linear-player/components/media-element.tsx",
+        },
+        {
+          path: "registry/default/blocks/linear-player/components/player-hooks.tsx",
+          type: "registry:component",
+          target: "components/linear-player/components/player-hooks.tsx",
+        },
+      ],
       component: React.lazy(async () => {
-        const mod = await import("@/registry/default/blocks/linear-player/media-player.tsx")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "linear-player"
+        const mod = await import(
+          "@/registry/default/blocks/linear-player/media-player.tsx"
+        )
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || "linear-player"
         return { default: mod.default || mod[exportName] }
       }),
       meta: undefined,
     },
-  }
+  },
 }
