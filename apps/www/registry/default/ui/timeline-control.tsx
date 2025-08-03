@@ -17,8 +17,10 @@ export const Root = React.forwardRef<
   ) as React.RefObject<HTMLDivElement>
   const { className, orientation = "horizontal", ...etc } = props
 
+  const player = useMediaStore((s) => s.player)
   const currentTime = useMediaStore((s) => s.currentTime)
   const duration = useMediaStore((s) => s.duration)
+  const isLive = useMediaStore((s) => s.isLive)
   const currentValue = duration ? (currentTime / duration) * 100 : 0
 
   useImperativeHandle(ref, () => internalRef.current)
@@ -27,18 +29,35 @@ export const Root = React.forwardRef<
 
   const trackEvents = useTrackEvents({
     onPointerDown: (progress, event) => {
-      const newTime = getTimeFromEvent(event)
-      if (duration) {
-        seek(newTime)
+      if (player) {
+        const newTime = getTimeFromEvent(event)
+        const seekRange = player.seekRange()
+
+        const liveSeekTime = isLive
+          ? seekRange.start +
+            (newTime / duration) * (seekRange.end - seekRange.start)
+          : newTime
+
+        if (duration) {
+          seek(liveSeekTime)
+        }
       }
     },
     onPointerMove: (progress, isPointerDown, event) => {
-      if (duration) {
-        setHoveringTime(getTimeFromEvent(event))
+      if (duration && player) {
+        const newTime = getTimeFromEvent(event)
+        const seekRange = player.seekRange()
+
+        setHoveringTime(newTime)
         setIsHovering(true)
 
+        const liveSeekTime = isLive
+          ? seekRange.start +
+            (newTime / duration) * (seekRange.end - seekRange.start)
+          : newTime
+
         if (isPointerDown) {
-          seek(getTimeFromEvent(event))
+          seek(liveSeekTime)
         }
       }
     },
@@ -184,12 +203,12 @@ export const Buffered = React.forwardRef<HTMLDivElement, BufferedProps>(
 
     return (
       <div ref={ref} className={cn("absolute size-full", className)} {...etc}>
-        {normalizedBuffered.map((range, i: number) => {
+        {normalizedBuffered.map((range, index: number) => {
           const startPercent = (range.start / duration) * 100
           const widthPercent = ((range.end - range.start) / duration) * 100
           return (
             <SliderPrimitive.Indicator
-              key={i}
+              key={index}
               className={cn(
                 `left-[var(--lp-buffered-start)]! h-full w-[var(--lp-buffered-width)]! bg-white/40`,
                 variant === "from-zero" && "rounded-e-full",
