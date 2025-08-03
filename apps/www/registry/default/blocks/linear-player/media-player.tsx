@@ -1,5 +1,3 @@
-import { Suspense } from "react"
-
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
 import { MediaElement } from "@/registry/default/blocks/linear-player/components/media-element"
 import { PlayerHooks } from "@/registry/default/blocks/linear-player/components/player-hooks"
@@ -8,9 +6,17 @@ import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 import { MediaProvider } from "@/registry/default/ui/media-provider"
 import * as Layout from "@/registry/default/ui/player-layout"
 
-export function MediaPlayer() {
+export interface LinearMediaPlayerProps {
+  src: string
+  debug?: boolean
+}
+
+export function LinearMediaPlayer({
+  src,
+  debug = false,
+}: LinearMediaPlayerProps) {
   return (
-    <MediaProvider>
+    <MediaProvider debug={debug}>
       <Layout.RootContainer
         height={720}
         width={1280}
@@ -20,9 +26,7 @@ export function MediaPlayer() {
           <FallbackPoster className="bg-stone-900">
             <LimeplayLogo />
           </FallbackPoster>
-          <Suspense>
-            <MediaElement />
-          </Suspense>
+          <MediaElement src={src} />
           <PlayerHooks />
           <Layout.ControlsOverlayContainer />
           <Layout.ControlsContainer>

@@ -1,33 +1,25 @@
 "use client"
 
 import { useEffect } from "react"
-import { useSearchParams } from "next/navigation"
 
 import { Media } from "@/registry/default/ui/media"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-export function MediaElement() {
+export function MediaElement({ src }: { src: string }) {
   const player = useMediaStore((state) => state.player)
   const mediaRef = useMediaStore((state) => state.mediaRef)
-  const searchParams = useSearchParams()
-  const playbackUrl = searchParams.get("playbackUrl")
 
   useEffect(() => {
     const mediaElement = mediaRef.current
 
     if (player && mediaElement) {
-      let finalUrl =
-        "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
-
-      if (playbackUrl) {
+      if (src) {
         try {
-          const parsedUrl = new URL(playbackUrl)
+          const parsedUrl = new URL(src)
 
           if (!["http:", "https:"].includes(parsedUrl.protocol)) {
             throw new Error("Invalid URL protocol")
           }
-
-          finalUrl = parsedUrl.toString()
         } catch (error) {
           console.error(
             "Invalid playback URL:",
@@ -41,12 +33,15 @@ export function MediaElement() {
           // DEV: To debug the buffer values in timeline slider
           bufferingGoal: 120,
         },
+        manifest: {
+          // availabilityWindowOverride: 600,
+        },
       } as shaka.extern.PlayerConfiguration
 
       player.configure(config)
 
       void player
-        .load(finalUrl)
+        .load(src)
         .then(() => {
           console.debug("[limeplay] media loaded")
         })
@@ -54,7 +49,7 @@ export function MediaElement() {
           console.error("[limeplay] error loading media:", error)
         })
     }
-  }, [player, mediaRef, playbackUrl])
+  }, [player, mediaRef, src])
 
   return (
     <Media
