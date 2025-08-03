@@ -15,10 +15,11 @@ export const Elapsed = React.forwardRef<
 >((props, forwardedRef) => {
   const currentTime = useMediaStore((s) => s.currentTime)
   const duration = useMediaStore((s) => s.duration)
+  const player = useMediaStore((s) => s.player)
 
   return (
     <time
-      dateTime={durationDateTime(currentTime)}
+      dateTime={durationDateTime(currentTime, player?.seekRange())}
       role="timer"
       {...props}
       ref={forwardedRef}
@@ -41,10 +42,11 @@ export const Remaining = React.forwardRef<
 >((props, forwardedRef) => {
   const duration = useMediaStore((s) => s.duration)
   const currentTime = useMediaStore((s) => s.currentTime)
+  const player = useMediaStore((s) => s.player)
 
   return (
     <time
-      dateTime={durationDateTime(duration - currentTime)}
+      dateTime={durationDateTime(duration - currentTime, player?.seekRange())}
       role="timer"
       {...props}
       ref={forwardedRef}
@@ -68,11 +70,16 @@ export const Duration = React.forwardRef<
   React.HTMLProps<HTMLTimeElement>
 >((props, forwardedRef) => {
   const duration = useMediaStore((s) => s.duration)
+  const player = useMediaStore((s) => s.player)
 
   return (
-    <time dateTime={durationDateTime(duration)} ref={forwardedRef} {...props}>
+    <time
+      dateTime={durationDateTime(duration, player?.seekRange())}
+      ref={forwardedRef}
+      {...props}
+    >
       <span className="sr-only">Duration</span>
-      {formatTimestamp(duration)}
+      {formatTimestamp(duration, duration > HOURS_IN_SECONDS)}
     </time>
   )
 })
@@ -84,17 +91,41 @@ export const HoverTime = React.forwardRef<
   React.HTMLProps<HTMLTimeElement>
 >((props, forwardedRef) => {
   const hoveringTime = useMediaStore((s) => s.hoveringTime)
+  const player = useMediaStore((s) => s.player)
+  const duration = useMediaStore((s) => s.duration)
+  const isLive = useMediaStore((s) => s.isLive)
+
+  const hoverTime = isLive ? duration - hoveringTime : hoveringTime
 
   return (
     <time
-      dateTime={durationDateTime(hoveringTime)}
+      dateTime={durationDateTime(hoveringTime, player?.seekRange())}
       ref={forwardedRef}
       {...props}
     >
       <span className="sr-only">Seek To:</span>
-      {formatTimestamp(hoveringTime)}
+      {formatTimestamp(hoverTime, duration > HOURS_IN_SECONDS)}
     </time>
   )
 })
 
 HoverTime.displayName = "HoverTime"
+
+export const LiveLatency = React.forwardRef<
+  HTMLTimeElement,
+  React.HTMLProps<HTMLTimeElement>
+>((props, forwardedRef) => {
+  const liveLatency = useMediaStore((s) => s.liveLatency)
+
+  if (!liveLatency) return null
+
+  return (
+    <time ref={forwardedRef} {...props}>
+      <span className="sr-only">Live Latency:</span>
+      <span aria-hidden>&minus;</span>
+      {formatTimestamp(liveLatency, liveLatency > HOURS_IN_SECONDS)}
+    </time>
+  )
+})
+
+LiveLatency.displayName = "LiveLatency"

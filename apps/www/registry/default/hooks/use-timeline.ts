@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useCallback } from "react"
 import clamp from "lodash.clamp"
 import type { StateCreator } from "zustand"
@@ -9,6 +11,8 @@ import {
   useMediaStore,
 } from "@/registry/default/ui/media-provider"
 
+import { useInterval } from "./use-interval"
+
 export interface TimelineStore {
   duration: number
   currentTime: number
@@ -16,6 +20,7 @@ export interface TimelineStore {
   hoveringTime: number
   isHovering: boolean
   buffered: shaka.extern.BufferedRange[]
+  liveLatency: number | null
   isLive: boolean
 }
 
@@ -31,31 +36,64 @@ export const createTimelineStore: StateCreator<
   hoveringTime: 0,
   isHovering: false,
   buffered: [],
+  liveLatency: null,
   isLive: false,
 })
 
-export function useTimelineStates() {
+export interface useTimelineStatesProps {
+  /**
+   * Interval in milliseconds to update the states
+   * @default 500
+   */
+  updateDuration?: number
+}
+
+export function useTimelineStates({
+  updateDuration = 500,
+}: useTimelineStatesProps = {}) {
   const store = useGetStore()
   const player = useMediaStore((s) => s.player)
   const mediaRef = useMediaStore((state) => state.mediaRef)
 
   const onTimeUpdate = () => {
-    if (!mediaRef.current) return
+    if (!mediaRef.current || !player) return
 
-    const { duration, currentTime } = mediaRef.current
-    const progress = toFixedNumber(currentTime / duration, 4)
+    const mediaCurrentTime = mediaRef.current.currentTime
+    const isLive = player.isLive()
 
-    store.setState({ currentTime, progress: progress || 0 })
+    let currentTime = mediaCurrentTime
+    let liveLatency = null
+
+    if (isLive) {
+      const seekRange = player.seekRange()
+      currentTime = mediaCurrentTime - seekRange.start
+      liveLatency = seekRange.end - mediaCurrentTime
+      currentTime = Math.max(0, currentTime)
+    } else {
+      currentTime = clamp(mediaCurrentTime, 0, store.getState().duration)
+    }
+
+    const progress = toFixedNumber(currentTime / store.getState().duration, 4)
+
+    store.setState({
+      currentTime: currentTime,
+      progress: progress || 0,
+      liveLatency,
+      isLive,
+    })
   }
 
   const onDurationChange = React.useCallback(() => {
-    if (!mediaRef.current) return
+    if (!mediaRef.current || !player) return
 
-    const { duration } = mediaRef.current
-    if (duration && Number.isFinite(duration)) {
-      store.setState({ duration })
+    const playerDuration = player.isLive()
+      ? player.getSegmentAvailabilityDuration()
+      : mediaRef.current.duration
+
+    if (playerDuration && Number.isFinite(playerDuration)) {
+      store.setState({ duration: playerDuration })
     }
-  }, [store, mediaRef])
+  }, [store, mediaRef, player])
 
   const onBuffer = React.useCallback(() => {
     if (!player) return
@@ -69,6 +107,8 @@ export function useTimelineStates() {
     store.setState({ buffered: bufferedInfo.total })
   }, [store, player])
 
+  useInterval(onTimeUpdate, updateDuration)
+
   React.useEffect(() => {
     if (!mediaRef.current || !player) return noop
 
@@ -80,14 +120,14 @@ export function useTimelineStates() {
       onBuffer()
     }
 
-    on(media, "timeupdate", onTimeUpdate)
-    on(media, ["durationchange", "loadedmetadata"], onDurationChange)
+    on(media, "durationchange", onDurationChange)
+    on(media, "loadedmetadata", onDurationChange)
     on(media, "progress", onBuffer)
     on(player, "trackschanged", onBuffer)
 
     return () => {
-      off(media, "timeupdate", onTimeUpdate)
-      off(media, ["durationchange", "loadedmetadata"], onDurationChange)
+      off(media, "durationchange", onDurationChange)
+      off(media, "loadedmetadata", onDurationChange)
       off(media, "progress", onBuffer)
       off(player, "trackschanged", onBuffer)
     }
@@ -98,6 +138,8 @@ export function useTimeline() {
   const store = useGetStore()
   const mediaRef = useMediaStore((state) => state.mediaRef)
   const duration = useMediaStore((state) => state.duration)
+  const isLive = useMediaStore((state) => state.isLive)
+  const player = useMediaStore((state) => state.player)
 
   const getTimeFromEvent = useCallback(
     (event: React.PointerEvent) => {
@@ -114,23 +156,32 @@ export function useTimeline() {
 
     const media = mediaRef.current
 
-    const clampedTime = clamp(time, 0, duration)
+    let actualSeekTime = time
+    let storeCurrentTime = time
+
+    if (isLive && player) {
+      const seekRange = player.seekRange()
+      // For live videos, clamp within the seek range
+      actualSeekTime = clamp(time, seekRange.start, seekRange.end)
+      // Store the relative time for UI display (0 to duration)
+      storeCurrentTime = actualSeekTime - seekRange.start
+    } else {
+      // For non-live videos, clamp within duration
+      actualSeekTime = clamp(time, 0, duration)
+      storeCurrentTime = actualSeekTime
+    }
 
     store.setState({
-      progress: clampedTime / duration,
-      currentTime: clampedTime,
+      progress: storeCurrentTime / duration,
+      currentTime: storeCurrentTime,
     })
 
-    media.currentTime = time
+    media.currentTime = actualSeekTime
   }
 
   function setHoveringTime(time: number) {
-    const { duration } = store.getState()
-    if (!Number.isFinite(duration)) return
+    if (!Number.isFinite(store.getState().duration)) return
 
-    // store.setState({
-    //   hoveringTime: clamp(time, 0, duration),
-    // })
     store.setState({
       hoveringTime: time,
     })
