@@ -202,23 +202,11 @@ export function useMediaState() {
     setLoop(!media.loop)
   }
 
-  function seek(time: number) {
-    const media = store.getState().mediaRef.current
-    if (!media) return
-
-    media.currentTime = time
-
-    store.setState({
-      idle: false,
-    })
-  }
-
   return {
     play,
     pause,
     togglePaused,
     setLoop,
     toggleLoop,
-    seek,
   }
 }

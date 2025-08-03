@@ -21,15 +21,20 @@ export function formatTimestamp(seconds: number, showHours = false): string {
   return showHours ? `${HH}:${MM}:${SS}` : `${MM}:${SS}`
 }
 
-export function durationDateTime(durationSeconds: number) {
+export function durationDateTime(
+  durationSeconds: number,
+  seekRange?: shaka.extern.BufferedRange
+) {
   if (!Number.isFinite(durationSeconds) || durationSeconds < 0) {
     return "PT0S"
   }
 
-  const duration = intervalToDuration({
-    start: 0,
-    end: durationSeconds * 1000,
-  })
+  const duration = intervalToDuration(
+    seekRange ?? {
+      start: 0,
+      end: durationSeconds * 1000,
+    }
+  )
 
   const weeks = Math.floor((duration.days ?? 0) / 7)
   const days = (duration.days ?? 0) % 7
