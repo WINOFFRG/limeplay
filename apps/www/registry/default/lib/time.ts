@@ -29,6 +29,7 @@ export function durationDateTime(
     return "PT0S"
   }
 
+  // TODO: There is a possible bug here as seekRange returns in seconds
   const duration = intervalToDuration(
     seekRange ?? {
       start: 0,

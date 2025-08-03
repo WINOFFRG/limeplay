@@ -34,6 +34,7 @@ export const blocks: Registry["items"] = [
       "fallback-poster",
       "timeline-labels",
       "use-shaka-player",
+      "limeplay-logo",
     ],
     files: [
       {

@@ -144,4 +144,14 @@ export const ui: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "limeplay-logo",
+    type: "registry:ui",
+    files: [
+      {
+        path: "ui/limeplay-logo.tsx",
+        type: "registry:ui",
+      },
+    ],
+  },
 ]

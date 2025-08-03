@@ -1,3 +1,5 @@
+import { Suspense } from "react"
+
 import { MotionContainer } from "@/components/motion-container"
 import { PlayerContainer } from "@/components/player-container"
 import { VideoBackground } from "@/components/video-background"
@@ -7,7 +9,9 @@ export default function Home() {
     <section className="lg:mt-16">
       <VideoBackground />
       <MotionContainer>
-        <PlayerContainer />
+        <Suspense>
+          <PlayerContainer />
+        </Suspense>
       </MotionContainer>
     </section>
   )
