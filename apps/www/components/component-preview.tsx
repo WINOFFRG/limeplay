@@ -6,7 +6,6 @@ import { Pre } from "fumadocs-ui/components/codeblock"
 
 import { cn } from "@/lib/utils"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-// import { Icons } from "@/components/icons"
 import { Index } from "@/registry/__index__"
 import { PlayerLayoutDemo } from "@/registry/default/examples/player-root-demo"
 
