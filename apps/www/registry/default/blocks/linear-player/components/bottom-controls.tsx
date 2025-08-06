@@ -16,19 +16,13 @@ export function BottomControls() {
       <PlaybackStateControl />
       <div
         className={`
-          group me-2 flex gap-2 rounded-md pe-2 transition-all duration-300 ease-in-out
+          group me-2 flex min-w-22 items-center gap-2 rounded-md pe-2 transition-all duration-300 ease-in-out
           hover:bg-primary/10 hover:backdrop-blur-md
           focus-visible:bg-primary/10 focus-visible:ring-primary/50
         `}
       >
-        <VolumeStateControl className="hover:bg-primary/30 hover:backdrop-blur-md" />
-        <VolumeSliderControl
-          className={`
-            opacity-0 transition-opacity duration-300 ease-in-out
-            group-focus-within:opacity-100
-            group-hover:opacity-100
-          `}
-        />
+        <VolumeStateControl />
+        <VolumeSliderControl />
       </div>
       <TimelineSliderControl />
     </div>
