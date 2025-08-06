@@ -42,3 +42,5 @@ out
 build
 .source
 apps/www/public/r/*
+apps/www/registry.json
+apps/www/registry/__index__.tsx
