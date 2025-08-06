@@ -4,14 +4,13 @@ import React, { useCallback } from "react"
 import clamp from "lodash.clamp"
 import type { StateCreator } from "zustand"
 
+import { useInterval } from "@/registry/default/hooks/use-interval"
 import type { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
 import { noop, off, on, toFixedNumber } from "@/registry/default/lib/utils"
 import {
   useGetStore,
   useMediaStore,
 } from "@/registry/default/ui/media-provider"
-
-import { useInterval } from "./use-interval"
 
 export interface TimelineStore {
   duration: number

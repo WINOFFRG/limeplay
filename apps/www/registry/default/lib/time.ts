@@ -1,4 +1,4 @@
-import { intervalToDuration } from "date-fns"
+import { intervalToDuration } from "date-fns/intervalToDuration"
 
 const MAX_SAFE_SECONDS = 8.64e12
 
