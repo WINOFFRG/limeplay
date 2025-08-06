@@ -42,7 +42,12 @@ export const hooks: Registry["items"] = [
     type: "registry:hook",
     dependencies: ["lodash.clamp", "zustand"],
     devDependencies: ["@types/lodash.clamp"],
-    registryDependencies: ["use-player-root-store", "utils", "media-provider"],
+    registryDependencies: [
+      "use-player-root-store",
+      "utils",
+      "media-provider",
+      "use-interval",
+    ],
     files: [
       {
         path: "hooks/use-timeline.ts",
@@ -70,6 +75,16 @@ export const hooks: Registry["items"] = [
     files: [
       {
         path: "hooks/use-shaka-player.ts",
+        type: "registry:hook",
+      },
+    ],
+  },
+  {
+    name: "use-interval",
+    type: "registry:hook",
+    files: [
+      {
+        path: "hooks/use-interval.ts",
         type: "registry:hook",
       },
     ],

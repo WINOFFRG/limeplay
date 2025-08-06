@@ -69,6 +69,15 @@ export const blocks: Registry["items"] = [
         path: `${BASE_SRC_URL}/components/player-hooks.tsx`,
         type: "registry:component",
       },
+      {
+        path: `${BASE_SRC_URL}/components/button.tsx`,
+        type: "registry:ui",
+        target: "components/ui/button.tsx",
+      },
+      {
+        path: `${BASE_SRC_URL}/lib/create-media-store.ts`,
+        type: "registry:lib",
+      },
     ],
   },
 ]

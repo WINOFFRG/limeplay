@@ -10,12 +10,17 @@ import { Button } from "@/components/ui/button"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 import { MuteControl } from "@/registry/default/ui/mute-control"
 
-export function VolumeStateControl({ className }: { className?: string }) {
+export function VolumeStateControl() {
   const muted = useMediaStore((state) => state.muted)
   const volume = useMediaStore((state) => state.volume)
 
   return (
-    <Button size="icon" variant="glass" asChild className={className}>
+    <Button
+      size="icon"
+      variant="glass"
+      asChild
+      className={"hover:bg-primary/30 hover:backdrop-blur-md"}
+    >
       <MuteControl>
         {muted || volume === 0 ? (
           <SpeakerXIcon size={18} weight="fill" />
