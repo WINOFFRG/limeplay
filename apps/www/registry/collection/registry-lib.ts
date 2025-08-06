@@ -26,6 +26,7 @@ export const lib: Registry["items"] = [
   {
     name: "time",
     type: "registry:lib",
+    dependencies: ["date-fns"],
     files: [
       {
         path: "lib/time.ts",
