@@ -499,7 +499,7 @@ async function buildRegistry() {
   logger.info("🏗️ Building registry...")
   return new Promise((resolve, reject) => {
     const process = exec(
-      `pnpm dlx shadcn build registry.json --output ../www/public/r/styles/${STYLE}`
+      `bun x shadcn build registry.json --output ../www/public/r/styles/${STYLE}`
     )
 
     // Capture stdout
