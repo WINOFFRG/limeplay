@@ -70,7 +70,7 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
-        path: "blocks/linear-player/components/button.tsx",
+        path: `${BASE_SRC_URL}/components/button.tsx`,
         type: "registry:ui",
         target: "components/ui/button.tsx",
       },
