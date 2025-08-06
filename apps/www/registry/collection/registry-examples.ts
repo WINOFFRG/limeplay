@@ -23,7 +23,7 @@ export const examples: Registry["items"] = [
   {
     name: "fallback-poster-demo",
     type: "registry:example",
-    registryDependencies: ["fallback-poster"],
+    registryDependencies: ["fallback-poster", "limeplay-logo"],
     files: [
       {
         path: "examples/fallback-poster-demo.tsx",
