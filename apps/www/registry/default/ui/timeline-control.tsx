@@ -101,7 +101,7 @@ export const Track = React.forwardRef<
       tabIndex={0}
       className={cn(
         `
-          relative flex h-full grow flex-row rounded-full bg-white/20
+          relative flex h-full grow flex-row rounded-full bg-lp-accent/20
           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50
         `,
         className
@@ -125,7 +125,7 @@ export const Progress = React.forwardRef<
     <SliderPrimitive.Indicator
       ref={ref}
       className={cn(
-        "h-full w-(--lp-played-width) rounded-s-full bg-white",
+        "h-full w-(--lp-played-width) rounded-s-full bg-lp-accent",
         className
       )}
       style={
@@ -210,7 +210,7 @@ export const Buffered = React.forwardRef<HTMLDivElement, BufferedProps>(
             <SliderPrimitive.Indicator
               key={index}
               className={cn(
-                `left-[var(--lp-buffered-start)]! h-full w-[var(--lp-buffered-width)]! bg-white/40`,
+                `left-[var(--lp-buffered-start)]! h-full w-[var(--lp-buffered-width)]! bg-lp-accent/30`,
                 variant === "from-zero" && "rounded-e-full",
                 className
               )}
@@ -254,7 +254,7 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
     return (
       <SliderPrimitive.Thumb
         className={cn(
-          "left-(--lp-timeline-thumb-position)! size-4 rounded-full bg-white",
+          "left-(--lp-timeline-thumb-position)! size-4 rounded-full bg-lp-accent",
           className
         )}
         ref={ref}
