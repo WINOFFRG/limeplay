@@ -40,8 +40,8 @@ export function TimelineSliderControl() {
           <TimelineSlider.Thumb
             showWithHover
             className={`
-              top-auto! bottom-[calc(100%+16px)] flex h-auto w-fit bg-transparent text-xs font-medium tabular-nums opacity-0
-              transition-opacity duration-[var(--lp-transition-speed-regular)]
+              top-auto! bottom-[calc(100%+16px)] flex h-auto w-fit bg-transparent text-xs font-medium tabular-nums opacity-0 transition-opacity
+              duration-[var(--lp-transition-speed-regular)]
               group-hover/timeline:opacity-100
             `}
           >
@@ -69,7 +69,7 @@ export function TimelineSliderControl() {
           aria-pressed={showRemaining}
         >
           {showRemaining ? (
-            <Remaining className="text-xs font-mediumtabular-nums" />
+            <Remaining className="text-xs font-medium tabular-nums" />
           ) : (
             <Duration className="text-xs font-medium tabular-nums" />
           )}

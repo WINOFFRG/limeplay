@@ -23,8 +23,8 @@ export const Elapsed = React.forwardRef<
     <time
       dateTime={durationDateTime(currentTime, player?.seekRange())}
       role="timer"
-      className={cn("text-lp-accent", className)}
       {...etc}
+      className={cn("text-lp-accent", className)}
       ref={forwardedRef}
     >
       <span className="sr-only">Elapsed</span>
@@ -127,7 +127,7 @@ export const LiveLatency = React.forwardRef<
   const { className, ...etc } = props
   const liveLatency = useMediaStore((s) => s.liveLatency)
 
-  if (!liveLatency) return null
+  if (liveLatency == null) return null
 
   return (
     <time

@@ -47,13 +47,19 @@ export const baseOptions: BaseLayoutProps = {
         <Image
           alt={PRODUCT_NAME}
           src={Logo}
-          className="size-4 dark:block hidden"
+          className={`
+            hidden size-4
+            dark:block
+          `}
           aria-label={PRODUCT_NAME}
         />
         <Image
           alt={PRODUCT_NAME}
           src={LogoDark}
-          className="size-4 block dark:hidden"
+          className={`
+            block size-4
+            dark:hidden
+          `}
           aria-label={PRODUCT_NAME}
         />
         <span className="text-base font-medium">Limeplay</span>
