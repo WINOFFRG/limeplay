@@ -50,8 +50,8 @@ export function ControlsOverlayContainer() {
     <div
       data-layout-type="controls-overlay-container"
       className={`
-        pointer-events-none absolute inset-0 bg-black/30 bg-linear-to-t from-black/30 to-transparent to-[120px] transition-opacity duration-300
-        ease-out
+        pointer-events-none absolute inset-0 bg-lp-controls-fade bg-size-[100%_45%] bg-no-repeat bg-bottom
+        ease-out transition-opacity duration-300
         group-data-[idle=true]/root:opacity-0
         group-data-[status=paused]/root:opacity-100
       `}

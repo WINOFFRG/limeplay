@@ -21,9 +21,7 @@ export function TimelineSliderControl() {
 
   return (
     <div className="my-auto flex grow items-center gap-3 select-none">
-      {!isLive && (
-        <Elapsed className="text-xs font-medium text-white tabular-nums" />
-      )}
+      {!isLive && <Elapsed className="text-xs font-medium tabular-nums" />}
 
       <div className="group/timeline relative w-full grow">
         <TimelineSlider.Root className="group focus-area cursor-crosshair -focus-area-x-2 -focus-area-y-14">
@@ -34,7 +32,7 @@ export function TimelineSliderControl() {
           <TimelineSlider.Thumb
             showWithHover
             className={`
-              absolute h-8 w-px rounded-full bg-white/60 opacity-0 transition-opacity duration-[var(--lp-transition-speed-regular)]
+              absolute h-8 w-px rounded-full bg-lp-accent/60 opacity-0 transition-opacity duration-[var(--lp-transition-speed-regular)]
               group-hover/timeline:opacity-100
               group-active/timeline:bg-white
             `}
@@ -42,8 +40,8 @@ export function TimelineSliderControl() {
           <TimelineSlider.Thumb
             showWithHover
             className={`
-              top-auto! bottom-[calc(100%+16px)]! flex size-0 h-auto w-fit items-center bg-transparent text-xs font-medium tabular-nums opacity-0
-              transition-opacity duration-[var(--lp-transition-speed-regular)]
+              top-auto! bottom-[calc(100%+16px)] flex h-auto w-fit bg-transparent text-xs font-medium tabular-nums opacity-0 transition-opacity
+              duration-[var(--lp-transition-speed-regular)]
               group-hover/timeline:opacity-100
             `}
           >
@@ -51,7 +49,7 @@ export function TimelineSliderControl() {
             {!isLive && (
               <>
                 &nbsp;/&nbsp;
-                <Duration className="text-gray-400" />
+                <Duration className="text-lp-accent/60" />
               </>
             )}
           </TimelineSlider.Thumb>
@@ -71,15 +69,15 @@ export function TimelineSliderControl() {
           aria-pressed={showRemaining}
         >
           {showRemaining ? (
-            <Remaining className="text-xs font-medium text-white tabular-nums" />
+            <Remaining className="text-xs font-medium tabular-nums" />
           ) : (
-            <Duration className="text-xs font-medium text-white tabular-nums" />
+            <Duration className="text-xs font-medium tabular-nums" />
           )}
         </Button>
       )}
       {liveLatency && player && liveLatency > 1 && (
         <>
-          <LiveLatency className="text-xs font-medium text-white tabular-nums" />
+          <LiveLatency className="text-xs font-medium tabular-nums" />
           <Button
             variant="glass"
             size="icon"
@@ -87,13 +85,15 @@ export function TimelineSliderControl() {
             onClick={() => void player.goToLive()}
             aria-label="Go to live"
           >
-            <span className="text-xs font-medium text-white">Go to live</span>
+            <span className="text-xs font-medium text-lp-accent">
+              Go to live
+            </span>
           </Button>
         </>
       )}
       {liveLatency && liveLatency <= 1 && (
         <div className="flex items-center rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold tracking-wide text-white">
-          <div className="mr-1 h-2 w-2 animate-caret-blink rounded-full bg-white" />
+          <div className="mr-1 h-2 w-2 animate-caret-blink rounded-full bg-foreground" />
           <span className="tracking-widest">LIVE</span>
         </div>
       )}

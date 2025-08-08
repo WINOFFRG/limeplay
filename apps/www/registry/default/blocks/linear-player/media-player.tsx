@@ -23,7 +23,7 @@ export function LinearMediaPlayer({
         className="m-auto max-w-[var(--width,1280px)] min-w-80"
       >
         <Layout.PlayerContainer>
-          <FallbackPoster className="bg-stone-900">
+          <FallbackPoster className="bg-primary-foreground">
             <LimeplayLogo />
           </FallbackPoster>
           <MediaElement src={src} />
