@@ -13,7 +13,6 @@ export function VideoBackground() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className={`
-        ${styles.containerBackground}
         pointer-events-none absolute inset-0 select-none
       `}
     >
@@ -22,7 +21,6 @@ export function VideoBackground() {
         suppressHydrationWarning
         alt="Video Background"
         src={background}
-        // src={`https://qusmdshfvwgcppaiykvd.supabase.co/storage/v1/object/public/chr-v3-prd-user-image-uploads/intro-cover/curated/gradient${parsedNumber}.jpg`}
         className="size-full object-cover"
       />
       {/* </BlurFade> */}

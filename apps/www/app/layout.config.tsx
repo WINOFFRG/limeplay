@@ -1,4 +1,5 @@
 import Image from "next/image"
+import LogoDark from "@/public/product-icon-dark.svg"
 import Logo from "@/public/product-icon.svg"
 import {
   BlueprintIcon,
@@ -46,7 +47,13 @@ export const baseOptions: BaseLayoutProps = {
         <Image
           alt={PRODUCT_NAME}
           src={Logo}
-          className="size-4"
+          className="size-4 dark:block hidden"
+          aria-label={PRODUCT_NAME}
+        />
+        <Image
+          alt={PRODUCT_NAME}
+          src={LogoDark}
+          className="size-4 block dark:hidden"
           aria-label={PRODUCT_NAME}
         />
         <span className="text-base font-medium">Limeplay</span>
