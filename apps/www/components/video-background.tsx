@@ -4,25 +4,19 @@ import Image from "next/image"
 import background from "@/public/bg-7.jpg"
 import { motion } from "motion/react"
 
-import styles from "./video-background.module.css"
-
 export function VideoBackground() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className={`
-        ${styles.containerBackground}
-        pointer-events-none absolute inset-0 select-none
-      `}
+      className={`pointer-events-none absolute inset-0 select-none`}
     >
       <Image
         fill
         suppressHydrationWarning
         alt="Video Background"
         src={background}
-        // src={`https://qusmdshfvwgcppaiykvd.supabase.co/storage/v1/object/public/chr-v3-prd-user-image-uploads/intro-cover/curated/gradient${parsedNumber}.jpg`}
         className="size-full object-cover"
       />
       {/* </BlurFade> */}
