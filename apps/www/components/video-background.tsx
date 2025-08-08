@@ -4,17 +4,13 @@ import Image from "next/image"
 import background from "@/public/bg-7.jpg"
 import { motion } from "motion/react"
 
-import styles from "./video-background.module.css"
-
 export function VideoBackground() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className={`
-        pointer-events-none absolute inset-0 select-none
-      `}
+      className={`pointer-events-none absolute inset-0 select-none`}
     >
       <Image
         fill
