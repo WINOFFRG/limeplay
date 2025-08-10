@@ -51,5 +51,5 @@ export function MediaElement({ src }: { src: string }) {
     }
   }, [player, mediaRef, src])
 
-  return <Media as="video" className="size-full" autoPlay={true} muted loop />
+  return <Media as="video" className="size-full" autoPlay={false} muted loop />
 }
