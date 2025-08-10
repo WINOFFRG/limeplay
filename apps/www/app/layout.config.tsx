@@ -65,7 +65,6 @@ export const baseOptions: BaseLayoutProps = {
         <span className="text-base font-medium">Limeplay</span>
       </>
     ),
-    transparentMode: "always",
   },
   links: [
     {
