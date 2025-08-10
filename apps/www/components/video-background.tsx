@@ -32,8 +32,6 @@ export function VideoBackground() {
       }}
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-stone-100 to-neutral-200" />
-
       <div
         className="absolute inset-0 opacity-[0.12] mix-blend-overlay"
         style={{
@@ -58,7 +56,7 @@ export function VideoBackground() {
             src="https://shots.so/display-assets/shadow-overlays/087.png"
             alt="Tree shadow"
             fill
-            className="opacity-60 mix-blend-multiply"
+            className="opacity-65 mix-blend-multiply"
             style={{
               transform: "scale(1.2) translate3d(-8%, -3%, 0)",
               filter: "blur(0.8px)",
