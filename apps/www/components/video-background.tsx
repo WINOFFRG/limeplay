@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image"
-import background from "@/public/bg-7.jpg"
 import { motion } from "motion/react"
 
 export function VideoBackground() {
@@ -9,24 +8,109 @@ export function VideoBackground() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className={`pointer-events-none absolute inset-0 select-none`}
+      transition={{
+        duration: 1,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }}
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none"
     >
-      <Image
-        fill
-        suppressHydrationWarning
-        alt="Video Background"
-        src={background}
-        className="size-full object-cover"
-      />
-      {/* </BlurFade> */}
-      <div className="absolute inset-0 opacity-50 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-stone-100 to-neutral-200" />
+
       <div
-        className={`absolute inset-[0_auto_0_0] w-2/6 bg-gradient-to-r from-black to-transparent opacity-50`}
+        className="absolute inset-0 opacity-[0.12] mix-blend-overlay"
+        style={{
+          backgroundImage: "url('https://assets.shots.so/canvas/noise2.svg')",
+          backgroundSize: "180px 180px",
+          backgroundRepeat: "repeat",
+        }}
       />
-      <div
-        className={`absolute inset-[0_0_0_auto] w-1/4 bg-gradient-to-l from-black to-transparent opacity-50`}
-      />
+
+      <motion.div
+        className="absolute inset-0 z-10"
+        initial={{ opacity: 0, x: -60, scale: 1.1 }}
+        animate={{ opacity: 0.4, x: 0, scale: 1 }}
+        transition={{
+          duration: 2.5,
+          ease: [0.25, 0.46, 0.45, 0.94],
+          delay: 0.3,
+        }}
+      >
+        <div className="relative h-full w-full">
+          <Image
+            src="https://shots.so/display-assets/shadow-overlays/087.png"
+            alt="Tree shadow"
+            fill
+            className="opacity-60 mix-blend-multiply"
+            style={{
+              transform: "scale(1.2) translate3d(-8%, -3%, 0)",
+              filter: "blur(0.8px)",
+            }}
+          />
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="absolute inset-0 z-20"
+        initial={{ opacity: 0, scale: 0.9, rotate: -3 }}
+        animate={{ opacity: 0.15, scale: 1, rotate: 0 }}
+        transition={{
+          duration: 3.5,
+          ease: [0.25, 0.46, 0.45, 0.94],
+          delay: 0.8,
+        }}
+      >
+        <div className="relative h-full w-full">
+          <div
+            className="absolute inset-0 opacity-25 mix-blend-multiply"
+            style={{
+              background: `
+                radial-gradient(ellipse 280px 180px at 25% 35%, rgba(0,0,0,0.3) 0%, transparent 50%),
+                radial-gradient(ellipse 220px 140px at 75% 55%, rgba(0,0,0,0.25) 0%, transparent 50%),
+                radial-gradient(ellipse 180px 260px at 55% 25%, rgba(0,0,0,0.15) 0%, transparent 50%)
+              `,
+              filter: "blur(1.5px)",
+            }}
+          />
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="absolute inset-0 z-30"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          duration: 2,
+          ease: "easeOut",
+          delay: 1.3,
+        }}
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(48deg, rgba(255,248,220,0.08) 0%, transparent 65%)",
+          }}
+        />
+      </motion.div>
+
+      <motion.div
+        className="absolute inset-0 z-40"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          duration: 4,
+          ease: "easeOut",
+          delay: 1.8,
+        }}
+      >
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            background:
+              "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.4) 0%, transparent 60%)",
+          }}
+        />
+      </motion.div>
     </motion.div>
   )
 }
