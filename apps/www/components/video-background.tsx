@@ -1,18 +1,36 @@
 "use client"
 
+import { useRef } from "react"
 import Image from "next/image"
-import { motion } from "motion/react"
+import { motion, useScroll, useTransform } from "motion/react"
 
 export function VideoBackground() {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // Track scroll progress for fade-out effect
+  const { scrollYProgress } = useScroll()
+
+  // Fade out background synchronized with player expansion
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.3, 0.7, 1],
+    [1, 0.7, 0.2, 0]
+  )
+
+  // Scale effect for parallax depth
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1])
+
   return (
     <motion.div
+      ref={containerRef}
+      style={{ opacity, scale }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{
         duration: 1,
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
-      className="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none"
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-stone-100 to-neutral-200" />
 
