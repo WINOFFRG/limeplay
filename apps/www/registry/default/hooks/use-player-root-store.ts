@@ -16,6 +16,8 @@ export interface PlayerRootStore {
   setDebug: (value: boolean) => void
   playerContainerRef: HTMLDivElement | null
   setPlayerContainerRef: (instance: HTMLDivElement | null) => void
+  forceIdle: boolean
+  setForceIdle: (value: boolean) => void
 }
 
 export type MediaStatus =
@@ -56,5 +58,9 @@ export const createPlayerRootStore: StateCreator<
   playerContainerRef: null,
   setPlayerContainerRef: (instance) => {
     set({ playerContainerRef: instance })
+  },
+  forceIdle: false,
+  setForceIdle: (value) => {
+    set({ forceIdle: value })
   },
 })

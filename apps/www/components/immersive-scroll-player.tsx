@@ -37,7 +37,7 @@ export function ImmersiveScrollPlayer({
 
   useEffect(() => {
     const unsubscribe = scrollYProgress.on("change", (progress) => {
-      if (progress >= 0.7 && !isLocked) {
+      if (progress >= 0.65 && !isLocked) {
         setIsLocked(true)
         const container = containerRef.current
         if (container) {
@@ -48,7 +48,7 @@ export function ImmersiveScrollPlayer({
             behavior: "smooth",
           })
         }
-      } else if (progress < 0.7 && isLocked) {
+      } else if (progress < 0.65 && isLocked) {
         setIsLocked(false)
       }
     })
