@@ -99,7 +99,7 @@ export function useTimelineStates({
 
     const bufferedInfo = player.getBufferedInfo()
 
-    if (player.isBuffering() && bufferedInfo.total.length === 0) {
+    if (player.isBuffering()) {
       return
     }
 

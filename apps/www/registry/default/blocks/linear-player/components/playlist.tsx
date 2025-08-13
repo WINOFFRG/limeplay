@@ -85,7 +85,6 @@ export function Playlist() {
       }
 
       await player.load(asset.src)
-      console.log(`Loaded asset: ${asset.title}`)
       setCurrentAsset(asset)
 
       if (mediaRef.current?.paused) {
