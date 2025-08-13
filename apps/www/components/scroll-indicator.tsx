@@ -1,13 +1,43 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
+
+const FADE_START = 0.1
+const FADE_END = 0.3
+const HIDE_THRESHOLD = 0.3
 
 export function ScrollIndicator() {
   const { scrollYProgress } = useScroll()
 
-  const opacity = useTransform(scrollYProgress, [0, 0.1, 0.3], [1, 0.7, 0])
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, FADE_START, FADE_END],
+    [1, 0.7, 0]
+  )
 
   const y = useTransform(scrollYProgress, [0, 0.2], [0, 50])
+
+  const shouldShow = useTransform(
+    scrollYProgress,
+    (value) => value < HIDE_THRESHOLD
+  )
+
+  const [isVisible, setIsVisible] = useState(true)
+
+  useEffect(() => {
+    const unsubscribe = shouldShow.on("change", (latest) => {
+      if (!latest) {
+        setIsVisible(latest)
+      }
+    })
+
+    return unsubscribe
+  }, [shouldShow])
+
+  if (!isVisible) {
+    return null
+  }
 
   return (
     <motion.div
@@ -21,9 +51,7 @@ export function ScrollIndicator() {
           transition={{ delay: 2.3, duration: 0.8 }}
           className="relative"
         >
-          {/* Mouse outline */}
           <div className="relative h-10 w-6 rounded-full border-2 border-slate-400/60">
-            {/* Scroll wheel dot */}
             <motion.div
               animate={{
                 y: [0, 12, 0],

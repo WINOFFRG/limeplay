@@ -43,14 +43,9 @@ export function Navbar(props: NavbarProps) {
   const [isHidden, setIsHidden] = useState(false)
   const [scrollDirection, setScrollDirection] = useState<"up" | "down">("down")
   const { scrollY } = useScroll()
-  const hideTimeoutRef = React.useRef<number | null>(null)
 
   // Replace the complex useEffect with Framer Motion's useMotionValueEvent
   useMotionValueEvent(scrollY, "change", (currentY) => {
-    if (hideTimeoutRef.current) {
-      window.clearTimeout(hideTimeoutRef.current)
-      hideTimeoutRef.current = null
-    }
     const previous = scrollY.getPrevious() ?? 0
     const scrollingDown = currentY > previous
     const nextIsScrolled = currentY > 50
@@ -58,20 +53,12 @@ export function Navbar(props: NavbarProps) {
     setScrollDirection(scrollingDown ? "down" : "up")
     setIsScrolled(nextIsScrolled)
 
-    if (scrollingDown && currentY > 120 && value.length === 0) {
-      hideTimeoutRef.current = window.setTimeout(() => {
-        setIsHidden(true)
-      }, 150)
+    if (scrollingDown && currentY > 150 && value.length === 0) {
+      setIsHidden(true)
     } else if (!scrollingDown || currentY <= 100) {
       setIsHidden(false)
     }
   })
-
-  React.useEffect(() => {
-    return () => {
-      if (hideTimeoutRef.current) window.clearTimeout(hideTimeoutRef.current)
-    }
-  }, [])
 
   // Keep the existing useEffect for menu open state
   React.useEffect(() => {

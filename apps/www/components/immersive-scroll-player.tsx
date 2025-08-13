@@ -32,13 +32,11 @@ export function ImmersiveScrollPlayer({
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end end"],
+    offset: ["start end", "end end"],
   })
 
   useEffect(() => {
     const unsubscribe = scrollYProgress.on("change", (progress) => {
-      console.log({ progress })
-
       if (progress >= 0.7 && !isLocked) {
         setIsLocked(true)
         const container = containerRef.current
@@ -96,7 +94,7 @@ export function ImmersiveScrollPlayer({
       initial="hidden"
       animate="show"
     >
-      <div className="sticky top-0 grid h-svh w-full place-items-center overflow-hidden">
+      <div className="sticky top-0 -mt-28 grid h-svh w-full place-items-center overflow-hidden">
         <motion.div
           className="absolute inset-0 z-0"
           style={{ backgroundColor }}

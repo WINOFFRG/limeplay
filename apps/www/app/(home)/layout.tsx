@@ -3,6 +3,7 @@ import Script from "next/script"
 import { cn } from "@/lib/utils"
 import { Header } from "@/components/layouts/header"
 import { slot } from "@/components/layouts/shared"
+import { VideoBackground } from "@/components/video-background"
 import { baseOptions, HEADER_LINKS } from "@/app/layout.config"
 
 export default function RootLayout({
@@ -17,11 +18,11 @@ export default function RootLayout({
         src="//unpkg.com/react-scan/dist/auto.global.js"
       />
       <main
-        id="nd-home-layout"
         className={cn(
           "w-dvw bg-gradient-to-br from-slate-50 via-amber-50 to-neutral-200"
         )}
       >
+        <VideoBackground />
         {slot(
           baseOptions.nav,
           <Header links={HEADER_LINKS} nav={baseOptions.nav} />
