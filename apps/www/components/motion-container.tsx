@@ -26,7 +26,7 @@ export function MotionContainer({ children }: { children: React.ReactNode }) {
           duration: 0.4,
         },
       }}
-      className={`absolute top-1/2 left-1/2 w-dvh`}
+      className={`absolute top-1/2 left-1/2 w-dvw`}
     >
       {children}
     </motion.div>
