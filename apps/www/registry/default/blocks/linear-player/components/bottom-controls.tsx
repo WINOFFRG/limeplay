@@ -1,4 +1,8 @@
+// import { ChatTextIcon } from "@phosphor-icons/react"
+
+// import { Button } from "@/components/ui/button"
 import { PlaybackStateControl } from "@/registry/default/blocks/linear-player/components/playback-state-control"
+// import { Playlist } from "@/registry/default/blocks/linear-player/components/playlist"
 import { TimelineSliderControl } from "@/registry/default/blocks/linear-player/components/timeline-slider-control"
 import { VolumeSliderControl } from "@/registry/default/blocks/linear-player/components/volume-slider-control"
 import { VolumeStateControl } from "@/registry/default/blocks/linear-player/components/volume-state-control"
@@ -10,6 +14,7 @@ export function BottomControls() {
         pointer-events-auto absolute inset-x-0 bottom-8 mx-auto flex items-end gap-2 px-[min(80px,10%)] transition-all duration-300 ease-out-quad
         group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
         group-data-[idle=true]/root:translate-y-4 group-data-[idle=true]/root:opacity-0
+        group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100
         group-data-[status=paused]/root:translate-y-0 group-data-[status=paused]/root:opacity-100
       `}
     >
@@ -25,6 +30,10 @@ export function BottomControls() {
         <VolumeSliderControl />
       </div>
       <TimelineSliderControl />
+      {/* <Playlist />
+      <Button size="icon" variant="glass" aria-label="Open episodes">
+        <ChatTextIcon weight="fill" />
+      </Button> */}
     </div>
   )
 }

@@ -1,10 +1,9 @@
 import type { ReactNode } from "react"
 import { Slot } from "@radix-ui/react-slot"
 
-import type { NavProviderProps } from "@/components/contexts/layout"
 import type { LinkItemType } from "@/components/layouts/links"
 
-export interface NavOptions extends NavProviderProps {
+export interface NavOptions {
   enabled: boolean
   component: ReactNode
 

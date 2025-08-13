@@ -28,17 +28,17 @@ export function MediaElement({ src }: { src: string }) {
         }
       }
 
-      const config = {
-        streaming: {
-          // DEV: To debug the buffer values in timeline slider
-          bufferingGoal: 120,
-        },
-        manifest: {
-          // availabilityWindowOverride: 600,
-        },
-      } as shaka.extern.PlayerConfiguration
+      // const config = {
+      //   streaming: {
+      //     // DEV: To debug the buffer values in timeline slider
+      //     bufferingGoal: 120,
+      //   },
+      //   manifest: {
+      //     // availabilityWindowOverride: 600,
+      //   },
+      // } as shaka.extern.PlayerConfiguration
 
-      player.configure(config)
+      // player.configure(config)
 
       void player
         .load(src)
@@ -51,5 +51,5 @@ export function MediaElement({ src }: { src: string }) {
     }
   }, [player, mediaRef, src])
 
-  return <Media as="video" className="size-full" autoPlay={true} muted loop />
+  return <Media as="video" className="size-full" autoPlay={false} muted loop />
 }

@@ -20,7 +20,7 @@ export function LinearMediaPlayer({
       <Layout.RootContainer
         height={720}
         width={1280}
-        className="m-auto max-w-[var(--width,1280px)] min-w-80"
+        className="m-auto w-full min-w-80 rounded-xl"
       >
         <Layout.PlayerContainer>
           <FallbackPoster className="bg-primary-foreground">

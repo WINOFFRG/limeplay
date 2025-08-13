@@ -171,10 +171,10 @@ html {
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border selection:bg-rose-200;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
   }
 }
 
