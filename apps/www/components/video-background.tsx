@@ -27,11 +27,7 @@ export function VideoBackground() {
       className="pointer-events-none fixed inset-0 z-0 transform-gpu overflow-hidden will-change-transform select-none"
     >
       <div
-        className={`
-          absolute inset-0
-          bg-[url('https://assets.shots.so/canvas/noise2.svg')]
-          bg-size-[180px] bg-repeat opacity-[0.12] mix-blend-overlay
-        `}
+        className={`absolute inset-0 bg-[url('/noise2.svg')] bg-size-[180px] bg-repeat opacity-[0.12] mix-blend-overlay`}
       />
       <motion.div
         className="absolute inset-0 z-10 transform-gpu will-change-transform"
