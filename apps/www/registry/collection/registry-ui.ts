@@ -53,7 +53,8 @@ export const ui: Registry["items"] = [
     css: {
       "@utility focus-area": {
         position: "relative",
-        "&::before": {
+
+        "&:before": {
           position: "absolute",
           content: '""',
           inset: "calc(var(--y) * 1px) calc(var(--x) * 1px)",
