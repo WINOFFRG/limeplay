@@ -63,14 +63,6 @@ export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
             return <NavbarLinkItem key={i} item={item} />
           })}
       </ul>
-
-      <div className="ml-4 flex flex-row items-center justify-end gap-1.5">
-        {slot(
-          themeSwitch,
-          <ThemeToggle className="max-lg:hidden" mode={themeSwitch?.mode} />
-        )}
-      </div>
-
       <ul className="ml-2 flex flex-row items-center gap-2">
         {navItems.filter(isSecondary).map((item, i) => (
           <NavbarLinkItem
