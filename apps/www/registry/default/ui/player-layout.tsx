@@ -71,6 +71,7 @@ export const RootContainer = React.forwardRef<
 >((props, forwardedRef) => {
   const { children, height, width, className, ...etc } = props
   const idle = useMediaStore((state) => state.idle)
+  const forceIdle = useMediaStore((state) => state.forceIdle)
   const setIdle = useMediaStore((state) => state.setIdle)
   const status = useMediaStore((state) => state.status)
   const debug = useMediaStore((state) => state.debug)
@@ -90,7 +91,7 @@ export const RootContainer = React.forwardRef<
       tabIndex={0}
       aria-label="Media player"
       role="region"
-      data-idle={debug ? "false" : idle}
+      data-idle={debug ? "false" : forceIdle ? "false" : idle}
       ref={composeRefs(forwardedRef, setPlayerContainerRef)}
       data-status={status}
       style={{
@@ -111,22 +112,34 @@ export const RootContainer = React.forwardRef<
       // onFocus show controls and set focus true so that keyboard shortcuts are triggered
       // onBlur hide controls and set focus to false
       onPointerUp={() => {
-        setIdle(false)
+        if (!forceIdle) {
+          setIdle(false)
+        }
       }}
       onPointerLeave={() => {
-        setIdle(true)
+        if (!forceIdle) {
+          setIdle(true)
+        }
       }}
       onPointerMove={() => {
-        setIdle(false)
+        if (!forceIdle) {
+          setIdle(false)
+        }
       }}
       onPointerEnter={() => {
-        setIdle(false)
+        if (!forceIdle) {
+          setIdle(false)
+        }
       }}
       onFocus={() => {
-        setIdle(false)
+        if (!forceIdle) {
+          setIdle(false)
+        }
       }}
       onBlur={() => {
-        setIdle(true)
+        if (!forceIdle) {
+          setIdle(true)
+        }
       }}
       {...etc}
     >
