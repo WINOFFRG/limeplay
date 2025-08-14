@@ -72,7 +72,6 @@ export const ui: Registry["items"] = [
       "@utility -focus-area-y-*": {
         "--y": "--value(number) * -1",
       },
-      "[data-layout-type='root-container']": {},
     },
   },
   {
