@@ -32,14 +32,14 @@ export default function Home() {
         </h1>
 
         <div className="mx-auto mt-8 max-w-2xl space-y-2">
-          <p
+          <h2
             className={`
               text-2xl font-medium text-neutral-900
               sm:text-xl
             `}
           >
             Modern UI Library for building video players
-          </p>
+          </h2>
           <p
             className={`
               text-base font-medium text-neutral-700
@@ -48,8 +48,10 @@ export default function Home() {
           >
             Powered by
             <Link
-              href={"https://shaka-player.netlify.app/"}
+              href={"https://github.com/shaka-project/shaka-player/"}
               className="underline underline-offset-2"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               @shaka-player
             </Link>
@@ -57,6 +59,8 @@ export default function Home() {
             <Link
               href={"https://ui.shadcn.com/"}
               className="underline underline-offset-2"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               @shadcn/ui
             </Link>
@@ -77,7 +81,7 @@ export default function Home() {
               sm:w-auto
             `}
           >
-            <a href="/docs/components">Browse components</a>
+            <Link href="/docs/components">Browse components</Link>
           </Button>
 
           <Button
@@ -93,7 +97,7 @@ export default function Home() {
             <a
               href="https://github.com/winoffrg/limeplay"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="flex items-center gap-2"
             >
               <Icons.gitHub className="h-5 w-5" />
