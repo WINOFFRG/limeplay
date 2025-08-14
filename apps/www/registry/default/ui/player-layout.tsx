@@ -88,6 +88,7 @@ export const RootContainer = React.forwardRef<
 
   return (
     <div
+      data-layout-type="root-container"
       tabIndex={0}
       aria-label="Media player"
       role="region"
