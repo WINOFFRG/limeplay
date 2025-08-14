@@ -9,18 +9,22 @@ import { ThemeProvider } from "next-themes"
 
 import {
   PROD_BASE_HOST,
-  PRODUCT_DECSRIPTION,
+  PRODUCT_DESCRIPTION,
   PRODUCT_NAME,
 } from "@/lib/constants"
+import { JsonLd } from "@/components/json-ld"
 
 const geist = Geist({
   variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
 })
 
 const mono = Geist_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
+  display: "swap",
 })
 
 export const metadata: Metadata = {
@@ -29,14 +33,18 @@ export const metadata: Metadata = {
     template: `%s | ${PRODUCT_NAME}`,
   },
   metadataBase: new URL(PROD_BASE_HOST),
-  description: PRODUCT_DECSRIPTION,
+  description: PRODUCT_DESCRIPTION,
   keywords: [
+    "video player",
+    "video components",
+    "open source",
+    "limeplay",
+    "shaka player",
+    "React",
+    "TypeScript",
     "Next.js",
     "React",
     "Tailwind CSS",
-    "shaka-player",
-    "shaka player",
-    "video player",
     "media",
     "ui",
   ],
@@ -51,7 +59,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: PROD_BASE_HOST,
     title: PRODUCT_NAME,
-    description: PRODUCT_DECSRIPTION,
+    description: PRODUCT_DESCRIPTION,
     siteName: PRODUCT_NAME,
     images: [
       {
@@ -65,11 +73,28 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: PRODUCT_NAME,
-    description: PRODUCT_DECSRIPTION,
+    description: PRODUCT_DESCRIPTION,
     images: [`${PROD_BASE_HOST}/opengraph-image.png`],
     creator: "@shadcn",
   },
   manifest: `${PROD_BASE_HOST}/site.webmanifest`,
+  alternates: {
+    canonical: PROD_BASE_HOST,
+    types: {
+      "application/xml": `${PROD_BASE_HOST}/sitemap.xml`,
+    },
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 }
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -83,6 +108,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       suppressHydrationWarning
     >
       <body className="antialiased">
+        <JsonLd />
         <Analytics />
         <SpeedInsights />
         <ThemeProvider
