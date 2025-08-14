@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react"
 
 import { Button } from "@/components/ui/button"
@@ -151,13 +150,13 @@ export function Playlist() {
               >
                 <div className="flex w-full items-center gap-3 p-2">
                   <div className="relative aspect-video w-20 shrink-0 overflow-hidden rounded">
-                    <Image
+                    <img
                       src={asset.poster}
                       alt={asset.title}
-                      fill
+                      // fill
                       sizes="80px"
                       className="object-cover"
-                      priority={index < 2}
+                      // priority={index < 2}
                     />
                     {isCurrentAsset && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40">
