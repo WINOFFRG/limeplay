@@ -3,7 +3,7 @@ import type { Organization, Person, WebSite, WithContext } from "schema-dts"
 
 import {
   PROD_BASE_HOST,
-  PRODUCT_DECSRIPTION,
+  PRODUCT_DESCRIPTION,
   PRODUCT_NAME,
 } from "@/lib/constants"
 
@@ -12,7 +12,7 @@ export function JsonLd() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: PRODUCT_NAME,
-    description: PRODUCT_DECSRIPTION,
+    description: PRODUCT_DESCRIPTION,
     url: PROD_BASE_HOST,
   }
 

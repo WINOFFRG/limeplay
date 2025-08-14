@@ -3,6 +3,8 @@ import type { MetadataRoute } from "next"
 import { PROD_BASE_HOST } from "@/lib/constants"
 import { source } from "@/lib/source"
 
+export const dynamic = "force-static"
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = PROD_BASE_HOST
 

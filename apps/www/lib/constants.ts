@@ -1,5 +1,5 @@
 export const PRODUCT_NAME = "Limeplay"
-export const PRODUCT_DECSRIPTION =
+export const PRODUCT_DESCRIPTION =
   "Modern UI Library for building video players, powered by Shaka Player and shadcn UI"
 export const GITHUB_URL = "http://git.new/limeplay"
 export const X_URL = "https://dub.sh/winoffrg"
