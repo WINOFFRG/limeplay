@@ -16,6 +16,7 @@ export const blocks: Registry["items"] = [
       "lodash.clamp",
     ],
     registryDependencies: [
+      "dropdown-menu",
       "player-layout",
       "media",
       "media-provider",
@@ -77,6 +78,10 @@ export const blocks: Registry["items"] = [
       {
         path: `${BASE_SRC_URL}/lib/create-media-store.ts`,
         type: "registry:lib",
+      },
+      {
+        path: `${BASE_SRC_URL}/components/playlist.tsx`,
+        type: "registry:component",
       },
     ],
   },
