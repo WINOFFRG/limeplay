@@ -75,19 +75,11 @@ export function Navbar(props: NavbarProps) {
         {...props}
         className={cn(
           `fixed left-1/2 z-50 -translate-x-1/2 transition-[top,width] duration-300 ease-in-out will-change-transform`,
-          // Keep your exact dynamic positioning and sizing logic
-          !isScrolled && !isHidden
-            ? `
-              top-[50px] w-[min(1240px,calc(100%-2rem))]
-              lg:w-[min(1240px,calc(100%-2rem))]
-            `
-            : `
-              top-[30px] w-[min(960px,calc(100%-2rem))]
-              lg:w-[min(960px,calc(100%-2rem))]
-            `,
+          `top-0 w-full`,
+          `md:top-[50px] md:w-[min(1240px,calc(100%-2rem))]`,
+          isScrolled && `md:top-[30px] md:w-[min(960px,calc(100%-2rem))]`,
           props.className
         )}
-        // Replace manual hide/show with Framer Motion animation
         animate={{
           y: isHidden ? -120 : 0,
           opacity: isHidden ? 0 : 1,
@@ -102,34 +94,39 @@ export function Navbar(props: NavbarProps) {
       >
         <nav
           className={cn(
+            `relative w-full transition-all duration-500 ease-linear`,
             `
-              relative w-full rounded-2xl border border-neutral-200/50 px-5 py-2 backdrop-blur-[20px] backdrop-saturate-[180%] transition-all
-              duration-500 ease-linear
-              dark:border-neutral-700/50
+              border-b border-neutral-200/50 bg-white px-4 py-2
+              dark:border-neutral-700/50 dark:bg-neutral-900
             `,
-            // Keep your exact background and shadow logic
+            `
+              md:rounded-2xl md:border md:border-neutral-200/50 md:px-5 md:py-2 md:backdrop-blur-[20px] md:backdrop-saturate-[180%]
+              md:dark:border-neutral-700/50
+            `,
+            // Desktop background and shadow logic (hidden on mobile)
             !isScrolled
               ? `
-                bg-white/30 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.1),0px_15px_25px_0px_rgba(0,0,0,0.15)] backdrop-blur-md
-                dark:bg-neutral-900/80 dark:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.3),0px_15px_25px_0px_rgba(0,0,0,0.4)] dark:backdrop-blur-md
+                md:bg-white/30 md:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.1),0px_15px_25px_0px_rgba(0,0,0,0.15)] md:backdrop-blur-md
+                md:dark:bg-neutral-900/80 md:dark:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.3),0px_15px_25px_0px_rgba(0,0,0,0.4)] md:dark:backdrop-blur-md
               `
               : `
-                border-transparent bg-white/80 shadow-[0px_1px_2px_0px_rgba(0,0,0,0.15)] backdrop-blur-md
-                dark:bg-neutral-900/80 dark:shadow-[0px_1px_2px_0px_rgba(0,0,0,0.4)] dark:backdrop-blur-md
+                md:border-transparent md:bg-white/80 md:shadow-[0px_1px_2px_0px_rgba(0,0,0,0.15)] md:backdrop-blur-md md:dark:bg-neutral-900/80
+                md:dark:shadow-[0px_1px_2px_0px_rgba(0,0,0,0.4)] md:dark:backdrop-blur-md
               `,
-            // Keep menu open override
             value.length > 0 &&
               `
-                border-neutral-200/50 bg-white/30 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.1),0px_15px_25px_0px_rgba(0,0,0,0.15)] backdrop-blur-md
-                dark:border-neutral-700/50 dark:bg-neutral-900/30 dark:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.3),0px_15px_25px_0px_rgba(0,0,0,0.4)]
-                dark:backdrop-blur-md
+                md:border-neutral-200/50 md:bg-white/30 md:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.1),0px_15px_25px_0px_rgba(0,0,0,0.15)]
+                md:backdrop-blur-md md:dark:border-neutral-700/50 md:dark:bg-neutral-900/30
+                md:dark:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.3),0px_15px_25px_0px_rgba(0,0,0,0.4)] md:dark:backdrop-blur-md
               `
           )}
         >
           <NavigationMenuList
             className={cn(
-              `flex w-full flex-row items-center justify-between px-3`,
-              !isScrolled || value.length > 0 ? "h-[44px]" : "h-[40px]"
+              `flex w-full flex-row items-center justify-between`,
+              `h-[44px] px-2`,
+              `md:px-3`,
+              !isScrolled || value.length > 0 ? "md:h-[44px]" : "md:h-[40px]"
             )}
             asChild
           >
