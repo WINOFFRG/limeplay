@@ -42,7 +42,7 @@ export function VideoBackground() {
         <Image
           src={ShadowOverlay28}
           alt="Tree shadow"
-          className="size-full scale-120 opacity-50 mix-blend-multiply blur-xs"
+          className="size-full sm:scale-120 opacity-50 mix-blend-multiply blur-xs object-cover sm:object-fill"
           style={{
             transform: "translate3d(-8%, -3%, 0)",
           }}
