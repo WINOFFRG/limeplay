@@ -13,10 +13,12 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <Script
-        crossOrigin="anonymous"
-        src="//unpkg.com/react-scan/dist/auto.global.js"
-      />
+      {process.env.NODE_ENV === "development" && (
+        <Script
+          crossOrigin="anonymous"
+          src="//unpkg.com/react-scan/dist/auto.global.js"
+        />
+      )}
       <main
         className={cn(
           "w-dvw bg-gradient-to-br from-slate-50 via-amber-50 to-neutral-200"

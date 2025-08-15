@@ -30,10 +30,7 @@ export function GitHubStars() {
 
   return (
     <span
-      className={`
-        hidden rounded-md bg-secondary px-1 py-0.5 text-xs font-medium text-secondary-foreground
-        sm:inline-flex
-      `}
+      className={`inline-flex rounded-md bg-secondary px-1 py-0.5 text-xs font-medium text-secondary-foreground`}
     >
       <span className="min-w-[4ch] text-center tabular-nums">
         {stars?.toLocaleString() ?? "..."}

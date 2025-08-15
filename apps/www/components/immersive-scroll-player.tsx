@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
 
+import { useIsMobile } from "@/hooks/use-mobile"
+
 interface ImmersiveScrollPlayerProps {
   children: React.ReactNode
 }
@@ -29,6 +31,7 @@ export function ImmersiveScrollPlayer({
 }: ImmersiveScrollPlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isLocked, setIsLocked] = useState(false)
+  const isMobile = useIsMobile()
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -36,6 +39,8 @@ export function ImmersiveScrollPlayer({
   })
 
   useEffect(() => {
+    if (isMobile) return
+
     const unsubscribe = scrollYProgress.on("change", (progress) => {
       if (progress >= 0.65 && !isLocked) {
         setIsLocked(true)
@@ -54,7 +59,7 @@ export function ImmersiveScrollPlayer({
     })
 
     return unsubscribe
-  }, [scrollYProgress, isLocked])
+  }, [scrollYProgress, isLocked, isMobile])
 
   const { width: vw, height: vh } = useViewportSize()
 
@@ -80,6 +85,14 @@ export function ImmersiveScrollPlayer({
     ["rgba(255, 255, 255, 0)", "rgba(0, 0, 0, 1)"]
   )
 
+  if (isMobile) {
+    return (
+      <div className="relative w-full" ref={containerRef}>
+        <div className="aspect-video w-full">{children}</div>
+      </div>
+    )
+  }
+
   return (
     <motion.div
       ref={containerRef}
@@ -94,7 +107,7 @@ export function ImmersiveScrollPlayer({
       initial="hidden"
       animate="show"
     >
-      <div className="sticky top-0 -mt-28 grid h-svh w-full place-items-center overflow-hidden">
+      <div className="sticky top-0 md:-mt-28 grid h-svh w-full place-items-center overflow-hidden">
         <motion.div
           className="absolute inset-0 z-0"
           style={{ backgroundColor }}
