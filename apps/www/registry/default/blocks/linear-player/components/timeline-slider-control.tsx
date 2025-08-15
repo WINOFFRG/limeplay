@@ -21,8 +21,7 @@ export function TimelineSliderControl() {
 
   return (
     <div className="my-auto flex grow items-center gap-3 select-none">
-      {!isLive && <Elapsed className="text-xs font-medium tabular-nums" />}
-
+      {!isLive && <Elapsed className="text-xs font-medium" />}
       <div className="group/timeline relative w-full grow">
         <TimelineSlider.Root className="group focus-area cursor-crosshair -focus-area-x-2 -focus-area-y-14">
           <TimelineSlider.Track className="overflow-hidden">
@@ -40,7 +39,7 @@ export function TimelineSliderControl() {
           <TimelineSlider.Thumb
             showWithHover
             className={`
-              top-auto! bottom-[calc(100%+16px)] flex h-auto w-fit bg-transparent text-xs font-medium tabular-nums opacity-0 transition-opacity
+              top-auto! bottom-[calc(100%+16px)] flex h-auto w-fit bg-transparent text-xs font-medium opacity-0 transition-opacity
               duration-[var(--lp-transition-speed-regular)]
               group-hover/timeline:opacity-100
             `}
@@ -69,15 +68,15 @@ export function TimelineSliderControl() {
           aria-pressed={showRemaining}
         >
           {showRemaining ? (
-            <Remaining className="text-xs font-medium tabular-nums" />
+            <Remaining className="text-xs font-medium" />
           ) : (
-            <Duration className="text-xs font-medium tabular-nums" />
+            <Duration className="text-xs font-medium" />
           )}
         </Button>
       )}
       {liveLatency && player && liveLatency > 1 && (
         <>
-          <LiveLatency className="text-xs font-medium tabular-nums" />
+          <LiveLatency className="text-xs font-medium" />
           <Button
             variant="glass"
             size="icon"

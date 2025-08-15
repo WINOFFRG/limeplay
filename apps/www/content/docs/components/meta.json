@@ -3,12 +3,14 @@
   "description": "All components used in Player UI",
   "pages": [
     "media-provider",
-    "playback-state",
-    "volume-state",
+    "playback-control",
+    "mute-control",
     "volume-control",
     "timeline-control",
     "timeline-labels",
     "media",
-    "player-hooks"
+    "player-hooks",
+    "fallback-poster",
+    "player-layout"
   ]
 }
