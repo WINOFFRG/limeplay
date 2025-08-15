@@ -42,7 +42,7 @@ export function ScrollIndicator() {
   return (
     <motion.div
       style={{ opacity, y }}
-      className="pointer-events-none fixed bottom-8 left-1/2 z-20 -translate-x-1/2 transform"
+      className="pointer-events-none fixed bottom-8 left-1/2 z-20 -translate-x-1/2 transform hidden md:block"
     >
       <div className="flex flex-col items-center gap-2">
         <motion.div

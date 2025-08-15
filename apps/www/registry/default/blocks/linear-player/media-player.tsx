@@ -1,3 +1,5 @@
+import React from "react"
+
 import { cn } from "@/lib/utils"
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
 import { MediaElement } from "@/registry/default/blocks/linear-player/components/media-element"
@@ -13,18 +15,23 @@ export interface LinearMediaPlayerProps {
   className?: string
 }
 
-export function LinearMediaPlayer({
-  src,
-  debug = false,
-  className,
-}: LinearMediaPlayerProps) {
+export const LinearMediaPlayer = React.forwardRef<
+  HTMLDivElement,
+  LinearMediaPlayerProps
+>(({ src, debug = false, className }, ref) => {
   return (
     <MediaProvider debug={debug}>
       <Layout.RootContainer
+        ref={ref}
         height={720}
         width={1280}
-        // eslint-disable-next-line better-tailwindcss/no-unregistered-classes
-        className={cn("dark m-auto w-full min-w-80", className)}
+        className={cn(
+          `
+            dark m-auto w-full
+            md:min-w-80
+          `,
+          className
+        )}
       >
         <Layout.PlayerContainer>
           <FallbackPoster className="bg-black">
@@ -40,4 +47,6 @@ export function LinearMediaPlayer({
       </Layout.RootContainer>
     </MediaProvider>
   )
-}
+})
+
+LinearMediaPlayer.displayName = "LinearMediaPlayer"
