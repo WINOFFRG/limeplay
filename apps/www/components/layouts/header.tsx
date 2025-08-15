@@ -1,13 +1,6 @@
 import { Fragment } from "react"
 import Link from "next/link"
-import { ChevronDown } from "lucide-react"
 
-import {
-  Menu,
-  MenuContent,
-  MenuLinkItem,
-  MenuTrigger,
-} from "@/components/layouts/home/menu"
 import {
   Navbar,
   NavbarLink,
@@ -21,8 +14,6 @@ import type {
   LinkItemType,
   NavOptions,
 } from "@/components/layouts/shared"
-import { slot } from "@/components/layouts/shared"
-import { ThemeToggle } from "@/components/layouts/theme-toggle"
 
 export interface HomeLayoutProps extends BaseLayoutProps {
   nav?: Partial<
@@ -35,7 +26,7 @@ export interface HomeLayoutProps extends BaseLayoutProps {
   >
 }
 
-export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
+export function Header({ nav = {}, links }: HomeLayoutProps) {
   const navItems = links.filter((item) =>
     ["nav", "all"].includes(item.on ?? "all")
   )
@@ -65,49 +56,8 @@ export function Header({ nav = {}, links, themeSwitch }: HomeLayoutProps) {
       </ul>
       <ul className="ml-2 flex flex-row items-center gap-2">
         {navItems.filter(isSecondary).map((item, i) => (
-          <NavbarLinkItem
-            key={i}
-            item={item}
-            className={`
-              -me-1.5
-              max-lg:hidden
-            `}
-          />
+          <NavbarLinkItem key={i} item={item} className="-me-1.5" />
         ))}
-        <Menu className="lg:hidden">
-          <MenuTrigger
-            aria-label="Toggle Menu"
-            className="group -me-2"
-            enableHover={nav.enableHoverToOpen}
-          >
-            <ChevronDown
-              className={`
-                size-3 transition-transform duration-300
-                group-data-[state=open]:rotate-180
-              `}
-            />
-          </MenuTrigger>
-          <MenuContent className="sm:flex-row sm:items-center sm:justify-end">
-            {navItems
-              .filter((item) => !isSecondary(item))
-              .map((item, i) => (
-                <MenuLinkItem key={i} item={item} className="sm:hidden" />
-              ))}
-            <div
-              className={`
-                -ms-1.5 flex flex-row items-center gap-1.5
-                max-sm:mt-2
-              `}
-            >
-              {navItems.filter(isSecondary).map((item, i) => (
-                <MenuLinkItem key={i} item={item} className="-me-1.5" />
-              ))}
-              <div role="separator" className="flex-1" />
-
-              {slot(themeSwitch, <ThemeToggle mode={themeSwitch?.mode} />)}
-            </div>
-          </MenuContent>
-        </Menu>
       </ul>
     </Navbar>
   )
