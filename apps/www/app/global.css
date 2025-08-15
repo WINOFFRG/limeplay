@@ -81,10 +81,6 @@
   );
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -171,17 +167,17 @@ html {
 
 @layer base {
   * {
-    @apply border-border selection:bg-rose-200;
+    @apply border-border;
   }
   body {
-    @apply text-foreground;
+    @apply text-foreground scroll-smooth;
   }
 }
 
 @utility focus-area {
   position: relative;
 
-  &::before {
+  &:before {
     position: absolute;
     content: "";
     inset: calc(var(--y) * 1px) calc(var(--x) * 1px);

@@ -1,27 +1,30 @@
 ---
-title: Playback State
+title: Playback Control
 description: Controls the play/pause state of the Media.
 ---
+import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 <ComponentPreview name="playback-state-control-demo" withPlayer />
 
 ## Installation
 
-1. Install the `playback-control` component:
-
+<Steps>
+<Step>
+### Install the component
 ```npm
 npx shadcn add https://limeplay.winoffrg.dev/r/styles/default/playback-control.json
 ```
+</Step>
 
-2. Add Event & Action Bridge
+<Step>
+### Add Event & Action Bridge
+Import the `useMediaStates` hook in your existing `PlayerHooks` component.
 
-Import the `useMediaStates` hook in your existing `PlayerHooks` component. This hook setups the required events and action bridge for the playback state control to work.
-
-```tsx lineNumbers title="components/player/player-hooks.tsx"
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
 import React from "react"
 
-import { useMediaStates } from "@/registry/default/hooks/use-media-state" // [!code ++]
 import { useShakaPlayer } from "@/registry/default/hooks/use-shaka-player"
+import { useMediaStates } from "@/registry/default/hooks/use-media-state" // [!code ++]
 
 export const PlayerHooks = React.memo(() => {
   useShakaPlayer()
@@ -30,8 +33,9 @@ export const PlayerHooks = React.memo(() => {
   return null
 })
 ```
-
-3. Add the Store States
+</Step>
+<Step>
+### Add the Store States
 
 ```tsx lineNumbers title="lib/create-media-store.ts"
 import {
@@ -54,6 +58,43 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   }))
   return mediaStore
 }
+```
+
+</Step>
+</Steps>
+
+## Usage
+
+1. Design the playback button with icons and states.
+
+```tsx lineNumbers title="components/player/playback-control-button.tsx"
+import { PlaybackControl } from "@/components/limeplay/playback-control"
+import { useMediaStore } from "@/components/limeplay/media-provider"
+import { PauseIcon, PlayIcon } from "@phosphor-icons/react"
+
+export function PlaybackControlButton() {
+  const status = useMediaStore((state) => state.status)
+
+  return (
+    <Button size="icon" asChild>
+      <PlaybackControl>
+        {status === "playing" && <PauseIcon weight="fill" size={18} />}
+        {status === "paused" && <PlayIcon weight="fill" size={18} />}
+      </PlaybackControl>
+    </Button>
+  )
+}
+
+```
+
+2. Place the button inside the `BottomControls` component.
+
+```tsx lineNumbers title="components/player/media-player.tsx"
+<Layout.ControlsContainer>
+  <BottomControls>
+    <PlaybackStateControl />
+  </BottomControls>
+</Layout.ControlsContainer>
 ```
 
 ## Understanding
