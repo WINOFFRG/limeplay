@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useEffect } from "react"
-import { useControls } from "leva"
 
 import { CustomDemoControls } from "@/registry/default/internal/custom-demo-controls"
 import { PlayerHooks } from "@/registry/default/internal/player-hooks-demo"
@@ -17,15 +16,10 @@ import * as Layout from "@/registry/default/ui/player-layout"
 function MediaElement() {
   const player = useMediaStore((state) => state.player)
 
-  const { streamUrl } = useControls({
-    streamUrl: {
-      value:
-        "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8",
-      label: "Stream URL",
-    },
-  })
-
   useEffect(() => {
+    const streamUrl =
+      "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8"
+
     if (player) {
       try {
         const url = new URL(streamUrl)
@@ -39,7 +33,7 @@ function MediaElement() {
         console.error("Invalid stream URL format:", streamUrl, error)
       }
     }
-  }, [player, streamUrl])
+  }, [player])
 
   return (
     <Media
@@ -54,17 +48,21 @@ function MediaElement() {
 }
 
 interface PlayerDemoLayoutProps extends React.PropsWithChildren {
-  type: "overlay" | "block"
+  type: "overlay" | "block" | "poster"
 }
 
 export function PlayerLayoutDemo({ children, type }: PlayerDemoLayoutProps) {
   return (
     <MediaProvider>
       <Layout.RootContainer height={720} width={1280} className="container p-0">
-        <Layout.PlayerContainer className="my-4">
-          <FallbackPoster className="bg-stone-900">
-            <LimeplayLogo />
-          </FallbackPoster>
+        <Layout.PlayerContainer>
+          {type === "poster" ? (
+            children
+          ) : (
+            <FallbackPoster className="bg-stone-900">
+              <LimeplayLogo />
+            </FallbackPoster>
+          )}
           <MediaElement />
           <PlayerHooks />
           <Layout.ControlsContainer>

@@ -17,10 +17,6 @@ export default function Layout({ children }: { children: ReactNode }) {
         },
       }}
     >
-      <Banner variant="rainbow" className="font-medium">
-        Limeplay V2 in under heavy development 🥳 We are looking for
-        contributors 👀
-      </Banner>
       <DocsLayout tree={source.pageTree} {...baseOptions}>
         {children}
       </DocsLayout>
