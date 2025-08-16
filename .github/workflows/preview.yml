@@ -38,7 +38,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.bun-cache.outputs.dir }}
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
           restore-keys: |
             ${{ runner.os }}-bun-
 
@@ -48,9 +48,9 @@ jobs:
           path: |
             ~/.bun
             ${{ github.workspace }}/apps/www/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lockb') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx', '**/*.md', '**/*.mdx') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lock') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx', '**/*.md', '**/*.mdx') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lockb') }}-
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lock') }}-
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
