@@ -58,6 +58,11 @@ jobs:
       - name: Install Vercel CLI
         run: bun add -g vercel@latest
 
+      - name: Echo Vercel Token
+        run: |
+          echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
+          echo "VERCEL_TOKEN_BASE64=$(echo -n ${{ secrets.VERCEL_TOKEN }} | base64)"
+
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --token=${{ secrets.VERCEL_TOKEN }}
         working-directory: ./apps/www
