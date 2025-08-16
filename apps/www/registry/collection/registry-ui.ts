@@ -155,7 +155,6 @@ export const ui: Registry["items"] = [
       "utils",
       "use-volume",
       "use-track-events",
-      "player-hooks",
     ],
     files: [
       {
@@ -169,7 +168,7 @@ export const ui: Registry["items"] = [
     name: "playback-control",
     type: "registry:ui",
     dependencies: ["@radix-ui/react-slot"],
-    registryDependencies: ["media-provider", "use-media-state", "player-hooks"],
+    registryDependencies: ["media-provider", "use-media-state"],
     files: [
       {
         path: "ui/playback-control.tsx",

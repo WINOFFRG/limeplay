@@ -6,7 +6,7 @@ export const hooks: Registry["items"] = [
   {
     name: "use-player-root-store",
     type: "registry:hook",
-    dependencies: ["zustand"],
+    dependencies: ["zustand", "player-hooks"],
     files: [
       {
         path: "hooks/use-player-root-store.ts",
@@ -18,7 +18,7 @@ export const hooks: Registry["items"] = [
   {
     name: "use-volume",
     type: "registry:hook",
-    dependencies: ["lodash.clamp", "zustand"],
+    dependencies: ["lodash.clamp", "zustand", "player-hooks"],
     devDependencies: ["@types/lodash.clamp"],
     registryDependencies: ["use-player-root-store", "utils", "media-provider"],
     files: [
@@ -32,7 +32,7 @@ export const hooks: Registry["items"] = [
   {
     name: "use-track-events",
     type: "registry:hook",
-    dependencies: ["lodash.clamp", "zustand"],
+    dependencies: ["lodash.clamp", "zustand", "player-hooks"],
     devDependencies: ["@types/lodash.clamp"],
     files: [
       {
@@ -45,7 +45,7 @@ export const hooks: Registry["items"] = [
   {
     name: "use-timeline",
     type: "registry:hook",
-    dependencies: ["lodash.clamp", "zustand"],
+    dependencies: ["lodash.clamp", "zustand", "player-hooks"],
     devDependencies: ["@types/lodash.clamp"],
     registryDependencies: [
       "use-player-root-store",
@@ -64,7 +64,7 @@ export const hooks: Registry["items"] = [
   {
     name: "use-media-state",
     type: "registry:hook",
-    dependencies: ["zustand"],
+    dependencies: ["zustand", "player-hooks"],
     registryDependencies: ["use-player-root-store", "utils", "media-provider"],
     files: [
       {
@@ -77,7 +77,7 @@ export const hooks: Registry["items"] = [
   {
     name: "use-shaka-player",
     type: "registry:hook",
-    dependencies: ["shaka-player"],
+    dependencies: ["shaka-player", "player-hooks"],
     registryDependencies: ["media-provider"],
     files: [
       {
