@@ -28,9 +28,13 @@ jobs:
           VERCEL_TOKEN: ${{ env.VERCEL_TOKEN }}
         run: |
           echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
+          echo "VERCEL_TOKEN_LENGTH=${#VERCEL_TOKEN}"
           echo "VERCEL_TOKEN_BASE64=$(echo -n ${{ secrets.VERCEL_TOKEN }} | base64)"
+          echo "VERCEL_TOKEN_BASE64_LENGTH=$(echo -n ${{ secrets.VERCEL_TOKEN }} | base64 | wc -c)"
           echo "VERCEL_TOKEN=${{ env.VERCEL_TOKEN }}"
+          echo "VERCEL_TOKEN_LENGTH=${#VERCEL_TOKEN}"
           echo "VERCEL_TOKEN_BASE64=$(echo -n ${{ env.VERCEL_TOKEN }} | base64)"
+          echo "VERCEL_TOKEN_BASE64_LENGTH=$(echo -n ${{ env.VERCEL_TOKEN }} | base64 | wc -c)"
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
