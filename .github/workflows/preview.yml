@@ -9,7 +9,6 @@ on:
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
   NEXT_TELEMETRY_DISABLED: 1
 
 jobs:
@@ -59,36 +58,20 @@ jobs:
       - name: Install Vercel CLI
         run: bun add -g vercel@latest
 
-      - name: Build Project
-        run: cd apps/www && bun run build
-        env:
-          REGISTRY_HOST: https://limeplay.winoffrg.dev
-
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=preview --token=${{ env.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
         working-directory: ./apps/www
 
       - name: Build Project Artifacts
-        run: vercel build --token=${{ env.VERCEL_TOKEN }}
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
         working-directory: ./apps/www
         env:
-          NODE_ENV: development
+          NODE_ENV: production
+          REGISTRY_HOST: https://limeplay.winoffrg.dev
 
       - name: Deploy to Vercel
         id: deploy
         run: |
-          url=$(vercel deploy --prebuilt --token=${{ env.VERCEL_TOKEN }})
+          url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "preview_url=$url" >> $GITHUB_OUTPUT
         working-directory: ./apps/www
-
-      - name: Comment PR
-        uses: actions/github-script@v7
-        if: github.event_name == 'pull_request'
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `🚀 Preview deployed to: ${{ steps.deploy.outputs.preview_url }}`
-            })
