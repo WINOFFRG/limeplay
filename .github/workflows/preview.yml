@@ -1,14 +1,13 @@
 name: Deployment
 
 on:
-  pull_request:
+  pull_request_target:
     branches: [dev]
     types: [opened, synchronize, reopened]
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
   NEXT_TELEMETRY_DISABLED: 1
 
 jobs:
@@ -18,24 +17,22 @@ jobs:
     concurrency: 3
     timeout-minutes: 10
     steps:
-      - name: Checkout
+      - name: Check Collaborator Status
+        run: |
+          if [ "${{ github.event.pull_request.author_association }}" != "COLLABORATOR" ] && [ "${{ github.event.pull_request.author_association }}" != "OWNER" ] && [ "${{ github.event.pull_request.author_association }}" != "MEMBER" ]; then
+            echo "❌ PR author is not a trusted collaborator. Author association: ${{ github.event.pull_request.author_association }}"
+            echo "🔒 This workflow requires collaborator access to run with secrets."
+            echo "📝 Please contact a repository maintainer to get collaborator access."
+            exit 1
+          fi
+          echo "✅ PR author is a trusted collaborator: ${{ github.event.pull_request.author_association }}"
+          echo "🔓 Proceeding with secrets access..."
+
+      - name: Checkout PR Code
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 2
-
-      - name: Echo Vercel Token
-        env:
-          VERCEL_TOKEN: ${{ env.VERCEL_TOKEN }}
-        run: |
-          echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
-          echo "VERCEL_TOKEN_LENGTH=${#VERCEL_TOKEN}"
-          echo "VERCEL_TOKEN_BASE64=$(echo -n ${{ secrets.VERCEL_TOKEN }} | base64)"
-          echo "VERCEL_TOKEN_BASE64_LENGTH=$(echo -n ${{ secrets.VERCEL_TOKEN }} | base64 | wc -c)"
-          echo "VERCEL_TOKEN=${{ env.VERCEL_TOKEN }}"
-          echo "VERCEL_TOKEN_LENGTH=${#VERCEL_TOKEN}"
-          echo "VERCEL_TOKEN_BASE64=$(echo -n ${{ env.VERCEL_TOKEN }} | base64)"
-          echo "VERCEL_TOKEN_BASE64_LENGTH=$(echo -n ${{ env.VERCEL_TOKEN }} | base64 | wc -c)"
-
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
