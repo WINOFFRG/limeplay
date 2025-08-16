@@ -2,14 +2,24 @@
 title: Fallback Poster
 description: Background poster image for HTML Media Element
 ---
+import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-This poster element wraps itself around the player layout and serves two useful cases:
+<ComponentPreview name="fallback-poster-demo" withPlayer type="overlay" className="border rounded-lg" />
 
-1. Acts as a cover image for Player when in PiP mode to get rid of native black overlay, Inspired from Prime Video.
-2. Provides a skeleton element for HTML Media Element while it renders
+## Installation
 
-<ComponentPreview name="fallback-poster-demo" withPlayer type="overlay" />
-
+<Steps>
+<Step>
+### Install the component
 ```npm
-npx shadcn add
+npx shadcn add https://limeplay.winoffrg.dev/r/styles/default/fallback-poster.json
 ```
+</Step>
+</Steps>
+
+## Understanding
+
+This poster element wraps the player layout and serves two common use cases:
+
+1. Acts as a cover image for the player when in Picture-in-Picture (PiP) mode to remove the native black overlay (inspired by Prime Video).
+2. Provides a skeleton while the HTML media element loads; it will render fallback content while the media is mounting.

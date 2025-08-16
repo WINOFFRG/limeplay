@@ -4,6 +4,7 @@ import React, { useCallback, useRef, useState } from "react"
 import type { Variants } from "framer-motion"
 import { motion } from "framer-motion"
 import { Copy } from "lucide-react"
+import { useCopyToClipboard } from "react-use"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -73,6 +74,7 @@ const MotionButton = motion.create(Button)
 export const CopyButton: React.FC<CopyButtonProps> = ({
   onCopy,
   className,
+  containerRef,
 }) => {
   const [status, setStatus] = useState<"idle" | "copying" | "copied">("idle")
   const [backgroundState, setBackgroundState] = useState<
@@ -81,6 +83,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   const [entryDirection, setEntryDirection] = useState({ x: 0, y: 0 })
   const [leaveDirection, setLeaveDirection] = useState({ x: 0, y: 0 })
   const buttonRef = useRef<HTMLButtonElement>(null)
+  const [, copyToClipboard] = useCopyToClipboard()
 
   const handleCopy = async () => {
     if (status !== "idle") return
@@ -89,6 +92,10 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
     try {
       if (onCopy) {
         await onCopy()
+      } else if (containerRef?.current) {
+        const textContent =
+          containerRef.current.textContent || "No text content"
+        copyToClipboard(textContent)
       }
       setTimeout(() => {
         setStatus("copied")

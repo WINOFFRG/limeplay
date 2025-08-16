@@ -1,5 +1,7 @@
 import { type Registry } from "shadcn/registry"
 
+const TARGET_BASE_PATH = "components/limeplay"
+
 export const ui: Registry["items"] = [
   {
     name: "fallback-poster",
@@ -9,7 +11,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/fallback-poster.tsx",
         type: "registry:ui",
-        target: "components/player/fallback-poster.tsx",
+        target: `${TARGET_BASE_PATH}/fallback-poster.tsx`,
       },
     ],
   },
@@ -22,7 +24,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/mute-control.tsx",
         type: "registry:ui",
-        target: "components/player/mute-control.tsx",
+        target: `${TARGET_BASE_PATH}/mute-control.tsx`,
       },
     ],
   },
@@ -35,7 +37,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/media-provider.tsx",
         type: "registry:ui",
-        target: "components/player/media-provider.tsx",
+        target: `${TARGET_BASE_PATH}/media-provider.tsx`,
       },
     ],
     cssVars: {
@@ -83,7 +85,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/player-layout.tsx",
         type: "registry:ui",
-        target: "components/player/player-layout.tsx",
+        target: `${TARGET_BASE_PATH}/player-layout.tsx`,
       },
     ],
     cssVars: {
@@ -140,7 +142,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/media.tsx",
         type: "registry:ui",
-        target: "components/player/media.tsx",
+        target: `${TARGET_BASE_PATH}/media.tsx`,
       },
     ],
   },
@@ -158,7 +160,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/volume-control.tsx",
         type: "registry:ui",
-        target: "components/player/volume-control.tsx",
+        target: `${TARGET_BASE_PATH}/volume-control.tsx`,
       },
     ],
   },
@@ -166,12 +168,12 @@ export const ui: Registry["items"] = [
     name: "playback-control",
     type: "registry:ui",
     dependencies: ["@radix-ui/react-slot"],
-    registryDependencies: ["use-media-state", "media-provider"],
+    registryDependencies: ["media-provider", "use-media-state"],
     files: [
       {
         path: "ui/playback-control.tsx",
         type: "registry:ui",
-        target: "components/player/playback-control.tsx",
+        target: `${TARGET_BASE_PATH}/playback-control.tsx`,
       },
     ],
   },
@@ -183,7 +185,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/timeline-labels.tsx",
         type: "registry:ui",
-        target: "components/player/timeline-labels.tsx",
+        target: `${TARGET_BASE_PATH}/timeline-labels.tsx`,
       },
     ],
   },
@@ -195,7 +197,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/player-hooks.tsx",
         type: "registry:ui",
-        target: "components/player/player-hooks.tsx",
+        target: `${TARGET_BASE_PATH}/player-hooks.tsx`,
       },
     ],
   },
@@ -213,7 +215,7 @@ export const ui: Registry["items"] = [
       {
         path: "ui/timeline-control.tsx",
         type: "registry:ui",
-        target: "components/player/timeline-control.tsx",
+        target: `${TARGET_BASE_PATH}/timeline-control.tsx`,
       },
     ],
     cssVars: {
