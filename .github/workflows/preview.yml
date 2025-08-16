@@ -31,7 +31,7 @@ jobs:
         run: bun add -g vercel@latest
 
       - name: Build Project
-        run: bun run build
+        run: cd apps/www && bun run build
         env:
           REGISTRY_HOST: https://limeplay.winoffrg.dev
 
