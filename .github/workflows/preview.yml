@@ -16,7 +16,6 @@ jobs:
     name: Preview
     runs-on: ubuntu-latest
     concurrency: 3
-    environment: preview
     timeout-minutes: 10
     steps:
       - name: Checkout
