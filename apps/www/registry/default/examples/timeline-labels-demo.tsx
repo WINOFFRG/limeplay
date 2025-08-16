@@ -34,19 +34,19 @@ export function TimelineLabelsDemo() {
       <div className="grid grid-cols-2 gap-4 pt-2">
         <div className="flex flex-col gap-1">
           <span className="text-xs text-white/60">Elapsed:</span>
-          <Elapsed className="text-sm font-medium text-white tabular-nums" />
+          <Elapsed className="text-sm font-medium text-white" />
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-xs text-white/60">Remaining:</span>
-          <Remaining className="text-sm font-medium text-white tabular-nums" />
+          <Remaining className="text-sm font-medium text-white" />
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-xs text-white/60">Duration:</span>
-          <Duration className="text-sm font-medium text-white tabular-nums" />
+          <Duration className="text-sm font-medium text-white" />
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-xs text-white/60">Hover Time:</span>
-          <HoverTime className="text-sm font-medium text-white tabular-nums" />
+          <HoverTime className="text-sm font-medium text-white" />
         </div>
       </div>
     </div>

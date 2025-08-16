@@ -2,7 +2,109 @@
 title: Timeline Control
 description: Slider control to control the media timeline. Composed with timeline state control
 ---
-
-## Horizontal Control
+import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 <ComponentPreview name="timeline-control-demo" withPlayer />
+
+## Installation
+
+<Steps>
+<Step>
+### Install the component
+```npm
+npx shadcn add https://limeplay.winoffrg.dev/r/styles/default/timeline-control.json
+```
+</Step>
+
+<Step>
+### Add Event & Action Bridge
+Import the `useTimelineStates` hook in your existing `PlayerHooks` component.
+
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+import React from "react"
+
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+import { useTimelineStates } from "@/hooks/limeplay/use-timeline" // [!code ++]
+
+export const PlayerHooks = React.memo(() => {
+  useShakaPlayer()
+  useTimelineStates() // [!code ++]
+
+  return null
+})
+```
+</Step>
+
+<Step>
+### Add the Store States
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+import {
+  createPlayerRootStore,
+  PlayerRootStore,
+} from "@/hooks/limeplay/use-player-root-store"
+import {
+  createTimelineStore,
+  TimelineStore,
+} from "@/hooks/limeplay/use-timeline" // [!code ++]
+
+export type TypeMediaStore = PlayerRootStore &
+  TimelineStore & {} // [!code ++]
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlayerRootStore(...etc),
+    ...createTimelineStore(...etc), // [!code ++]
+    ...initProps,
+  }))
+  return mediaStore
+}
+```
+</Step>
+</Steps>
+
+## Usage
+
+1. Compose the timeline slider and handle states
+
+```tsx lineNumbers title="components/player/timeline-control.tsx"
+import { useMediaStore } from "@/components/limeplay/media-provider"
+import * as TimelineSlider from "@/components/limeplay/timeline-control"
+import { Duration, HoverTime } from "@/components/limeplay/timeline-labels"
+
+export function TimelineSliderControl() {
+  return (
+    <div className="relative w-full grow">
+      <TimelineSlider.Root className="focus-area -focus-area-x-2 -focus-area-y-14">
+        <TimelineSlider.Track className="overflow-hidden">
+          <TimelineSlider.Progress />
+          <TimelineSlider.Buffered variant="combined" />
+        </TimelineSlider.Track>
+        {/* Thumb to Seek */}
+        <TimelineSlider.Thumb
+          showWithHover
+          className={"absolute h-8 w-px rounded-full bg-lp-accent/60"}
+        />
+        {/* Custom Thumb */}
+        <TimelineSlider.Thumb
+          showWithHover
+          className={"top-auto! bottom-[calc(100%+16px)] flex h-auto w-fit bg-transparent text-xs font-medium"}
+        >
+          <HoverTime />
+          <Duration className="text-lp-accent/60" />
+        </TimelineSlider.Thumb>
+      </TimelineSlider.Root>
+    </div>
+  )
+}
+```
+
+2. Place the slider inside the `BottomControls` component.
+
+```tsx lineNumbers title="components/player/media-player.tsx"
+<Layout.ControlsContainer>
+  <BottomControls>
+    <TimelineSliderControl />
+  </BottomControls>
+</Layout.ControlsContainer>
+```

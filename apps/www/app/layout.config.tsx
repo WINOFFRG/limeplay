@@ -65,22 +65,11 @@ export const baseOptions: BaseLayoutProps = {
     },
     {
       type: "main",
-      text: "What is Limeplay?",
-      url: "/docs/what-is-limeplay",
-      icon: <QuestionIcon />,
-    },
-    {
-      type: "main",
       text: "Architecture",
       url: "/docs/architecture",
       icon: <BlueprintIcon />,
     },
-    {
-      type: "main",
-      text: "Concepts & Design",
-      url: "/docs/concepts-and-design",
-      icon: <BookIcon />,
-    },
+
     ...COMMON_LINKS,
   ],
 }

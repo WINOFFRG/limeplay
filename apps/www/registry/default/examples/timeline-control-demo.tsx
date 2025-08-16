@@ -14,7 +14,7 @@ export function TimelineControlDemo() {
 
   return (
     <div className="my-4 flex h-fit w-full flex-row items-center gap-3 rounded-md bg-primary/10 p-3">
-      <Elapsed className="text-xs font-medium text-white tabular-nums" />
+      <Elapsed className="text-xs font-medium text-white" />
       <div className="group/timeline relative w-full grow">
         <TimelineControlPrimitive.Root
           className="group focus-area cursor-crosshair -focus-area-x-2 -focus-area-y-14"
@@ -36,7 +36,7 @@ export function TimelineControlDemo() {
       </div>
       <button
         className={`
-          text-xs font-medium text-white tabular-nums transition-colors
+          text-xs font-medium text-white transition-colors
           hover:text-white/80
         `}
         onClick={() => {
@@ -48,9 +48,9 @@ export function TimelineControlDemo() {
         aria-pressed={showRemaining}
       >
         {showRemaining ? (
-          <Remaining className="text-xs font-medium text-white tabular-nums" />
+          <Remaining className="text-xs font-medium text-white" />
         ) : (
-          <Duration className="text-xs font-medium text-white tabular-nums" />
+          <Duration className="text-xs font-medium text-white" />
         )}
       </button>
     </div>
