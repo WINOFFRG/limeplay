@@ -1,6 +1,6 @@
 ---
 title: Player Hooks
-description: Central top level memoized hook for component level state management
+description: Central, top-level memoized hooks for component-level state management
 ---
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
@@ -39,6 +39,6 @@ export function MediaPlayer() {
 
 ## Understanding
 
-This library uses Shaka Player as the default player engine, most components rely on custom hooks like `useShakaPlayer` to setup the player engine or `useMediaStates` to setup the media state are all singleton. Adding the hooks in `<PlayerHooks />` component prevents re-initialization of the hooks on every render. Ideally, we can have those hooks parallel to each molecular component without any issues but as a best practice we memoize the hooks in a single place.
+This library uses Shaka Player as the default playback engine. Hooks like `useShakaPlayer` (engine setup) and `useMediaStates` (media state) are singletons. Rendering them via the `<PlayerHooks />` component prevents re-initializing these hooks on every render. While you could co-locate such hooks alongside each molecule/component, centralizing them keeps behavior predictable and avoids redundant work.
 
-You can add as many hooks as you want in `<PlayerHooks />` component.
+You can add as many hooks as you need inside the `<PlayerHooks />` component.
