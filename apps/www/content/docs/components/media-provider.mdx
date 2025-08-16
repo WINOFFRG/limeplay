@@ -22,7 +22,7 @@ npx shadcn add https://limeplay.winoffrg.dev/r/styles/default/media-provider.jso
 ### Setup the provider in the root
 
 ```tsx lineNumbers title="components/player/media-player.tsx"
-import { MediaProvider } from "@/registry/default/ui/media-provider" // [!code ++]
+import { MediaProvider } from "@/components/limeplay/media-provider" // [!code ++]
 
 // ... other imports
 
@@ -51,7 +51,7 @@ export function MediaPlayer() {
 ### Call the store anywhere inside the component tree
 
 ```tsx lineNumbers title="components/volume-control.tsx"
-import { useMediaStore } from "@/registry/default/ui/media-provider"    // [!code ++]
+import { useMediaStore } from "@/components/limeplay/media-provider"    // [!code ++]
 
 export function VolumeStateControlDemo() {
   const muted = useMediaStore((state) => state.muted)    // [!code ++]

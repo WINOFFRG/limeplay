@@ -1,5 +1,7 @@
 import { type Registry } from "shadcn/registry"
 
+const TARGET_BASE_PATH = "hooks/limeplay"
+
 export const hooks: Registry["items"] = [
   {
     name: "use-player-root-store",
@@ -9,6 +11,7 @@ export const hooks: Registry["items"] = [
       {
         path: "hooks/use-player-root-store.ts",
         type: "registry:hook",
+        target: `${TARGET_BASE_PATH}/use-player-root-store.ts`,
       },
     ],
   },
@@ -22,6 +25,7 @@ export const hooks: Registry["items"] = [
       {
         path: "hooks/use-volume.ts",
         type: "registry:hook",
+        target: `${TARGET_BASE_PATH}/use-volume.ts`,
       },
     ],
   },
@@ -34,6 +38,7 @@ export const hooks: Registry["items"] = [
       {
         path: "hooks/use-track-events.ts",
         type: "registry:hook",
+        target: `${TARGET_BASE_PATH}/use-track-events.ts`,
       },
     ],
   },
@@ -52,6 +57,7 @@ export const hooks: Registry["items"] = [
       {
         path: "hooks/use-timeline.ts",
         type: "registry:hook",
+        target: `${TARGET_BASE_PATH}/use-timeline.ts`,
       },
     ],
   },
@@ -64,6 +70,7 @@ export const hooks: Registry["items"] = [
       {
         path: "hooks/use-media-state.ts",
         type: "registry:hook",
+        target: `${TARGET_BASE_PATH}/use-media-state.ts`,
       },
     ],
   },
@@ -76,6 +83,7 @@ export const hooks: Registry["items"] = [
       {
         path: "hooks/use-shaka-player.ts",
         type: "registry:hook",
+        target: `${TARGET_BASE_PATH}/use-shaka-player.ts`,
       },
     ],
   },
@@ -86,6 +94,7 @@ export const hooks: Registry["items"] = [
       {
         path: "hooks/use-interval.ts",
         type: "registry:hook",
+        target: `${TARGET_BASE_PATH}/use-interval.ts`,
       },
     ],
   },
