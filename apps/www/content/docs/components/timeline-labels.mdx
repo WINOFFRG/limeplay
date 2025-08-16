@@ -23,8 +23,8 @@ Import the `useTimelineStates` hook in your existing `PlayerHooks` component.
 ```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
 import React from "react"
 
-import { useShakaPlayer } from "@/registry/default/hooks/use-shaka-player"
-import { useTimelineStates } from "@/registry/default/hooks/use-timeline" // [!code ++]
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+import { useTimelineStates } from "@/hooks/limeplay/use-timeline" // [!code ++]
 
 export const PlayerHooks = React.memo(() => {
   useShakaPlayer()
@@ -42,11 +42,11 @@ export const PlayerHooks = React.memo(() => {
 import {
   createPlayerRootStore,
   PlayerRootStore,
-} from "@/registry/default/hooks/use-player-root-store"
+} from "@/hooks/limeplay/use-player-root-store"
 import {
   createTimelineStore,
   TimelineStore,
-} from "@/registry/default/hooks/use-timeline" // [!code ++]
+} from "@/hooks/limeplay/use-timeline" // [!code ++]
 
 export type TypeMediaStore = PlayerRootStore &
   TimelineStore & {} // [!code ++]
