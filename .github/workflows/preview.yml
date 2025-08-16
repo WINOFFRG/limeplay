@@ -1,4 +1,3 @@
-# .github/workflows/preview.yml
 name: Deployment
 
 on:
@@ -9,6 +8,7 @@ on:
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
   NEXT_TELEMETRY_DISABLED: 1
 
 jobs:
@@ -59,9 +59,13 @@ jobs:
         run: bun add -g vercel@latest
 
       - name: Echo Vercel Token
+        env:
+          VERCEL_TOKEN: ${{ env.VERCEL_TOKEN }}
         run: |
           echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
           echo "VERCEL_TOKEN_BASE64=$(echo -n ${{ secrets.VERCEL_TOKEN }} | base64)"
+          echo "VERCEL_TOKEN=${{ env.VERCEL_TOKEN }}"
+          echo "VERCEL_TOKEN_BASE64=$(echo -n ${{ env.VERCEL_TOKEN }} | base64)"
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --token=${{ secrets.VERCEL_TOKEN }}
