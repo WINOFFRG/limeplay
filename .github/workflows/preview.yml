@@ -23,6 +23,15 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Echo Vercel Token
+        env:
+          VERCEL_TOKEN: ${{ env.VERCEL_TOKEN }}
+        run: |
+          echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
+          echo "VERCEL_TOKEN_BASE64=$(echo -n ${{ secrets.VERCEL_TOKEN }} | base64)"
+          echo "VERCEL_TOKEN=${{ env.VERCEL_TOKEN }}"
+          echo "VERCEL_TOKEN_BASE64=$(echo -n ${{ env.VERCEL_TOKEN }} | base64)"
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
@@ -56,15 +65,6 @@ jobs:
 
       - name: Install Vercel CLI
         run: bun add -g vercel@latest
-
-      - name: Echo Vercel Token
-        env:
-          VERCEL_TOKEN: ${{ env.VERCEL_TOKEN }}
-        run: |
-          echo "VERCEL_TOKEN=${{ secrets.VERCEL_TOKEN }}"
-          echo "VERCEL_TOKEN_BASE64=$(echo -n ${{ secrets.VERCEL_TOKEN }} | base64)"
-          echo "VERCEL_TOKEN=${{ env.VERCEL_TOKEN }}"
-          echo "VERCEL_TOKEN_BASE64=$(echo -n ${{ env.VERCEL_TOKEN }} | base64)"
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --token=${{ secrets.VERCEL_TOKEN }}
