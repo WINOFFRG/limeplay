@@ -21,6 +21,8 @@ npx shadcn add https://limeplay.winoffrg.dev/r/styles/default/playback-control.j
 Import the `useMediaStates` hook in your existing `PlayerHooks` component.
 
 ```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+"use client"
+
 import React from "react"
 
 import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
@@ -92,7 +94,7 @@ export function PlaybackControlButton() {
 ```tsx lineNumbers title="components/player/media-player.tsx"
 <Layout.ControlsContainer>
   <BottomControls>
-    <PlaybackStateControl />
+    <PlaybackControlButton />
   </BottomControls>
 </Layout.ControlsContainer>
 ```
