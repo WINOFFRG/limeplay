@@ -52,22 +52,22 @@ export async function ComponentPreview({
 
   return (
     <div
-      className={cn(
-        "group relative my-4 mb-12 flex flex-col space-y-2",
-        className
-      )}
+      className={cn("group relative my-4 mb-12 flex flex-col space-y-2")}
       {...props}
     >
-      <Tabs defaultValue="preview" className="relative mr-auto w-full">
+      <Tabs
+        defaultValue="preview"
+        className="relative mr-auto w-full rounded-none"
+      >
         <div className="flex items-center justify-between pb-3">
           {!hideCode && (
-            <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">
+            <TabsList className="w-full justify-start border-b bg-transparent p-0">
               <TabsTrigger
                 value="preview"
                 className={`
-                  relative h-9 cursor-pointer rounded-none border-b-2 border-b-transparent bg-transparent px-4 pt-2 pb-3 font-semibold
+                  relative h-9 cursor-pointer rounded-b-none border-b-2 border-b-transparent bg-transparent px-4 py-3 font-semibold
                   text-muted-foreground shadow-none transition-none
-                  data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none
+                  data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-primary/10
                 `}
               >
                 Preview
@@ -75,9 +75,9 @@ export async function ComponentPreview({
               <TabsTrigger
                 value="code"
                 className={`
-                  relative h-9 cursor-pointer rounded-none border-b-2 border-b-transparent bg-transparent px-4 pt-2 pb-3 font-semibold
+                  relative h-9 cursor-pointer rounded-b-none border-b-2 border-b-transparent bg-transparent px-4 py-3 font-semibold
                   text-muted-foreground shadow-none transition-none
-                  data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none
+                  data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-primary/10
                 `}
               >
                 Code
@@ -93,18 +93,11 @@ export async function ComponentPreview({
           `}
           forceMount
         >
-          {/* <React.Suspense
-            fallback={
-              <div className="flex w-full items-center justify-center text-sm text-muted-foreground">
-                <Icons.spinner className="mr-2 size-4 animate-spin" />
-                Loading...
-              </div>
-            }
-          > */}
-          <PreviewComponent type={type}>
-            <PreviewTabComponent componentName={name} />
-          </PreviewComponent>
-          {/* </React.Suspense> */}
+          <div className={className}>
+            <PreviewComponent type={type}>
+              <PreviewTabComponent componentName={name} />
+            </PreviewComponent>
+          </div>
         </TabsContent>
         <TabsContent value="code">
           <CustomCodeBlock

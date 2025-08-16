@@ -1,10 +1,10 @@
 ---
-title: Volume Control
-description: Slider control to control the media volume. Composed with volume state control
+title: Mute Control
+description: Controls the volume mute toggle state
 ---
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-<ComponentPreview name="volume-slider-control-horizontal-demo" withPlayer />
+<ComponentPreview name="volume-state-control-demo" withPlayer />
 
 ## Installation
 
@@ -12,7 +12,7 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 <Step>
 ### Install the component
 ```npm
-npx shadcn add https://limeplay.winoffrg.dev/r/styles/default/volume-control.json
+npx shadcn add https://limeplay.winoffrg.dev/r/styles/default/mute-control.json
 ```
 </Step>
 
@@ -64,36 +64,45 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 </Step>
 </Steps>
 
+
 ## Usage
 
-1. Compose the volume slide and handle states
+1. Design the mute button with icons and states.
 
-```tsx lineNumbers
-import { cn } from "@/lib/utils"
-import * as VolumeSlider from "@/components/limeplay/volume-control"
+```tsx lineNumbers title="components/player/mute-control-button.tsx"
+"use client"
 
-export function VolumeControlSlider() {
+import { MuteControl } from "@/components/limeplay/mute-control"
+import { useMediaStore } from "@/components/limeplay/media-provider"
+import { SpeakerHighIcon, SpeakerLowIcon, SpeakerXIcon } from "@phosphor-icons/react"
+
+export function MuteControlButton() {
+  const muted = useMediaStore((state) => state.muted)
+  const volume = useMediaStore((state) => state.volume)
+
   return (
-    <VolumeSlider.Root
-      className={cn("relative h-1 focus-area -focus-area-x-2 -focus-area-y-12")}
-      orientation="horizontal"
-    >
-      <VolumeSlider.Track>
-        <VolumeSlider.Progress />
-      </VolumeSlider.Track>
-      <VolumeSlider.Thumb />
-    </VolumeSlider.Root>
+    <Button size="icon" asChild >
+      <MuteControl>
+        {muted || volume === 0 ? (
+          <SpeakerXIcon size={18} weight="fill" />
+        ) : volume < 0.5 ? (
+          <SpeakerLowIcon size={18} weight="fill" />
+        ) : (
+          <SpeakerHighIcon size={18} weight="fill" />
+        )}
+      </MuteControl>
+    </Button>
   )
 }
 
 ```
 
-2. Place the slider inside the `BottomControls` component.
+2. Place the button inside the `BottomControls` component.
 
 ```tsx lineNumbers title="components/player/media-player.tsx"
 <Layout.ControlsContainer>
   <BottomControls>
-    <VolumeControlSlider />
+    <MuteControlButton />
   </BottomControls>
 </Layout.ControlsContainer>
 ```

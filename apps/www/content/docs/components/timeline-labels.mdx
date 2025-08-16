@@ -2,26 +2,29 @@
 title: Timeline Labels
 description: Timeline Labels provide semantic time display components for media players. These components automatically format time based on duration and provide proper accessibility attributes.
 ---
+import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 <ComponentPreview name="timeline-labels-demo" withPlayer />
 
 ## Installation
 
-1. Install the `timeline-labels` component:
-
+<Steps>
+<Step>
+### Install the component
 ```npm
 npx shadcn add https://limeplay.winoffrg.dev/r/styles/default/timeline-labels.json
 ```
+</Step>
 
-2. Add Event & Action Bridge
+<Step>
+### Add Event & Action Bridge
+Import the `useTimelineStates` hook in your existing `PlayerHooks` component.
 
-Import the `useMediaStates` hook in your existing `PlayerHooks` component. This hook setups the required events and action bridge for the playback state control to work.
-
-```tsx lineNumbers title="components/player/player-hooks.tsx"
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
 import React from "react"
 
-import { useShakaPlayer } from "@/registry/default/hooks/use-shaka-player"
-import { useTimelineStates } from "@/registry/default/hooks/use-timeline" // [!code ++]
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+import { useTimelineStates } from "@/hooks/limeplay/use-timeline" // [!code ++]
 
 export const PlayerHooks = React.memo(() => {
   useShakaPlayer()
@@ -30,18 +33,20 @@ export const PlayerHooks = React.memo(() => {
   return null
 })
 ```
+</Step>
 
-3. Add the Store States
+<Step>
+### Add the Store States
 
 ```tsx lineNumbers title="lib/create-media-store.ts"
 import {
   createPlayerRootStore,
   PlayerRootStore,
-} from "@/registry/default/hooks/use-player-root-store"
+} from "@/hooks/limeplay/use-player-root-store"
 import {
   createTimelineStore,
   TimelineStore,
-} from "@/registry/default/hooks/use-timeline" // [!code ++]
+} from "@/hooks/limeplay/use-timeline" // [!code ++]
 
 export type TypeMediaStore = PlayerRootStore &
   TimelineStore & {} // [!code ++]
@@ -55,8 +60,49 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   return mediaStore
 }
 ```
+</Step>
+</Steps>
 
-## Components
+## Usage
+
+1. Compose the labels
+
+```tsx lineNumbers title="components/player/timeline-control.tsx"
+"use client"
+
+import { useState } from "react"
+
+import { useMediaStore } from "@/components/limeplay/media-provider"
+import { Duration, Elapsed, HoverTime, LiveLatency, Remaining } from "@/components/limeplay/timeline-labels"
+
+export function TimelineSliderControl() {
+  const [showRemaining, setShowRemaining] = useState(false)
+  const isLive = useMediaStore((state) => state.isLive)
+
+  return (
+    <div className="my-auto flex grow items-center gap-3 select-none">
+      {!isLive && <Elapsed className="text-xs font-medium" />}
+      {!isLive && (
+        <Button
+          size="icon"
+          onClick={() => { setShowRemaining(!showRemaining) }}
+          aria-label={showRemaining ? "Show total duration" : "Show remaining time"}
+          aria-pressed={showRemaining}
+        >
+          {showRemaining ? (
+            <Remaining className="text-xs font-medium" />
+          ) : (
+            <Duration className="text-xs font-medium" />
+          )}
+        </Button>
+      )}
+    </div>
+  )
+}
+
+```
+
+## Understanding
 
 - `<Elapsed />` component shows current playback time
 - `<Remaining />` component shows remaining time (with minus sign)
