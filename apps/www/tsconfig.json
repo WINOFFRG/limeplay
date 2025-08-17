@@ -34,7 +34,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "types",
-    "eslint.config.mjs",
     "registry/__index__.tsx",
     "postcss.config.mjs"
   ],

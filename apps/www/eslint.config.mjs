@@ -1,6 +1,7 @@
+import { fixupConfigRules } from "@eslint/compat"
 import eslintPluginBetterTailwindcss from "eslint-plugin-better-tailwindcss"
 
-import { base, compat, defineConfig } from "../../eslint.config.mjs"
+import baseConfig, { compat, defineConfig } from "../../eslint.config.mjs"
 
 const tailwindConfig = {
   files: ["**/*.{jsx,tsx}"],
@@ -19,13 +20,7 @@ const tailwindConfig = {
     ...eslintPluginBetterTailwindcss.configs["recommended-error"].rules,
     "better-tailwindcss/enforce-consistent-line-wrapping": [
       "warn",
-      { printWidth: 200 },
-    ],
-    "better-tailwindcss/no-unregistered-classes": [
-      "error",
-      {
-        ignore: ["dark"],
-      },
+      { printWidth: 150 },
     ],
   },
 }
@@ -41,20 +36,15 @@ const eslintConfig = [
       },
     },
   },
-  ...compat.config({
-    extends: [
+  ...fixupConfigRules(
+    compat.extends(
       "next",
       "plugin:@next/next/recommended",
       "next/core-web-vitals",
-      "next/typescript",
-    ],
-    settings: {
-      next: {
-        rootDir: "app",
-      },
-    },
-  }),
-  ...base,
+      "next/typescript"
+    )
+  ),
+  baseConfig,
 ]
 
 export default defineConfig(...eslintConfig)

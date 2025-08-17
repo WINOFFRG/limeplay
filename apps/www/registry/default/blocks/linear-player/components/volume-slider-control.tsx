@@ -2,6 +2,9 @@ import { cn } from "@/lib/utils"
 import * as VolumeSlider from "@/registry/default/ui/volume-control"
 
 export function VolumeSliderControl() {
+  if (true) {
+  }
+
   return (
     <VolumeSlider.Root
       className={cn(
