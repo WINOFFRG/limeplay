@@ -104,4 +104,4 @@ export const base = defineConfig(
   }
 )
 
-export default base
+export default defineConfig(...base)
