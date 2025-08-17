@@ -6,15 +6,17 @@ import type { registryItemFileSchema } from "shadcn/registry"
 import { Project, ScriptKind } from "ts-morph"
 import type { z } from "zod"
 
-import { useConfig } from "@/hooks/use-config"
+import { atomReader, useConfig } from "@/hooks/use-config"
 import { Index } from "@/registry/__index__"
 
 export function getRegistryComponent(name: string) {
-  return Index.default[name]?.component
+  const config = atomReader()
+  return Index[config.style][name]?.component
 }
 
 export async function getRegistryItem(name: string) {
-  const item = Index.default[name]
+  const config = atomReader()
+  const item = Index[config.style][name]
 
   if (!item) {
     return null

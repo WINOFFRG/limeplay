@@ -1,7 +1,7 @@
 import * as React from "react"
 import { highlight } from "fumadocs-core/highlight"
-import { registryItemFileSchema } from "shadcn/registry"
-import { z } from "zod"
+import type { registryItemFileSchema } from "shadcn/registry"
+import type { z } from "zod"
 
 import {
   createFileTreeForRegistryItemFiles,
@@ -39,12 +39,12 @@ const getCachedRegistryItem = React.cache(async (name: string) => {
 })
 
 const getCachedFileTree = React.cache(
-  async (files: Array<{ path: string; target?: string }>) => {
+  async (files: { path: string; target?: string }[]) => {
     if (!files) {
       return null
     }
 
-    return await createFileTreeForRegistryItemFiles(files)
+    return createFileTreeForRegistryItemFiles(files)
   }
 )
 
