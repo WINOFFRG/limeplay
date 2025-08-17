@@ -84,5 +84,8 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
     ],
+    meta: {
+      iframeHeight: "678px",
+    },
   },
 ]
