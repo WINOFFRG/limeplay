@@ -5,7 +5,6 @@ import { registryItemSchema } from "shadcn/registry"
 import { z } from "zod"
 
 import { getRegistryComponent, getRegistryItem } from "@/lib/registry"
-import { absoluteUrl, cn } from "@/lib/utils"
 
 export const revalidate = false
 export const dynamic = "force-static"
@@ -95,10 +94,8 @@ export default async function BlockPage({
   }
 
   return (
-    <>
-      <div className={cn("bg-background", item.meta?.container)}>
-        <Component />
-      </div>
-    </>
+    <div className={item.meta?.container}>
+      <Component {...item.meta?.props} />
+    </div>
   )
 }

@@ -1,6 +1,6 @@
 import eslintPluginBetterTailwindcss from "eslint-plugin-better-tailwindcss"
 
-import baseConfig, { compat, defineConfig } from "../../eslint.config.mjs"
+import { base, compat, defineConfig } from "../../eslint.config.mjs"
 
 const tailwindConfig = {
   files: ["**/*.{jsx,tsx}"],
@@ -19,11 +19,14 @@ const tailwindConfig = {
     ...eslintPluginBetterTailwindcss.configs["recommended-error"].rules,
     "better-tailwindcss/enforce-consistent-line-wrapping": [
       "warn",
-      { printWidth: 150 },
+      { printWidth: 200 },
     ],
-    "better-tailwindcss/no-unregistered-classes": {
-      ignore: ["dark"],
-    },
+    "better-tailwindcss/no-unregistered-classes": [
+      "error",
+      {
+        ignore: ["dark"],
+      },
+    ],
   },
 }
 
@@ -51,7 +54,7 @@ const eslintConfig = [
       },
     },
   }),
-  ...baseConfig,
+  ...base,
 ]
 
 export default defineConfig(...eslintConfig)

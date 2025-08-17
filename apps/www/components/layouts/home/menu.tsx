@@ -19,8 +19,8 @@ const menuItemVariants = cva("", {
     variant: {
       main: `
         inline-flex items-center gap-2 py-1.5 transition-colors
-        hover:text-fd-popover-foreground/50
-        data-[active=true]:font-medium data-[active=true]:text-fd-primary
+        hover:text-popover-foreground/50
+        data-[active=true]:font-medium data-[active=true]:text-primary
         [&_svg]:size-4
       `,
       icon: buttonVariants({
@@ -58,7 +58,7 @@ export function MenuLinkItem({
 
     return (
       <div className={cn("mb-4 flex flex-col", props.className)}>
-        <p className="mb-1 text-sm text-fd-muted-foreground">
+        <p className="mb-1 text-sm text-muted-foreground">
           {item.url ? (
             <NavigationMenuLink asChild>
               <Link href={item.url}>{header}</Link>

@@ -45,6 +45,7 @@
   --sidebar-ring: oklch(0.708 0 0);
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
+  --surface: oklch(0.98 0 0);
 
   /* Limeplay Colors */
   --lp-primary: oklch(0.205 0 0);
@@ -100,6 +101,7 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
+  --surface: oklch(0.2 0 0);
 
   /* Limeplay Colors */
   --lp-primary: oklch(1 0 0);
@@ -168,6 +170,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-surface: var(--surface);
 
   /* Limeplay */
   --color-lp-primary: var(--lp-primary);
@@ -232,11 +235,11 @@
   --y: --value(number) * -1;
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 }

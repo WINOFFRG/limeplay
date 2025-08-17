@@ -81,5 +81,10 @@ export const HEADER_LINKS: LinkItemType[] = [
     url: "/docs/getting-started",
     icon: <BookIcon />,
   },
+  {
+    type: "main",
+    text: "Blocks",
+    url: "/blocks",
+  },
   ...COMMON_LINKS,
 ]
