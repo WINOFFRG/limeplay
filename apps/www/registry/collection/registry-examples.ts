@@ -12,6 +12,8 @@ export const examples: Registry["items"] = [
       "player-hooks-demo",
       "limeplay-logo",
       "fallback-poster",
+      "root-container",
+      "media-provider",
     ],
     files: [
       {
