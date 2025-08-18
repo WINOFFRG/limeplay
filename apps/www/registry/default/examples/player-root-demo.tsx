@@ -12,6 +12,7 @@ import {
   useMediaStore,
 } from "@/registry/default/ui/media-provider"
 import * as Layout from "@/registry/default/ui/player-layout"
+import { RootContainer } from "@/registry/default/ui/root-container"
 
 function MediaElement() {
   const player = useMediaStore((state) => state.player)
@@ -54,7 +55,7 @@ interface PlayerDemoLayoutProps extends React.PropsWithChildren {
 export function PlayerLayoutDemo({ children, type }: PlayerDemoLayoutProps) {
   return (
     <MediaProvider>
-      <Layout.RootContainer height={720} width={1280} className="container p-0">
+      <RootContainer height={720} width={1280} className="container p-0">
         <Layout.PlayerContainer>
           {type === "poster" ? (
             children
@@ -69,7 +70,7 @@ export function PlayerLayoutDemo({ children, type }: PlayerDemoLayoutProps) {
             {type === "overlay" && children}
           </Layout.ControlsContainer>
         </Layout.PlayerContainer>
-      </Layout.RootContainer>
+      </RootContainer>
       {type === "block" && <CustomDemoControls>{children}</CustomDemoControls>}
     </MediaProvider>
   )

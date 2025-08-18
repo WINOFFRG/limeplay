@@ -175,9 +175,41 @@ const registry = {
   items: z.array(registryItemSchema).parse(registryItems),
 } satisfies Registry
 
+// Fetch and parse shadcn registry into a map keyed by name (no top-level await)
+async function getShadcnRegistryMap(): Promise<Map<string, unknown>> {
+  try {
+    const items = await fetch(
+      "https://github.com/shadcn-ui/ui/blob/main/apps/v4/public/r/index.json?raw=true"
+    ).then((res) => res.json())
+    return parseShadcnRegistryItemsToMap(items as Array<{ name?: string }>)
+  } catch {
+    return new Map<string, unknown>()
+  }
+}
+
+// Convert shadcn registry array into a map keyed by item name.
+// We ignore duplicates and only keep the first occurrence.
+function parseShadcnRegistryItemsToMap(
+  items: Array<{ name?: string }>
+): Map<string, unknown> {
+  const byName = new Map<string, unknown>()
+  if (!Array.isArray(items)) return byName
+  for (const item of items) {
+    const name = typeof item?.name === "string" ? item.name : undefined
+    if (!name) continue
+    if (!byName.has(name)) {
+      byName.set(name, item)
+    }
+  }
+  return byName
+}
+
+// Resolved on-demand via getShadcnRegistryMap()
+
 // Check for missing and undefined dependencies
 async function validateDependencies() {
   logger.info("🔍 Validating dependencies based on imports...")
+  const shadcnRegistryMap = await getShadcnRegistryMap()
 
   // Regex to find imports from our registry
   const importRegex = /@\/registry\/default\/([^"']+)/g
@@ -207,14 +239,17 @@ async function validateDependencies() {
       }
 
       // Check if dependency exists
-      if (!registryItemsMap.has(dependency)) {
+      if (
+        !registryItemsMap.has(dependency) &&
+        !shadcnRegistryMap.has(dependency)
+      ) {
         undefinedDependencies.push(dependency)
       }
     }
 
     if (undefinedDependencies.length > 0) {
       logger.error(
-        `❌ Component "${item.name}" has undefined dependencies in registryDependencies:`
+        `❌ Component "${item.name}" has missing dependencies in registryDependencies:`
       )
       undefinedDependencies.forEach((dep) => {
         logger.error(`   - ${dep} (not found in registry)`)

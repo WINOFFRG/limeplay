@@ -238,6 +238,19 @@ export const ui: Registry["items"] = [
       {
         path: "ui/limeplay-logo.tsx",
         type: "registry:ui",
+        target: `${TARGET_BASE_PATH}/limeplay-logo.tsx`,
+      },
+    ],
+  },
+  {
+    name: "root-container",
+    type: "registry:ui",
+    registryDependencies: ["media-provider"],
+    files: [
+      {
+        path: "ui/root-container.tsx",
+        type: "registry:ui",
+        target: `${TARGET_BASE_PATH}/root-container.tsx`,
       },
     ],
   },
