@@ -54,7 +54,7 @@ const ASSETS: DemoAsset[] = [
     description: "A Blender Foundation short film, Media Tailor Live DASH",
     poster:
       "https://storage.googleapis.com/shaka-asset-icons/big_buck_bunny.png",
-    src: "https://d305rncpy6ne2q.cloudfront.net/v1/dash/94063eadf7d8c56e9e2edd84fdf897826a70d0df/SFP-MediaTailor-Live-HLS-DASH/channel/sfp-channel1/dash.mpd?aws.sessionId=4ea517f0-e782-4f92-9b61-38730faf7087",
+    src: "https://d305rncpy6ne2q.cloudfront.net/v1/dash/94063eadf7d8c56e9e2edd84fdf897826a70d0df/SFP-MediaTailor-Live-HLS-DASH/channel/sfp-channel1/dash.mpd",
   },
   {
     title: "National Geographic - VR equirectangular",

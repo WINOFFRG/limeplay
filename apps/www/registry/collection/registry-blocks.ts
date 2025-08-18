@@ -36,6 +36,7 @@ export const blocks: Registry["items"] = [
       "timeline-labels",
       "use-shaka-player",
       "limeplay-logo",
+      "root-container",
     ],
     files: [
       {
@@ -81,6 +82,48 @@ export const blocks: Registry["items"] = [
       },
       {
         path: `${BASE_SRC_URL}/components/playlist.tsx`,
+        type: "registry:component",
+      },
+    ],
+    meta: {
+      iframeHeight: "750px",
+      props: {
+        src: "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8",
+      },
+    },
+  },
+  {
+    name: "basic-player",
+    type: "registry:block",
+    author: "Rohan Gupta (@winoffrg)",
+    description: "Basic Media Player",
+    dependencies: ["@phosphor-icons/react", "zustand", "shaka-player"],
+    registryDependencies: [
+      "media-provider",
+      "player-layout",
+      "root-container",
+      "fallback-poster",
+      "limeplay-logo",
+      "media",
+      "utils",
+      "button",
+      "playback-control",
+    ],
+    files: [
+      {
+        path: `blocks/basic-player/media-player.tsx`,
+        type: "registry:component",
+      },
+      {
+        path: `blocks/basic-player/components/playback-state-control.tsx`,
+        type: "registry:component",
+      },
+      {
+        path: `blocks/basic-player/components/player-hooks.tsx`,
+        type: "registry:component",
+      },
+      {
+        path: `blocks/basic-player/components/media-element.tsx`,
         type: "registry:component",
       },
     ],
