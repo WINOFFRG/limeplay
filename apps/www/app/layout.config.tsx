@@ -59,9 +59,15 @@ export const baseOptions: BaseLayoutProps = {
   links: [
     {
       type: "main",
-      text: "Getting Started",
-      url: "/docs/getting-started",
+      text: "Quick Start",
+      url: "/docs/quick-start",
       icon: <SparkleIcon />,
+    },
+    {
+      type: "main",
+      text: "What is Limeplay?",
+      url: "/docs/what-is-limeplay",
+      icon: <QuestionIcon />,
     },
     {
       type: "main",
@@ -78,7 +84,7 @@ export const HEADER_LINKS: LinkItemType[] = [
   {
     type: "main",
     text: "Documentation",
-    url: "/docs/getting-started",
+    url: "/docs/quick-start",
     icon: <BookIcon />,
   },
   {

@@ -63,14 +63,13 @@ export async function ComponentPreview({
       >
         <div className="flex items-center justify-between pb-3">
           {!hideCode && (
-            <TabsList className="w-full justify-start border-b bg-transparent p-0">
+            <TabsList className="w-fit justify-start border-b bg-transparent p-0 rounded-none">
               <TabsTrigger
                 value="preview"
                 className={`
-                  relative h-9 cursor-pointer rounded-b-none border-b-2 border-b-transparent bg-transparent px-4 py-3 font-semibold
+                  relative h-9 cursor-pointer rounded-b-none border-b-2 border-b-transparent bg-transparent px-6 py-3 font-semibold
                   text-muted-foreground shadow-none transition-none
-                  data-[state=active]:border-b-primary data-[state=active]:bg-primary/10 data-[state=active]:text-foreground
-                  data-[state=active]:shadow-none
+                  data-[state=active]:border-b-primary! data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-primary/10!
                 `}
               >
                 Preview
@@ -78,10 +77,9 @@ export async function ComponentPreview({
               <TabsTrigger
                 value="code"
                 className={`
-                  relative h-9 cursor-pointer rounded-b-none border-b-2 border-b-transparent bg-transparent px-4 py-3 font-semibold
+                  relative h-9 cursor-pointer rounded-b-none border-b-2 border-b-transparent bg-transparent px-6 py-3 font-semibold
                   text-muted-foreground shadow-none transition-none
-                  data-[state=active]:border-b-primary data-[state=active]:bg-primary/10 data-[state=active]:text-foreground
-                  data-[state=active]:shadow-none
+                  data-[state=active]:border-b-primary! data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-primary/10!
                 `}
               >
                 Code

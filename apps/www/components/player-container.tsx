@@ -84,7 +84,7 @@ export function PlayerContainer() {
           `
             mx-auto w-[calc(100%-2rem)] rounded-xl
             sm:mx-2 sm:w-full
-            md:mx-0
+            md:mx-0 overflow-hidden
           `,
           isMobilePortrait &&
             `
