@@ -298,9 +298,9 @@ function BlockViewerView() {
             absolute inset-0 right-4
             [background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]
             [background-size:20px_20px]
-            dark:[background-image:radial-gradient(#404040_1px,transparent_1px)]
+            dark:[background-image:radial-gradient(#404040_1px,transparent_1px)] m-1.5
           `}
-        ></div>
+        />
         <ResizablePanelGroup
           direction="horizontal"
           className={`
@@ -425,7 +425,7 @@ function BlockViewerCode() {
             data-line-numbers
             className="my-0 w-full rounded-none border-0 pt-0 pl-0"
             viewportProps={{
-              className: "no-scrollbar h-full max-h-fit",
+              className: "max-h-fit h-(--height)",
             }}
             titleProps={{
               className: "h-12 border-b border-border",

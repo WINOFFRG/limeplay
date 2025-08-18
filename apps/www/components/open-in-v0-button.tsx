@@ -1,9 +1,10 @@
+import { PROD_BASE_HOST } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 
 // v0 uses the default style.
-const V0_STYLE = "new-york-v4"
+const V0_STYLE = "default"
 
 export function OpenInV0Button({
   name,
@@ -20,7 +21,7 @@ export function OpenInV0Button({
       {...props}
     >
       <a
-        href={`${process.env.NEXT_PUBLIC_V0_URL}/chat/api/open?url=${process.env.NEXT_PUBLIC_APP_URL}/r/styles/${V0_STYLE}/${name}.json`}
+        href={`https://v0.dev/chat/api/open?url=${PROD_BASE_HOST}/r/styles/${V0_STYLE}/${name}.json`}
         target="_blank"
       >
         Open in <Icons.v0 className="size-5" />
