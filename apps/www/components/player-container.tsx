@@ -1,6 +1,7 @@
 "use client"
 
-import { RefObject, useEffect, useRef, useState } from "react"
+import type { RefObject } from "react"
+import { useRef } from "react"
 import { useSearchParams } from "next/navigation"
 import { RotateCw } from "lucide-react"
 import { useFullscreen, useToggle } from "react-use"
@@ -18,17 +19,20 @@ function RotateMessage({
 }) {
   const [show, toggle] = useToggle(false)
   useFullscreen(playerRef as RefObject<Element>, show, {
-    onClose: () => toggle(false),
+    onClose: () => {
+      toggle(false)
+    },
   })
 
-  const handleRotate = async () => {
+  const handleRotate = () => {
     toggle(true)
   }
 
   return (
     <div
       className={`
-        absolute inset-0 z-50 flex items-center justify-center md:hidden
+        absolute inset-0 z-50 flex items-center justify-center
+        md:hidden
       `}
     >
       <div className={`mx-1 max-w-xs rounded-xl text-center`}>
@@ -50,11 +54,7 @@ function RotateMessage({
             disabled:opacity-50
           `}
         >
-          <RotateCw
-            className={`
-              mr-2 h-3 w-3
-            `}
-          />
+          <RotateCw className={`mr-2 h-3 w-3`} />
           Rotate
         </Button>
       </div>
@@ -82,12 +82,15 @@ export function PlayerContainer() {
         debug={debug}
         className={cn(
           `
-          mx-auto w-[calc(100%-2rem)] rounded-xl
-          sm:mx-2 sm:w-full
-          md:mx-0
-        `,
+            mx-auto w-[calc(100%-2rem)] rounded-xl
+            sm:mx-2 sm:w-full
+            md:mx-0
+          `,
           isMobilePortrait &&
-            "[&_[data-layout-type='player-container']]:hidden bg-black/90"
+            `
+              bg-black/90
+              [&_[data-layout-type='player-container']]:hidden
+            `
         )}
         ref={playerRef}
       />

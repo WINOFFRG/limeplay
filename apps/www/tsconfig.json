@@ -34,9 +34,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "types",
-    "eslint.config.mjs",
     "registry/__index__.tsx",
-    "postcss.config.mjs"
+    "postcss.config.mjs",
+    "eslint.config.mjs"
   ],
   "exclude": ["node_modules", ".next", "registry/__index__.tsx"]
 }

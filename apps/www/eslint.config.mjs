@@ -21,9 +21,10 @@ const tailwindConfig = {
       "warn",
       { printWidth: 150 },
     ],
-    "better-tailwindcss/no-unregistered-classes": {
-      ignore: ["dark"],
-    },
+    "better-tailwindcss/no-unregistered-classes": [
+      "error",
+      { ignore: ["dark"] },
+    ],
   },
 }
 
