@@ -7,7 +7,8 @@
     "build": {
       "dependsOn": ["^build", "registry:build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "out/**"]
+      "outputs": [".next/**", "!.next/cache/**", "out/**"],
+      "env": ["NODE_ENV"]
     },
     "registry:build": {
       "cache": true,

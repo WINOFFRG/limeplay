@@ -1,4 +1,4 @@
-import { useAtom } from "jotai"
+import { getDefaultStore, useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
 
 import type { Style } from "@/registry/collection/registry-styles"
@@ -19,4 +19,10 @@ const configAtom = atomWithStorage<Config>("config", {
 
 export function useConfig() {
   return useAtom(configAtom)
+}
+
+export function atomReader() {
+  const store = getDefaultStore()
+  const value = store.get(configAtom)
+  return value
 }

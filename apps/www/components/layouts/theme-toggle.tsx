@@ -7,11 +7,11 @@ import { useTheme } from "next-themes"
 
 import { cn } from "@/lib/utils"
 
-const itemVariants = cva("size-6 rounded-full p-1 text-fd-muted-foreground", {
+const itemVariants = cva("size-6 rounded-full p-1 text-muted-foreground", {
   variants: {
     active: {
-      true: "bg-fd-accent text-fd-accent-foreground",
-      false: "text-fd-muted-foreground",
+      true: "bg-accent text-accent-foreground",
+      false: "text-muted-foreground",
     },
   },
 })

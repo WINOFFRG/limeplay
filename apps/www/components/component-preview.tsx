@@ -5,6 +5,7 @@ import { highlight } from "fumadocs-core/highlight"
 import { Pre } from "fumadocs-ui/components/codeblock"
 
 import { cn } from "@/lib/utils"
+import { atomReader } from "@/hooks/use-config"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Index } from "@/registry/__index__"
 import { PlayerLayoutDemo } from "@/registry/default/examples/player-root-demo"
@@ -27,7 +28,8 @@ export async function ComponentPreview({
   type = "block",
   ...props
 }: ComponentPreviewProps) {
-  const Component = (Index.default as Record<string, any>)[name]
+  const config = atomReader()
+  const Component = (Index[config.style] as Record<string, any>)[name]
 
   if (!Component) {
     throw new Error(`Component ${name} not found in registry`)
@@ -67,7 +69,8 @@ export async function ComponentPreview({
                 className={`
                   relative h-9 cursor-pointer rounded-b-none border-b-2 border-b-transparent bg-transparent px-4 py-3 font-semibold
                   text-muted-foreground shadow-none transition-none
-                  data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-primary/10
+                  data-[state=active]:border-b-primary data-[state=active]:bg-primary/10 data-[state=active]:text-foreground
+                  data-[state=active]:shadow-none
                 `}
               >
                 Preview
@@ -77,7 +80,8 @@ export async function ComponentPreview({
                 className={`
                   relative h-9 cursor-pointer rounded-b-none border-b-2 border-b-transparent bg-transparent px-4 py-3 font-semibold
                   text-muted-foreground shadow-none transition-none
-                  data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-primary/10
+                  data-[state=active]:border-b-primary data-[state=active]:bg-primary/10 data-[state=active]:text-foreground
+                  data-[state=active]:shadow-none
                 `}
               >
                 Code

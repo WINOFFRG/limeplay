@@ -42,7 +42,7 @@ export function ImmersiveScrollPlayer({
     if (isMobile) return
 
     const unsubscribe = scrollYProgress.on("change", (progress) => {
-      if (progress >= 0.65 && !isLocked) {
+      if (progress >= 0.7 && !isLocked) {
         setIsLocked(true)
         const container = containerRef.current
         if (container) {
@@ -53,7 +53,7 @@ export function ImmersiveScrollPlayer({
             behavior: "smooth",
           })
         }
-      } else if (progress < 0.65 && isLocked) {
+      } else if (progress < 0.7 && isLocked) {
         setIsLocked(false)
       }
     })
@@ -81,7 +81,7 @@ export function ImmersiveScrollPlayer({
   // Animate background to black when scroll reaches 100%
   const backgroundColor = useTransform(
     scrollYProgress,
-    [0.95, 1],
+    [0.95, 0.99],
     ["rgba(255, 255, 255, 0)", "rgba(0, 0, 0, 1)"]
   )
 
@@ -96,7 +96,7 @@ export function ImmersiveScrollPlayer({
   return (
     <motion.div
       ref={containerRef}
-      className="relative h-[280vh]"
+      className="relative h-[250vh]"
       variants={{
         hidden: { opacity: 0 },
         show: {
@@ -107,7 +107,12 @@ export function ImmersiveScrollPlayer({
       initial="hidden"
       animate="show"
     >
-      <div className="sticky top-0 md:-mt-28 grid h-svh w-full place-items-center overflow-hidden">
+      <div
+        className={`
+          sticky top-0 grid h-svh w-full place-items-center overflow-hidden
+          md:-mt-28
+        `}
+      >
         <motion.div
           className="absolute inset-0 z-0"
           style={{ backgroundColor }}

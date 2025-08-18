@@ -49,6 +49,8 @@ export interface CodeBlockProps extends ComponentProps<"figure"> {
   "data-line-numbers-start"?: number
 
   Actions?: (props: { className?: string; children?: ReactNode }) => ReactNode
+
+  titleProps?: HTMLAttributes<HTMLDivElement>
 }
 
 const TabsContext = createContext<{
@@ -67,13 +69,14 @@ export function CodeBlock({
   Actions = (props) => (
     <div {...props} className={cn("empty:hidden", props.className)} />
   ),
+  titleProps = {},
   ...props
 }: CodeBlockProps) {
   const isTab = useContext(TabsContext) !== null
   const areaRef = useRef<HTMLDivElement>(null)
   allowCopy ??= !isTab
   const bg = cn(
-    "bg-fd-secondary",
+    "bg-muted",
     keepBackground &&
       `
         bg-(--shiki-light-bg)
@@ -87,7 +90,7 @@ export function CodeBlock({
       dir="ltr"
       {...props}
       className={cn(
-        isTab ? [bg, "rounded-lg shadow-sm"] : "my-4 rounded-xl bg-fd-card p-1",
+        isTab ? [bg, "rounded-lg shadow-sm"] : "my-4 rounded-xl bg-card p-1",
         // eslint-disable-next-line better-tailwindcss/no-unregistered-classes
         "shiki not-prose relative overflow-hidden border text-sm outline-none",
         props.className
@@ -95,9 +98,11 @@ export function CodeBlock({
     >
       {title ? (
         <div
+          {...titleProps}
           className={cn(
-            "flex h-9.5 items-center gap-2 ps-3 text-fd-muted-foreground",
-            isTab && "border-b"
+            "flex h-9.5 items-center gap-2 ps-3 text-muted-foreground",
+            isTab && "border-b",
+            titleProps.className
           )}
         >
           {typeof icon === "string" ? (
@@ -108,7 +113,7 @@ export function CodeBlock({
               }}
             />
           ) : (
-            icon
+            <div className="[&_svg]:size-3.5">{icon}</div>
           )}
           <figcaption className="flex-1 truncate">{title}</figcaption>
           {Actions({
@@ -120,7 +125,7 @@ export function CodeBlock({
       ) : (
         Actions({
           className:
-            "absolute top-1 right-1 z-2 bg-fd-card rounded-bl-lg border-l border-b text-fd-muted-foreground",
+            "absolute top-1 right-1 z-2 bg-card rounded-bl-lg border-l border-b text-muted-foreground",
           children: allowCopy && (
             <CopyButton containerRef={areaRef as RefObject<HTMLElement>} />
           ),

@@ -30,7 +30,7 @@ const NavigationMenuTrigger = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <Primitive.Trigger
     ref={ref}
-    className={cn("data-[state=open]:bg-fd-accent/50", className)}
+    className={cn("data-[state=open]:bg-accent/50", className)}
     {...props}
   >
     {children}
@@ -70,7 +70,7 @@ const NavigationMenuViewport = React.forwardRef<
       {...props}
       className={cn(
         `
-          relative h-(--radix-navigation-menu-viewport-height) w-full origin-[top_center] overflow-hidden text-fd-popover-foreground
+          relative h-(--radix-navigation-menu-viewport-height) w-full origin-[top_center] overflow-hidden text-popover-foreground
           transition-[width,height] duration-300
           data-[state=closed]:animate-fd-nav-menu-out
           data-[state=open]:animate-fd-nav-menu-in
