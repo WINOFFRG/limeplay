@@ -6,7 +6,7 @@ import type { registryItemFileSchema } from "shadcn/registry"
 import { Project, ScriptKind } from "ts-morph"
 import type { z } from "zod"
 
-import { atomReader, useConfig } from "@/hooks/use-config"
+import { atomReader } from "@/hooks/use-config"
 import { Index } from "@/registry/__index__"
 
 export function getRegistryComponent(name: string) {
