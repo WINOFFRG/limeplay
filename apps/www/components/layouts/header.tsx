@@ -81,7 +81,7 @@ function NavbarLinkItem({
         banner = child.icon ? (
           <div
             className={`
-              w-fit rounded-md border bg-fd-muted p-1
+              w-fit rounded-md border bg-muted p-1
               [&_svg]:size-5
             `}
           >
@@ -98,7 +98,7 @@ function NavbarLinkItem({
               {banner}
               <p className="-mb-1 text-base font-medium">{child.text}</p>
               {child.description ? (
-                <p className="text-[13px] text-fd-muted-foreground">
+                <p className="text-[13px] text-muted-foreground">
                   {child.description}
                 </p>
               ) : null}

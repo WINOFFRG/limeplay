@@ -26,7 +26,7 @@ const navItemVariants = cva(
   `
     inline-flex items-center gap-1 px-2.5 py-1.5 text-sm font-semibold tracking-wide text-neutral-700 transition-colors duration-300
     hover:text-black
-    data-[active=true]:text-fd-primary
+    data-[active=true]:text-primary
     dark:text-neutral-300 dark:hover:text-white
     [&_svg]:size-4
   `
@@ -99,25 +99,21 @@ export function Navbar(props: NavbarProps) {
               border-b border-neutral-200/50 bg-white px-4 py-2
               dark:border-neutral-700/50 dark:bg-neutral-900
             `,
-            `
-              md:rounded-2xl md:border md:border-neutral-200/50 md:px-5 md:py-2 md:backdrop-blur-[20px] md:backdrop-saturate-[180%]
-              md:dark:border-neutral-700/50
-            `,
+            `md:rounded-2xl md:border md:border-neutral-200/50 md:px-5 md:py-2 md:backdrop-blur-[20px] md:backdrop-saturate-[180%] md:dark:border-neutral-700/50`,
             // Desktop background and shadow logic (hidden on mobile)
             !isScrolled
               ? `
-                md:bg-white/30 md:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.1),0px_15px_25px_0px_rgba(0,0,0,0.15)] md:backdrop-blur-md
-                md:dark:bg-neutral-900/80 md:dark:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.3),0px_15px_25px_0px_rgba(0,0,0,0.4)] md:dark:backdrop-blur-md
+                md:bg-white/30 md:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.1),0px_15px_25px_0px_rgba(0,0,0,0.15)] md:backdrop-blur-md md:dark:bg-neutral-900/80
+                md:dark:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.3),0px_15px_25px_0px_rgba(0,0,0,0.4)] md:dark:backdrop-blur-md
               `
               : `
-                md:border-transparent md:bg-white/80 md:shadow-[0px_1px_2px_0px_rgba(0,0,0,0.15)] md:backdrop-blur-md md:dark:bg-neutral-900/80
-                md:dark:shadow-[0px_1px_2px_0px_rgba(0,0,0,0.4)] md:dark:backdrop-blur-md
+                md:border-transparent md:bg-white/80 md:shadow-[0px_1px_2px_0px_rgba(0,0,0,0.15)] md:backdrop-blur-md md:dark:bg-neutral-900/80 md:dark:shadow-[0px_1px_2px_0px_rgba(0,0,0,0.4)]
+                md:dark:backdrop-blur-md
               `,
             value.length > 0 &&
               `
-                md:border-neutral-200/50 md:bg-white/30 md:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.1),0px_15px_25px_0px_rgba(0,0,0,0.15)]
-                md:backdrop-blur-md md:dark:border-neutral-700/50 md:dark:bg-neutral-900/30
-                md:dark:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.3),0px_15px_25px_0px_rgba(0,0,0,0.4)] md:dark:backdrop-blur-md
+                md:border-neutral-200/50 md:bg-white/30 md:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.1),0px_15px_25px_0px_rgba(0,0,0,0.15)] md:backdrop-blur-md md:dark:border-neutral-700/50
+                md:dark:bg-neutral-900/30 md:dark:shadow-[0px_4px_4px_0px_rgba(0,0,0,0.3),0px_15px_25px_0px_rgba(0,0,0,0.4)] md:dark:backdrop-blur-md
               `
           )}
         >
@@ -180,8 +176,8 @@ export function NavbarMenuLink(props: NavbarMenuLinkProps) {
         {...props}
         className={cn(
           `
-            flex flex-col gap-2 rounded-lg border bg-fd-card p-3 transition-colors
-            hover:bg-fd-accent/80 hover:text-fd-accent-foreground
+            flex flex-col gap-2 rounded-lg border bg-card p-3 transition-colors
+            hover:bg-accent/80 hover:text-accent-foreground
           `,
           props.className
         )}

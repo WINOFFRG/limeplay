@@ -1,6 +1,5 @@
 import Script from "next/script"
 
-import { cn } from "@/lib/utils"
 import { Header } from "@/components/layouts/header"
 import { slot } from "@/components/layouts/shared"
 import { VideoBackground } from "@/components/video-background"
@@ -20,9 +19,9 @@ export default function RootLayout({
         />
       )}
       <main
-        className={cn(
+        className={
           "w-dvw bg-gradient-to-br from-slate-50 via-amber-50 to-neutral-200"
-        )}
+        }
       >
         <VideoBackground />
         {slot(

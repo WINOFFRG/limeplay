@@ -201,7 +201,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   return (
     <div className="relative z-10 mb-1 ml-1">
       <motion.div
-        className="absolute inset-0 -z-1 rounded-md bg-[#252525]"
+        className="absolute inset-0 -z-1 rounded-md bg-muted"
         animate={getBackgroundAnimation()}
       />
       <MotionButton
