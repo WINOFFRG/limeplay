@@ -172,7 +172,7 @@ function BlockViewerToolbar() {
         {item.description?.replace(/\.$/, "")}
       </span>
       <div className="ml-auto flex items-center gap-2">
-        <div className="h-8 items-center gap-1.5 rounded-md border border-border bg-background p-1 shadow-none">
+        <div className="h-8 items-center gap-1.5 rounded-md border border-border bg-muted p-1 shadow-none">
           <ToggleGroup
             type="single"
             defaultValue="100"
@@ -236,8 +236,8 @@ function BlockViewerToolbar() {
         <Button
           variant="outline"
           className={`
-            w-fit gap-1 border-primary bg-background px-2 shadow-none
-            hover:bg-accent hover:text-accent-foreground
+            w-fit gap-1 bg-muted px-2 shadow-none
+            hover:bg-accent hover:text-accent-foreground py-2 border border-border
           `}
           size="sm"
           onClick={() => {
@@ -256,7 +256,7 @@ function BlockViewerToolbar() {
         <Separator orientation="vertical" className="mx-1 !h-4" />
         <OpenInV0Button
           name={item.name}
-          className="border border-primary-foreground"
+          className="border border-border bg-muted text-foreground hover:bg-accent hover:text-accent-foreground"
           size="sm"
         />
       </div>
