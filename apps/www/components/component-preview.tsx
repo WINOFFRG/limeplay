@@ -35,7 +35,7 @@ export async function ComponentPreview({
     throw new Error(`Component ${name} not found in registry`)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+   
   const filePath = path.join(Component?.files?.[0]?.path)
   const fileContent = await fs.promises.readFile(filePath, "utf-8")
   const fileName = path.basename(filePath)
@@ -63,13 +63,14 @@ export async function ComponentPreview({
       >
         <div className="flex items-center justify-between pb-3">
           {!hideCode && (
-            <TabsList className="w-fit justify-start border-b bg-transparent p-0 rounded-none">
+            <TabsList className="w-fit justify-start rounded-none border-b bg-transparent p-0">
               <TabsTrigger
                 value="preview"
                 className={`
                   relative h-9 cursor-pointer rounded-b-none border-b-2 border-b-transparent bg-transparent px-6 py-3 font-semibold
                   text-muted-foreground shadow-none transition-none
-                  data-[state=active]:border-b-primary! data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-primary/10!
+                  data-[state=active]:border-b-primary! data-[state=active]:bg-primary/10! data-[state=active]:text-foreground
+                  data-[state=active]:shadow-none
                 `}
               >
                 Preview
@@ -79,7 +80,8 @@ export async function ComponentPreview({
                 className={`
                   relative h-9 cursor-pointer rounded-b-none border-b-2 border-b-transparent bg-transparent px-6 py-3 font-semibold
                   text-muted-foreground shadow-none transition-none
-                  data-[state=active]:border-b-primary! data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-primary/10!
+                  data-[state=active]:border-b-primary! data-[state=active]:bg-primary/10! data-[state=active]:text-foreground
+                  data-[state=active]:shadow-none
                 `}
               >
                 Code

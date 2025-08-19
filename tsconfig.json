@@ -16,6 +16,6 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "include": ["eslint.config.mjs", "apps/**/*"],
+  "include": ["apps/**/*"],
   "exclude": ["node_modules", "scripts"]
 }

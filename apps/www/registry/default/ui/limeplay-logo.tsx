@@ -6,7 +6,12 @@ export function LimeplayLogo(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       className={cn(
-        "size-18 text-primary sm:size-24 md:size-36 lg:size-48",
+        `
+          size-18 text-primary
+          sm:size-24
+          md:size-36
+          lg:size-48
+        `,
         className
       )}
       xmlns="http://www.w3.org/2000/svg"
