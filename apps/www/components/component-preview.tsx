@@ -35,7 +35,7 @@ export async function ComponentPreview({
     throw new Error(`Component ${name} not found in registry`)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+   
   const filePath = path.join(Component?.files?.[0]?.path)
   const fileContent = await fs.promises.readFile(filePath, "utf-8")
   const fileName = path.basename(filePath)

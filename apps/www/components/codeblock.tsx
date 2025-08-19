@@ -91,7 +91,6 @@ export function CodeBlock({
       {...props}
       className={cn(
         isTab ? [bg, "rounded-lg shadow-sm"] : "my-4 rounded-xl bg-card p-1",
-        // eslint-disable-next-line better-tailwindcss/no-unregistered-classes
         "shiki not-prose relative overflow-hidden border text-sm outline-none",
         props.className
       )}
