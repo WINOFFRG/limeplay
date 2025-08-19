@@ -1,36 +1,31 @@
+import nextPlugin from "@next/eslint-plugin-next"
 import eslintPluginBetterTailwindcss from "eslint-plugin-better-tailwindcss"
+import tseslint from "typescript-eslint"
 
-import baseConfig, { compat, defineConfig } from "../../eslint.config.mjs"
-
-const tailwindConfig = {
-  files: ["**/*.{jsx,tsx}"],
-  languageOptions: {
-    parserOptions: {
-      ecmaFeatures: {
-        jsx: true,
-      },
-    },
-  },
-  plugins: {
-    "better-tailwindcss": eslintPluginBetterTailwindcss,
-  },
-  rules: {
-    ...eslintPluginBetterTailwindcss.configs["recommended-warn"].rules,
-    ...eslintPluginBetterTailwindcss.configs["recommended-error"].rules,
-    "better-tailwindcss/enforce-consistent-line-wrapping": [
-      "warn",
-      { printWidth: 150 },
-    ],
-    "better-tailwindcss/no-unregistered-classes": [
-      "error",
-      { ignore: ["dark"] },
-    ],
-  },
-}
+import { baseConfig } from "../../eslint.config.mjs"
 
 const eslintConfig = [
   {
-    ...tailwindConfig,
+    files: ["**/*.{jsx,tsx}"],
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    rules: {
+      ...eslintPluginBetterTailwindcss.configs["recommended-warn"].rules,
+      ...eslintPluginBetterTailwindcss.configs["recommended-error"].rules,
+      "better-tailwindcss/enforce-consistent-line-wrapping": [
+        "warn",
+        { printWidth: 150 },
+      ],
+      "better-tailwindcss/no-unregistered-classes": [
+        "error",
+        { ignore: ["dark"] },
+      ],
+    },
     settings: {
       "better-tailwindcss": {
         entryPoint: "app/global.css",
@@ -39,20 +34,17 @@ const eslintConfig = [
       },
     },
   },
-  ...compat.config({
-    extends: [
-      "next",
-      "plugin:@next/next/recommended",
-      "next/core-web-vitals",
-      "next/typescript",
-    ],
-    settings: {
-      next: {
-        rootDir: "app",
-      },
+  {
+    files: ["**/*.{js,jsx,ts,tsx}"],
+    plugins: {
+      "@next/next": nextPlugin,
     },
-  }),
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs["core-web-vitals"].rules,
+    },
+  },
   ...baseConfig,
 ]
 
-export default defineConfig(...eslintConfig)
+export default tseslint.config(eslintConfig)
