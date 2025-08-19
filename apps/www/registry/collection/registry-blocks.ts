@@ -108,6 +108,8 @@ export const blocks: Registry["items"] = [
       "utils",
       "button",
       "playback-control",
+      "use-media-state",
+      "use-shaka-player",
     ],
     files: [
       {

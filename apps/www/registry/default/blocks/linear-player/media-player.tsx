@@ -26,7 +26,10 @@ export const LinearMediaPlayer = React.forwardRef<
         ref={ref}
         height={720}
         width={1280}
-        className={cn("m-auto w-full md:min-w-80", className)}
+        className={cn(`
+          m-auto w-full
+          md:min-w-80
+        `, className)}
       >
         <Layout.PlayerContainer>
           <FallbackPoster className="bg-black">

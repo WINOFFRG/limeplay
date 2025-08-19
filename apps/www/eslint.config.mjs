@@ -1,5 +1,5 @@
 import nextPlugin from "@next/eslint-plugin-next"
-import eslintPluginBetterTailwindcss from "eslint-plugin-better-tailwindcss"
+import pluginBetterTailwindcss from "eslint-plugin-better-tailwindcss"
 import tseslint from "typescript-eslint"
 
 import { baseConfig } from "../../eslint.config.mjs"
@@ -15,10 +15,10 @@ const eslintConfig = [
       },
     },
     rules: {
-      ...eslintPluginBetterTailwindcss.configs["recommended-warn"].rules,
-      ...eslintPluginBetterTailwindcss.configs["recommended-error"].rules,
+      ...pluginBetterTailwindcss.configs["recommended-warn"].rules,
+      ...pluginBetterTailwindcss.configs["recommended-error"].rules,
       "better-tailwindcss/enforce-consistent-line-wrapping": [
-        "warn",
+        "error",
         { printWidth: 150 },
       ],
       "better-tailwindcss/no-unregistered-classes": [
