@@ -7,7 +7,15 @@ export const defineConfig = tseslint.config
 
 export const baseConfig = [
   {
-    ignores: ["**/eslint.config.*"],
+    ignores: [
+      "**/eslint.config.*",
+      "**/.next/**",
+      "**/out/**",
+      "**/dist/**",
+      "**/__index__.tsx",
+      "**/.source/**",
+      "**/prettier.config.cjs",
+    ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,

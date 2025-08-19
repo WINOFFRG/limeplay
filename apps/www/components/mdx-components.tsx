@@ -19,7 +19,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     ComponentPreview,
     pre: ({ ref: _ref, ...props }: React.ComponentPropsWithRef<any>) => (
       <CodeBlock {...props} keepBackground>
-        {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
+        { }
         <Pre>{props.children}</Pre>
       </CodeBlock>
     ),

@@ -23,7 +23,7 @@ const eslintConfig = [
       ],
       "better-tailwindcss/no-unregistered-classes": [
         "error",
-        { ignore: ["dark"] },
+        { ignore: ["dark", "shiki", "not-prose"] },
       ],
     },
     settings: {
