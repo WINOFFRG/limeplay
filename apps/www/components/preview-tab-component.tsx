@@ -14,7 +14,7 @@ export function PreviewTabComponent({
 
   const [config] = useConfig()
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+   
   const Component = Index[config.style][componentName]?.component
 
   if (!Component) {

@@ -1,4 +1,3 @@
-// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 
 import { exec } from "child_process"
@@ -195,7 +194,7 @@ function parseShadcnRegistryItemsToMap(
   const byName = new Map<string, unknown>()
   if (!Array.isArray(items)) return byName
   for (const item of items) {
-    const name = typeof item?.name === "string" ? item.name : undefined
+    const name = typeof item.name === "string" ? item.name : undefined
     if (!name) continue
     if (!byName.has(name)) {
       byName.set(name, item)
