@@ -79,12 +79,12 @@ export function ControlsBottomContainer({
       data-layout-type="controls-bottom-container"
       className={cn(
         `
-      pointer-events-auto absolute inset-x-0 bottom-8 mx-auto flex items-end gap-2 px-[min(80px,10%)] transition-all duration-300 ease-out-quad
-      group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
-      group-data-[idle=true]/root:translate-y-4 group-data-[idle=true]/root:opacity-0
-      group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100
-      group-data-[status=paused]/root:translate-y-0 group-data-[status=paused]/root:opacity-100
-    `,
+          pointer-events-auto absolute inset-x-0 bottom-8 mx-auto flex items-end gap-2 px-[min(80px,10%)] transition-all duration-300 ease-out-quad
+          group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
+          group-data-[idle=true]/root:translate-y-4 group-data-[idle=true]/root:opacity-0
+          group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100
+          group-data-[status=paused]/root:translate-y-0 group-data-[status=paused]/root:opacity-100
+        `,
         className
       )}
       {...props}
@@ -109,12 +109,12 @@ export function ControlsTopContainer({
       data-layout-type="controls-top-container"
       className={cn(
         `
-      pointer-events-auto absolute inset-x-0 top-8 mx-auto flex items-start gap-2 px-[min(80px,10%)] transition-all duration-300 ease-out-quad
-      group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
-      group-data-[idle=true]/root:-translate-y-4 group-data-[idle=true]/root:opacity-0
-      group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100
-      group-data-[status=paused]/root:translate-y-0 group-data-[status=paused]/root:opacity-100
-    `,
+          pointer-events-auto absolute inset-x-0 top-8 mx-auto flex items-start gap-2 px-[min(80px,10%)] transition-all duration-300 ease-out-quad
+          group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
+          group-data-[idle=true]/root:-translate-y-4 group-data-[idle=true]/root:opacity-0
+          group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100
+          group-data-[status=paused]/root:translate-y-0 group-data-[status=paused]/root:opacity-100
+        `,
         className
       )}
       {...props}

@@ -82,9 +82,9 @@ export function PlayerContainer() {
         debug={debug}
         className={cn(
           `
-            mx-auto w-[calc(100%-2rem)] rounded-xl
+            mx-auto w-[calc(100%-2rem)] overflow-hidden rounded-xl
             sm:mx-2 sm:w-full
-            md:mx-0 overflow-hidden
+            md:mx-0
           `,
           isMobilePortrait &&
             `

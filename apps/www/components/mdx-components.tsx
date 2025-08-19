@@ -17,9 +17,8 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     ),
     ...TabsComponents,
     ComponentPreview,
-    pre: ({ ref: _ref, ...props }: React.ComponentPropsWithRef<any>) => (
+    pre: ({ ref: _ref, ...props }: React.ComponentPropsWithRef<typeof Pre>) => (
       <CodeBlock {...props} keepBackground>
-        { }
         <Pre>{props.children}</Pre>
       </CodeBlock>
     ),

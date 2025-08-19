@@ -236,8 +236,8 @@ function BlockViewerToolbar() {
         <Button
           variant="outline"
           className={`
-            w-fit gap-1 bg-muted px-2 shadow-none
-            hover:bg-accent hover:text-accent-foreground py-2 border border-border
+            w-fit gap-1 border border-border bg-muted px-2 py-2 shadow-none
+            hover:bg-accent hover:text-accent-foreground
           `}
           size="sm"
           onClick={() => {
@@ -256,7 +256,10 @@ function BlockViewerToolbar() {
         <Separator orientation="vertical" className="mx-1 !h-4" />
         <OpenInV0Button
           name={item.name}
-          className="border border-border bg-muted text-foreground hover:bg-accent hover:text-accent-foreground"
+          className={`
+            border border-border bg-muted text-foreground
+            hover:bg-accent hover:text-accent-foreground
+          `}
           size="sm"
         />
       </div>
@@ -295,10 +298,10 @@ function BlockViewerView() {
       <div className="relative grid w-full gap-4">
         <div
           className={`
-            absolute inset-0 right-4
+            absolute inset-0 right-4 m-1.5
             [background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]
             [background-size:20px_20px]
-            dark:[background-image:radial-gradient(#404040_1px,transparent_1px)] m-1.5
+            dark:[background-image:radial-gradient(#404040_1px,transparent_1px)]
           `}
         />
         <ResizablePanelGroup
@@ -322,8 +325,8 @@ function BlockViewerView() {
           <ResizableHandle
             className={`
               relative hidden w-3 bg-transparent p-0
-              after:absolute after:top-1/2 after:right-0 after:h-8 after:w-[6px] after:translate-x-[-1px] after:-translate-y-1/2 after:rounded-full after:bg-primary-foreground/80 after:transition-all
-              after:hover:h-10
+              after:absolute after:top-1/2 after:right-0 after:h-8 after:w-[6px] after:translate-x-[-1px] after:-translate-y-1/2 after:rounded-full
+              after:bg-primary-foreground/80 after:transition-all after:hover:h-10
               md:block
             `}
           />
@@ -412,7 +415,8 @@ function BlockViewerCode() {
         <ResizableHandle
           className={`
             relative w-1 bg-transparent p-0
-            after:absolute after:top-1/2 after:left-1/2 after:h-8 after:w-[3px] after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-border after:transition-all after:hover:h-10
+            after:absolute after:top-1/2 after:left-1/2 after:h-8 after:w-[3px] after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full
+            after:bg-border after:transition-all after:hover:h-10
           `}
         />
         <ResizablePanel defaultSize={75} minSize={60}>
