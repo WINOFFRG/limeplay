@@ -40,7 +40,12 @@ export const blocks: Registry["items"] = [
     ],
     files: [
       {
-        path: `${BASE_SRC_URL}/media-player.tsx`,
+        path: `${BASE_SRC_URL}/page.tsx`,
+        type: "registry:page",
+        target: "app/player/page.tsx",
+      },
+      {
+        path: `${BASE_SRC_URL}/components/media-player.tsx`,
         type: "registry:component",
       },
       {
@@ -96,7 +101,7 @@ export const blocks: Registry["items"] = [
     name: "basic-player",
     type: "registry:block",
     author: "Rohan Gupta (@winoffrg)",
-    description: "Basic Media Player",
+    description: "Limeplay Basic Player",
     dependencies: ["@phosphor-icons/react", "zustand", "shaka-player"],
     registryDependencies: [
       "media-provider",
@@ -113,7 +118,12 @@ export const blocks: Registry["items"] = [
     ],
     files: [
       {
-        path: `blocks/basic-player/media-player.tsx`,
+        path: `blocks/basic-player/page.tsx`,
+        type: "registry:page",
+        target: "app/player/page.tsx",
+      },
+      {
+        path: `blocks/basic-player/components/media-player.tsx`,
         type: "registry:component",
       },
       {
