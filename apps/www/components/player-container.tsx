@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useOrientation } from "@/hooks/use-orientation"
 import { Button } from "@/components/ui/button"
-import { LinearMediaPlayer } from "@/registry/default/blocks/linear-player/media-player"
+import { LinearMediaPlayer } from "@/registry/default/blocks/linear-player/components/media-player"
 
 function RotateMessage({
   playerRef,
