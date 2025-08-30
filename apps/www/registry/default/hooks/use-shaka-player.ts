@@ -5,8 +5,8 @@ import React, { useRef } from "react"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 declare global {
-  interface Window {
-    shaka_player: shaka.Player
+  interface HTMLMediaElement {
+    player: shaka.Player | null
   }
 }
 
@@ -39,9 +39,7 @@ export function useShakaPlayer() {
 
       await playerInstance.current.attach(mediaElement)
 
-      // if (debug) {
-      window.shaka_player = playerInstance.current
-      // }
+      mediaElement.player = playerInstance.current
     }
 
     void loadPlayer()
