@@ -69,20 +69,16 @@ export function PlayerContainer() {
   const isMobilePortrait = isMobile && isPortrait
   const playerRef = useRef<HTMLDivElement>(null)
 
-  const playbackUrl =
-    searchParams.get("playbackUrl") ??
-    "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8"
   const debug = searchParams.get("debug") === "true"
 
   return (
     <>
       {isMobilePortrait && <RotateMessage playerRef={playerRef} />}
       <LinearMediaPlayer
-        src={playbackUrl}
         debug={debug}
         className={cn(
           `
-            mx-auto w-[calc(100%-2rem)] overflow-hidden rounded-xl
+            mx-auto w-[calc(100%-2rem)] overflow-hidden
             sm:mx-2 sm:w-full
             md:mx-0
           `,
