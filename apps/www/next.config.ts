@@ -9,6 +9,7 @@ const config: NextConfig = {
   images: {
     unoptimized: true,
   },
+  productionBrowserSourceMaps: process.env.VERCEL_ENV !== "production",
 }
 
 export default withMDX(config)
