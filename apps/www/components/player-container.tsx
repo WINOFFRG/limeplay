@@ -70,11 +70,13 @@ export function PlayerContainer() {
   const playerRef = useRef<HTMLDivElement>(null)
 
   const debug = searchParams.get("debug") === "true"
+  const playbackUrl = searchParams.get("playbackUrl")
 
   return (
     <>
       {isMobilePortrait && <RotateMessage playerRef={playerRef} />}
       <LinearMediaPlayer
+        src={playbackUrl ?? undefined}
         debug={debug}
         className={cn(
           `
