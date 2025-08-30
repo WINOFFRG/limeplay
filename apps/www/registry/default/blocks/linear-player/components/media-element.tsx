@@ -5,7 +5,13 @@ import { useEffect } from "react"
 import { Media } from "@/registry/default/ui/media"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-export function MediaElement({ src }: { src: string }) {
+export function MediaElement({
+  src,
+  config,
+}: {
+  src: string
+  config?: shaka.extern.PlayerConfiguration
+}) {
   const player = useMediaStore((state) => state.player)
   const mediaRef = useMediaStore((state) => state.mediaRef)
 
@@ -28,17 +34,9 @@ export function MediaElement({ src }: { src: string }) {
         }
       }
 
-      // const config = {
-      //   streaming: {
-      //     // DEV: To debug the buffer values in timeline slider
-      //     bufferingGoal: 120,
-      //   },
-      //   manifest: {
-      //     // availabilityWindowOverride: 600,
-      //   },
-      // } as shaka.extern.PlayerConfiguration
-
-      // player.configure(config)
+      if (config) {
+        player.configure(config)
+      }
 
       void player
         .load(src)
@@ -49,7 +47,7 @@ export function MediaElement({ src }: { src: string }) {
           console.error("[limeplay] error loading media:", error)
         })
     }
-  }, [player, mediaRef, src])
+  }, [player, mediaRef, src, config])
 
   return (
     <Media
