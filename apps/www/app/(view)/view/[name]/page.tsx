@@ -1,6 +1,6 @@
 import * as React from "react"
 import { notFound } from "next/navigation"
-import { registryItemSchema } from "shadcn/registry"
+import { registryItemSchema } from "shadcn/schema"
 import { z } from "zod"
 
 import { getRegistryComponent, getRegistryItem } from "@/lib/registry"

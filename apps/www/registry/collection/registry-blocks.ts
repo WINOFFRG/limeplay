@@ -1,4 +1,4 @@
-import { type Registry } from "shadcn/registry"
+import { type Registry } from "shadcn/schema"
 
 const BASE_SRC_URL = "blocks/linear-player"
 
