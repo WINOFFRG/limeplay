@@ -1,8 +1,8 @@
 import { promises as fs } from "fs"
 import { tmpdir } from "os"
 import path from "path"
-import { registryItemSchema } from "shadcn/registry"
-import type { registryItemFileSchema } from "shadcn/registry"
+import { registryItemSchema } from "shadcn/schema"
+import type { registryItemFileSchema } from "shadcn/schema"
 import { Project, ScriptKind } from "ts-morph"
 import type { z } from "zod"
 
