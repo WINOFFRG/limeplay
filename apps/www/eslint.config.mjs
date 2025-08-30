@@ -43,6 +43,11 @@ const eslintConfig = [
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs["core-web-vitals"].rules,
     },
+    settings: {
+      next: {
+        rootDir: ".",
+      },
+    },
   },
   ...baseConfig,
 ]

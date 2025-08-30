@@ -25,6 +25,8 @@ export const MuteControl = React.forwardRef<
       {...props}
       ref={forwardedRef}
       onClick={toggleMute}
+      aria-label="Mute (keyboard shortcut m)"
+      aria-keyshortcuts="m"
     />
   )
 })
