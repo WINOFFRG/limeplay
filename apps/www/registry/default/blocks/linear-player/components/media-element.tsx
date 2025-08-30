@@ -9,7 +9,7 @@ export function MediaElement({
   src,
   config,
 }: {
-  src: string
+  src?: string
   config?: shaka.extern.PlayerConfiguration
 }) {
   const player = useMediaStore((state) => state.player)
@@ -38,14 +38,16 @@ export function MediaElement({
         player.configure(config)
       }
 
-      void player
-        .load(src)
-        .then(() => {
-          console.debug("[limeplay] media loaded")
-        })
-        .catch((error: unknown) => {
-          console.error("[limeplay] error loading media:", error)
-        })
+      if (src) {
+        void player
+          .load(src)
+          .then(() => {
+            console.debug("[limeplay] media loaded")
+          })
+          .catch((error: unknown) => {
+            console.error("[limeplay] error loading media:", error)
+          })
+      }
     }
   }, [player, mediaRef, src, config])
 
