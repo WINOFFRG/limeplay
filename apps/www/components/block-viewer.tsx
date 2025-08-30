@@ -17,10 +17,7 @@ import {
 } from "lucide-react"
 import type { ImperativePanelHandle } from "react-resizable-panels"
 import { useCopyToClipboard } from "react-use"
-import type {
-  registryItemFileSchema,
-  registryItemSchema,
-} from "shadcn/registry"
+import type { registryItemFileSchema, registryItemSchema } from "shadcn/schema"
 import type { z } from "zod"
 
 import type {
@@ -312,7 +309,7 @@ function BlockViewerView() {
           `}
         >
           <ResizablePanel
-            ref={resizablePanelRef}
+            ref={resizablePanelRef as React.Ref<ImperativePanelHandle>}
             className={`
               relative aspect-[4/2.5] overflow-hidden rounded-lg border bg-transparent
               md:aspect-auto md:rounded-xl
