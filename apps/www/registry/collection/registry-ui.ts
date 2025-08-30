@@ -1,4 +1,4 @@
-import { type Registry } from "shadcn/registry"
+import { type Registry } from "shadcn/schema"
 
 const TARGET_BASE_PATH = "components/limeplay"
 
