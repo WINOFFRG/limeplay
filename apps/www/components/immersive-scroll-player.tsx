@@ -85,6 +85,12 @@ export function ImmersiveScrollPlayer({
     ["rgba(255, 255, 255, 0)", "rgba(0, 0, 0, 1)"]
   )
 
+  const borderRadius = useTransform(
+    scrollYProgress,
+    [0.95, 0.99],
+    ["14px", "0px"]
+  )
+
   if (isMobile) {
     return (
       <div className="relative w-full" ref={containerRef}>
@@ -118,8 +124,8 @@ export function ImmersiveScrollPlayer({
           style={{ backgroundColor }}
         />
         <motion.div
-          style={{ width }}
-          className="relative z-10 aspect-video origin-center will-change-transform"
+          style={{ width, borderRadius }}
+          className="relative z-10 aspect-video origin-center overflow-hidden will-change-transform"
           variants={{
             hidden: { opacity: 0, y: 10, scale: 0.98 },
             show: {
