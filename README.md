@@ -15,3 +15,5 @@ Discussion and ideas on our [Discord Server](https://discord.gg/ZjXFzqmqjn)
 ## License
 
 MIT © [WINOFFRG](https://github.com/winoffrg)
+
+[![Star History Chart](https://api.star-history.com/svg?repos=winoffrg/limeplay&type=Date)](https://star-history.com/#winoffrg/limeplay&Date)
