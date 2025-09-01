@@ -2,7 +2,6 @@
 
 import React, { useEffect, useImperativeHandle, useRef } from "react"
 import { ClosedCaptioningIcon } from "@phosphor-icons/react"
-import shaka from "shaka-player"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/default/blocks/linear-player/components/button"
@@ -30,26 +29,13 @@ export const Root = React.forwardRef<
       return
     }
 
-    const textDisplayFactory = new shaka.text.UITextDisplayer(
-      mediaRef.current,
-      containerRef.current
-    )
-
-    console.log("[marker445] configuring text display factory", {
-      textDisplayFactory,
-      mediaRef: mediaRef.current,
-      containerRef: containerRef.current,
-      player,
-      el: document.querySelector('[data-layout-type="player-container"]'),
-    })
-
     mediaRef.current.currentTime = 120
 
-    player.configure("textDisplayFactory", () => textDisplayFactory)
-    player.configure("streaming.alwaysStreamText", true)
-    player.setVideoContainer(
-      document.querySelector('[data-layout-type="player-container"]')
-    )
+    console.log("[marker445] setting video container", {
+      containerRef: containerRef.current,
+    })
+
+    player.setVideoContainer(containerRef.current)
 
     const textTracks = player.getTextTracks()
 

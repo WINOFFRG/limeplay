@@ -2,11 +2,11 @@
 
 import React, { useRef } from "react"
 
-import { ASSETS } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
 import { MediaElement } from "@/registry/default/blocks/linear-player/components/media-element"
 import { PlayerHooks } from "@/registry/default/blocks/linear-player/components/player-hooks"
+import { ASSETS } from "@/registry/default/blocks/linear-player/components/playlist"
 import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 import { MediaProvider } from "@/registry/default/ui/media-provider"
