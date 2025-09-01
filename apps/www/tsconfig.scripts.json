@@ -9,6 +9,6 @@
     "isolatedModules": false,
     "allowImportingTsExtensions": true
   },
-  "include": ["scripts/**/*.{ts,mts}"],
+  "include": ["scripts/**/*.{ts,mts}", "registry/**/*"],
   "exclude": ["node_modules"]
 }
