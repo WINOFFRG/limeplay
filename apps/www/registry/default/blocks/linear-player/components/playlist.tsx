@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react"
 
-import { ASSETS, type DemoAsset } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -13,6 +12,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  ASSETS,
+  type DemoAsset,
+} from "@/registry/default/blocks/linear-player/lib/playlist"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export function Playlist() {
