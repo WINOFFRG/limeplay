@@ -89,6 +89,10 @@ export const blocks: Registry["items"] = [
         path: `${BASE_SRC_URL}/components/playlist.tsx`,
         type: "registry:component",
       },
+      {
+        path: `${BASE_SRC_URL}/lib/playlist.ts`,
+        type: "registry:lib",
+      },
     ],
     meta: {
       iframeHeight: "750px",
