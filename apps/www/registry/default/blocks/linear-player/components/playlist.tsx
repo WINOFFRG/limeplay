@@ -12,10 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  ASSETS,
-  type DemoAsset,
-} from "@/registry/default/blocks/linear-player/lib/playlist"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export interface DemoAsset {
@@ -26,7 +22,7 @@ export interface DemoAsset {
   config?: shaka.extern.PlayerConfiguration
 }
 
-const ASSETS: DemoAsset[] = [
+export const ASSETS: DemoAsset[] = [
   {
     title: "Blender Foundation - Sintel",
     description:
