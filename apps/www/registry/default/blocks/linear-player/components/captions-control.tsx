@@ -29,17 +29,42 @@ export const Root = React.forwardRef<
       return
     }
 
-    mediaRef.current.currentTime = 120
-
     console.log("[marker445] setting video container", {
       containerRef: containerRef.current,
     })
 
     player.setVideoContainer(containerRef.current)
 
-    const textTracks = player.getTextTracks()
+    // const textTracks = player.getTextTracks()
 
-    player.selectTextTrack(textTracks[1])
+    const addTextTrack = () => {
+      player
+        .addTextTrackAsync(
+          "/assets/all_variants.vtt",
+          "en",
+          "subtitle",
+          "text/vtt",
+          undefined,
+          "custom"
+        )
+        .then((track) => {
+          console.log("[marker445] added text track", track)
+          player.selectTextTrack(track)
+          player.setTextTrackVisibility(true)
+        })
+        .catch((error) => {
+          console.error("[marker445] error adding text track", error)
+        })
+    }
+
+    player.addEventListener("loaded", addTextTrack)
+
+    return () => {
+      player.removeEventListener("loaded", addTextTrack)
+    }
+    // player.selectTextTrack(textTracks[1])
+    // player.setTextTrackVisibility(true)
+    // mediaRef.current.currentTime = 120
   }, [containerRef, mediaRef, player])
 
   useImperativeHandle(ref, () => internalRef.current!)
