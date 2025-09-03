@@ -49,7 +49,7 @@ export const LinearMediaPlayer = React.forwardRef<
           <Layout.ControlsOverlayContainer />
           <Layout.ControlsContainer>
             <div
-              className="h-5/6 w-full border border-red-500"
+              className="relative h-5/6 w-full border border-red-500"
               data-debug="cues-container"
               ref={cuesContainerRef}
             />
