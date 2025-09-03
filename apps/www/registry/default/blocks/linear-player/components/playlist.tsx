@@ -22,7 +22,7 @@ export interface DemoAsset {
   config?: shaka.extern.PlayerConfiguration
 }
 
-const ASSETS: DemoAsset[] = [
+export const ASSETS: DemoAsset[] = [
   {
     title: "Blender Foundation - Sintel",
     description:

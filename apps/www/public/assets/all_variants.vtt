@@ -1,0 +1,123 @@
+WEBVTT
+NOTE
+This file demonstrates all WebVTT cue settings and positioning options
+Use this to test different text positions and alignments
+1
+00:00:00.000 --> 00:00:02.000
+Default positioning (no settings)
+
+2
+00:00:02.000 --> 00:00:04.000 vertical:rl
+Vertical right-to-left text
+
+3
+00:00:04.000 --> 00:00:06.000 vertical:lr
+Vertical left-to-right text
+
+4
+00:00:06.000 --> 00:00:08.000 line:0
+Top line (line:0)
+
+5
+00:00:08.000 --> 00:00:10.000 line:5
+Fifth line from top (line:5)
+
+6
+00:00:10.000 --> 00:00:12.000 line:-1
+Bottom line (line:-1)
+
+7
+00:00:12.000 --> 00:00:14.000 line:-3
+Third line from bottom (line:-3)
+
+8
+00:00:14.000 --> 00:00:16.000 line:0%
+Top using percentage (line:0%)
+
+9
+00:00:16.000 --> 00:00:18.000 line:50%
+Middle using percentage (line:50%)
+
+10
+00:00:18.000 --> 00:00:20.000 line:100%
+Bottom using percentage (line:100%)
+
+11
+00:00:20.000 --> 00:00:22.000 position:0%
+Left edge (position:0%)
+
+12
+00:00:22.000 --> 00:00:24.000 position:25%
+Quarter from left (position:25%)
+
+13
+00:00:24.000 --> 00:00:26.000 position:50%
+Center horizontally (position:50%)
+
+14
+00:00:26.000 --> 00:00:28.000 position:75%
+Three-quarters from left (position:75%)
+
+15
+00:00:28.000 --> 00:00:30.000 position:100%
+Right edge (position:100%)
+
+16
+00:00:30.000 --> 00:00:32.000 size:25%
+Quarter width (size:25%)
+
+17
+00:00:32.000 --> 00:00:34.000 size:50%
+Half width (size:50%)
+
+18
+00:00:34.000 --> 00:00:36.000 size:75%
+Three-quarter width (size:75%)
+
+19
+00:00:36.000 --> 00:00:38.000 size:100%
+Full width (size:100%)
+
+20
+00:00:38.000 --> 00:00:40.000 align:start
+Left aligned text (align:start)
+
+21
+00:00:40.000 --> 00:00:42.000 align:center
+Center aligned text (align:center)
+
+22
+00:00:42.000 --> 00:00:44.000 align:end
+Right aligned text (align:end)
+
+23
+00:00:44.000 --> 00:00:46.000 line:0 position:0% align:start
+Top-left corner (line:0 position:0% align:start)
+
+24
+00:00:46.000 --> 00:00:48.000 line:0 position:50% align:center
+Top-center (line:0 position:50% align:center)
+
+25
+00:00:48.000 --> 00:00:50.000 line:0 position:100% align:end
+Top-right corner (line:0 position:100% align:end)
+
+26
+00:00:50.000 --> 00:00:52.000 line:50% position:0% align:start
+Middle-left (line:50% position:0% align:start)
+
+27
+00:00:52.000 --> 00:00:54.000 line:50% position:50% align:center
+Perfect center (line:50% position:50% align:center)
+
+28
+00:00:54.000 --> 00:00:56.000 line:50% position:100% align:end
+Middle-right (line:50% position:100% align:end)
+
+29
+00:00:56.000 --> 00:00:58.000 line:100% position:0% align:start
+Bottom-left corner (line:100% position:0% align:start)
+
+30
+00:00:58.000 --> 00:01:00.000 line:100% position:50% align:center
+Bottom-center (line:100% position:50% align:center)

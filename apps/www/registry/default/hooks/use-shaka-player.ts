@@ -8,6 +8,11 @@ declare global {
   interface HTMLMediaElement {
     player: shaka.Player | null
   }
+  interface Window {
+    shaka: {
+      Player: typeof shaka.Player
+    }
+  }
 }
 
 export function useShakaPlayer() {
@@ -40,6 +45,7 @@ export function useShakaPlayer() {
       await playerInstance.current.attach(mediaElement)
 
       mediaElement.player = playerInstance.current
+      window.shaka = shakaLib
     }
 
     void loadPlayer()
