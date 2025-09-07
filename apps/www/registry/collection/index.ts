@@ -7,37 +7,24 @@ import { hooks } from "@/registry/collection/registry-hooks"
 import { internal, lib } from "@/registry/collection/registry-lib"
 import { ui } from "@/registry/collection/registry-ui"
 
-const DEPRECATED_ITEMS = [
-  "toast",
-  "toast-demo",
-  "toast-destructive",
-  "toast-simple",
-  "toast-with-action",
-  "toast-with-title",
-]
-
-export const registry = {
-  name: "shadcn/ui",
-  homepage: "https://ui.shadcn.com",
-  items: z.array(registryItemSchema).parse(
-    [
-      {
-        name: "index",
-        type: "registry:style",
-        dependencies: ["class-variance-authority", "lucide-react"],
-        devDependencies: ["tw-animate-css"],
-        registryDependencies: ["utils"],
-        cssVars: {},
-        files: [],
-      },
-      ...ui,
-      ...blocks,
-      ...lib,
-      ...hooks,
-      ...internal,
-      ...examples,
-    ].filter((item) => {
-      return !DEPRECATED_ITEMS.includes(item.name)
-    })
-  ),
-} satisfies Registry
+export const registry: Registry = {
+  name: "limeplay/ui",
+  homepage: "https://limeplay.winoffrg.dev",
+  items: z.array(registryItemSchema).parse([
+    {
+      name: "index",
+      type: "registry:style",
+      dependencies: ["class-variance-authority", "lucide-react"],
+      devDependencies: ["tw-animate-css"],
+      registryDependencies: ["utils"],
+      cssVars: {},
+      files: [],
+    },
+    ...ui,
+    ...blocks,
+    ...lib,
+    ...hooks,
+    ...internal,
+    ...examples,
+  ]),
+}
