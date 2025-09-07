@@ -47,7 +47,7 @@ const STYLE = "default"
 const DEPRECATED_ITEMS = ["test"]
 // Get registry host from env variable or use default
 const REGISTRY_HOST = process.env.REGISTRY_HOST ?? "http://localhost:3000"
-const BASE_URL = `${REGISTRY_HOST}/r/styles/default`
+const BASE_URL = `${REGISTRY_HOST}/r`
 
 logger.info(`🌐 Using registry host: ${REGISTRY_HOST}`)
 
@@ -533,7 +533,7 @@ async function buildRegistry() {
   logger.info("🏗️ Building registry...")
   return new Promise((resolve, reject) => {
     const process = exec(
-      `bun x shadcn build registry.json --output ../www/public/r/styles/${STYLE}`
+      `bun x shadcn build registry.json --output ../www/public/r`
     )
 
     // Capture stdout
