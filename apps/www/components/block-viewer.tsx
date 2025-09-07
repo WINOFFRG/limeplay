@@ -239,7 +239,7 @@ function BlockViewerToolbar() {
           size="sm"
           onClick={() => {
             copyToClipboard(
-              `npx shadcn@latest add https://limeplay.winoffrg.dev/r/styles/default/${item.name}.json`
+              `npx shadcn@latest add https://limeplay.winoffrg.dev/r/${item.name}.json`
             )
           }}
         >
