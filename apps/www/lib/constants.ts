@@ -4,4 +4,7 @@ export const PRODUCT_DESCRIPTION =
 export const GITHUB_URL = "http://git.new/limeplay"
 export const X_URL = "https://dub.sh/winoffrg"
 export const DISCORD_URL = "https://discord.gg/ZjXFzqmqjn?utm_source=limeplay"
-export const PROD_BASE_HOST = "https://limeplay.winoffrg.dev"
+export const PROD_BASE_HOST =
+  process.env.VERCEL_ENV === "preview"
+    ? (process.env.VERCEL_URL ?? "https://limeplay.winoffrg.dev")
+    : "https://limeplay.winoffrg.dev"
