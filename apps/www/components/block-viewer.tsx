@@ -238,9 +238,7 @@ function BlockViewerToolbar() {
           `}
           size="sm"
           onClick={() => {
-            copyToClipboard(
-              `npx shadcn@latest add https://limeplay.winoffrg.dev/r/${item.name}.json`
-            )
+            copyToClipboard(`npx shadcn@latest add @limeplay/${item.name}`)
           }}
         >
           {isCopied.value ? (

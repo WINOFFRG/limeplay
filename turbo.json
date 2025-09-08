@@ -8,7 +8,7 @@
       "dependsOn": ["^build", "registry:build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "out/**"],
-      "env": ["NODE_ENV", "VERCEL_ENV"]
+      "env": ["NODE_ENV", "VERCEL_ENV", "VERCEL_URL"]
     },
     "registry:build": {
       "cache": true,
