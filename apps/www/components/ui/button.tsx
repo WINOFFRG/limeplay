@@ -34,7 +34,7 @@ const buttonVariants = cva(
         `,
         glass: `
           bg-transparent text-lp-accent
-          hover:bg-primary/10 hover:backdrop-blur-sm
+          hover:bg-primary/10
           active:scale-[0.97]
         `,
       },

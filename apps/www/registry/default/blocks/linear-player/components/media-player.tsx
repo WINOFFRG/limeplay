@@ -1,12 +1,11 @@
-"use client"
-
-import React, { useRef } from "react"
+import React from "react"
 
 import { cn } from "@/lib/utils"
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
 import { MediaElement } from "@/registry/default/blocks/linear-player/components/media-element"
 import { PlayerHooks } from "@/registry/default/blocks/linear-player/components/player-hooks"
 import { ASSETS } from "@/registry/default/blocks/linear-player/components/playlist"
+import { CaptionsContainer } from "@/registry/default/ui/captions"
 import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 import { MediaProvider } from "@/registry/default/ui/media-provider"
@@ -23,7 +22,6 @@ export const LinearMediaPlayer = React.forwardRef<
   HTMLDivElement,
   LinearMediaPlayerProps
 >(({ debug = false, className }, ref) => {
-  const cuesContainerRef = useRef<HTMLDivElement>(null)
   const initialAsset = ASSETS[0]
 
   return (
@@ -48,13 +46,9 @@ export const LinearMediaPlayer = React.forwardRef<
           <PlayerHooks />
           <Layout.ControlsOverlayContainer />
           <Layout.ControlsContainer>
-            <div
-              className="relative h-5/6 w-full border border-red-500"
-              data-debug="cues-container"
-              ref={cuesContainerRef}
-            />
+            <CaptionsContainer />
             <Layout.ControlsBottomContainer>
-              <BottomControls cuesContainerRef={cuesContainerRef} />
+              <BottomControls />
             </Layout.ControlsBottomContainer>
           </Layout.ControlsContainer>
         </Layout.PlayerContainer>

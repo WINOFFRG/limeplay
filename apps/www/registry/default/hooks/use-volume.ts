@@ -2,7 +2,7 @@ import React from "react"
 import clamp from "lodash.clamp"
 import type { StateCreator } from "zustand"
 
-import type { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
+import type { PlayerStore } from "@/registry/default/hooks/use-player"
 import { noop, off, on } from "@/registry/default/lib/utils"
 import {
   useGetStore,
@@ -57,7 +57,7 @@ export interface VolumeStore {
 const BASE_RESET_VOLUME = 0.05
 
 export const createVolumeStore: StateCreator<
-  VolumeStore & PlayerRootStore,
+  VolumeStore & PlayerStore,
   [],
   [],
   VolumeStore

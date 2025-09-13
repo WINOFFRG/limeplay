@@ -4,7 +4,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 
 import { Button } from "@/components/ui/button"
-import { useMediaState } from "@/registry/default/hooks/use-media-state"
+import { MediaReadyState, usePlayer } from "@/registry/default/hooks/use-player"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export interface PlaybackControlProps
@@ -18,11 +18,13 @@ export const PlaybackControl = React.forwardRef<
 >((props, forwardedRef) => {
   const status = useMediaStore((state) => state.status)
   const Comp = props.asChild ? Slot : Button
+  const readyState = useMediaStore((state) => state.readyState)
 
-  const { togglePaused } = useMediaState()
+  const { togglePaused } = usePlayer()
 
   return (
     <Comp
+      disabled={readyState < MediaReadyState.HAVE_CURRENT_DATA}
       ref={forwardedRef}
       aria-label={["paused", "ended"].includes(status) ? `Play` : `Pause`}
       aria-keyshortcuts="k"

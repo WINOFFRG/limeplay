@@ -26,11 +26,11 @@ Import the `useMediaStates` hook in your existing `PlayerHooks` component.
 import React from "react"
 
 import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
-import { useMediaStates } from "@/hooks/limeplay/use-media-state" // [!code ++]
+import { usePlayerStates } from "@/hooks/limeplay/use-player" // [!code ++]
 
 export const PlayerHooks = React.memo(() => {
   useShakaPlayer()
-  useMediaStates() // [!code ++]
+  usePlayerStates() // [!code ++]
 
   return null
 })
@@ -41,21 +41,15 @@ export const PlayerHooks = React.memo(() => {
 
 ```tsx lineNumbers title="lib/create-media-store.ts"
 import {
-  createMediaStateStore,
-  MediaStateStore,
-} from "@/hooks/limeplay/use-media-state" // [!code ++]
-import {
-  createPlayerRootStore,
-  PlayerRootStore,
-} from "@/hooks/limeplay/use-player-root-store"
+  createPlayerStore,
+  PlayerStore,
+} from "@/hooks/limeplay/use-player" // [!code ++]
 
-export type TypeMediaStore = PlayerRootStore &
-  MediaStateStore & {} // [!code ++]
+export type TypeMediaStore = PlayerStore & {} // [!code ++]
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlayerRootStore(...etc),
-    ...createMediaStateStore(...etc), // [!code ++]
+    ...createPlayerStore(...etc), // [!code ++]
     ...initProps,
   }))
   return mediaStore

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { useVolume } from "@/registry/default/hooks/use-volume"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
+import { MediaReadyState } from "../hooks/use-player"
+
 export interface MuteControlProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean
@@ -14,13 +16,13 @@ export const MuteControl = React.forwardRef<
   HTMLButtonElement,
   MuteControlProps
 >((props, forwardedRef) => {
-  const mediaRef = useMediaStore((state) => state.mediaRef)
   const Comp = props.asChild ? Slot : Button
+  const readyState = useMediaStore((state) => state.readyState)
   const { toggleMute } = useVolume()
 
   return (
     <Comp
-      disabled={!mediaRef.current}
+      disabled={readyState < MediaReadyState.HAVE_METADATA}
       data-slot="mute-control"
       {...props}
       ref={forwardedRef}
