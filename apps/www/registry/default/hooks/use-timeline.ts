@@ -5,7 +5,7 @@ import clamp from "lodash.clamp"
 import type { StateCreator } from "zustand"
 
 import { useInterval } from "@/registry/default/hooks/use-interval"
-import type { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
+import type { PlayerStore } from "@/registry/default/hooks/use-player"
 import { noop, off, on, toFixedNumber } from "@/registry/default/lib/utils"
 import {
   useGetStore,
@@ -24,7 +24,7 @@ export interface TimelineStore {
 }
 
 export const createTimelineStore: StateCreator<
-  TimelineStore & PlayerRootStore,
+  TimelineStore & PlayerStore,
   [],
   [],
   TimelineStore
@@ -53,6 +53,7 @@ export function useTimelineStates({
   const store = useGetStore()
   const player = useMediaStore((s) => s.player)
   const mediaRef = useMediaStore((state) => state.mediaRef)
+  const canPlay = useMediaStore((state) => state.canPlay)
 
   const onTimeUpdate = () => {
     if (!mediaRef.current || !player) return
@@ -113,7 +114,7 @@ export function useTimelineStates({
 
     const media = mediaRef.current
 
-    if (media.readyState >= 1) {
+    if (canPlay) {
       onTimeUpdate()
       onDurationChange()
       onBuffer()
@@ -130,7 +131,7 @@ export function useTimelineStates({
       off(media, "progress", onBuffer)
       off(player, "trackschanged", onBuffer)
     }
-  }, [mediaRef, player])
+  }, [mediaRef, player, canPlay])
 }
 
 export function useTimeline() {
