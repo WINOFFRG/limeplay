@@ -4,6 +4,7 @@ import React, { useImperativeHandle, useRef } from "react"
 import { Slider as SliderPrimitive } from "@base-ui-components/react/slider"
 
 import { cn } from "@/lib/utils"
+import { MediaReadyState } from "@/registry/default/hooks/use-player"
 import { useTimeline } from "@/registry/default/hooks/use-timeline"
 import { useTrackEvents } from "@/registry/default/hooks/use-track-events"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
@@ -22,6 +23,9 @@ export const Root = React.forwardRef<
   const duration = useMediaStore((s) => s.duration)
   const isLive = useMediaStore((s) => s.isLive)
   const currentValue = duration ? (currentTime / duration) * 100 : 0
+  const readyState = useMediaStore((s) => s.readyState)
+
+  const disabled = props.disabled || readyState < MediaReadyState.HAVE_METADATA
 
   useImperativeHandle(ref, () => internalRef.current)
   const { seek, setHoveringTime, setIsHovering, getTimeFromEvent } =
@@ -83,6 +87,7 @@ export const Root = React.forwardRef<
       ref={internalRef}
       {...trackEvents}
       {...etc}
+      disabled={disabled}
     />
   )
 })
@@ -254,7 +259,10 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
     return (
       <SliderPrimitive.Thumb
         className={cn(
-          "left-(--lp-timeline-thumb-position)! size-4 rounded-full bg-lp-accent",
+          `
+            left-(--lp-timeline-thumb-position)! size-4 rounded-full bg-lp-accent
+            data-[disabled]:bg-lp-accent/85
+          `,
           className
         )}
         ref={ref}

@@ -1,9 +1,9 @@
 import { create } from "zustand"
 
-import type { PlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
-import { createPlayerRootStore } from "@/registry/default/hooks/use-player-root-store"
+import type { PlayerStore } from "@/registry/default/hooks/use-player"
+import { createPlayerStore } from "@/registry/default/hooks/use-player"
 
-export type TypeMediaStore = PlayerRootStore & {}
+export type TypeMediaStore = PlayerStore & {}
 
 export interface CreateMediaStoreProps {
   debug?: boolean
@@ -11,7 +11,7 @@ export interface CreateMediaStoreProps {
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlayerRootStore(...etc),
+    ...createPlayerStore(...etc),
     ...initProps,
   }))
   return mediaStore

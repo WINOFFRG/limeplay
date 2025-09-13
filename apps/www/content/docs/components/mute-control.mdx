@@ -24,7 +24,7 @@ Import the `useVolumeStates` hook in your existing `PlayerHooks` component.
 import React from "react"
 
 import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
-import { useVolumeStates } from "@/hooks/limeplay/use-volume-state" // [!code ++]
+import { useVolumeStates } from "@/hooks/limeplay/use-volume" // [!code ++]
 
 export const PlayerHooks = React.memo(() => {
   useShakaPlayer()
@@ -44,16 +44,16 @@ import {
   VolumeStore
 } from "@/hooks/limeplay/use-volume"   // [!code ++]
 import {
-  createPlayerRootStore,
-  PlayerRootStore,
-} from "@/hooks/limeplay/use-player-root-store"
+  createPlayerStore,
+  PlayerStore,
+} from "@/hooks/limeplay/use-player"
 
-export type TypeMediaStore = PlayerRootStore &
+export type TypeMediaStore = PlayerStore &
   VolumeStore & {} // [!code ++]
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlayerRootStore(...etc),
+    ...createPlayerStore(...etc),
     ...createVolumeStore(...etc), // [!code ++]
     ...initProps,
   }))

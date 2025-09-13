@@ -4,15 +4,15 @@ const TARGET_BASE_PATH = "hooks/limeplay"
 
 export const hooks: Registry["items"] = [
   {
-    name: "use-player-root-store",
+    name: "use-player",
     type: "registry:hook",
     dependencies: ["zustand"],
-    registryDependencies: ["player-hooks"],
+    registryDependencies: ["utils", "media-provider", "player-hooks"],
     files: [
       {
-        path: "hooks/use-player-root-store.ts",
+        path: "hooks/use-player.ts",
         type: "registry:hook",
-        target: `${TARGET_BASE_PATH}/use-player-root-store.ts`,
+        target: `${TARGET_BASE_PATH}/use-player.ts`,
       },
     ],
   },
@@ -22,7 +22,7 @@ export const hooks: Registry["items"] = [
     dependencies: ["lodash.clamp", "zustand"],
     devDependencies: ["@types/lodash.clamp"],
     registryDependencies: [
-      "use-player-root-store",
+      "use-player",
       "utils",
       "media-provider",
       "player-hooks",
@@ -55,7 +55,7 @@ export const hooks: Registry["items"] = [
     dependencies: ["lodash.clamp", "zustand"],
     devDependencies: ["@types/lodash.clamp"],
     registryDependencies: [
-      "use-player-root-store",
+      "use-player",
       "utils",
       "media-provider",
       "use-interval",
@@ -66,24 +66,6 @@ export const hooks: Registry["items"] = [
         path: "hooks/use-timeline.ts",
         type: "registry:hook",
         target: `${TARGET_BASE_PATH}/use-timeline.ts`,
-      },
-    ],
-  },
-  {
-    name: "use-media-state",
-    type: "registry:hook",
-    dependencies: ["zustand"],
-    registryDependencies: [
-      "use-player-root-store",
-      "utils",
-      "media-provider",
-      "player-hooks",
-    ],
-    files: [
-      {
-        path: "hooks/use-media-state.ts",
-        type: "registry:hook",
-        target: `${TARGET_BASE_PATH}/use-media-state.ts`,
       },
     ],
   },
@@ -108,6 +90,24 @@ export const hooks: Registry["items"] = [
         path: "hooks/use-interval.ts",
         type: "registry:hook",
         target: `${TARGET_BASE_PATH}/use-interval.ts`,
+      },
+    ],
+  },
+  {
+    name: "use-captions",
+    type: "registry:hook",
+    dependencies: ["zustand"],
+    registryDependencies: [
+      "use-player",
+      "utils",
+      "media-provider",
+      "player-hooks",
+    ],
+    files: [
+      {
+        path: "hooks/use-captions.ts",
+        type: "registry:hook",
+        target: `${TARGET_BASE_PATH}/use-captions.ts`,
       },
     ],
   },
