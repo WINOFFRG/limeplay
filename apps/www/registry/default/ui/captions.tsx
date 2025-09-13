@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect } from "react"
 import { composeRefs } from "@radix-ui/react-compose-refs"
 import { Slot } from "@radix-ui/react-slot"
