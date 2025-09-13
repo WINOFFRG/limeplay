@@ -1,3 +1,5 @@
+"use client"
+
 import { useCallback, useEffect } from "react"
 import type shaka from "shaka-player"
 import type { StateCreator } from "zustand"
