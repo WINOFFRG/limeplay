@@ -2,21 +2,21 @@
 
 import { ClosedCaptioningIcon } from "@phosphor-icons/react"
 
-import { Toggle } from "@/registry/default/blocks/linear-player/ui/toggle"
+import { Button } from "@/components/ui/button"
 import { CaptionsControl } from "@/registry/default/ui/captions"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-export function CaptionsStateControl() {
+export function CaptionsStateControlDemo() {
   const textTrackVisible = useMediaStore((state) => state.textTrackVisible)
 
   return (
-    <Toggle asChild pressed={textTrackVisible} variant="glass">
+    <Button size="icon" variant="glass" asChild>
       <CaptionsControl>
         <ClosedCaptioningIcon
           weight={textTrackVisible ? "fill" : "regular"}
-          fill="white"
+          size={20}
         />
       </CaptionsControl>
-    </Toggle>
+    </Button>
   )
 }
