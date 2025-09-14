@@ -40,20 +40,20 @@ export const PlayerHooks = React.memo(() => {
 
 ```tsx lineNumbers title="lib/create-media-store.ts"
 import {
-  createPlayerRootStore,
-  PlayerRootStore,
-} from "@/hooks/limeplay/use-player-root-store"
+  createPlayerStore,
+  PlayerStore,
+} from "@/hooks/limeplay/use-player"
 import {
   createTimelineStore,
   TimelineStore,
 } from "@/hooks/limeplay/use-timeline" // [!code ++]
 
-export type TypeMediaStore = PlayerRootStore &
+export type TypeMediaStore = PlayerStore &
   TimelineStore & {} // [!code ++]
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlayerRootStore(...etc),
+    ...createPlayerStore(...etc),
     ...createTimelineStore(...etc), // [!code ++]
     ...initProps,
   }))

@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
 import { MediaElement } from "@/registry/default/blocks/linear-player/components/media-element"
 import { PlayerHooks } from "@/registry/default/blocks/linear-player/components/player-hooks"
+import { CaptionsContainer } from "@/registry/default/ui/captions"
 import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 import { MediaProvider } from "@/registry/default/ui/media-provider"
@@ -19,7 +20,7 @@ export interface LinearMediaPlayerProps {
 export const LinearMediaPlayer = React.forwardRef<
   HTMLDivElement,
   LinearMediaPlayerProps
->(({ src, debug = false, className }, ref) => {
+>(({ debug = false, className }, ref) => {
   return (
     <MediaProvider debug={debug}>
       <RootContainer
@@ -38,10 +39,11 @@ export const LinearMediaPlayer = React.forwardRef<
           <FallbackPoster className="bg-black">
             <LimeplayLogo />
           </FallbackPoster>
-          <MediaElement src={src} />
+          <MediaElement />
           <PlayerHooks />
           <Layout.ControlsOverlayContainer />
           <Layout.ControlsContainer>
+            <CaptionsContainer />
             <Layout.ControlsBottomContainer>
               <BottomControls />
             </Layout.ControlsBottomContainer>

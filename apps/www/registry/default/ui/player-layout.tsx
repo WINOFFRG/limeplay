@@ -40,7 +40,7 @@ export function ControlsContainer({
     <div
       data-layout-type="controls-container"
       className={cn(
-        "pointer-events-none absolute inset-0 isolate contain-strict",
+        "pointer-events-none absolute inset-0 isolate flex flex-col contain-strict",
         className
       )}
       {...props}
@@ -79,7 +79,7 @@ export function ControlsBottomContainer({
       data-layout-type="controls-bottom-container"
       className={cn(
         `
-          pointer-events-auto absolute inset-x-0 bottom-8 mx-auto flex items-end gap-2 px-[min(80px,10%)] transition-all duration-300 ease-out-quad
+          pointer-events-auto inset-x-0 mx-auto my-6 flex w-full items-end gap-2 px-[min(80px,10%)] transition-all duration-300 ease-out-quad
           group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
           group-data-[idle=true]/root:translate-y-4 group-data-[idle=true]/root:opacity-0
           group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100

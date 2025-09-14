@@ -155,6 +155,7 @@ export const ui: Registry["items"] = [
       "utils",
       "use-volume",
       "use-track-events",
+      "use-player",
     ],
     files: [
       {
@@ -168,7 +169,7 @@ export const ui: Registry["items"] = [
     name: "playback-control",
     type: "registry:ui",
     dependencies: ["@radix-ui/react-slot"],
-    registryDependencies: ["media-provider", "use-media-state"],
+    registryDependencies: ["media-provider", "use-player"],
     files: [
       {
         path: "ui/playback-control.tsx",
@@ -210,6 +211,7 @@ export const ui: Registry["items"] = [
       "utils",
       "use-timeline",
       "use-track-events",
+      "use-player",
     ],
     files: [
       {
@@ -251,6 +253,19 @@ export const ui: Registry["items"] = [
         path: "ui/root-container.tsx",
         type: "registry:ui",
         target: `${TARGET_BASE_PATH}/root-container.tsx`,
+      },
+    ],
+  },
+  {
+    name: "captions",
+    type: "registry:ui",
+    dependencies: ["@radix-ui/react-compose-refs", "@radix-ui/react-slot"],
+    registryDependencies: ["media-provider", "use-captions"],
+    files: [
+      {
+        path: "ui/captions.tsx",
+        type: "registry:ui",
+        target: `${TARGET_BASE_PATH}/captions.tsx`,
       },
     ],
   },

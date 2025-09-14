@@ -15,7 +15,7 @@ export const lib: Registry["items"] = [
     name: "create-media-store",
     type: "registry:lib",
     dependencies: ["zustand"],
-    registryDependencies: ["use-player-root-store"],
+    registryDependencies: ["use-player"],
     files: [
       {
         path: "lib/create-media-store.ts",
@@ -52,7 +52,7 @@ export const internal: Registry["items"] = [
     name: "player-hooks-demo",
     type: "registry:ui",
     registryDependencies: [
-      "use-media-state",
+      "use-player",
       "use-shaka-player",
       "use-timeline",
       "use-volume",

@@ -1,7 +1,9 @@
 WEBVTT
+
 NOTE
 This file demonstrates all WebVTT cue settings and positioning options
 Use this to test different text positions and alignments
+
 1
 00:00:00.000 --> 00:00:02.000
 Default positioning (no settings)
