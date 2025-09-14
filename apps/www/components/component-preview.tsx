@@ -18,6 +18,8 @@ interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   type?: "overlay" | "block"
   withPlayer?: boolean
   name: string
+  overlayChildren?: React.ReactNode
+  blockChildren?: React.ReactNode
 }
 
 export async function ComponentPreview({
@@ -26,6 +28,8 @@ export async function ComponentPreview({
   withPlayer = false,
   hideCode = false,
   type = "block",
+  overlayChildren,
+  blockChildren,
   ...props
 }: ComponentPreviewProps) {
   const config = atomReader()
@@ -35,7 +39,6 @@ export async function ComponentPreview({
     throw new Error(`Component ${name} not found in registry`)
   }
 
-   
   const filePath = path.join(Component?.files?.[0]?.path)
   const fileContent = await fs.promises.readFile(filePath, "utf-8")
   const fileName = path.basename(filePath)
@@ -98,7 +101,11 @@ export async function ComponentPreview({
           forceMount
         >
           <div className={className}>
-            <PreviewComponent type={type}>
+            <PreviewComponent
+              type={type}
+              overlayChildren={overlayChildren}
+              blockChildren={blockChildren}
+            >
               <PreviewTabComponent componentName={name} />
             </PreviewComponent>
           </div>

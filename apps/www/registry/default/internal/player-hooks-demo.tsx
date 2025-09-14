@@ -2,6 +2,7 @@
 
 import React from "react"
 
+import { useCaptionsStates } from "@/registry/default/hooks/use-captions"
 import { usePlayerStates } from "@/registry/default/hooks/use-player"
 import { useShakaPlayer } from "@/registry/default/hooks/use-shaka-player"
 import { useTimelineStates } from "@/registry/default/hooks/use-timeline"
@@ -12,6 +13,7 @@ export const PlayerHooks = React.memo(() => {
   useShakaPlayer()
   useVolumeStates()
   useTimelineStates()
+  useCaptionsStates()
 
   return null
 })

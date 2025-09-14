@@ -11,6 +11,7 @@ export const blocks: Registry["items"] = [
     dependencies: [
       "@phosphor-icons/react",
       "@base-ui-components/react",
+      "@radix-ui/react-toggle",
       "zustand",
       "shaka-player",
       "lodash.clamp",
@@ -93,6 +94,15 @@ export const blocks: Registry["items"] = [
       {
         path: `${BASE_SRC_URL}/lib/playlist.ts`,
         type: "registry:lib",
+      },
+      {
+        path: `${BASE_SRC_URL}/components/captions-state-control.tsx`,
+        type: "registry:component",
+      },
+      {
+        path: `${BASE_SRC_URL}/ui/toggle.tsx`,
+        type: "registry:ui",
+        target: "components/ui/toggle.tsx",
       },
     ],
     meta: {
