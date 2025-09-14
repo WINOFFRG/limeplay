@@ -18,7 +18,7 @@ export function CaptionsStateControlDemo() {
 
   // DEV: Adding text tracks externally as demo asset doesn't have built-in text tracks
   useEffect(() => {
-    if (!player || readyState > MediaReadyState.HAVE_METADATA) return
+    if (!player || readyState < MediaReadyState.HAVE_METADATA) return
 
     player
       .addTextTrackAsync(
