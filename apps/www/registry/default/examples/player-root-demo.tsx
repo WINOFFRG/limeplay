@@ -49,10 +49,17 @@ function MediaElement() {
 }
 
 interface PlayerDemoLayoutProps extends React.PropsWithChildren {
-  type: "overlay" | "block" | "poster"
+  type: "overlay" | "block" | "poster" | "hybrid"
+  overlayChildren?: React.ReactNode
+  blockChildren?: React.ReactNode
 }
 
-export function PlayerLayoutDemo({ children, type }: PlayerDemoLayoutProps) {
+export function PlayerLayoutDemo({
+  children,
+  type,
+  overlayChildren,
+  blockChildren,
+}: PlayerDemoLayoutProps) {
   return (
     <MediaProvider>
       <RootContainer height={720} width={1280} className="container p-0">
@@ -68,10 +75,14 @@ export function PlayerLayoutDemo({ children, type }: PlayerDemoLayoutProps) {
           <PlayerHooks />
           <Layout.ControlsContainer>
             {type === "overlay" && children}
+            {type === "hybrid" && overlayChildren}
           </Layout.ControlsContainer>
         </Layout.PlayerContainer>
       </RootContainer>
       {type === "block" && <CustomDemoControls>{children}</CustomDemoControls>}
+      {type === "hybrid" && (
+        <CustomDemoControls>{blockChildren}</CustomDemoControls>
+      )}
     </MediaProvider>
   )
 }
