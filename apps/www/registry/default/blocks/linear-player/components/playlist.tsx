@@ -68,7 +68,6 @@ export function Playlist() {
   const [currentAsset, setCurrentAsset] = useState<DemoAsset | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const player = useMediaStore((state) => state.player)
-  const setStatus = useMediaStore((state) => state.setStatus)
   const setForceIdle = useMediaStore((state) => state.setForceIdle)
   const mediaRef = useMediaStore((state) => state.mediaRef)
 
@@ -91,7 +90,6 @@ export function Playlist() {
       }
     } catch (error) {
       console.error("Error loading asset:", error)
-      setStatus("error")
     }
   }
 

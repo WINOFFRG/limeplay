@@ -19,7 +19,7 @@ export function VolumeStateControl() {
       size="icon"
       variant="glass"
       asChild
-      className={"hover:bg-primary/30 hover:backdrop-blur-md"}
+      className={"hover:bg-primary/30"}
     >
       <MuteControl>
         {muted || volume === 0 ? (

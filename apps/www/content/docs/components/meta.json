@@ -11,6 +11,8 @@
     "media",
     "player-hooks",
     "fallback-poster",
-    "player-layout"
+    "player-layout",
+    "captions-control",
+    "captions-container"
   ]
 }

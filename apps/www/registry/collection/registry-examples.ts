@@ -108,4 +108,15 @@ export const examples: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "captions-state-control-demo",
+    type: "registry:example",
+    registryDependencies: ["media-provider", "captions"],
+    files: [
+      {
+        path: "examples/captions-state-control-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
 ]
