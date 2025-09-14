@@ -1,6 +1,6 @@
 ---
-title: Captions Control
-description: Button component for toggling captions visibility
+title: Captions
+description: Complete captions system with container, control, and hooks for text track management
 ---
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
@@ -18,7 +18,7 @@ import { CaptionsStateControlDemo, CaptionsHybridDemo } from "@/registry/default
 
 <Steps>
 <Step>
-### Install the component
+### Install the components
 ```bash
 npx shadcn add @limeplay/captions
 ```
@@ -75,9 +75,61 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 </Step>
 </Steps>
 
-## Usage
+## Components
 
-### Basic Captions Control
+### CaptionsContainer
+
+The `CaptionsContainer` component serves as the rendering area for Shaka Player's text tracks. It automatically registers itself with the Shaka Player instance and provides proper positioning for caption overlay.
+
+#### Basic Usage
+
+Place the captions container within your player layout to provide a rendering area for text tracks.
+
+```tsx lineNumbers title="components/player/media-player.tsx"
+import { CaptionsContainer } from "@/components/limeplay/captions-container"
+
+export function MediaPlayer() {
+  return (
+    <MediaProvider>
+      <PlayerHooks />
+      <Layout.RootContainer height={720} width={1280}>
+        <Layout.PlayerContainer>
+          <MediaElement />
+          <Layout.ControlsContainer>
+            <CaptionsContainer />
+            <Layout.ControlsBottomContainer>
+              <BottomControls />
+            </Layout.ControlsBottomContainer>
+          </Layout.ControlsContainer>
+        </Layout.PlayerContainer>
+      </Layout.RootContainer>
+    </MediaProvider>
+  )
+}
+```
+
+#### Custom Styling
+
+You can customize the captions container with additional styling and font scaling.
+
+```tsx lineNumbers title="components/player/captions-container.tsx"
+import { CaptionsContainer } from "@/components/limeplay/captions-container"
+
+export function CustomCaptionsContainer() {
+  return (
+    <CaptionsContainer
+      className="px-4 pb-4"
+      fontScale={1.2}
+    />
+  )
+}
+```
+
+### CaptionsControl
+
+The `CaptionsControl` component provides a standardized way to toggle captions visibility. It automatically disables when no text tracks are available and handles track selection automatically.
+
+#### Basic Usage
 
 Create a captions toggle button with appropriate icons and states.
 
@@ -103,49 +155,13 @@ export function CaptionsControlButton() {
 }
 ```
 
-### Place in Player Layout
+## Hooks
 
-For captions to work properly, you need both the control button and the captions container:
+### useCaptionsStates()
 
-#### Option 1: Hybrid Layout (Recommended)
-Use the hybrid layout to place the control button outside the player and the captions container inside:
+Sets up event listeners for text track changes and visibility updates. This hook should be called once in your `PlayerHooks` component.
 
-```tsx lineNumbers title="components/player/captions-demo.tsx"
-import { PlayerLayoutDemo } from "@/components/demo/player-root-demo"
-import { CaptionsStateControlDemo, CaptionsHybridDemo } from "@/components/demo/captions-state-control-demo"
+### useCaptions()
 
-export function CaptionsDemo() {
-  return (
-    <PlayerLayoutDemo
-      type="hybrid"
-      overlayChildren={<CaptionsHybridDemo />}
-      blockChildren={<CaptionsStateControlDemo />}
-    />
-  )
-}
-```
+Returns captions control functions for managing text tracks.
 
-#### Option 2: Traditional Layout
-Add both components to your player's layout:
-
-```tsx lineNumbers title="components/player/media-player.tsx"
-<Layout.ControlsContainer>
-  <CaptionsContainer /> {/* For rendering captions */}
-  <Layout.ControlsBottomContainer>
-    <BottomControls>
-      <CaptionsControlButton /> {/* For toggle button */}
-    </BottomControls>
-  </Layout.ControlsBottomContainer>
-</Layout.ControlsContainer>
-```
-
-## Understanding
-
-The `CaptionsControl` component provides a standardized way to toggle captions visibility. It:
-
-- Automatically disables when no text tracks are available
-- Handles track selection automatically (selects default track if none active)
-- Provides proper accessibility attributes including keyboard shortcuts
-- Integrates with the captions store for state management
-
-The component is designed to work seamlessly with Shaka Player's text track system and provides a consistent user experience across different media sources.
