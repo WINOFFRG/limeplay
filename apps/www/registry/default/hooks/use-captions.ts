@@ -43,6 +43,16 @@ export function useCaptionsStates() {
   const mediaRef = useMediaStore((state) => state.mediaRef)
   const canPlay = useMediaStore((state) => state.canPlay)
 
+  const onTextTrackChanged = () => {
+    if (!player) {
+      return
+    }
+
+    const activeTextTrack = player.getTextTracks().find((t) => t.active)
+
+    store.setState({ activeTextTrack })
+  }
+
   const onTracksChanged = () => {
     if (!player) {
       return
@@ -77,11 +87,13 @@ export function useCaptionsStates() {
       onTracksChanged()
     }
 
-    on(player, "textchanged", onTracksChanged)
+    on(player, "textchanged", onTextTrackChanged)
+    on(player, ["trackschanged", "loading"], onTracksChanged)
     on(player, "texttrackvisibility", onTextTrackVisibility)
 
     return () => {
-      off(player, "textchanged", onTracksChanged)
+      off(player, "textchanged", onTextTrackChanged)
+      off(player, ["trackschanged", "loading"], onTracksChanged)
       off(player, "texttrackvisibility", onTextTrackVisibility)
     }
   }, [mediaRef, player, canPlay])

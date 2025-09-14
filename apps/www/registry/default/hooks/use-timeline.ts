@@ -5,7 +5,10 @@ import clamp from "lodash.clamp"
 import type { StateCreator } from "zustand"
 
 import { useInterval } from "@/registry/default/hooks/use-interval"
-import type { PlayerStore } from "@/registry/default/hooks/use-player"
+import {
+  MediaReadyState,
+  type PlayerStore,
+} from "@/registry/default/hooks/use-player"
 import { noop, off, on, toFixedNumber } from "@/registry/default/lib/utils"
 import {
   useGetStore,
@@ -54,40 +57,60 @@ export function useTimelineStates({
   const player = useMediaStore((s) => s.player)
   const mediaRef = useMediaStore((state) => state.mediaRef)
   const canPlay = useMediaStore((state) => state.canPlay)
+  const readyState = useMediaStore((state) => state.readyState)
+
+  const isLive = player?.isLive() ?? false
 
   const onTimeUpdate = () => {
     if (!mediaRef.current || !player) return
 
-    const mediaCurrentTime = mediaRef.current.currentTime
-    const isLive = player.isLive()
+    if (readyState < MediaReadyState.HAVE_METADATA) return
 
-    let currentTime = mediaCurrentTime
-    let liveLatency = null
+    let currentTime = mediaRef.current.currentTime
+    let liveLatency = isLive ? 0 : null
+    let progress = 0
 
     if (isLive) {
       const seekRange = player.seekRange()
-      currentTime = mediaCurrentTime - seekRange.start
-      liveLatency = seekRange.end - mediaCurrentTime
-      currentTime = Math.max(0, currentTime)
+      liveLatency =
+        mediaRef.current.currentTime === 0
+          ? 0
+          : seekRange.end - mediaRef.current.currentTime
+
+      liveLatency = toFixedNumber(clamp(liveLatency, 0, seekRange.end), 4)
+
+      progress =
+        1 -
+        (seekRange.end - mediaRef.current.currentTime) /
+          (seekRange.end - seekRange.start)
+
+      progress = toFixedNumber(clamp(progress, 0, 1), 4)
     } else {
-      currentTime = clamp(mediaCurrentTime, 0, store.getState().duration)
+      currentTime = clamp(
+        mediaRef.current.currentTime,
+        0,
+        store.getState().duration
+      )
+      progress = toFixedNumber(currentTime / store.getState().duration, 4)
     }
 
-    const progress = toFixedNumber(currentTime / store.getState().duration, 4)
-
     store.setState({
-      currentTime: currentTime,
-      progress: progress || 0,
+      currentTime,
+      progress,
       liveLatency,
-      isLive,
+      isLive: isLive,
+      ...(isLive && {
+        duration: player.seekRange().end - player.seekRange().start,
+      }),
     })
   }
 
   const onDurationChange = React.useCallback(() => {
     if (!mediaRef.current || !player) return
 
+    const seekRange = player.seekRange()
     const playerDuration = player.isLive()
-      ? player.getSegmentAvailabilityDuration()
+      ? seekRange.end - seekRange.start
       : mediaRef.current.duration
 
     if (playerDuration && Number.isFinite(playerDuration)) {
