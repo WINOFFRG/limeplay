@@ -55,10 +55,7 @@ export const Root = React.forwardRef<
         setHoveringTime(newTime)
         setIsHovering(true)
 
-        const liveSeekTime = isLive
-          ? seekRange.start +
-            (newTime / duration) * (seekRange.end - seekRange.start)
-          : newTime
+        const liveSeekTime = isLive ? seekRange.start + newTime : newTime
 
         if (isPointerDown) {
           seek(liveSeekTime)
@@ -130,7 +127,7 @@ export const Progress = React.forwardRef<
     <SliderPrimitive.Indicator
       ref={ref}
       className={cn(
-        "h-full w-(--lp-played-width) rounded-s-full bg-lp-accent",
+        "h-full !w-(--lp-played-width) rounded-s-full bg-lp-accent",
         className
       )}
       style={

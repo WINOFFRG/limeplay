@@ -25,7 +25,7 @@ export const CaptionsControl = React.forwardRef<
 
   return (
     <Comp
-      disabled={textTracks?.length === 0}
+      disabled={!textTracks || textTracks.length === 0}
       data-slot="captions-control"
       {...props}
       ref={forwardedRef}
