@@ -5,7 +5,14 @@ description: Button component for toggling captions visibility
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-<ComponentPreview name="captions-state-control-demo" withPlayer />
+import {
+  CaptionsContainer,
+  CaptionsControl,
+} from "@/registry/default/ui/captions"
+
+import { CaptionsStateControlDemo, CaptionsHybridDemo } from "@/registry/default/examples/captions-state-control-demo"
+
+<ComponentPreview name="captions-state-control-demo" withPlayer type="hybrid" blockChildren={<CaptionsStateControlDemo />} overlayChildren={<CaptionsHybridDemo />} />
 
 ## Installation
 
@@ -13,7 +20,7 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 <Step>
 ### Install the component
 ```bash
-npx shadcn add @limeplay/captions-control
+npx shadcn add @limeplay/captions
 ```
 </Step>
 
@@ -98,13 +105,35 @@ export function CaptionsControlButton() {
 
 ### Place in Player Layout
 
-Add the captions control to your player's bottom controls.
+For captions to work properly, you need both the control button and the captions container:
+
+#### Option 1: Hybrid Layout (Recommended)
+Use the hybrid layout to place the control button outside the player and the captions container inside:
+
+```tsx lineNumbers title="components/player/captions-demo.tsx"
+import { PlayerLayoutDemo } from "@/components/demo/player-root-demo"
+import { CaptionsStateControlDemo, CaptionsHybridDemo } from "@/components/demo/captions-state-control-demo"
+
+export function CaptionsDemo() {
+  return (
+    <PlayerLayoutDemo
+      type="hybrid"
+      overlayChildren={<CaptionsHybridDemo />}
+      blockChildren={<CaptionsStateControlDemo />}
+    />
+  )
+}
+```
+
+#### Option 2: Traditional Layout
+Add both components to your player's layout:
 
 ```tsx lineNumbers title="components/player/media-player.tsx"
 <Layout.ControlsContainer>
+  <CaptionsContainer /> {/* For rendering captions */}
   <Layout.ControlsBottomContainer>
     <BottomControls>
-      <CaptionsControlButton />
+      <CaptionsControlButton /> {/* For toggle button */}
     </BottomControls>
   </Layout.ControlsBottomContainer>
 </Layout.ControlsContainer>
