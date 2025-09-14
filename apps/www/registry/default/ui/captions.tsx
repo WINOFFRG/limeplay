@@ -73,3 +73,5 @@ export const CaptionsContainer = React.forwardRef<
     />
   )
 })
+
+CaptionsContainer.displayName = "CaptionsContainer"

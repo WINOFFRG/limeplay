@@ -1,17 +1,26 @@
 ---
-title: Captions Container
-description: Container component for rendering captions and text tracks
+title: Captions
+description: Complete captions system with container, control, and hooks for text track management
 ---
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+import {
+  CaptionsContainer,
+  CaptionsControl,
+} from "@/registry/default/ui/captions"
+
+import { CaptionsStateControlDemo, CaptionsHybridDemo } from "@/registry/default/examples/captions-state-control-demo"
+
+<ComponentPreview name="captions-state-control-demo" withPlayer type="hybrid" blockChildren={<CaptionsStateControlDemo />} overlayChildren={<CaptionsHybridDemo />} />
 
 ## Installation
 
 <Steps>
 <Step>
-### Install the component
+### Install the components
 ```bash
-npx shadcn add @limeplay/captions-container
+npx shadcn add @limeplay/captions
 ```
 </Step>
 
@@ -66,9 +75,13 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 </Step>
 </Steps>
 
-## Usage
+## Components
 
-### Basic Captions Container
+### CaptionsContainer
+
+The `CaptionsContainer` component serves as the rendering area for Shaka Player's text tracks. It automatically registers itself with the Shaka Player instance and provides proper positioning for caption overlay.
+
+#### Basic Usage
 
 Place the captions container within your player layout to provide a rendering area for text tracks.
 
@@ -95,7 +108,7 @@ export function MediaPlayer() {
 }
 ```
 
-### Custom Styling
+#### Custom Styling
 
 You can customize the captions container with additional styling and font scaling.
 
@@ -112,24 +125,43 @@ export function CustomCaptionsContainer() {
 }
 ```
 
-## API Reference
+### CaptionsControl
 
-### CaptionsContainer Props
+The `CaptionsControl` component provides a standardized way to toggle captions visibility. It automatically disables when no text tracks are available and handles track selection automatically.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `fontScale` | `number` | `undefined` | Font scale factor for captions (1.0 = normal size) |
-| `className` | `string` | `undefined` | Additional CSS classes |
-| `...etc` | `React.ComponentPropsWithoutRef<"div">` | - | Additional div props |
+#### Basic Usage
 
-## Understanding
+Create a captions toggle button with appropriate icons and states.
 
-The `CaptionsContainer` component serves as the rendering area for Shaka Player's text tracks. It:
+```tsx lineNumbers title="components/player/captions-control-button.tsx"
+import { CaptionsControl } from "@/components/limeplay/captions-control"
+import { useMediaStore } from "@/components/limeplay/media-provider"
+import { ClosedCaptioningIcon } from "@phosphor-icons/react"
 
-- Automatically registers itself with the Shaka Player instance
-- Provides proper positioning for caption overlay
-- Supports font scaling configuration
-- Integrates with the captions store for state management
-- Uses Radix UI's compose refs for proper ref handling
+export function CaptionsControlButton() {
+  const textTracks = useMediaStore((state) => state.textTracks)
+  const textTrackVisible = useMediaStore((state) => state.textTrackVisible)
 
-The container should be placed within your player's controls area to ensure proper layering and positioning of captions over the video content.
+  return (
+    <Button size="icon" variant="glass" asChild>
+      <CaptionsControl>
+        <ClosedCaptioningIcon
+          weight={textTrackVisible ? "fill" : "regular"}
+          size={18}
+        />
+      </CaptionsControl>
+    </Button>
+  )
+}
+```
+
+## Hooks
+
+### useCaptionsStates()
+
+Sets up event listeners for text track changes and visibility updates. This hook should be called once in your `PlayerHooks` component.
+
+### useCaptions()
+
+Returns captions control functions for managing text tracks.
+
