@@ -4,6 +4,7 @@ import React, { useImperativeHandle, useRef, useState } from "react"
 import { Slider as SliderPrimitive } from "@base-ui-components/react/slider"
 
 import { cn } from "@/lib/utils"
+import { MediaReadyState } from "@/registry/default/hooks/use-player"
 import { useTrackEvents } from "@/registry/default/hooks/use-track-events"
 import { useVolume } from "@/registry/default/hooks/use-volume"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
@@ -17,11 +18,14 @@ export const Root = React.forwardRef<
   const internalRef = useRef<HTMLDivElement>(
     null
   ) as React.RefObject<HTMLDivElement>
-  const { className, orientation = "horizontal", disabled, ...etc } = props
+  const { className, orientation = "horizontal", ...etc } = props
   const volume = useMediaStore((state) => state.volume)
   const hasAudio = useMediaStore((state) => state.hasAudio)
   const muted = useMediaStore((state) => state.muted)
+  const readyState = useMediaStore((state) => state.readyState)
   const [currentValue, setCurrentValue] = useState(volume)
+
+  const disabled = props.disabled || readyState < MediaReadyState.HAVE_METADATA
 
   useImperativeHandle(ref, () => internalRef.current)
   const { setVolume } = useVolume()
@@ -79,9 +83,9 @@ export const Root = React.forwardRef<
         className
       )}
       orientation={orientation}
-      disabled={disabled}
       {...trackEvents}
       {...etc}
+      disabled={disabled}
     />
   )
 })
@@ -161,6 +165,7 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
           `
             block size-2 rounded-full bg-lp-accent
             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lp-accent/50
+            data-[disabled]:bg-lp-accent/85
           `,
           className
         )}

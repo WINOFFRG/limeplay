@@ -27,9 +27,8 @@ export const blocks: Registry["items"] = [
       "volume-control",
       "use-timeline",
       "use-volume",
-      "use-media-state",
+      "use-player",
       "use-track-events",
-      "use-player-root-store",
       "utils",
       "create-media-store",
       "fallback-poster",
@@ -37,6 +36,8 @@ export const blocks: Registry["items"] = [
       "use-shaka-player",
       "limeplay-logo",
       "root-container",
+      "captions",
+      "use-captions",
     ],
     files: [
       {
@@ -117,7 +118,7 @@ export const blocks: Registry["items"] = [
       "utils",
       "button",
       "playback-control",
-      "use-media-state",
+      "use-player",
       "use-shaka-player",
     ],
     files: [

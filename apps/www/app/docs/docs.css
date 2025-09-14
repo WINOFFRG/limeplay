@@ -3,6 +3,5 @@
 @import "fumadocs-ui/css/preset.css";
 
 :root {
-  --fd-layout-width: 1400px;
-  --fd-nav-height: 57px;
+  /* --fd-layout-width: 1400px; */
 }

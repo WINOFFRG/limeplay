@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 
+import { ASSETS } from "@/registry/default/blocks/linear-player/lib/playlist"
 import { Media } from "@/registry/default/ui/media"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
@@ -17,6 +18,11 @@ export function MediaElement({
 
   useEffect(() => {
     const mediaElement = mediaRef.current
+
+    if (!src || !config) {
+      src = ASSETS[0].src
+      config = ASSETS[0].config
+    }
 
     if (player && mediaElement) {
       if (src) {
