@@ -143,16 +143,14 @@ export function useTimelineStates({
       onBuffer()
     }
 
-    on(media, "durationchange", onDurationChange)
-    on(media, "loadedmetadata", onDurationChange)
+    on(media, ["durationchange", "loading"], onDurationChange)
     on(media, "progress", onBuffer)
-    on(player, "trackschanged", onBuffer)
+    on(player, ["trackschanged", "loading"], onBuffer)
 
     return () => {
-      off(media, "durationchange", onDurationChange)
-      off(media, "loadedmetadata", onDurationChange)
+      off(media, ["durationchange", "loading"], onDurationChange)
       off(media, "progress", onBuffer)
-      off(player, "trackschanged", onBuffer)
+      off(player, ["trackschanged", "loading"], onBuffer)
     }
   }, [mediaRef, player, canPlay])
 }
