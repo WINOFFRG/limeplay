@@ -2,10 +2,9 @@ import React from "react"
 import { Slot } from "@radix-ui/react-slot"
 
 import { Button } from "@/components/ui/button"
+import { MediaReadyState } from "@/registry/default/hooks/use-player"
 import { useVolume } from "@/registry/default/hooks/use-volume"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
-
-import { MediaReadyState } from "../hooks/use-player"
 
 export interface MuteControlProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
