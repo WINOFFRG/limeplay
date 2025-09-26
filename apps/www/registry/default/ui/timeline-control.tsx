@@ -165,66 +165,32 @@ export const Buffered = React.forwardRef<HTMLDivElement, BufferedProps>(
 
     const buffered = useMediaStore((s) => s.buffered)
     const duration = useMediaStore((s) => s.duration)
+    const { processBufferedRanges } = useTimeline()
 
     if (!duration || !buffered.length) {
       return null
     }
 
-    let normalizedBuffered: shaka.extern.BufferedRange[] = []
-
-    if (variant === "combined") {
-      const combinedBuffered = buffered.reduce(
-        (acc, range) => {
-          acc.start = Math.min(acc.start, range.start)
-          acc.end = Math.max(acc.end, range.end)
-          return acc
-        },
-        { start: Infinity, end: 0 }
-      )
-
-      if (combinedBuffered.start !== Infinity) {
-        normalizedBuffered = [
-          {
-            start: combinedBuffered.start,
-            end: combinedBuffered.end,
-          },
-        ]
-      }
-    } else if (variant === "from-zero") {
-      normalizedBuffered = buffered.map((range) => ({
-        start: 0,
-        end: range.end,
-      }))
-    } else {
-      normalizedBuffered = buffered
-    }
-
-    if (!normalizedBuffered.length) {
-      return null
-    }
+    const normalizedPercentages = processBufferedRanges(buffered, variant)
 
     return (
       <div ref={ref} className={cn("absolute size-full", className)} {...etc}>
-        {normalizedBuffered.map((range, index: number) => {
-          const startPercent = (range.start / duration) * 100
-          const widthPercent = ((range.end - range.start) / duration) * 100
-          return (
-            <SliderPrimitive.Indicator
-              key={index}
-              className={cn(
-                `left-[var(--lp-buffered-start)]! h-full w-[var(--lp-buffered-width)]! bg-lp-accent/30`,
-                variant === "from-zero" && "rounded-e-full",
-                className
-              )}
-              style={
-                {
-                  "--lp-buffered-start": `${startPercent}%`,
-                  "--lp-buffered-width": `${widthPercent}%`,
-                } as React.CSSProperties
-              }
-            />
-          )
-        })}
+        {normalizedPercentages.map(({ startPercent, widthPercent }, index) => (
+          <SliderPrimitive.Indicator
+            key={index}
+            className={cn(
+              `left-[var(--lp-buffered-start)]! h-full w-[var(--lp-buffered-width)]! bg-lp-accent/30`,
+              variant === "from-zero" && "rounded-e-full",
+              className
+            )}
+            style={
+              {
+                "--lp-buffered-start": `${startPercent}%`,
+                "--lp-buffered-width": `${widthPercent}%`,
+              } as React.CSSProperties
+            }
+          />
+        ))}
       </div>
     )
   }
