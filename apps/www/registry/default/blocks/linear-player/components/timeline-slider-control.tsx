@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/registry/default/blocks/linear-player/ui/button"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 import * as TimelineSlider from "@/registry/default/ui/timeline-control"
 import {
