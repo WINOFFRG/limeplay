@@ -10,7 +10,7 @@ export function CaptionsStateControl() {
   const textTrackVisible = useMediaStore((state) => state.textTrackVisible)
 
   return (
-    <Toggle asChild pressed={textTrackVisible} variant="glass">
+    <Toggle asChild pressed={textTrackVisible} variant="glass" size="sm">
       <CaptionsControl>
         <ClosedCaptioningIcon
           weight={textTrackVisible ? "fill" : "regular"}
