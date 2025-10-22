@@ -39,6 +39,7 @@ export const blocks: Registry["items"] = [
       "root-container",
       "captions",
       "use-captions",
+      "use-playback-rate",
     ],
     files: [
       {
@@ -96,6 +97,10 @@ export const blocks: Registry["items"] = [
       },
       {
         path: `${BASE_SRC_URL}/components/captions-state-control.tsx`,
+        type: "registry:component",
+      },
+      {
+        path: `${BASE_SRC_URL}/components/playback-rate-control.tsx`,
         type: "registry:component",
       },
       {

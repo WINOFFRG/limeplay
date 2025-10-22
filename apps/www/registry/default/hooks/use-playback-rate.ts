@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect } from "react"
 import type { StateCreator } from "zustand"
 
@@ -22,8 +24,10 @@ export function usePlaybackRateStates() {
   const onPlaybackRateChange = () => {
     if (!player) return
 
+    const rate = player.getPlaybackRate()
+
     store.setState({
-      playbackRate: player.getPlaybackRate(),
+      playbackRate: rate === 0 ? 1 : rate,
     })
   }
 
