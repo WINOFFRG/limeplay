@@ -1,0 +1,138 @@
+---
+title: Playback Rate Control
+description: Controls the playback speed of the Media.
+---
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+<ComponentPreview name="playback-rate-demo" withPlayer />
+
+## Installation
+
+<Steps>
+<Step>
+### Install the component
+```npm
+npx shadcn add @limeplay/playback-rate
+```
+</Step>
+
+<Step>
+### Add Event & Action Bridge
+Import the `usePlaybackRateStates` hook in your existing `PlayerHooks` component.
+
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+"use client"
+
+import React from "react"
+
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+import { usePlayerStates } from "@/hooks/limeplay/use-player"
+import { usePlaybackRateStates } from "@/hooks/limeplay/use-playback-rate" // [!code ++]
+
+export const PlayerHooks = React.memo(() => {
+  useShakaPlayer()
+  usePlayerStates()
+  usePlaybackRateStates() // [!code ++]
+
+  return null
+})
+```
+</Step>
+<Step>
+### Add the Store States
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+import {
+  createPlayerStore,
+  PlayerStore,
+} from "@/hooks/limeplay/use-player"
+import {
+  createPlaybackRateStore,
+  PlaybackRateStore,
+} from "@/hooks/limeplay/use-playback-rate" // [!code ++]
+
+export type TypeMediaStore = PlayerStore & PlaybackRateStore & {} // [!code ++]
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlayerStore(...etc),
+    ...createPlaybackRateStore(...etc), // [!code ++]
+    ...initProps,
+  }))
+  return mediaStore
+}
+```
+
+</Step>
+</Steps>
+
+## Usage
+
+1. Design the playback rate selector with dropdown and states.
+
+```tsx lineNumbers title="components/player/playback-rate-control.tsx"
+import { Button } from "@/components/ui/button"
+import * as PlaybackRate from "@/components/limeplay/playback-rate"
+
+export function PlaybackRateControl() {
+  return (
+    <PlaybackRate.Select>
+      <Button variant="ghost" size="icon" asChild>
+        <PlaybackRate.Trigger
+          size="sm"
+          className={`
+            border-none bg-transparent px-8
+            data-[highlighted]:!bg-accent/80
+            data-[popup-open]:!bg-accent
+            dark:bg-transparent
+          `}
+        />
+      </Button>
+      <PlaybackRate.Positioner 
+        className="z-[100]" 
+        align="start"
+      >
+        <PlaybackRate.Content
+          className={`
+            min-w-24 backdrop-blur-md
+            dark:bg-accent
+          `}
+        >
+          <PlaybackRate.Group
+            className={`
+              tracking-wider
+              dark:text-accent-foreground dark:hover:bg-primary/10
+            `}
+          />
+        </PlaybackRate.Content>
+      </PlaybackRate.Positioner>
+    </PlaybackRate.Select>
+  )
+}
+```
+
+2. Place the control inside the `BottomControls` component.
+
+```tsx lineNumbers title="components/player/media-player.tsx"
+<Layout.ControlsContainer>
+  <BottomControls>
+    <PlaybackRateControl />
+  </BottomControls>
+</Layout.ControlsContainer>
+```
+
+## Understanding
+
+You can use the `playbackRate` and `playbackRates` fields from media store to get the current playback rate and available rates. The component provides:
+
+| Field           | Type       | Description                                    |
+| --------------- | ---------- | ---------------------------------------------- |
+| `playbackRate`  | `number`   | Current playback rate (e.g., 1, 1.5, 2)      |
+| `playbackRates` | `number[]` | Available playback rates [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] |
+
+The `usePlaybackRate` hook provides methods to control playback rate:
+
+| Method              | Description                                    |
+| ------------------- | ---------------------------------------------- |
+| `setPlaybackRate`   | Sets the playback rate for the media element  |
+| `setTrickplayRate`  | Sets trickplay rate using Shaka Player        |

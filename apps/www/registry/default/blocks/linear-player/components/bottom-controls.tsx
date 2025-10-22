@@ -1,5 +1,5 @@
 import { CaptionsStateControl } from "@/registry/default/blocks/linear-player/components/captions-state-control"
-import { PlaybackRate } from "@/registry/default/blocks/linear-player/components/playback-rate"
+import { PlaybackRateControl } from "@/registry/default/blocks/linear-player/components/playback-rate-control"
 import { PlaybackStateControl } from "@/registry/default/blocks/linear-player/components/playback-state-control"
 import { Playlist } from "@/registry/default/blocks/linear-player/components/playlist"
 import { TimelineSliderControl } from "@/registry/default/blocks/linear-player/components/timeline-slider-control"
@@ -12,7 +12,7 @@ export function BottomControls() {
       <PlaybackStateControl />
       <VolumeControl />
       <TimelineSliderControl />
-      <PlaybackRate />
+      <PlaybackRateControl />
       <CaptionsStateControl />
       <Playlist />
     </Layout.ControlsBottomContainer>

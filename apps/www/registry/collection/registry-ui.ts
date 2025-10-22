@@ -179,6 +179,19 @@ export const ui: Registry["items"] = [
     ],
   },
   {
+    name: "playback-rate",
+    type: "registry:ui",
+    dependencies: ["@radix-ui/react-slot"],
+    registryDependencies: ["media-provider", "use-playback-rate"],
+    files: [
+      {
+        path: "ui/playback-rate.tsx",
+        type: "registry:ui",
+        target: `${TARGET_BASE_PATH}/playback-rate.tsx`,
+      },
+    ],
+  },
+  {
     name: "timeline-labels",
     type: "registry:ui",
     registryDependencies: ["media-provider", "utils", "time"],
