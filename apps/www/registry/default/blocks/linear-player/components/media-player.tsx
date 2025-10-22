@@ -42,7 +42,7 @@ export const LinearMediaPlayer = React.forwardRef<
           <MediaElement />
           <PlayerHooks />
           <Layout.ControlsOverlayContainer />
-          <Layout.ControlsContainer>
+          <Layout.ControlsContainer className="pb-6">
             <CaptionsContainer />
             <BottomControls />
           </Layout.ControlsContainer>

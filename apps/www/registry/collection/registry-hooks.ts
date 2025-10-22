@@ -111,4 +111,22 @@ export const hooks: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "use-playback-rate",
+    type: "registry:hook",
+    dependencies: ["zustand"],
+    registryDependencies: [
+      "use-player",
+      "utils",
+      "media-provider",
+      "player-hooks",
+    ],
+    files: [
+      {
+        path: "hooks/use-playback-rate.ts",
+        type: "registry:hook",
+        target: `${TARGET_BASE_PATH}/use-playback-rate.ts`,
+      },
+    ],
+  },
 ]
