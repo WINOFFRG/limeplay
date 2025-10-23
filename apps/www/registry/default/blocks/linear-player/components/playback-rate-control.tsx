@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import * as Select from "@/components/ui/select"
 import * as PlaybackRate from "@/registry/default/ui/playback-rate"
 
