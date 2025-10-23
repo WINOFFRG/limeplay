@@ -14,7 +14,6 @@ export function PreviewTabComponent({
 
   const [config] = useConfig()
 
-   
   const Component = Index[config.style][componentName]?.component
 
   if (!Component) {

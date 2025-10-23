@@ -2,7 +2,8 @@
 title: Playback Control
 description: Controls the play/pause state of the Media.
 ---
-import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
 
 <ComponentPreview name="playback-state-control-demo" withPlayer />
 
@@ -25,8 +26,8 @@ Import the `useMediaStates` hook in your existing `PlayerHooks` component.
 
 import React from "react"
 
-import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
 import { usePlayerStates } from "@/hooks/limeplay/use-player" // [!code ++]
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
 
 export const PlayerHooks = React.memo(() => {
   useShakaPlayer()
@@ -35,15 +36,15 @@ export const PlayerHooks = React.memo(() => {
   return null
 })
 ```
+
 </Step>
 <Step>
 ### Add the Store States
 
 ```tsx lineNumbers title="lib/create-media-store.ts"
-import {
-  createPlayerStore,
-  PlayerStore,
-} from "@/hooks/limeplay/use-player" // [!code ++]
+import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+
+// [!code ++]
 
 export type TypeMediaStore = PlayerStore & {} // [!code ++]
 
@@ -64,9 +65,10 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 1. Design the playback button with icons and states.
 
 ```tsx lineNumbers title="components/player/playback-control-button.tsx"
-import { PlaybackControl } from "@/components/limeplay/playback-control"
-import { useMediaStore } from "@/components/limeplay/media-provider"
 import { PauseIcon, PlayIcon } from "@phosphor-icons/react"
+
+import { useMediaStore } from "@/components/limeplay/media-provider"
+import { PlaybackControl } from "@/components/limeplay/playback-control"
 
 export function PlaybackControlButton() {
   const status = useMediaStore((state) => state.status)
@@ -80,7 +82,6 @@ export function PlaybackControlButton() {
     </Button>
   )
 }
-
 ```
 
 2. Place the button inside the `BottomControls` component.

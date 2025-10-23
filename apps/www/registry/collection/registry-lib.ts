@@ -56,7 +56,7 @@ export const internal: Registry["items"] = [
       "use-shaka-player",
       "use-timeline",
       "use-volume",
-      "use-captions"
+      "use-captions",
     ],
     files: [
       {

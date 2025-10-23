@@ -2,7 +2,8 @@
 title: Mute Control
 description: Controls the volume mute toggle state
 ---
-import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
 
 <ComponentPreview name="volume-state-control-demo" withPlayer />
 
@@ -33,23 +34,18 @@ export const PlayerHooks = React.memo(() => {
   return null
 })
 ```
+
 </Step>
 
 <Step>
 ### Add the Store States
 
 ```tsx lineNumbers title="lib/create-media-store.ts"
-import {
-  createVolumeStore,
-  VolumeStore
-} from "@/hooks/limeplay/use-volume"   // [!code ++]
-import {
-  createPlayerStore,
-  PlayerStore,
-} from "@/hooks/limeplay/use-player"
+// [!code ++]
+import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+import { createVolumeStore, VolumeStore } from "@/hooks/limeplay/use-volume"
 
-export type TypeMediaStore = PlayerStore &
-  VolumeStore & {} // [!code ++]
+export type TypeMediaStore = PlayerStore & VolumeStore & {} // [!code ++]
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
@@ -64,7 +60,6 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 </Step>
 </Steps>
 
-
 ## Usage
 
 1. Design the mute button with icons and states.
@@ -72,16 +67,21 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 ```tsx lineNumbers title="components/player/mute-control-button.tsx"
 "use client"
 
-import { MuteControl } from "@/components/limeplay/mute-control"
+import {
+  SpeakerHighIcon,
+  SpeakerLowIcon,
+  SpeakerXIcon,
+} from "@phosphor-icons/react"
+
 import { useMediaStore } from "@/components/limeplay/media-provider"
-import { SpeakerHighIcon, SpeakerLowIcon, SpeakerXIcon } from "@phosphor-icons/react"
+import { MuteControl } from "@/components/limeplay/mute-control"
 
 export function MuteControlButton() {
   const muted = useMediaStore((state) => state.muted)
   const volume = useMediaStore((state) => state.volume)
 
   return (
-    <Button size="icon" asChild >
+    <Button size="icon" asChild>
       <MuteControl>
         {muted || volume === 0 ? (
           <SpeakerXIcon size={18} weight="fill" />
@@ -94,7 +94,6 @@ export function MuteControlButton() {
     </Button>
   )
 }
-
 ```
 
 2. Place the button inside the `BottomControls` component.

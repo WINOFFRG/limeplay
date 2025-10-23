@@ -2,7 +2,8 @@
 title: Volume Control
 description: Slider control to control the media volume. Composed with volume state control
 ---
-import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
 
 <ComponentPreview name="volume-slider-control-horizontal-demo" withPlayer />
 
@@ -33,23 +34,18 @@ export const PlayerHooks = React.memo(() => {
   return null
 })
 ```
+
 </Step>
 
 <Step>
 ### Add the Store States
 
 ```tsx lineNumbers title="lib/create-media-store.ts"
-import {
-  createVolumeStore,
-  VolumeStore
-} from "@/hooks/limeplay/use-volume"   // [!code ++]
-import {
-  createPlayerStore,
-  PlayerStore,
-} from "@/hooks/limeplay/use-player"
+// [!code ++]
+import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+import { createVolumeStore, VolumeStore } from "@/hooks/limeplay/use-volume"
 
-export type TypeMediaStore = PlayerStore &
-  VolumeStore & {} // [!code ++]
+export type TypeMediaStore = PlayerStore & VolumeStore & {} // [!code ++]
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
@@ -85,7 +81,6 @@ export function VolumeControlSlider() {
     </VolumeSlider.Root>
   )
 }
-
 ```
 
 2. Place the slider inside the `BottomControls` component.
