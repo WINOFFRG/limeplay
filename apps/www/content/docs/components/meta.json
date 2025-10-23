@@ -4,6 +4,7 @@
   "pages": [
     "media-provider",
     "playback-control",
+    "playback-rate",
     "mute-control",
     "volume-control",
     "timeline-control",

@@ -19,7 +19,7 @@ export const ui: Registry["items"] = [
     name: "mute-control",
     type: "registry:ui",
     dependencies: ["@radix-ui/react-slot"],
-    registryDependencies: ["media-provider", "use-volume"],
+    registryDependencies: ["media-provider", "use-volume", "use-player"],
     files: [
       {
         path: "ui/mute-control.tsx",
@@ -175,6 +175,19 @@ export const ui: Registry["items"] = [
         path: "ui/playback-control.tsx",
         type: "registry:ui",
         target: `${TARGET_BASE_PATH}/playback-control.tsx`,
+      },
+    ],
+  },
+  {
+    name: "playback-rate",
+    type: "registry:ui",
+    dependencies: ["@radix-ui/react-slot"],
+    registryDependencies: ["media-provider", "use-playback-rate", "@basecn/select"],
+    files: [
+      {
+        path: "ui/playback-rate.tsx",
+        type: "registry:ui",
+        target: `${TARGET_BASE_PATH}/playback-rate.tsx`,
       },
     ],
   },

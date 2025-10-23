@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react"
 
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Button } from "@/registry/default/blocks/linear-player/ui/button"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export interface DemoAsset {

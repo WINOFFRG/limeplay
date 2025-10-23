@@ -8,11 +8,14 @@ import type { TimelineStore } from "@/registry/default/hooks/use-timeline"
 import { createTimelineStore } from "@/registry/default/hooks/use-timeline"
 import type { VolumeStore } from "@/registry/default/hooks/use-volume"
 import { createVolumeStore } from "@/registry/default/hooks/use-volume"
+import type { PlaybackRateStore } from "@/registry/default/hooks/use-playback-rate";
+import { createPlaybackRateStore } from "@/registry/default/hooks/use-playback-rate"
 
 export type TypeMediaStore = PlayerStore &
   VolumeStore &
   TimelineStore &
-  CaptionsStore
+  CaptionsStore &
+  PlaybackRateStore
 
 export interface CreateMediaStoreProps {
   debug?: boolean
@@ -24,6 +27,8 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
     ...createVolumeStore(...etc),
     ...createTimelineStore(...etc),
     ...createCaptionsStore(...etc),
+    ...createPlaybackRateStore(...etc),
+
     ...initProps,
   }))
   return mediaStore
