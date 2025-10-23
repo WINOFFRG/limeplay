@@ -57,6 +57,7 @@ export const internal: Registry["items"] = [
       "use-timeline",
       "use-volume",
       "use-captions",
+      "use-playback-rate",
     ],
     files: [
       {

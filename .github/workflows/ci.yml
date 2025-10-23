@@ -1,4 +1,4 @@
-name: Lint & Format Check
+name: Linters
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   code-quality:
-    name: Lint and Prettier check
+    name: Lint and Prettier
     runs-on: ubuntu-latest
 
     steps:
