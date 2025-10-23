@@ -1,16 +1,17 @@
-"use client"
+"use client";
 
 import * as React from "react"
 
-import { SelectGroup } from "@/components/ui/select"
 import {
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectPositioner,
   Select as SelectPrimitive,
   SelectTrigger,
   SelectValue,
-} from "@/registry/default/blocks/linear-player/ui/select"
+} from "@/components/ui/select"
 import { usePlaybackRate } from "@/registry/default/hooks/use-playback-rate"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
@@ -89,6 +90,7 @@ export const Group = React.forwardRef<HTMLDivElement, GroupProps>(
 
     return (
       <SelectGroup ref={forwardedRef} {...props}>
+        <SelectLabel>Playback Rate</SelectLabel>
         {playbackRates.map((rate) => (
           <Item key={rate} value={rate.toString()}>
             {rate}
