@@ -10,6 +10,7 @@ export const baseConfig = [
     ignores: [
       "**/eslint.config.*",
       "**/.next/**",
+      "**/next-env.d.ts",
       "**/out/**",
       "**/dist/**",
       "**/__index__.tsx",
