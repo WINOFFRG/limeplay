@@ -2,7 +2,8 @@
 title: Media Provider
 description: Setup zustand singleton store for media player accessible via hooks.
 ---
-import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
 
 `<MediaProvider />` is a composition of React's `context` and `zustand` store. This component exposes a hook `useMediaStore` which is an implementation of zustand store getter.
 
@@ -45,6 +46,7 @@ export function MediaPlayer() {
   )
 }
 ```
+
 </Step>
 
 <Step>
@@ -62,6 +64,7 @@ export function VolumeStateControlDemo() {
   )
 }
 ```
+
 </Step>
 </Steps>
 

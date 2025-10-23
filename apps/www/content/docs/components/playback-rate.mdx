@@ -2,7 +2,8 @@
 title: Playback Rate Control
 description: Controls the playback speed of the Media.
 ---
-import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
 
 <ComponentPreview name="playback-rate-demo" withPlayer />
 
@@ -25,9 +26,9 @@ Import the `usePlaybackRateStates` hook in your existing `PlayerHooks` component
 
 import React from "react"
 
-import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
-import { usePlayerStates } from "@/hooks/limeplay/use-player"
 import { usePlaybackRateStates } from "@/hooks/limeplay/use-playback-rate" // [!code ++]
+import { usePlayerStates } from "@/hooks/limeplay/use-player"
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
 
 export const PlayerHooks = React.memo(() => {
   useShakaPlayer()
@@ -37,19 +38,19 @@ export const PlayerHooks = React.memo(() => {
   return null
 })
 ```
+
 </Step>
 <Step>
 ### Add the Store States
 
 ```tsx lineNumbers title="lib/create-media-store.ts"
 import {
-  createPlayerStore,
-  PlayerStore,
-} from "@/hooks/limeplay/use-player"
-import {
   createPlaybackRateStore,
   PlaybackRateStore,
-} from "@/hooks/limeplay/use-playback-rate" // [!code ++]
+} from "@/hooks/limeplay/use-playback-rate"
+import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+
+// [!code ++]
 
 export type TypeMediaStore = PlayerStore & PlaybackRateStore & {} // [!code ++]
 
@@ -88,10 +89,7 @@ export function PlaybackRateControl() {
           `}
         />
       </Button>
-      <PlaybackRate.Positioner 
-        className="z-[100]" 
-        align="start"
-      >
+      <PlaybackRate.Positioner className="z-[100]" align="start">
         <PlaybackRate.Content
           className={`
             min-w-24 backdrop-blur-md
@@ -125,14 +123,14 @@ export function PlaybackRateControl() {
 
 You can use the `playbackRate` and `playbackRates` fields from media store to get the current playback rate and available rates. The component provides:
 
-| Field           | Type       | Description                                    |
-| --------------- | ---------- | ---------------------------------------------- |
-| `playbackRate`  | `number`   | Current playback rate (e.g., 1, 1.5, 2)      |
+| Field           | Type       | Description                                                 |
+| --------------- | ---------- | ----------------------------------------------------------- |
+| `playbackRate`  | `number`   | Current playback rate (e.g., 1, 1.5, 2)                     |
 | `playbackRates` | `number[]` | Available playback rates [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] |
 
 The `usePlaybackRate` hook provides methods to control playback rate:
 
-| Method              | Description                                    |
-| ------------------- | ---------------------------------------------- |
-| `setPlaybackRate`   | Sets the playback rate for the media element  |
-| `setTrickplayRate`  | Sets trickplay rate using Shaka Player        |
+| Method             | Description                                  |
+| ------------------ | -------------------------------------------- |
+| `setPlaybackRate`  | Sets the playback rate for the media element |
+| `setTrickplayRate` | Sets trickplay rate using Shaka Player       |

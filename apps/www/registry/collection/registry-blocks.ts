@@ -112,7 +112,7 @@ export const blocks: Registry["items"] = [
       {
         path: `${BASE_SRC_URL}/components/volume-group-control.tsx`,
         type: "registry:component",
-      }
+      },
     ],
     meta: {
       iframeHeight: "750px",

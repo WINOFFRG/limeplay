@@ -19,8 +19,9 @@ Import the `useCaptionsStates` hook in your existing `PlayerHooks` component to 
 import React from "react"
 
 import { useCaptionsStates } from "@/hooks/limeplay/use-captions" // [!code ++]
-import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+
 import { usePlayerStates } from "@/hooks/limeplay/use-player"
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
 
 export const PlayerHooks = React.memo(() => {
   useShakaPlayer()
@@ -39,21 +40,14 @@ Add the captions store to your media store configuration.
 import { create } from "zustand"
 
 import {
-  createCaptionsStore,
   CaptionsStore,
-} from "@/hooks/limeplay/use-captions" // [!code ++]
-import {
-  createPlayerStore,
-  PlayerStore,
-} from "@/hooks/limeplay/use-player"
-import {
-  createVolumeStore,
-  VolumeStore,
-} from "@/hooks/limeplay/use-volume"
+  createCaptionsStore,
+} from "@/hooks/limeplay/use-captions"
+// [!code ++]
+import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+import { createVolumeStore, VolumeStore } from "@/hooks/limeplay/use-volume"
 
-export type TypeMediaStore = PlayerStore &
-  VolumeStore &
-  CaptionsStore & {} // [!code ++]
+export type TypeMediaStore = PlayerStore & VolumeStore & CaptionsStore & {} // [!code ++]
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
@@ -78,20 +72,20 @@ Returns captions control functions for managing text tracks.
 
 #### Returns
 
-| Property | Type | Description |
-|----------|------|-------------|
+| Property                  | Type         | Description                                                                                  |
+| ------------------------- | ------------ | -------------------------------------------------------------------------------------------- |
 | `toggleCaptionVisibility` | `() => void` | Toggles the visibility of captions. Automatically selects a default track if none is active. |
 
 ### Store State
 
 The captions store provides the following state:
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `activeTextTrack` | `shaka.extern.TextTrack \| null` | Currently active text track |
-| `textTracks` | `shaka.extern.TextTrack[] \| undefined` | Available text tracks |
-| `textTrackVisible` | `boolean` | Whether captions are currently visible |
-| `textTrackContainerElement` | `HTMLDivElement \| null` | Container element for text track rendering |
+| Property                       | Type                                        | Description                                |
+| ------------------------------ | ------------------------------------------- | ------------------------------------------ |
+| `activeTextTrack`              | `shaka.extern.TextTrack \| null`            | Currently active text track                |
+| `textTracks`                   | `shaka.extern.TextTrack[] \| undefined`     | Available text tracks                      |
+| `textTrackVisible`             | `boolean`                                   | Whether captions are currently visible     |
+| `textTrackContainerElement`    | `HTMLDivElement \| null`                    | Container element for text track rendering |
 | `setTextTrackContainerElement` | `(element: HTMLDivElement \| null) => void` | Sets the container element for text tracks |
 
 ## Understanding
