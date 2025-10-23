@@ -1,7 +1,7 @@
 import { VolumeSliderControl } from "@/registry/default/blocks/linear-player/components/volume-slider-control"
 import { VolumeStateControl } from "@/registry/default/blocks/linear-player/components/volume-state-control"
 
-export function VolumeControl() {
+export function VolumeGroupControl() {
   return (
     <div
       className={`
