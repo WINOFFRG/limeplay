@@ -1,13 +1,14 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
+import * as Select from "@/components/ui/select"
 import * as PlaybackRate from "@/registry/default/ui/playback-rate"
 
 export function PlaybackRateControl() {
   return (
-    <PlaybackRate.Select>
+    <PlaybackRate.SelectRoot>
       <Button variant="ghost" size="icon" asChild>
-        <PlaybackRate.Trigger
+        <PlaybackRate.SelectTrigger
           size="sm"
           className={`
             border-none bg-transparent px-8
@@ -17,21 +18,21 @@ export function PlaybackRateControl() {
           `}
         />
       </Button>
-      <PlaybackRate.Positioner className="z-[100]" align="start">
-        <PlaybackRate.Content
+      <Select.SelectPositioner className="z-[100]" align="start">
+        <Select.SelectContent
           className={`
             min-w-24 backdrop-blur-md
             dark:bg-accent
           `}
         >
-          <PlaybackRate.Group
+          <PlaybackRate.SelectGroup
             className={`
               tracking-wider
               dark:text-accent-foreground dark:hover:bg-primary/10
             `}
           />
-        </PlaybackRate.Content>
-      </PlaybackRate.Positioner>
-    </PlaybackRate.Select>
+        </Select.SelectContent>
+      </Select.SelectPositioner>
+    </PlaybackRate.SelectRoot>
   )
 }
