@@ -119,4 +119,16 @@ export const examples: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "playback-rate-demo",
+    type: "registry:example",
+    registryDependencies: ["media-provider", "playback-rate", "use-playback-rate"],
+    files: [
+      {
+        path: "examples/playback-rate-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  
 ]
