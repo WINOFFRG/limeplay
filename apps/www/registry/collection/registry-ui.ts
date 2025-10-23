@@ -182,7 +182,11 @@ export const ui: Registry["items"] = [
     name: "playback-rate",
     type: "registry:ui",
     dependencies: ["@radix-ui/react-slot"],
-    registryDependencies: ["media-provider", "use-playback-rate", "@basecn/select"],
+    registryDependencies: [
+      "media-provider",
+      "use-playback-rate",
+      "@basecn/select",
+    ],
     files: [
       {
         path: "ui/playback-rate.tsx",

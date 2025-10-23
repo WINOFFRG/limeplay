@@ -3,16 +3,25 @@ title: Captions
 description: Complete captions system with container, control, and hooks for text track management
 ---
 
-import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Step, Steps } from "fumadocs-ui/components/steps"
 
 import {
   CaptionsContainer,
   CaptionsControl,
 } from "@/registry/default/ui/captions"
 
-import { CaptionsStateControlDemo, CaptionsHybridDemo } from "@/registry/default/examples/captions-state-control-demo"
+import {
+  CaptionsHybridDemo,
+  CaptionsStateControlDemo,
+} from "@/registry/default/examples/captions-state-control-demo"
 
-<ComponentPreview name="captions-state-control-demo" withPlayer type="hybrid" blockChildren={<CaptionsStateControlDemo />} overlayChildren={<CaptionsHybridDemo />} />
+<ComponentPreview
+  name="captions-state-control-demo"
+  withPlayer
+  type="hybrid"
+  blockChildren={<CaptionsStateControlDemo />}
+  overlayChildren={<CaptionsHybridDemo />}
+/>
 
 ## Installation
 
@@ -32,8 +41,9 @@ Import the `useCaptionsStates` hook in your existing `PlayerHooks` component.
 import React from "react"
 
 import { useCaptionsStates } from "@/hooks/limeplay/use-captions" // [!code ++]
-import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+
 import { usePlayerStates } from "@/hooks/limeplay/use-player"
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
 
 export const PlayerHooks = React.memo(() => {
   useShakaPlayer()
@@ -43,6 +53,7 @@ export const PlayerHooks = React.memo(() => {
   return null
 })
 ```
+
 </Step>
 
 <Step>
@@ -52,16 +63,13 @@ export const PlayerHooks = React.memo(() => {
 import { create } from "zustand"
 
 import {
-  createCaptionsStore,
   CaptionsStore,
-} from "@/hooks/limeplay/use-captions" // [!code ++]
-import {
-  createPlayerStore,
-  PlayerStore,
-} from "@/hooks/limeplay/use-player"
+  createCaptionsStore,
+} from "@/hooks/limeplay/use-captions"
+// [!code ++]
+import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
 
-export type TypeMediaStore = PlayerStore &
-  CaptionsStore & {} // [!code ++]
+export type TypeMediaStore = PlayerStore & CaptionsStore & {} // [!code ++]
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
@@ -72,6 +80,7 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   return mediaStore
 }
 ```
+
 </Step>
 </Steps>
 
@@ -116,12 +125,7 @@ You can customize the captions container with additional styling and font scalin
 import { CaptionsContainer } from "@/components/limeplay/captions-container"
 
 export function CustomCaptionsContainer() {
-  return (
-    <CaptionsContainer
-      className="px-4 pb-4"
-      fontScale={1.2}
-    />
-  )
+  return <CaptionsContainer className="px-4 pb-4" fontScale={1.2} />
 }
 ```
 
@@ -134,9 +138,10 @@ The `CaptionsControl` component provides a standardized way to toggle captions v
 Create a captions toggle button with appropriate icons and states.
 
 ```tsx lineNumbers title="components/player/captions-control-button.tsx"
+import { ClosedCaptioningIcon } from "@phosphor-icons/react"
+
 import { CaptionsControl } from "@/components/limeplay/captions-control"
 import { useMediaStore } from "@/components/limeplay/media-provider"
-import { ClosedCaptioningIcon } from "@phosphor-icons/react"
 
 export function CaptionsControlButton() {
   const textTracks = useMediaStore((state) => state.textTracks)
@@ -164,4 +169,3 @@ Sets up event listeners for text track changes and visibility updates. This hook
 ### useCaptions()
 
 Returns captions control functions for managing text tracks.
-
