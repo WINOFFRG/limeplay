@@ -237,6 +237,10 @@ async function validateDependencies() {
         continue
       }
 
+      if (dependency.startsWith("@") && dependency.includes("/")) {
+        continue
+      }
+
       // Check if dependency exists
       if (
         !registryItemsMap.has(dependency) &&

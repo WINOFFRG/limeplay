@@ -66,7 +66,7 @@ export const CaptionsContainer = React.forwardRef<
     <div
       ref={composeRefs(ref, setContainerElement)}
       className={cn(
-        "relative flex w-full grow flex-col justify-end",
+        "relative flex w-full grow flex-col justify-end text-lg text-white",
         className
       )}
       {...etc}
