@@ -111,7 +111,7 @@ export const examples: Registry["items"] = [
   {
     name: "captions-state-control-demo",
     type: "registry:example",
-    registryDependencies: ["media-provider", "captions"],
+    registryDependencies: ["media-provider", "captions", "use-player"],
     files: [
       {
         path: "examples/captions-state-control-demo.tsx",
