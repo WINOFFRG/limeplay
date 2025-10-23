@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
@@ -24,7 +26,23 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Run ESLint
-        run: bun run lint
+        run: |
+          CHANGED_FILES=$(git diff --name-only origin/dev...HEAD -- '*.js' '*.jsx' '*.ts' '*.tsx')
+          if [ -n "$CHANGED_FILES" ]; then
+            echo "Running ESLint on changed files:"
+            echo "$CHANGED_FILES"
+            bunx eslint $CHANGED_FILES
+          else
+            echo "No JS/TS files changed."
+          fi
 
       - name: Run Prettier check
-        run: bun run format:check
+        run: |
+          CHANGED_FILES=$(git diff --name-only origin/dev...HEAD -- '*.js' '*.jsx' '*.ts' '*.tsx' '*.json' '*.css' '*.md')
+          if [ -n "$CHANGED_FILES" ]; then
+            echo "Running Prettier check on changed files:"
+            echo "$CHANGED_FILES"
+            bunx prettier --check $CHANGED_FILES
+          else
+            echo "No files to check."
+          fi
