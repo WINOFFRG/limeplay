@@ -172,50 +172,118 @@ export function useTimeline() {
     [duration]
   )
 
-  function seek(time: number) {
-    if (!mediaRef.current || !Number.isFinite(duration)) return
+  const seek = useCallback(
+    (time: number) => {
+      if (!mediaRef.current || !Number.isFinite(duration)) return
 
-    const media = mediaRef.current
+      const media = mediaRef.current
 
-    let actualSeekTime = time
-    let storeCurrentTime = time
+      let actualSeekTime = time
+      let storeCurrentTime = time
 
-    if (isLive && player) {
-      const seekRange = player.seekRange()
-      // For live videos, clamp within the seek range
-      actualSeekTime = clamp(time, seekRange.start, seekRange.end)
-      // Store the relative time for UI display (0 to duration)
-      storeCurrentTime = actualSeekTime - seekRange.start
-    } else {
-      // For non-live videos, clamp within duration
-      actualSeekTime = clamp(time, 0, duration)
-      storeCurrentTime = actualSeekTime
-    }
+      if (isLive && player) {
+        const seekRange = player.seekRange()
+        actualSeekTime = clamp(time, seekRange.start, seekRange.end)
+        storeCurrentTime = actualSeekTime - seekRange.start
+      } else {
+        actualSeekTime = clamp(time, 0, duration)
+        storeCurrentTime = actualSeekTime
+      }
 
-    store.setState({
-      progress: storeCurrentTime / duration,
-      currentTime: storeCurrentTime,
-    })
+      store.setState({
+        progress: storeCurrentTime / duration,
+        currentTime: storeCurrentTime,
+      })
 
-    media.currentTime = actualSeekTime
-  }
+      media.currentTime = actualSeekTime
+    },
+    [mediaRef, duration, isLive, player, store]
+  )
 
-  function setHoveringTime(time: number) {
-    if (!Number.isFinite(store.getState().duration)) return
+  const setHoveringTime = useCallback(
+    (time: number) => {
+      if (!Number.isFinite(store.getState().duration)) return
 
-    store.setState({
-      hoveringTime: time,
-    })
-  }
+      store.setState({
+        hoveringTime: time,
+      })
+    },
+    [store]
+  )
 
   function setIsHovering(isHovering: boolean) {
     store.setState({ isHovering })
   }
+
+  const processBufferedRanges = useCallback(
+    (
+      bufferedRanges: shaka.extern.BufferedRange[],
+      variant: "combined" | "from-zero" | "default" = "default"
+    ): Array<{ startPercent: number; widthPercent: number }> => {
+      if (!bufferedRanges.length || !duration) {
+        return []
+      }
+
+      let normalizedBuffered: shaka.extern.BufferedRange[] = []
+
+      if (variant === "combined") {
+        const combinedBuffered = bufferedRanges.reduce(
+          (acc, range) => {
+            acc.start = Math.min(acc.start, range.start)
+            acc.end = Math.max(acc.end, range.end)
+            return acc
+          },
+          { start: Infinity, end: 0 }
+        )
+
+        if (combinedBuffered.start !== Infinity) {
+          normalizedBuffered = [
+            {
+              start: combinedBuffered.start,
+              end: combinedBuffered.end,
+            },
+          ]
+        }
+      } else if (variant === "from-zero") {
+        normalizedBuffered = bufferedRanges.map((range) => ({
+          start: 0,
+          end: range.end,
+        }))
+      } else {
+        normalizedBuffered = bufferedRanges
+      }
+
+      if (!normalizedBuffered.length) {
+        return []
+      }
+
+      return normalizedBuffered.map((range) => {
+        let startPercent: number
+        let widthPercent: number
+
+        if (isLive && player) {
+          const seekRange = player.seekRange()
+          const relativeStart = Math.max(0, range.start - seekRange.start)
+          const relativeEnd = Math.max(0, range.end - seekRange.start)
+
+          startPercent = (relativeStart / duration) * 100
+          widthPercent = ((relativeEnd - relativeStart) / duration) * 100
+        } else {
+          startPercent = (range.start / duration) * 100
+          widthPercent = ((range.end - range.start) / duration) * 100
+        }
+
+        return { startPercent, widthPercent }
+      })
+    },
+    [duration, isLive, player]
+  )
 
   return {
     seek,
     setHoveringTime,
     setIsHovering,
     getTimeFromEvent,
+    processBufferedRanges,
   }
 }

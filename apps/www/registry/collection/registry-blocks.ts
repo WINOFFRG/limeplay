@@ -39,6 +39,8 @@ export const blocks: Registry["items"] = [
       "root-container",
       "captions",
       "use-captions",
+      "playback-rate",
+      "use-playback-rate",
     ],
     files: [
       {
@@ -79,9 +81,8 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/button.tsx`,
+        path: `${BASE_SRC_URL}/ui/button.tsx`,
         type: "registry:ui",
-        target: "components/ui/button.tsx",
       },
       {
         path: `${BASE_SRC_URL}/lib/create-media-store.ts`,
@@ -100,10 +101,18 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
+        path: `${BASE_SRC_URL}/components/playback-rate-control.tsx`,
+        type: "registry:component",
+      },
+      {
         path: `${BASE_SRC_URL}/ui/toggle.tsx`,
         type: "registry:ui",
         target: "components/ui/toggle.tsx",
       },
+      {
+        path: `${BASE_SRC_URL}/components/volume-group-control.tsx`,
+        type: "registry:component",
+      }
     ],
     meta: {
       iframeHeight: "750px",
