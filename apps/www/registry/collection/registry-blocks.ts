@@ -39,6 +39,7 @@ export const blocks: Registry["items"] = [
       "root-container",
       "captions",
       "use-captions",
+      "playback-rate",
       "use-playback-rate",
     ],
     files: [
@@ -108,6 +109,10 @@ export const blocks: Registry["items"] = [
         type: "registry:ui",
         target: "components/ui/toggle.tsx",
       },
+      {
+        path: `${BASE_SRC_URL}/components/volume-group-control.tsx`,
+        type: "registry:component",
+      }
     ],
     meta: {
       iframeHeight: "750px",

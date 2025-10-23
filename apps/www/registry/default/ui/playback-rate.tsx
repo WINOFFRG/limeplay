@@ -17,13 +17,12 @@ import { useMediaStore } from "@/registry/default/ui/media-provider"
 export const Select = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<typeof SelectPrimitive>
->((props, forwardedRef) => {
+>((props, _) => {
   const playbackRate = useMediaStore((state) => state.playbackRate)
   const { setPlaybackRate } = usePlaybackRate()
 
   return (
     <SelectPrimitive
-      ref={forwardedRef}
       value={playbackRate.toString()}
       onValueChange={(value) => setPlaybackRate(Number(value))}
       {...props}
