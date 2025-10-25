@@ -212,25 +212,14 @@
       background-position: calc(100% + var(--shiny-width)) 0;
     }
   }
-  @keyframes shiny-text {
-    0%,
-    90%,
-    100% {
-      background-position: calc(-100% - var(--shiny-width)) 0;
-    }
-    30%,
-    60% {
-      background-position: calc(100% + var(--shiny-width)) 0;
-    }
-  }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border outline-ring/50;
   }
   body {
-    @apply text-foreground scroll-smooth;
+    @apply text-foreground scroll-smooth bg-background;
   }
 }
 
@@ -266,14 +255,5 @@
 
   &::-webkit-scrollbar {
     display: none;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
 }
