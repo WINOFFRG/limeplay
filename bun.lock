@@ -53,7 +53,7 @@
         "lodash.clamp": "^4.0.3",
         "lodash.throttle": "^4.1.1",
         "lucide-react": "^0.542.0",
-        "motion": "^12.23.11",
+        "motion": "^12.23.24",
         "next": "^16.0.0",
         "next-themes": "^0.4.6",
         "react": "^19.1.1",
