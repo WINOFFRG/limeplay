@@ -43,7 +43,6 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "date-fns": "^4.1.0",
-        "framer-motion": "^12.23.11",
         "fumadocs-core": "16.0.2",
         "fumadocs-mdx": "13.0.0",
         "fumadocs-typescript": "^4.0.12",
