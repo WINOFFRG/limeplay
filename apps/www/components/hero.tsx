@@ -7,20 +7,20 @@ import { Icons } from "@/components/icons"
 export function Hero() {
   return (
     <div className="flex flex-col">
-      <div
-        className={`
-          z-10 mx-auto flex max-w-7xl flex-col px-4 pb-16 text-center
-          sm:mt-20 sm:px-6 sm:pb-16
-          md:mt-36 md:px-8 md:pb-16
-          lg:mt-60 lg:px-8
-          xl:mt-32 xl:pt-32
-        `}
-      >
-        <AnimatedGroup preset="blur-slide">
+      <AnimatedGroup preset="blur-slide">
+        <div
+          className={`
+            z-10 mx-auto mt-28 flex max-w-7xl flex-col px-4 pb-4 text-center
+            sm:px-6
+            md:mt-36 md:px-8 md:pb-16
+            lg:mt-60 lg:px-8
+            xl:mt-32 xl:pt-32
+          `}
+        >
           <h1
             className={`
-              mx-auto max-w-4xl text-2xl leading-[1.2] font-semibold tracking-tight text-balance text-black
-              sm:text-3xl sm:leading-[1.15]
+              mx-auto max-w-4xl text-3xl leading-[1.2] font-semibold tracking-tight text-balance text-black
+              sm:leading-[1.15]
               md:text-4xl md:leading-[1.1]
               lg:text-5xl
               xl:text-6xl
@@ -75,8 +75,8 @@ export function Hero() {
               </Link>
             </p>
           </div>
-        </AnimatedGroup>
-      </div>
+        </div>
+      </AnimatedGroup>
       <AnimatedGroup preset="fade">
         <AnimatedButtons />
       </AnimatedGroup>

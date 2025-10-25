@@ -13,8 +13,9 @@ export default function HeroButtons() {
   return (
     <div
       className={`
-        flex flex-col items-center justify-center gap-2
-        md:flex-row
+        flex flex-col items-center justify-center gap-3
+        sm:gap-3
+        md:flex-row md:gap-2
       `}
     >
       <motion.div
@@ -30,8 +31,10 @@ export default function HeroButtons() {
           type: "spring",
         }}
         className={`
-          group relative flex h-12 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-neutral-800/20 font-mono text-slate-700
+          group relative flex h-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-neutral-800/20 font-mono text-slate-700
           backdrop-blur-lg
+          sm:h-11
+          md:h-12
         `}
       >
         <div
@@ -43,8 +46,9 @@ export default function HeroButtons() {
         />
         <div
           className={`
-            flex items-center gap-px text-sm
+            flex items-center gap-px text-xs
             group-active:scale-[0.999]
+            sm:text-sm
           `}
         >
           <span>{command.split("/")[0]}/</span>
@@ -85,8 +89,9 @@ export default function HeroButtons() {
             type: "spring",
           }}
           className={`
-            flex h-12 w-fit cursor-pointer items-center justify-center rounded-xl bg-neutral-600 text-sm font-medium
+            hidden h-12 w-fit cursor-pointer items-center justify-center rounded-xl bg-neutral-600 text-sm font-medium
             hover:bg-neutral-700
+            md:flex
           `}
         >
           Quick Start
