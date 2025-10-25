@@ -1,18 +1,25 @@
-import "@/app/global.css"
 
-import type { ReactNode } from "react"
-import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/react"
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { ThemeProvider } from "next-themes"
 
-import {
-  PROD_BASE_HOST,
-  PRODUCT_DESCRIPTION,
-  PRODUCT_NAME,
-} from "@/lib/constants"
-import { JsonLd } from "@/components/json-ld"
+
+import "@/app/global.css";
+
+
+
+import type { ReactNode } from "react";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ThemeProvider } from "next-themes";
+
+
+
+import { PROD_BASE_HOST, PRODUCT_DESCRIPTION, PRODUCT_NAME } from "@/lib/constants";
+import { JsonLd } from "@/components/json-ld";
+
+
+
+
 
 const geist = Geist({
   variable: "--font-sans",
@@ -104,6 +111,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       className={`
         ${geist.variable}
         ${mono.variable}
+        bg-slate-50
       `}
       suppressHydrationWarning
     >
