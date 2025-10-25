@@ -9,23 +9,25 @@ import { ScrollIndicator } from "@/components/scroll-indicator"
 
 export default function Home() {
   return (
-    <section>
-      <Hero />
-      <ImmersiveScrollPlayer>
-        <Suspense
-          fallback={
-            <div
-              className="aspect-video w-full animate-pulse"
-              aria-hidden="true"
-            />
-          }
-        >
-          <PlayerContainer />
-        </Suspense>
-      </ImmersiveScrollPlayer>
-      <ScrollIndicator />
-      <Features />
+    <>
+      <section>
+        <Hero />
+        <ImmersiveScrollPlayer>
+          <Suspense
+            fallback={
+              <div
+                className="aspect-video w-full animate-pulse"
+                aria-hidden="true"
+              />
+            }
+          >
+            <PlayerContainer />
+          </Suspense>
+        </ImmersiveScrollPlayer>
+        <ScrollIndicator />
+        <Features />
+      </section>
       <Footer />
-    </section>
+    </>
   )
 }
