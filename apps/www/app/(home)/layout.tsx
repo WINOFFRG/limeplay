@@ -20,7 +20,7 @@ export default function RootLayout({
       )}
       <main
         className={
-          "w-dvw bg-gradient-to-br from-slate-50 via-amber-50 to-neutral-200"
+          "w-dvw bg-linear-to-br from-slate-50 via-amber-50 to-neutral-200"
         }
       >
         <VideoBackground />
