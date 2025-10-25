@@ -104,6 +104,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       className={`
         ${geist.variable}
         ${mono.variable}
+        bg-slate-50
       `}
       suppressHydrationWarning
     >

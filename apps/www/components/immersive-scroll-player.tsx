@@ -30,7 +30,6 @@ export function ImmersiveScrollPlayer({
   children,
 }: ImmersiveScrollPlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [isLocked, setIsLocked] = useState(false)
   const isMobile = useIsMobile()
 
   const { scrollYProgress } = useScroll({
@@ -38,32 +37,9 @@ export function ImmersiveScrollPlayer({
     offset: ["start end", "end end"],
   })
 
-  useEffect(() => {
-    if (isMobile) return
-
-    const unsubscribe = scrollYProgress.on("change", (progress) => {
-      if (progress >= 0.7 && !isLocked) {
-        setIsLocked(true)
-        const container = containerRef.current
-        if (container) {
-          const rect = container.getBoundingClientRect()
-          const scrollTarget = window.scrollY + rect.bottom - window.innerHeight
-          window.scrollTo({
-            top: scrollTarget,
-            behavior: "smooth",
-          })
-        }
-      } else if (progress < 0.7 && isLocked) {
-        setIsLocked(false)
-      }
-    })
-
-    return unsubscribe
-  }, [scrollYProgress, isLocked, isMobile])
-
   const { width: vw, height: vh } = useViewportSize()
 
-  const [initialWidthPx, midWidthPx, finalWidthPx] = useMemo(() => {
+  const [initialWidthPx, _, finalWidthPx] = useMemo(() => {
     const fitByHeight = Math.round((vh * 16) / 9)
     const fitWidth = Math.min(vw, fitByHeight) // contain: fit within viewport bounds
     const initial = Math.min(1080, Math.max(320, Math.round(fitWidth * 0.6)))
@@ -74,21 +50,25 @@ export function ImmersiveScrollPlayer({
 
   const width = useTransform(
     scrollYProgress,
-    [0, 0.6, 1],
-    [initialWidthPx, midWidthPx, finalWidthPx]
+    [0, 0.7, 0.9, 1],
+    [initialWidthPx, finalWidthPx, finalWidthPx, finalWidthPx]
   )
 
-  // Animate background to black when scroll reaches 100%
   const backgroundColor = useTransform(
     scrollYProgress,
-    [0.95, 0.99],
-    ["rgba(255, 255, 255, 0)", "rgba(0, 0, 0, 1)"]
+    [0.5, 0.7, 0.95, 1],
+    [
+      "rgba(255, 255, 255, 0)",
+      "rgba(0, 0, 0, 1)",
+      "rgba(0, 0, 0, 1)",
+      "rgba(0, 0, 0, 1)",
+    ]
   )
 
   const borderRadius = useTransform(
     scrollYProgress,
-    [0.95, 0.99],
-    ["14px", "0px"]
+    [0.6, 0.7, 0.9, 1],
+    ["14px", "0px", "0px", "0px"]
   )
 
   if (isMobile) {
@@ -114,10 +94,7 @@ export function ImmersiveScrollPlayer({
       animate="show"
     >
       <div
-        className={`
-          sticky top-0 grid h-svh w-full place-items-center overflow-hidden
-          md:-mt-28
-        `}
+        className={`sticky top-0 grid h-svh w-full snap-proximity snap-normal place-items-center overflow-hidden`}
       >
         <motion.div
           className="absolute inset-0 z-0"

@@ -2,8 +2,8 @@
 
 import Link from "next/link"
 import { DotLottieReact } from "@lottiefiles/dotlottie-react"
-import { motion } from "framer-motion"
 import { ArrowLeft } from "lucide-react"
+import { motion } from "motion/react"
 
 import AnimatedGradientBackground from "@/components/ui/animated-gradient-background"
 import { Button } from "@/components/ui/button"
