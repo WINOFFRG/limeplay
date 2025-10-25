@@ -1,9 +1,9 @@
 "use client"
 
 import React, { useCallback, useRef, useState } from "react"
-import type { Variants } from "framer-motion"
-import { motion } from "framer-motion"
 import { Copy } from "lucide-react"
+import type { Variants } from "motion/react"
+import { motion } from "motion/react"
 import { useCopyToClipboard } from "react-use"
 
 import { cn } from "@/lib/utils"

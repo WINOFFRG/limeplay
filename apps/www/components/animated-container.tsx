@@ -1,7 +1,7 @@
 "use client"
 
 import type { ComponentProps, ReactNode } from "react"
-import { motion, useReducedMotion } from "framer-motion"
+import { motion, useReducedMotion } from "motion/react"
 
 type ViewAnimationProps = {
   delay?: number
