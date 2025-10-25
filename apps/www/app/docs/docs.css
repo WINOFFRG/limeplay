@@ -62,50 +62,53 @@
   --animate-stroke: stroke 5s linear infinite;
 
   --color-gradient-radial: radial-gradient(circle, var(--tw-gradient-stops));
-  --color-repeat-gradient-to-r: repeating-linear-gradient(to right,
-    var(--tw-gradient-stops));
-  --color-repeat-gradient-to-br: repeating-linear-gradient(to bottom right,
-    var(--tw-gradient-stops));
+  --color-repeat-gradient-to-r: repeating-linear-gradient(
+    to right,
+    var(--tw-gradient-stops)
+  );
+  --color-repeat-gradient-to-br: repeating-linear-gradient(
+    to bottom right,
+    var(--tw-gradient-stops)
+  );
 }
 :root {
   --ui-color: hsl(41, 100%, 40%);
-    --color-fd-primary: var(--ui-color);
+  --color-fd-primary: var(--ui-color);
+}
+
+body {
+  overscroll-behavior-y: none;
+  background-color: var(--color-fd-background);
+}
+
+.dark {
+  --ui-color: #fff383;
+}
+
+@keyframes circuit_1 {
+  0% {
+    transform: translateY(-20px);
   }
 
-  body {
-    overscroll-behavior-y: none;
-    background-color: var(--color-fd-background);
+  100% {
+    transform: translateY(100px);
+  }
+}
+
+@keyframes circuit_1_x_energy {
+  0%,
+  46% {
+    opacity: 0;
+    transform: translateX(-20px);
   }
 
-  .dark {
-    --ui-color: #fff383;
+  47%,
+  70% {
+    opacity: 100%;
   }
 
-  @keyframes circuit_1 {
-    0% {
-      transform: translateY(-20px);
-    }
-
-    100% {
-      transform: translateY(100px);
-    }
+  100% {
+    opacity: 0;
+    transform: translateX(212px);
   }
-
-  @keyframes circuit_1_x_energy {
-
-    0%,
-    46% {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-
-    47%,
-    70% {
-      opacity: 100%;
-    }
-
-    100% {
-      opacity: 0;
-      transform: translateX(212px);
-    }
 }

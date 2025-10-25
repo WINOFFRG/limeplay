@@ -75,23 +75,23 @@ export default function HeroButtons() {
         </div>
       </motion.div>
       <Link href="/docs/quick-start">
-      <motion.div
-        initial={{ padding: "0px 20px" }}
-        whileHover={{ padding: "0px 32px" }}
-        whileTap={{ padding: "0px 20px" }}
-        transition={{
-          duration: 1,
-          bounce: 0.6,
-          type: "spring",
-        }}
-        className={`
-          flex h-12 w-fit cursor-pointer items-center justify-center rounded-xl bg-neutral-600 text-sm font-medium
-          hover:bg-neutral-700
-        `}
-      >
-        Quick Start
-      </motion.div>
-        </Link>
+        <motion.div
+          initial={{ padding: "0px 20px" }}
+          whileHover={{ padding: "0px 32px" }}
+          whileTap={{ padding: "0px 20px" }}
+          transition={{
+            duration: 1,
+            bounce: 0.6,
+            type: "spring",
+          }}
+          className={`
+            flex h-12 w-fit cursor-pointer items-center justify-center rounded-xl bg-neutral-600 text-sm font-medium
+            hover:bg-neutral-700
+          `}
+        >
+          Quick Start
+        </motion.div>
+      </Link>
     </div>
   )
 }
