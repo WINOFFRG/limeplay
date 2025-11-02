@@ -75,26 +75,10 @@ export const metadata: Metadata = {
     title: PRODUCT_NAME,
     description: PRODUCT_DESCRIPTION,
     images: [`${PROD_BASE_HOST}/opengraph-image.png`],
-    creator: "@shadcn",
+    creator: "@winoffrg",
   },
   manifest: `${PROD_BASE_HOST}/site.webmanifest`,
-  alternates: {
-    canonical: PROD_BASE_HOST,
-    types: {
-      "application/xml": `${PROD_BASE_HOST}/sitemap.xml`,
-    },
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
+  robots: "index, follow",
 }
 
 export default function Layout({ children }: { children: ReactNode }) {
