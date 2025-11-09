@@ -55,6 +55,7 @@ export default function HeroButtons() {
           <span className="flex items-center gap-2 opacity-40">
             {command.split("/")[1]}
             <motion.span
+              aria-label="Copy to clipboard"
               key={isCopied.value ? "check" : "copy"}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
