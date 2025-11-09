@@ -1,13 +1,9 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { Check, Copy } from "lucide-react";
-import { motion } from "motion/react";
-import { useCopyToClipboard } from "react-use";
-
-
-
-
+import Link from "next/link"
+import { Check, Copy } from "lucide-react"
+import { motion } from "motion/react"
+import { useCopyToClipboard } from "react-use"
 
 const command = "npx shadcn add @limeplay/linear-player"
 
