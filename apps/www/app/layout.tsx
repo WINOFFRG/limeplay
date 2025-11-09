@@ -1,25 +1,18 @@
+import "@/app/global.css"
 
+import type { ReactNode } from "react"
+import type { Metadata } from "next"
+import { Geist, Geist_Mono } from "next/font/google"
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { ThemeProvider } from "next-themes"
 
-
-import "@/app/global.css";
-
-
-
-import type { ReactNode } from "react";
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { ThemeProvider } from "next-themes";
-
-
-
-import { PROD_BASE_HOST, PRODUCT_DESCRIPTION, PRODUCT_NAME } from "@/lib/constants";
-import { JsonLd } from "@/components/json-ld";
-
-
-
-
+import {
+  PROD_BASE_HOST,
+  PRODUCT_DESCRIPTION,
+  PRODUCT_NAME,
+} from "@/lib/constants"
+import { JsonLd } from "@/components/json-ld"
 
 const geist = Geist({
   variable: "--font-sans",
