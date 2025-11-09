@@ -77,7 +77,14 @@ export function Features() {
               lg:text-5xl
             `}
           > */}
-          Industry standard Media Players
+          <h2
+            className={`
+              text-4xl font-semibold text-balance text-foreground
+              lg:text-5xl
+            `}
+          >
+            Industry standard Media Players
+          </h2>
           {/* </TextEffect> */}
           {/* <TextEffect
             per="line"
@@ -87,7 +94,10 @@ export function Features() {
             as="p"
             className="mx-auto mt-8 max-w-2xl text-lg text-balance text-muted-foreground"
           > */}
-          Compose like an Artist without worrying about logic and functionality
+          <p className="mx-auto mt-8 max-w-2xl text-lg text-balance text-muted-foreground">
+            Compose like an Artist without worrying about logic and
+            functionality
+          </p>
           {/* </TextEffect> */}
         </div>
         <div
