@@ -56,7 +56,6 @@ export default function HeroButtons() {
             {command.split("/")[1]}
             <motion.span
               aria-label="Copy to clipboard"
-              aria-hidden="true"
               key={isCopied.value ? "check" : "copy"}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
