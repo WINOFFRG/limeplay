@@ -1,0 +1,56 @@
+---
+title: Architecture
+index: true
+---
+
+## Core Dependencies
+
+### Shaka Player
+
+Our foundational streaming engine used across all components. We selected Shaka Player after extensive evaluation for its robust streaming capabilities and performance—[learn more about this decision](./what-is-limeplay.mdx#why-choose-limeplay).
+
+### Zustand
+
+Lightweight state management ([1.2kb](https://bundlephobia.com/package/zustand@5.0.3)) that powers our player state. We integrate it with React Context to solve key architectural challenges:
+
+- **Multi-Instance Support**: React Context isolation ensures each player maintains independent state
+- **Performance**: Singleton pattern with proper memoization prevents unnecessary re-renders
+- **Modularity**: Slice pattern enables clean separation of concerns
+
+#### State Management Implementation
+
+We integrate Zustand with React Context to create proper isolation between Media Player instances. This approach addresses several architectural challenges:
+
+- **Singleton Pattern**: Zustand uses a singleton store where states are shared across components, unlike React Hooks which maintain separate state in each component.
+
+- **Multiple Player Support**: To support multiple Media Player instances on the same page, we implemented an isolation layer using React Context, ensuring each player maintains its own state.
+
+- **Modular Design**: Zustand's slice pattern enables efficient component distribution and organization, allowing us to separate concerns within our state management.
+
+## Component Architecture
+
+![Player Architecture Diagram](/docs/player-architecture.svg)
+
+### Component Hierarchy
+
+1. **`MediaProvider`** - Establishes isolated Zustand store via React Context. In case you don't want player isolation, you can update the reference from `useMediaStoreWithContext` to `useMediaStoreWithoutContext`.
+
+2. **`Layout.RootContainer`** - Accessible wrapper that manages player control visibility. This layer adds a skin on top of the media element to control the state of player controls like toggling the hidden state.
+
+3. **`Layout.PlayerContainer`** - Media element container with aspect ratio configuration. Acts as a shim for the media element.
+
+4. **`Layout.ControlsContainer`** - Structured layout for top, middle, and bottom controls. Provides a spaced area to add control sections.
+
+5. **`MediaElement`** - Native HTML5 media element
+
+6. **`PlayerHooks`** - Centralized hook management with memoization for performance. Since Limeplay hooks are mostly singleton, calling them repeatedly during re-renders would cause performance overhead.
+
+## State Synchronization
+
+### Event Bridge
+
+Native media element events are captured and synchronized to React state. Event listeners are centralized in [`PlayerHooks`](./components/player-hooks.mdx) to prevent performance issues from frequent re-renders. Since player components are high-velocity and prone to re-rendering, this optimization prevents performance issues on low-end devices.
+
+### Action Bridge
+
+UI interactions are translated to native media element controls via dedicated hooks like `useMediaState`. When these methods are called, they update the native element state directly, and the Event Bridge captures those events to update our UI. For highly reactive operations like seeking (via [`useTimeline`](./hooks/use-timeline.mdx)), we synchronize both native and React states simultaneously to maintain UI consistency and prevent degraded states.

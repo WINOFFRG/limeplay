@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "preserveSymlinks": false, // VI: Dependencies start breaking without this like Radix
+    "incremental": true,
+    "paths": {
+      "@/.source": [".source"],
+      "@/*": ["./*"],
+      // DEV: https://stackoverflow.com/questions/62702485/component-cannot-be-used-as-a-jsx-component-its-return-type-element-is-not
+      "react": ["./node_modules/@types/react"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "types",
+    "registry/__index__.tsx",
+    "postcss.config.mjs",
+    "eslint.config.mjs",
+    ".next/dev/types/**/*.ts",
+    "next.config.mjs"
+  ],
+  "exclude": ["node_modules", ".next", "registry/__index__.tsx"]
+}

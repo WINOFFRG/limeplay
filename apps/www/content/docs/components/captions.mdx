@@ -1,0 +1,171 @@
+---
+title: Captions
+description: Complete captions system with container, control, and hooks for text track management
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+import {
+  CaptionsContainer,
+  CaptionsControl,
+} from "@/registry/default/ui/captions"
+
+import {
+  CaptionsHybridDemo,
+  CaptionsStateControlDemo,
+} from "@/registry/default/examples/captions-state-control-demo"
+
+<ComponentPreview
+  name="captions-state-control-demo"
+  withPlayer
+  type="hybrid"
+  blockChildren={<CaptionsStateControlDemo />}
+  overlayChildren={<CaptionsHybridDemo />}
+/>
+
+## Installation
+
+<Steps>
+<Step>
+### Install the components
+```bash
+npx shadcn add @limeplay/captions
+```
+</Step>
+
+<Step>
+### Add Event & Action Bridge
+Import the `useCaptionsStates` hook in your existing `PlayerHooks` component.
+
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+import React from "react"
+
+import { useCaptionsStates } from "@/hooks/limeplay/use-captions" // [!code ++]
+
+import { usePlayerStates } from "@/hooks/limeplay/use-player"
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+
+export const PlayerHooks = React.memo(() => {
+  useShakaPlayer()
+  usePlayerStates()
+  useCaptionsStates() // [!code ++]
+
+  return null
+})
+```
+
+</Step>
+
+<Step>
+### Add the Store States
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+import { create } from "zustand"
+
+import {
+  CaptionsStore,
+  createCaptionsStore,
+} from "@/hooks/limeplay/use-captions"
+// [!code ++]
+import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+
+export type TypeMediaStore = PlayerStore & CaptionsStore & {} // [!code ++]
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlayerStore(...etc),
+    ...createCaptionsStore(...etc), // [!code ++]
+    ...initProps,
+  }))
+  return mediaStore
+}
+```
+
+</Step>
+</Steps>
+
+## Components
+
+### CaptionsContainer
+
+The `CaptionsContainer` component serves as the rendering area for Shaka Player's text tracks. It automatically registers itself with the Shaka Player instance and provides proper positioning for caption overlay.
+
+#### Basic Usage
+
+Place the captions container within your player layout to provide a rendering area for text tracks.
+
+```tsx lineNumbers title="components/player/media-player.tsx"
+import { CaptionsContainer } from "@/components/limeplay/captions-container"
+
+export function MediaPlayer() {
+  return (
+    <MediaProvider>
+      <PlayerHooks />
+      <Layout.RootContainer height={720} width={1280}>
+        <Layout.PlayerContainer>
+          <MediaElement />
+          <Layout.ControlsContainer>
+            <CaptionsContainer />
+            <Layout.ControlsBottomContainer>
+              <BottomControls />
+            </Layout.ControlsBottomContainer>
+          </Layout.ControlsContainer>
+        </Layout.PlayerContainer>
+      </Layout.RootContainer>
+    </MediaProvider>
+  )
+}
+```
+
+#### Custom Styling
+
+You can customize the captions container with additional styling and font scaling.
+
+```tsx lineNumbers title="components/player/captions-container.tsx"
+import { CaptionsContainer } from "@/components/limeplay/captions-container"
+
+export function CustomCaptionsContainer() {
+  return <CaptionsContainer className="px-4 pb-4" fontScale={1.2} />
+}
+```
+
+### CaptionsControl
+
+The `CaptionsControl` component provides a standardized way to toggle captions visibility. It automatically disables when no text tracks are available and handles track selection automatically.
+
+#### Basic Usage
+
+Create a captions toggle button with appropriate icons and states.
+
+```tsx lineNumbers title="components/player/captions-control-button.tsx"
+import { ClosedCaptioningIcon } from "@phosphor-icons/react"
+
+import { CaptionsControl } from "@/components/limeplay/captions-control"
+import { useMediaStore } from "@/components/limeplay/media-provider"
+
+export function CaptionsControlButton() {
+  const textTracks = useMediaStore((state) => state.textTracks)
+  const textTrackVisible = useMediaStore((state) => state.textTrackVisible)
+
+  return (
+    <Button size="icon" variant="glass" asChild>
+      <CaptionsControl>
+        <ClosedCaptioningIcon
+          weight={textTrackVisible ? "fill" : "regular"}
+          size={18}
+        />
+      </CaptionsControl>
+    </Button>
+  )
+}
+```
+
+## Hooks
+
+### useCaptionsStates()
+
+Sets up event listeners for text track changes and visibility updates. This hook should be called once in your `PlayerHooks` component.
+
+### useCaptions()
+
+Returns captions control functions for managing text tracks.
