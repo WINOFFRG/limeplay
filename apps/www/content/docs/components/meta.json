@@ -1,0 +1,18 @@
+{
+  "title": "Components",
+  "description": "All components used in Player UI",
+  "pages": [
+    "media-provider",
+    "playback-control",
+    "playback-rate",
+    "mute-control",
+    "volume-control",
+    "timeline-control",
+    "timeline-labels",
+    "media",
+    "player-hooks",
+    "fallback-poster",
+    "player-layout",
+    "captions"
+  ]
+}

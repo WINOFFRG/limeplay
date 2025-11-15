@@ -1,0 +1,114 @@
+@import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+
+@theme {
+  --spacing-fd-container: 1436px;
+  --color-brand: hsl(55, 100%, 38%);
+  --color-brand-foreground: white;
+  --color-brand-secondary: #9b18dc;
+  --color-brand-secondary-foreground: #efccff;
+
+  --color-landing-foreground: #59592a;
+  --color-landing-foreground-200: #a8a866;
+}
+
+.dark {
+  --color-landing-foreground: #e4e2d0;
+  --color-landing-foreground-200: #b7af7e;
+
+  --color-brand: #fff383;
+  --color-brand-secondary: #ad41e7;
+  --color-brand-secondary-foreground: #f5e4ff;
+  --color-brand-foreground: black;
+}
+
+@theme inline {
+  --default-mono-font-family: var(--font-mono);
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+
+  @keyframes stroke {
+    from {
+      stroke-dasharray: 1000;
+    }
+
+    to {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 2000;
+    }
+  }
+
+  --animate-stroke: stroke 5s linear infinite;
+
+  --color-gradient-radial: radial-gradient(circle, var(--tw-gradient-stops));
+  --color-repeat-gradient-to-r: repeating-linear-gradient(
+    to right,
+    var(--tw-gradient-stops)
+  );
+  --color-repeat-gradient-to-br: repeating-linear-gradient(
+    to bottom right,
+    var(--tw-gradient-stops)
+  );
+}
+:root {
+  --ui-color: hsl(41, 100%, 40%);
+  --color-fd-primary: var(--ui-color);
+}
+
+body {
+  overscroll-behavior-y: none;
+  background-color: var(--color-fd-background);
+}
+
+.dark {
+  --ui-color: #fff383;
+}
+
+@keyframes circuit_1 {
+  0% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(100px);
+  }
+}
+
+@keyframes circuit_1_x_energy {
+  0%,
+  46% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  47%,
+  70% {
+    opacity: 100%;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(212px);
+  }
+}

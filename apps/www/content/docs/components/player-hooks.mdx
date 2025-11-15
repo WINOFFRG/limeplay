@@ -1,0 +1,46 @@
+---
+title: Player Hooks
+description: Central, top-level memoized hooks for component-level state management
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+## Installation
+
+<Steps>
+<Step>
+### Add in your existing MediaPlayer component
+
+```tsx lineNumbers title="components/limeplay/media-player.tsx"
+import { PlayerHooks } from "@/components/limeplay/player-hooks" // [!code ++]
+
+// ... other imports
+
+export function MediaPlayer() {
+  return (
+    <MediaProvider>
+      // [!code ++]
+      <PlayerHooks />
+      <Suspense>
+        <Layout.RootContainer height={720} width={1280}>
+          <Layout.PlayerContainer>
+            <MediaElement />
+            <Layout.ControlsContainer>
+              <BottomControls />
+            </Layout.ControlsContainer>
+          </Layout.PlayerContainer>
+        </Layout.RootContainer>
+      </Suspense>
+    </MediaProvider>
+  )
+}
+```
+
+</Step>
+</Steps>
+
+## Understanding
+
+This library uses Shaka Player as the default playback engine. Hooks like `useShakaPlayer` (engine setup) and `usePlayerStates` (media state) are singletons. Rendering them via the `<PlayerHooks />` component prevents re-initializing these hooks on every render. While you could co-locate such hooks alongside each molecule/component, centralizing them keeps behavior predictable and avoids redundant work.
+
+You can add as many hooks as you need inside the `<PlayerHooks />` component.

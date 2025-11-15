@@ -1,0 +1,94 @@
+---
+title: Volume Control
+description: Slider control to control the media volume. Composed with volume state control
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+<ComponentPreview name="volume-slider-control-horizontal-demo" withPlayer />
+
+## Installation
+
+<Steps>
+<Step>
+### Install the component
+```npm
+npx shadcn add @limeplay/volume-control
+```
+</Step>
+
+<Step>
+### Add Event & Action Bridge
+Import the `useVolumeStates` hook in your existing `PlayerHooks` component.
+
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+import React from "react"
+
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+import { useVolumeStates } from "@/hooks/limeplay/use-volume" // [!code ++]
+
+export const PlayerHooks = React.memo(() => {
+  useShakaPlayer()
+  useVolumeStates() // [!code ++]
+
+  return null
+})
+```
+
+</Step>
+
+<Step>
+### Add the Store States
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+// [!code ++]
+import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+import { createVolumeStore, VolumeStore } from "@/hooks/limeplay/use-volume"
+
+export type TypeMediaStore = PlayerStore & VolumeStore & {} // [!code ++]
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlayerStore(...etc),
+    ...createVolumeStore(...etc), // [!code ++]
+    ...initProps,
+  }))
+  return mediaStore
+}
+```
+
+</Step>
+</Steps>
+
+## Usage
+
+1. Compose the volume slide and handle states
+
+```tsx lineNumbers
+import { cn } from "@/lib/utils"
+import * as VolumeSlider from "@/components/limeplay/volume-control"
+
+export function VolumeControlSlider() {
+  return (
+    <VolumeSlider.Root
+      className={cn("relative h-1 focus-area -focus-area-x-2 -focus-area-y-12")}
+      orientation="horizontal"
+    >
+      <VolumeSlider.Track>
+        <VolumeSlider.Progress />
+      </VolumeSlider.Track>
+      <VolumeSlider.Thumb />
+    </VolumeSlider.Root>
+  )
+}
+```
+
+2. Place the slider inside the `BottomControls` component.
+
+```tsx lineNumbers title="components/player/media-player.tsx"
+<Layout.ControlsContainer>
+  <BottomControls>
+    <VolumeControlSlider />
+  </BottomControls>
+</Layout.ControlsContainer>
+```

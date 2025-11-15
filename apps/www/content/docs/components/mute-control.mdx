@@ -1,0 +1,107 @@
+---
+title: Mute Control
+description: Controls the volume mute toggle state
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+<ComponentPreview name="volume-state-control-demo" withPlayer />
+
+## Installation
+
+<Steps>
+<Step>
+### Install the component
+```npm
+npx shadcn add @limeplay/mute-control
+```
+</Step>
+
+<Step>
+### Add Event & Action Bridge
+Import the `useVolumeStates` hook in your existing `PlayerHooks` component.
+
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+import React from "react"
+
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+import { useVolumeStates } from "@/hooks/limeplay/use-volume" // [!code ++]
+
+export const PlayerHooks = React.memo(() => {
+  useShakaPlayer()
+  useVolumeStates() // [!code ++]
+
+  return null
+})
+```
+
+</Step>
+
+<Step>
+### Add the Store States
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+// [!code ++]
+import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+import { createVolumeStore, VolumeStore } from "@/hooks/limeplay/use-volume"
+
+export type TypeMediaStore = PlayerStore & VolumeStore & {} // [!code ++]
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlayerStore(...etc),
+    ...createVolumeStore(...etc), // [!code ++]
+    ...initProps,
+  }))
+  return mediaStore
+}
+```
+
+</Step>
+</Steps>
+
+## Usage
+
+1. Design the mute button with icons and states.
+
+```tsx lineNumbers title="components/player/mute-control-button.tsx"
+"use client"
+
+import {
+  SpeakerHighIcon,
+  SpeakerLowIcon,
+  SpeakerXIcon,
+} from "@phosphor-icons/react"
+
+import { useMediaStore } from "@/components/limeplay/media-provider"
+import { MuteControl } from "@/components/limeplay/mute-control"
+
+export function MuteControlButton() {
+  const muted = useMediaStore((state) => state.muted)
+  const volume = useMediaStore((state) => state.volume)
+
+  return (
+    <Button size="icon" asChild>
+      <MuteControl>
+        {muted || volume === 0 ? (
+          <SpeakerXIcon size={18} weight="fill" />
+        ) : volume < 0.5 ? (
+          <SpeakerLowIcon size={18} weight="fill" />
+        ) : (
+          <SpeakerHighIcon size={18} weight="fill" />
+        )}
+      </MuteControl>
+    </Button>
+  )
+}
+```
+
+2. Place the button inside the `BottomControls` component.
+
+```tsx lineNumbers title="components/player/media-player.tsx"
+<Layout.ControlsContainer>
+  <BottomControls>
+    <MuteControlButton />
+  </BottomControls>
+</Layout.ControlsContainer>
+```
