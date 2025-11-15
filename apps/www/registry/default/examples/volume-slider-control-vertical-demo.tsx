@@ -1,0 +1,19 @@
+import { VolumeStateControlDemo } from "@/registry/default/examples/volume-state-control-demo"
+import * as VolumeSlider from "@/registry/default/ui/volume-control"
+
+export function VolumeSliderControlVerticalDemo() {
+  return (
+    <div className="my-4 flex h-fit flex-col items-center gap-1 rounded-md bg-primary/10 pt-3">
+      <VolumeSlider.Root
+        className={`focus-area relative h-16 w-1 cursor-crosshair rounded-md -focus-area-x-12 -focus-area-y-2`}
+        orientation="vertical"
+      >
+        <VolumeSlider.Track>
+          <VolumeSlider.Progress />
+        </VolumeSlider.Track>
+        <VolumeSlider.Thumb className="size-3" />
+      </VolumeSlider.Root>
+      <VolumeStateControlDemo />
+    </div>
+  )
+}

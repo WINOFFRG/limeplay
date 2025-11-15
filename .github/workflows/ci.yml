@@ -1,0 +1,57 @@
+name: Linters
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+jobs:
+  code-quality:
+    name: Lint and Prettier
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.2.19
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            **/*.{js,jsx,ts,tsx}
+          files_yaml: |
+            prettier:
+              - '**/*.js'
+              - '**/*.jsx'
+              - '**/*.ts'
+              - '**/*.tsx'
+              - '**/*.json'
+              - '**/*.css'
+              - '**/*.md'
+              - '**/*.mdx'
+
+      - name: Run ESLint
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          echo "Running ESLint on changed files:"
+          echo "${{ steps.changed-files.outputs.all_changed_files }}"
+          bunx eslint ${{ steps.changed-files.outputs.all_changed_files }}
+
+      - name: Run Prettier check
+        if: steps.changed-files.outputs.prettier_any_changed == 'true'
+        run: |
+          echo "Running Prettier check on changed files:"
+          echo "${{ steps.changed-files.outputs.prettier_all_changed_files }}"
+          bunx prettier --check ${{ steps.changed-files.outputs.prettier_all_changed_files }}

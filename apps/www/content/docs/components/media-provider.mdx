@@ -1,0 +1,75 @@
+---
+title: Media Provider
+description: Setup zustand singleton store for media player accessible via hooks.
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+`<MediaProvider />` is a composition of React's `context` and `zustand` store. This component exposes a hook `useMediaStore` which is an implementation of zustand store getter.
+
+As we keep on adding bound slices to the store in `lib/create-media-store.ts` file this hook will act as a getter for those values.
+
+## Installation
+
+<Steps>
+<Step>
+### Install the component
+```npm
+npx shadcn add @limeplay/media-provider
+```
+</Step>
+
+<Step>
+### Setup the provider in the root
+
+```tsx lineNumbers title="components/player/media-player.tsx"
+import { MediaProvider } from "@/components/limeplay/media-provider" // [!code ++]
+
+// ... other imports
+
+export function MediaPlayer() {
+  return (
+    // [!code ++]
+    <MediaProvider>
+      <PlayerHooks />
+      <Suspense>
+        <Layout.RootContainer height={720} width={1280}>
+          <Layout.PlayerContainer>
+            <MediaElement />
+            <Layout.ControlsContainer>
+              <BottomControls />
+            </Layout.ControlsContainer>
+          </Layout.PlayerContainer>
+        </Layout.RootContainer>
+      </Suspense>
+    </MediaProvider>
+  )
+}
+```
+
+</Step>
+
+<Step>
+### Call the store anywhere inside the component tree
+
+```tsx lineNumbers title="components/volume-control.tsx"
+import { useMediaStore } from "@/components/limeplay/media-provider"    // [!code ++]
+
+export function VolumeStateControlDemo() {
+  const muted = useMediaStore((state) => state.muted)    // [!code ++]
+  const volume = useMediaStore((state) => state.volume)    // [!code ++]
+
+  return (
+    // ...
+  )
+}
+```
+
+</Step>
+</Steps>
+
+## Understanding
+
+`<MediaProvider />` is a composition of React's `context` and `zustand` store. This component exposes a hook `useMediaStore` which is an implementation of zustand store getter.
+
+As we keep on adding bound slices to the store in `lib/create-media-store.ts` file this hook will act as a getter for those values.
