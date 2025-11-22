@@ -1,0 +1,7 @@
+You are working on Limeplay, a shadcn/ui CLI based modern UI library for building media players in React.
+
+**IMPORTANT**: For complete guidelines, architecture patterns, and code review checklist, 
+always refer to: `.github/copilot-instructions.md`
+
+When reviewing code or generating new code, check against the checklist in `.github/copilot-instructions.md`.
+
