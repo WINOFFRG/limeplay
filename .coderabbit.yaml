@@ -1,0 +1,24 @@
+reviews:
+  enabled: true
+
+  guidelines:
+    - path: ".github/copilot-instructions.md"
+      description: "Limeplay project guidelines, architecture patterns, and code review checklist"
+
+  paths:
+    include:
+      - "apps/www/registry/**"
+      - "apps/www/content/docs/**"
+    exclude:
+      - "**/node_modules/**"
+      - "**/out/**"
+      - "**/.next/**"
+
+language:
+  typescript:
+    strict: true
+    no_any: true
+
+  react:
+    hooks_rules: true
+    performance_optimization: true
