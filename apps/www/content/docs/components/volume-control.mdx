@@ -60,11 +60,11 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 </Step>
 </Steps>
 
-## Usage
+## Example Usage
 
 1. Compose the volume slide and handle states
 
-```tsx lineNumbers
+```tsx lineNumbers title="components/player/volume-control-slider.tsx"
 import { cn } from "@/lib/utils"
 import * as VolumeSlider from "@/components/limeplay/volume-control"
 
@@ -83,12 +83,50 @@ export function VolumeControlSlider() {
 }
 ```
 
-2. Place the slider inside the `BottomControls` component.
+2. Use the component in your player.
 
-```tsx lineNumbers title="components/player/media-player.tsx"
-<Layout.ControlsContainer>
-  <BottomControls>
-    <VolumeControlSlider />
-  </BottomControls>
-</Layout.ControlsContainer>
+```tsx lineNumbers title="components/player/bottom-controls.tsx"
+<VolumeControlSlider />
 ```
+
+## Understanding
+
+The Volume Control is a composable slider built with the **Event & Action Bridge** pattern:
+
+- **Event Bridge**: [`useVolumeStates()`](/docs/hooks/use-volume) listens to `volumechange` events and syncs volume/mute state
+- **Action Bridge**: Components use [`useVolume()`](/docs/hooks/use-volume) to call `setVolume()` which controls the media element
+
+### Accessibility
+
+- **ARIA Slider Pattern**: Proper `aria-valuemin`, `aria-valuemax`, `aria-valuenow` attributes
+- **Keyboard Support**: Arrow keys for volume adjustment
+- **Screen Reader**: Announces volume percentage changes
+- **Visual Feedback**: Clear volume level indication
+
+## Components
+
+The volume slider is composed of multiple parts for maximum flexibility.
+
+### Root
+
+Main container with orientation support (horizontal/vertical).
+
+#### API Reference
+<AutoTypeTable path="./registry/default/ui/volume-control.tsx" name="VolumeRootPropsDocs" />
+
+### Thumb
+
+Draggable handle for volume adjustment.
+
+#### API Reference
+<AutoTypeTable path="./registry/default/ui/volume-control.tsx" name="VolumeThumbPropsDocs" />
+
+### Track
+
+Visual track showing volume range. Extends `SliderPrimitive.Track` props.
+
+### Progress
+
+Filled portion showing current volume. Extends `SliderPrimitive.Indicator` props.
+
+

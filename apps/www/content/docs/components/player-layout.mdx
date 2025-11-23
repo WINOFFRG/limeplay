@@ -17,10 +17,51 @@ npx shadcn add @limeplay/player-layout
 
 ## Understanding
 
-Provides composible set of components which helps to setup player container structure.
+Provides composible set of components which helps to setup player container structure. The layout system is built with accessibility and responsive design in mind.
 
-### Root Container
+## Components
 
-### Player Container
+The Player Layout is composed of multiple components that work together to create a structured media player interface.
 
-### Controls Container
+### RootContainer
+
+The outermost container that manages aspect ratio, idle state, and focus management.
+
+#### API Reference
+
+<AutoTypeTable path="./registry/default/ui/root-container.tsx" name="RootContainerPropsDocs" />
+
+#### Basic Usage
+
+```tsx lineNumbers title="components/player/media-player.tsx"
+import * as Layout from "@/components/limeplay/player-layout"
+
+export function MediaPlayer() {
+  return (
+    <MediaProvider>
+      <PlayerHooks />
+      <Layout.RootContainer height={720} width={1280}>
+        <Layout.PlayerContainer>
+          <MediaElement />
+        </Layout.PlayerContainer>
+      </Layout.RootContainer>
+    </MediaProvider>
+  )
+}
+```
+
+### PlayerContainer
+
+Container for the actual media element. Maintains aspect ratio and handles overflow.
+
+### ControlsContainer
+
+Container for player controls. Uses pointer-events management for proper interaction.
+
+### ControlsBottomContainer
+
+Bottom-aligned container for control buttons and sliders.
+
+### ControlsOverlayContainer
+
+Overlay gradient that provides visual separation for controls.
