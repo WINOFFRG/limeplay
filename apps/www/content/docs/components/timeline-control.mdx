@@ -64,7 +64,7 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 </Step>
 </Steps>
 
-## Usage
+## Example Usage
 
 1. Compose the timeline slider and handle states
 
@@ -102,12 +102,64 @@ export function TimelineSliderControl() {
 }
 ```
 
-2. Place the slider inside the `BottomControls` component.
+2. Use the component in your player.
 
-```tsx lineNumbers title="components/player/media-player.tsx"
-<Layout.ControlsContainer>
-  <BottomControls>
-    <TimelineSliderControl />
-  </BottomControls>
-</Layout.ControlsContainer>
+```tsx lineNumbers title="components/player/bottom-controls.tsx"
+<TimelineSliderControl />
 ```
+
+## Understanding
+
+The Timeline Control implements a highly composable seek slider following the **Event & Action Bridge** pattern:
+
+- **Event Bridge**: [`useTimelineStates()`](/docs/hooks/use-timeline) updates `currentTime`, `duration`, `progress`, and `buffered` ranges via polling (default 500ms)
+- **Action Bridge**: Components use [`useTimeline()`](/docs/hooks/use-timeline) to call `seek()` which updates `media.currentTime`
+
+### Live Stream Support
+
+Timeline automatically handles live streams:
+- Uses Shaka Player's `seekRange()` for proper DVR seeking
+- Displays live latency
+- Adjusts progress calculation for sliding window
+
+### Accessibility
+
+- **ARIA Slider**: `aria-label="Timeline Slider"`
+- **Keyboard Navigation**: Focus and arrow key support
+- **Screen Reader**: Announces time changes
+- **Visual Focus**: Clear focus indicators
+
+## Components
+
+Timeline is built with multiple composable parts.
+
+### Root
+
+Main slider container with built-in click/drag seek handling.
+
+#### API Reference
+<AutoTypeTable path="./registry/default/ui/timeline-control.tsx" name="TimelineRootPropsDocs" />
+
+### Thumb
+
+Draggable handle and/or hover preview.
+
+#### API Reference
+<AutoTypeTable path="./registry/default/ui/timeline-control.tsx" name="TimelineThumbPropsDocs" />
+
+### Buffered
+
+Shows buffered ranges. Supports 3 variants: `default`, `combined`, `from-zero`.
+
+#### API Reference
+<AutoTypeTable path="./registry/default/ui/timeline-control.tsx" name="TimelineBufferedPropsDocs" />
+
+### Track
+
+Visual track representing full duration. Extends `SliderPrimitive.Track` props.
+
+### Progress
+
+Filled indicator showing playback progress.
+
+

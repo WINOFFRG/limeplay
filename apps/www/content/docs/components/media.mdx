@@ -17,8 +17,30 @@ npx shadcn add @limeplay/media
 
 ## Understanding
 
-Native HTML Media Element component that provides audio and video playback capabilities.
+Native HTML Media Element component that provides audio and video playback capabilities. It supports both `video` and `audio` elements via the `as` prop.
 
-## Props
+## Components
+
+### Media
+
+The main component that renders either a `<video>` or `<audio>` element based on the `as` prop.
+
+#### API Reference
 
 <AutoTypeTable path="./registry/default/ui/media.tsx" name="MediaPropsDocs" />
+
+#### Basic Usage
+
+```tsx lineNumbers title="components/player/media-element.tsx"
+import { Media } from "@/components/limeplay/media"
+
+export function MediaElement() {
+  return (
+    <Media
+      as="video"
+      src="https://example.com/video.mp4"
+      className="h-full w-full"
+    />
+  )
+}
+```

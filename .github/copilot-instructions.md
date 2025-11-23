@@ -19,6 +19,8 @@ Limeplay uses a dual-bridge architecture for state synchronization:
 
 To understand registry you can simply ask for the "Shadcn UI Registry Template" contract on context7 MCP. The same concept is applied in `apps/www/registry/collection` each component, hook or even util from atomic level is registered right there which allows installation via the CLI. While we are developing we must ensure we don't miss to update the registry for the respective usage. We do have a build script which helps us ensure nothing is missing in registry which is also present in file but still we must ensure we don't miss to update the registry for the respective usage.
 
+We are using Next.js 16 and React 19.1.1 for the development with Tailwind CSS 4.0.0 for styling. So make sure you are using the correct version of the dependencies and guidelines for the same.
+
 ## Import Path Transformation (CRITICAL FOR DOCUMENTATION)
 
 When writing documentation, ALWAYS transform internal registry paths to external documentation paths:
@@ -131,11 +133,20 @@ export function Component({ asChild = false, ...props }: ComponentProps) {
      --lp-timeline-track-height: 4px;
      --lp-timeline-track-height-active: 7px;
      --lp-timeline-buffered-color: oklch(0.985 0 0 / 0.4);
+     --lp-buffered-start: /* dynamic via style prop */;
+     --lp-buffered-width: /* dynamic via style prop */;
+     --lp-played-width: /* dynamic via style prop */;
+     --lp-timeline-thumb-position: /* dynamic via style prop */;
+     
+     /* Volume specific */
+     --lp-volume-value: /* dynamic via style prop */;
      
      /* Controls fade gradient */
      --background-image-lp-controls-fade: linear-gradient(...);
    }
    ```
+   
+   Note: Variables marked as "dynamic via style prop" are component-scoped and set inline via React style props. They follow the `--lp-*` naming convention for consistency.
 
    As for November, 2025 I'm attaching a variable list of all styles under Neutral theme present in shadcn. Let's ensure we are using the correct styles and variables from below reference as some variables are not present in the globals.css file.
     ```css

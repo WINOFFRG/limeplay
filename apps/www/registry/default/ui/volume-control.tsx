@@ -11,6 +11,11 @@ import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 const VOLUME_RESET_BASE = 0.05
 
+export type VolumeRootPropsDocs = Pick<
+  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>,
+  "orientation" | "disabled"
+>
+
 export const Root = React.forwardRef<
   HTMLDivElement,
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
@@ -144,10 +149,13 @@ export const Progress = React.forwardRef<
 
 Progress.displayName = "VolumeProgress"
 
+export type VolumeThumbPropsDocs = Pick<ThumbProps, "showVolumeText">
+
 interface ThumbProps
   extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Thumb> {
   /**
    * Whether to show volume percentage as aria text
+   * @default true
    */
   showVolumeText?: boolean
 }
