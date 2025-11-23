@@ -1,5 +1,5 @@
+import * as React from "react"
 import type { ComponentPropsWithoutRef } from "react"
-import React from "react"
 
 import { cn } from "@/lib/utils"
 
@@ -7,13 +7,13 @@ export interface PlayerContainerProps extends ComponentPropsWithoutRef<"div"> {
   className?: string
 }
 
-export function PlayerContainer({
-  children,
-  className,
-  ...props
-}: PlayerContainerProps) {
+export const PlayerContainer = React.forwardRef<
+  HTMLDivElement,
+  PlayerContainerProps
+>(({ children, className, ...props }, ref) => {
   return (
     <div
+      ref={ref}
       data-layout-type="player-container"
       className={cn(
         "relative z-20 aspect-(--aspect-ratio) w-full overflow-hidden text-primary",
@@ -24,20 +24,22 @@ export function PlayerContainer({
       {children}
     </div>
   )
-}
+})
+
+PlayerContainer.displayName = "PlayerContainer"
 
 export interface ControlsContainerProps
   extends ComponentPropsWithoutRef<"div"> {
   className?: string
 }
 
-export function ControlsContainer({
-  children,
-  className,
-  ...props
-}: ControlsContainerProps) {
+export const ControlsContainer = React.forwardRef<
+  HTMLDivElement,
+  ControlsContainerProps
+>(({ children, className, ...props }, ref) => {
   return (
     <div
+      ref={ref}
       data-layout-type="controls-container"
       className={cn(
         "pointer-events-none absolute inset-0 isolate flex flex-col contain-strict",
@@ -48,7 +50,9 @@ export function ControlsContainer({
       {children}
     </div>
   )
-}
+})
+
+ControlsContainer.displayName = "ControlsContainer"
 
 export function ControlsOverlayContainer() {
   return (
@@ -69,13 +73,13 @@ export interface ControlsBottomContainerProps
   className?: string
 }
 
-export function ControlsBottomContainer({
-  children,
-  className,
-  ...props
-}: ControlsBottomContainerProps) {
+export const ControlsBottomContainer = React.forwardRef<
+  HTMLDivElement,
+  ControlsBottomContainerProps
+>(({ children, className, ...props }, ref) => {
   return (
     <div
+      ref={ref}
       data-layout-type="controls-bottom-container"
       className={cn(
         `
@@ -92,20 +96,22 @@ export function ControlsBottomContainer({
       {children}
     </div>
   )
-}
+})
+
+ControlsBottomContainer.displayName = "ControlsBottomContainer"
 
 export interface ControlsTopContainerProps
   extends ComponentPropsWithoutRef<"div"> {
   className?: string
 }
 
-export function ControlsTopContainer({
-  children,
-  className,
-  ...props
-}: ControlsTopContainerProps) {
+export const ControlsTopContainer = React.forwardRef<
+  HTMLDivElement,
+  ControlsTopContainerProps
+>(({ children, className, ...props }, ref) => {
   return (
     <div
+      ref={ref}
       data-layout-type="controls-top-container"
       className={cn(
         `
@@ -122,4 +128,6 @@ export function ControlsTopContainer({
       {children}
     </div>
   )
-}
+})
+
+ControlsTopContainer.displayName = "ControlsTopContainer"

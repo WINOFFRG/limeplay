@@ -9,6 +9,11 @@ import { useTimeline } from "@/registry/default/hooks/use-timeline"
 import { useTrackEvents } from "@/registry/default/hooks/use-track-events"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
+export type TimelineRootPropsDocs = Pick<
+  React.ComponentProps<typeof SliderPrimitive.Root>,
+  "orientation" | "disabled"
+>
+
 export const Root = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<typeof SliderPrimitive.Root>
@@ -142,6 +147,11 @@ export const Progress = React.forwardRef<
 
 Progress.displayName = "SliderProgress"
 
+export type TimelineThumbPropsDocs = Pick<
+  ThumbProps,
+  "position" | "showWithHover"
+>
+
 interface ThumbProps
   extends React.ComponentProps<typeof SliderPrimitive.Thumb> {
   /**
@@ -154,8 +164,17 @@ interface ThumbProps
   showWithHover?: boolean
 }
 
+export type TimelineBufferedPropsDocs = Pick<BufferedProps, "variant">
+
 interface BufferedProps
   extends React.ComponentProps<typeof SliderPrimitive.Track> {
+  /**
+   * How to render buffered ranges
+   * - "default": Show each buffered range separately
+   * - "combined": Merge all ranges into one
+   * - "from-zero": Show ranges from start to their end
+   * @default "default"
+   */
   variant?: "combined" | "from-zero" | "default"
 }
 

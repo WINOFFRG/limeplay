@@ -60,13 +60,14 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 </Step>
 </Steps>
 
-## Usage
+## Example Usage
 
 1. Design the playback button with icons and states.
 
 ```tsx lineNumbers title="components/player/playback-control-button.tsx"
 import { PauseIcon, PlayIcon } from "@phosphor-icons/react"
 
+import { Button } from "@/components/ui/button"
 import { useMediaStore } from "@/components/limeplay/media-provider"
 import { PlaybackControl } from "@/components/limeplay/playback-control"
 
@@ -74,29 +75,28 @@ export function PlaybackControlButton() {
   const status = useMediaStore((state) => state.status)
 
   return (
-    <Button size="icon" asChild>
-      <PlaybackControl>
-        {status === "playing" && <PauseIcon weight="fill" size={18} />}
-        {status === "paused" && <PlayIcon weight="fill" size={18} />}
-      </PlaybackControl>
-    </Button>
+    <PlaybackControl asChild>
+      <Button variant="ghost" size="icon">
+        {status === "playing" ? (
+          <PauseIcon weight="fill" size={18} />
+        ) : (
+          <PlayIcon weight="fill" size={18} />
+        )}
+      </Button>
+    </PlaybackControl>
   )
 }
 ```
 
-2. Place the button inside the `BottomControls` component.
+2. Use the component in your player.
 
-```tsx lineNumbers title="components/player/media-player.tsx"
-<Layout.ControlsContainer>
-  <BottomControls>
-    <PlaybackControlButton />
-  </BottomControls>
-</Layout.ControlsContainer>
+```tsx lineNumbers title="components/player/bottom-controls.tsx"
+<PlaybackControlButton />
 ```
 
 ## Understanding
 
-You can use the `status` field from media store to get the current status of the media. List of possible values are:
+The `PlaybackControl` component uses the [`usePlayer()`](/docs/hooks/use-player) hook to control playback state. You can use the `status` field from media store to get the current status of the media. List of possible values are:
 
 | Status      | Description                                   |
 | ----------- | --------------------------------------------- |
@@ -107,3 +107,17 @@ You can use the `status` field from media store to get the current status of the
 | `error`     | The media has encountered an error            |
 | `init`      | The media is initializing or has readyState 0 |
 | `stopped`   | The media has been stopped                    |
+
+The `PlaybackControl` component automatically handles all these states and shows appropriate behavior (e.g., "Replay" for ended state).
+
+## Components
+
+### PlaybackControl
+
+The main component for toggling play/pause state. It supports the **Slot pattern** (`asChild` prop) for composition.
+
+#### API Reference
+
+<AutoTypeTable path="./registry/default/ui/playback-control.tsx" name="PlaybackControlPropsDocs" />
+
+
