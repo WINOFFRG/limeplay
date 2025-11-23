@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button"
 import { MediaReadyState, usePlayer } from "@/registry/default/hooks/use-player"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-export interface PlaybackControlProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface PlaybackControlProps extends React.ComponentProps<typeof Button> {
+  shortcut?: string
   asChild?: boolean
 }
 
@@ -17,20 +17,62 @@ export const PlaybackControl = React.forwardRef<
   PlaybackControlProps
 >((props, forwardedRef) => {
   const status = useMediaStore((state) => state.status)
-  const Comp = props.asChild ? Slot : Button
   const readyState = useMediaStore((state) => state.readyState)
-
   const { togglePaused } = usePlayer()
+
+  const {
+    children,
+    onClick,
+    disabled: userDisabled,
+    "aria-label": ariaLabelProp,
+    shortcut,
+    asChild = false,
+    ...restProps
+  } = props
+
+  const Comp = asChild ? Slot : Button
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(event)
+    if (!event.defaultPrevented) {
+      togglePaused()
+    }
+  }
+
+  const isDisabled =
+    readyState < MediaReadyState.HAVE_CURRENT_DATA ||
+    status === "buffering" ||
+    userDisabled
+
+  const getDefaultAriaLabel = () => {
+    const shortcutText = shortcut ? ` (keyboard shortcut ${shortcut})` : ""
+    const labels = {
+      ended: "Replay",
+      playing: "Pause",
+      default: "Play",
+    }
+
+    const label =
+      status === "ended"
+        ? labels.ended
+        : status === "playing"
+          ? labels.playing
+          : labels.default
+    return `${label}${shortcutText}`
+  }
 
   return (
     <Comp
-      disabled={readyState < MediaReadyState.HAVE_CURRENT_DATA}
+      data-label="lp-playback-control"
+      disabled={isDisabled}
+      aria-label={ariaLabelProp ?? getDefaultAriaLabel()}
+      aria-keyshortcuts={shortcut}
+      {...restProps}
       ref={forwardedRef}
-      aria-label={["paused", "ended"].includes(status) ? `Play` : `Pause`}
-      aria-keyshortcuts="k"
-      {...props}
-      onClick={togglePaused}
-    />
+      onClick={handleClick}
+    >
+      {children}
+    </Comp>
   )
 })
 

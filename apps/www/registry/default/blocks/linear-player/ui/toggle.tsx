@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils"
 
 const toggleVariants = cva(
   `
-    inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none
-    hover:bg-muted hover:text-muted-foreground
-    focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+    inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow]
+    hover:bg-muted
+    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground/50
     disabled:pointer-events-none disabled:opacity-50
     aria-invalid:border-destructive aria-invalid:ring-destructive/20
     data-[state=on]:bg-accent data-[state=on]:text-accent-foreground
