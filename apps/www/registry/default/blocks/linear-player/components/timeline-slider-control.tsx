@@ -31,7 +31,7 @@ export function TimelineSliderControl() {
           <TimelineSlider.Thumb
             showWithHover
             className={`
-              absolute h-8 w-px rounded-full bg-lp-accent/60 opacity-0 transition-opacity duration-[var(--lp-transition-speed-regular)]
+              absolute h-8 w-px rounded-full bg-primary/60 opacity-0 transition-opacity duration-(--lp-transition-speed-regular)
               group-hover/timeline:opacity-100
               group-active/timeline:bg-white
             `}
@@ -40,7 +40,7 @@ export function TimelineSliderControl() {
             showWithHover
             className={`
               top-auto! bottom-[calc(100%+16px)] flex h-auto w-fit bg-transparent text-xs font-medium opacity-0 transition-opacity
-              duration-[var(--lp-transition-speed-regular)]
+              duration-(--lp-transition-speed-regular)
               group-hover/timeline:opacity-100
             `}
           >
@@ -48,7 +48,7 @@ export function TimelineSliderControl() {
             {!isLive && (
               <>
                 &nbsp;/&nbsp;
-                <Duration className="text-lp-accent/60" />
+                <Duration className="text-primary/60" />
               </>
             )}
           </TimelineSlider.Thumb>
@@ -57,8 +57,12 @@ export function TimelineSliderControl() {
       {!isLive && (
         <Button
           variant="glass"
-          size="icon"
-          className="h-6 w-14 cursor-pointer"
+          size="sm"
+          className={`
+            h-6 w-14 cursor-pointer
+            hover:bg-transparent
+            focus-visible:bg-transparent
+          `}
           onClick={() => {
             setShowRemaining(!showRemaining)
           }}
@@ -84,14 +88,12 @@ export function TimelineSliderControl() {
             onClick={() => void player.goToLive()}
             aria-label="Go to live"
           >
-            <span className="text-xs font-medium text-lp-accent">
-              Go to live
-            </span>
+            <span className="text-xs font-medium text-primary">Go to live</span>
           </Button>
         </>
       )}
       {liveLatency && liveLatency <= 1 && (
-        <div className="flex items-center rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold tracking-wide text-white">
+        <div className="flex items-center rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold tracking-wide">
           <div className="mr-1 h-2 w-2 animate-caret-blink rounded-full bg-foreground" />
           <span className="tracking-widest">LIVE</span>
         </div>

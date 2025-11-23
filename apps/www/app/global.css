@@ -47,13 +47,6 @@
   --foreground: oklch(0.145 0 0);
   --surface: oklch(0.98 0 0);
 
-  /* Limeplay Colors */
-  --lp-primary: oklch(0.205 0 0);
-  --lp-primary-foreground: oklch(0.985 0 0);
-  --lp-accent: oklch(0.269 0 0);
-
-  --lp-outline-color: oklch(0.922 0 0 / 0.5);
-
   /* Limeplay Static */
   --lp-timeline-track-height: 4px;
   --lp-timeline-track-height-active: 7px;
@@ -102,13 +95,6 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
   --surface: oklch(0.2 0 0);
-
-  /* Limeplay Colors */
-  --lp-primary: oklch(1 0 0);
-  --lp-primary-foreground: oklch(0.205 0 0);
-  --lp-accent: oklch(0.97 0 0);
-
-  --lp-outline-color: oklch(0.922 0 0 / 0.5);
 
   --background-image-lp-controls-fade: linear-gradient(
     to bottom,
@@ -173,10 +159,6 @@
   --color-surface: var(--surface);
 
   /* Limeplay */
-  --color-lp-primary: var(--lp-primary);
-  --color-lp-primary-foreground: var(--lp-primary-foreground);
-  --color-lp-accent: var(--lp-accent);
-
   --color-outline: var(--lp-outline-color);
 
   --ease-out-quad: var(--lp-transition-ease-out-quad);

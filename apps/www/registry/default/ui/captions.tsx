@@ -12,27 +12,54 @@ import { useMediaStore } from "@/registry/default/ui/media-provider"
 export interface CaptionsControlProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean
+  shortcut?: string
 }
 
 export const CaptionsControl = React.forwardRef<
   HTMLButtonElement,
   CaptionsControlProps
 >((props, forwardedRef) => {
-  const Comp = props.asChild ? Slot : Button
   const textTracks = useMediaStore((state) => state.textTracks)
-
   const { toggleCaptionVisibility } = useCaptions()
+
+  const {
+    children,
+    onClick,
+    disabled: userDisabled,
+    "aria-label": ariaLabelProp,
+    shortcut,
+    asChild = false,
+    ...restProps
+  } = props
+
+  const Comp = asChild ? Slot : Button
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(event)
+    if (!event.defaultPrevented) {
+      toggleCaptionVisibility()
+    }
+  }
+
+  const isDisabled = !textTracks || textTracks.length === 0 || userDisabled
+
+  const getDefaultAriaLabel = () => {
+    const shortcutText = shortcut ? ` (keyboard shortcut ${shortcut})` : ""
+    return `Captions${shortcutText}`
+  }
 
   return (
     <Comp
-      disabled={!textTracks || textTracks.length === 0}
-      data-slot="captions-control"
-      {...props}
+      disabled={isDisabled}
+      data-label="lp-captions-control"
+      aria-label={ariaLabelProp ?? getDefaultAriaLabel()}
+      aria-keyshortcuts={shortcut}
+      {...restProps}
       ref={forwardedRef}
-      onClick={toggleCaptionVisibility}
-      aria-label="Captions (keyboard shortcut c)"
-      aria-keyshortcuts="c"
-    />
+      onClick={handleClick}
+    >
+      {children}
+    </Comp>
   )
 })
 
@@ -66,7 +93,7 @@ export const CaptionsContainer = React.forwardRef<
     <div
       ref={composeRefs(ref, setContainerElement)}
       className={cn(
-        "relative flex w-full grow flex-col justify-end text-lg text-white",
+        "relative flex w-full grow flex-col justify-end text-lg",
         className
       )}
       {...etc}
