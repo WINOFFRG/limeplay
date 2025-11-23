@@ -1,0 +1,84 @@
+---
+title: use-track-events
+description: Utility hook for handling pointer events on slider tracks
+---
+
+## Installation
+
+```npm
+npx shadcn add @limeplay/use-track-events
+```
+
+## Example Usage
+
+Use `useTrackEvents` to handle pointer interactions on slider components.
+
+```tsx lineNumbers title="components/player/custom-slider.tsx"
+import { useTrackEvents } from "@/hooks/limeplay/use-track-events"
+
+export function CustomSlider() {
+  const trackEvents = useTrackEvents({
+    orientation: "horizontal",
+    onPointerDown: (progress, event) => {
+      console.log("Pointer down at:", progress)
+    },
+    onPointerMove: (progress, isPointerDown, event) => {
+      if (isPointerDown) {
+        console.log("Dragging at:", progress)
+      } else {
+        console.log("Hovering at:", progress)
+      }
+    },
+    onPointerUp: (event) => {
+      console.log("Pointer up")
+    },
+  })
+
+  return (
+    <div
+      {...trackEvents}
+      className="h-2 w-full bg-gray-200 rounded"
+    />
+  )
+}
+```
+
+## Understanding
+
+The `use-track-events` hook provides a standardized way to handle pointer events on slider/track components. It:
+
+- Calculates progress (0-1) based on pointer position and orientation
+- Handles pointer capture for smooth dragging
+- Supports both horizontal and vertical orientations
+- Provides separate handlers for down, move, up, and out events
+- Automatically clamps progress values between 0 and 1
+
+This hook is used internally by `timeline-control` and `volume-control` components for their slider interactions.
+
+## API Reference
+
+### useTrackEvents(props)
+
+Returns event handlers for pointer interactions on track elements.
+
+#### Parameters
+
+| Property        | Type                                                      | Description                                    |
+| --------------- | --------------------------------------------------------- | ---------------------------------------------- |
+| `orientation`   | `"horizontal" \| "vertical"`                              | Track orientation. Default: `"horizontal"`      |
+| `onPointerDown` | `(progress: number, event: React.PointerEvent) => void`   | Called when pointer is pressed down            |
+| `onPointerMove` | `(progress: number, isPointerDown: boolean, event: React.PointerEvent) => void` | Called on pointer move (fires even when not down) |
+| `onPointerUp`   | `(event: React.PointerEvent) => void`                     | Called when pointer is released                |
+| `onPointerOut`  | `(event: React.PointerEvent) => void`                     | Called when pointer leaves the element         |
+
+#### Returns
+
+Returns an object with event handlers that can be spread onto a track element:
+
+| Property        | Type                                                      | Description                                    |
+| --------------- | --------------------------------------------------------- | ---------------------------------------------- |
+| `onPointerDown` | `(event: React.PointerEvent) => void`                     | Pointer down handler                           |
+| `onPointerMove` | `(event: React.PointerEvent) => void`                     | Pointer move handler                           |
+| `onPointerUp`   | `(event: React.PointerEvent) => void`                     | Pointer up handler                             |
+| `onPointerOut`  | `(event: React.PointerEvent) => void`                     | Pointer out handler                            |
+

@@ -14,5 +14,6 @@
     "fallback-poster",
     "player-layout",
     "captions"
-  ]
+  ],
+  "defaultOpen": true
 }

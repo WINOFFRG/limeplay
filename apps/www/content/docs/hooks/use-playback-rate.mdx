@@ -1,0 +1,138 @@
+---
+title: use-playback-rate
+description: Hook for managing playback speed and trickplay
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+## Installation
+
+<Steps>
+<Step>
+### Install the hook
+```npm
+npx shadcn add @limeplay/use-playback-rate
+```
+</Step>
+
+<Step>
+### Add Event & Action Bridge
+Import the `usePlaybackRateStates` hook in your existing `PlayerHooks` component.
+
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+"use client"
+
+import React from "react"
+
+import { usePlaybackRateStates } from "@/hooks/limeplay/use-playback-rate" // [!code ++]
+import { usePlayerStates } from "@/hooks/limeplay/use-player"
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+
+export const PlayerHooks = React.memo(() => {
+  useShakaPlayer()
+  usePlayerStates()
+  usePlaybackRateStates() // [!code ++]
+
+  return null
+})
+```
+
+</Step>
+<Step>
+### Add the Store States
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+import {
+  createPlaybackRateStore,
+  PlaybackRateStore,
+} from "@/hooks/limeplay/use-playback-rate"
+import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+
+// [!code ++]
+
+export type TypeMediaStore = PlayerStore & PlaybackRateStore & {} // [!code ++]
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlayerStore(...etc),
+    ...createPlaybackRateStore(...etc), // [!code ++]
+    ...initProps,
+  }))
+  return mediaStore
+}
+```
+
+</Step>
+</Steps>
+
+## Example Usage
+
+Use the `usePlaybackRate()` hook to control playback speed.
+
+```tsx lineNumbers title="components/player/playback-rate-control.tsx"
+import { usePlaybackRate } from "@/hooks/limeplay/use-playback-rate"
+import { useMediaStore } from "@/components/limeplay/media-provider"
+
+export function PlaybackRateControl() {
+  const playbackRate = useMediaStore((state) => state.playbackRate)
+  const playbackRates = useMediaStore((state) => state.playbackRates)
+  const { setPlaybackRate, setTrickplayRate } = usePlaybackRate()
+
+  return (
+    <select
+      value={playbackRate}
+      onChange={(e) => setPlaybackRate(Number(e.target.value))}
+    >
+      {playbackRates.map((rate) => (
+        <option key={rate} value={rate}>
+          {rate}x
+        </option>
+      ))}
+    </select>
+  )
+}
+```
+
+## Understanding
+
+The `use-playback-rate` hook provides playback speed control following the **Event & Action Bridge** pattern:
+
+- **Event Bridge**: `usePlaybackRateStates()` listens to `ratechange` events from both the media element and Shaka Player, syncing the current playback rate to the React store
+- **Action Bridge**: `usePlaybackRate()` provides `setPlaybackRate()` for standard playback speed and `setTrickplayRate()` for Shaka Player's trickplay feature
+
+### Playback Rates
+
+Default available rates: `[0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]`
+
+These can be customized in your media store configuration.
+
+### Trickplay
+
+Shaka Player's trickplay feature allows fast-forward and rewind at custom speeds, which is useful for seeking through content quickly.
+
+## API Reference
+
+### usePlaybackRateStates()
+
+Sets up event listeners for playback rate changes. This hook should be called once in your `PlayerHooks` component.
+
+### usePlaybackRate()
+
+Returns control functions for managing playback rate.
+
+#### Returns
+
+| Property          | Type                              | Description                                    |
+| ----------------- | --------------------------------- | ---------------------------------------------- |
+| `setPlaybackRate` | `(rate: number) => void`           | Sets the playback rate for the media element   |
+| `setTrickplayRate` | `(rate: number, forced?: boolean) => void` | Sets trickplay rate using Shaka Player |
+
+### Store State
+
+The playback rate store provides the following state accessed via `useMediaStore`:
+
+| Property       | Type       | Description                                    |
+| -------------- | ---------- | ---------------------------------------------- |
+| `playbackRate` | `number`   | Current playback rate (e.g., 1, 1.5, 2)        |
+| `playbackRates` | `number[]` | Available playback rates                       |
+

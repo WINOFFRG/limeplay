@@ -7,8 +7,21 @@ import { Button } from "@/components/ui/button"
 import { MediaReadyState, usePlayer } from "@/registry/default/hooks/use-player"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
+export type PlaybackControlPropsDocs = Pick<
+  PlaybackControlProps,
+  "shortcut" | "asChild"
+>
+
 interface PlaybackControlProps extends React.ComponentProps<typeof Button> {
+  /**
+   * Keyboard shortcut hint displayed in aria-label
+   * @example "Space"
+   */
   shortcut?: string
+  /**
+   * Render as child component using Radix Slot
+   * @default false
+   */
   asChild?: boolean
 }
 

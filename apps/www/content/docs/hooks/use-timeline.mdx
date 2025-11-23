@@ -1,0 +1,153 @@
+---
+title: use-timeline
+description: Hook for managing timeline state, seeking, and buffered ranges
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+## Installation
+
+<Steps>
+<Step>
+### Install the hook
+```npm
+npx shadcn add @limeplay/use-timeline
+```
+</Step>
+
+<Step>
+### Add Event & Action Bridge
+Import the `useTimelineStates` hook in your existing `PlayerHooks` component.
+
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+import React from "react"
+
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+import { useTimelineStates } from "@/hooks/limeplay/use-timeline" // [!code ++]
+
+export const PlayerHooks = React.memo(() => {
+  useShakaPlayer()
+  useTimelineStates() // [!code ++]
+
+  return null
+})
+```
+
+</Step>
+
+<Step>
+### Add the Store States
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+import {
+  createTimelineStore,
+  TimelineStore,
+} from "@/hooks/limeplay/use-timeline"
+
+// [!code ++]
+
+export type TypeMediaStore = PlayerStore & TimelineStore & {} // [!code ++]
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlayerStore(...etc),
+    ...createTimelineStore(...etc), // [!code ++]
+    ...initProps,
+  }))
+  return mediaStore
+}
+```
+
+</Step>
+</Steps>
+
+## Example Usage
+
+Use the `useTimeline()` hook to implement seeking functionality.
+
+```tsx lineNumbers title="components/player/timeline-slider.tsx"
+import { useTimeline } from "@/hooks/limeplay/use-timeline"
+import { useMediaStore } from "@/components/limeplay/media-provider"
+
+export function TimelineSlider() {
+  const duration = useMediaStore((state) => state.duration)
+  const currentTime = useMediaStore((state) => state.currentTime)
+  const { seek, getTimeFromEvent } = useTimeline()
+
+  return (
+    <div
+      onPointerDown={(e) => {
+        const time = getTimeFromEvent(e)
+        seek(time)
+      }}
+    >
+      <div style={{ width: `${(currentTime / duration) * 100}%` }} />
+    </div>
+  )
+}
+```
+
+## Understanding
+
+The `use-timeline` hook provides comprehensive timeline management following the **Event & Action Bridge** pattern:
+
+- **Event Bridge**: `useTimelineStates()` polls media state (default 500ms) and listens to `durationchange`, `progress`, and Shaka Player events to update `currentTime`, `duration`, `progress`, and `buffered` ranges
+- **Action Bridge**: `useTimeline()` provides `seek()`, `setHoveringTime()`, and `getTimeFromEvent()` functions for timeline interactions
+
+### Live Stream Support
+
+The hook automatically handles live streams:
+- Uses Shaka Player's `seekRange()` for proper DVR seeking
+- Calculates live latency
+- Adjusts progress calculation for sliding window streams
+- Provides `isLive` and `liveLatency` state
+
+### Buffered Ranges
+
+The hook provides `processBufferedRanges()` function that supports three variants:
+- `default` - Shows all buffered ranges as-is
+- `combined` - Combines all ranges into a single range
+- `from-zero` - Shows ranges starting from 0
+
+## API Reference
+
+### useTimelineStates
+
+Sets up polling and event listeners for timeline state updates.
+
+#### Parameters
+
+| Property        | Type     | Default | Description                                    |
+| --------------- | -------- | ------- | ---------------------------------------------- |
+| `updateDuration` | `number` | `500`   | Interval in milliseconds to update timeline state |
+
+### useTimeline()
+
+Returns control functions for timeline interactions.
+
+#### Returns
+
+| Property              | Type                                                      | Description                                    |
+| --------------------- | --------------------------------------------------------- | ---------------------------------------------- |
+| `seek`                | `(time: number) => void`                                  | Seeks to the specified time (handles live streams) |
+| `setHoveringTime`     | `(time: number) => void`                                  | Sets the hover time for timeline preview        |
+| `setIsHovering`       | `(isHovering: boolean) => void`                           | Sets the hovering state                         |
+| `getTimeFromEvent`    | `(event: React.PointerEvent) => number`                    | Calculates time from pointer event position     |
+| `processBufferedRanges` | `(ranges: BufferedRange[], variant?: string) => Array` | Processes buffered ranges for display           |
+
+### Store State
+
+The timeline store provides the following state accessed via `useMediaStore`:
+
+| Property        | Type                          | Description                                    |
+| --------------- | ----------------------------- | ---------------------------------------------- |
+| `duration`      | `number`                      | Total media duration in seconds                 |
+| `currentTime`   | `number`                      | Current playback time in seconds                |
+| `progress`      | `number`                      | Playback progress (0-1)                         |
+| `hoveringTime`  | `number`                      | Time at cursor position on timeline             |
+| `isHovering`    | `boolean`                     | Whether the user is hovering over the timeline  |
+| `buffered`      | `shaka.extern.BufferedRange[]` | Array of buffered time ranges                   |
+| `liveLatency`   | `number \| null`              | Live stream latency in seconds (null for VOD)  |
+| `isLive`        | `boolean`                     | Whether the media is a live stream              |
+

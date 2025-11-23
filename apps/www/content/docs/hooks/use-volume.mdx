@@ -1,0 +1,142 @@
+---
+title: use-volume
+description: Hook for managing volume and mute state
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+## Installation
+
+<Steps>
+<Step>
+### Install the hook
+```npm
+npx shadcn add @limeplay/use-volume
+```
+</Step>
+
+<Step>
+### Add Event & Action Bridge
+Import the `useVolumeStates` hook in your existing `PlayerHooks` component.
+
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+import React from "react"
+
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+import { useVolumeStates } from "@/hooks/limeplay/use-volume" // [!code ++]
+
+export const PlayerHooks = React.memo(() => {
+  useShakaPlayer()
+  useVolumeStates() // [!code ++]
+
+  return null
+})
+```
+
+</Step>
+
+<Step>
+### Add the Store States
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+import { createVolumeStore, VolumeStore } from "@/hooks/limeplay/use-volume"
+
+// [!code ++]
+
+export type TypeMediaStore = PlayerStore & VolumeStore & {} // [!code ++]
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlayerStore(...etc),
+    ...createVolumeStore(...etc), // [!code ++]
+    ...initProps,
+  }))
+  return mediaStore
+}
+```
+
+</Step>
+</Steps>
+
+## Example Usage
+
+Use the `useVolume()` hook to control volume in your components.
+
+```tsx lineNumbers title="components/player/volume-control.tsx"
+import { useVolume } from "@/hooks/limeplay/use-volume"
+import { useMediaStore } from "@/components/limeplay/media-provider"
+
+export function VolumeControl() {
+  const volume = useMediaStore((state) => state.volume)
+  const muted = useMediaStore((state) => state.muted)
+  const { setVolume, toggleMute } = useVolume()
+
+  return (
+    <div>
+      <input
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        value={volume}
+        onChange={(e) => setVolume(Number(e.target.value))}
+      />
+      <button onClick={toggleMute}>
+        {muted ? "Unmute" : "Mute"}
+      </button>
+    </div>
+  )
+}
+```
+
+## Understanding
+
+The `use-volume` hook provides volume and mute management following the **Event & Action Bridge** pattern:
+
+- **Event Bridge**: `useVolumeStates()` listens to `volumechange` and `audiotrackschanged` events, syncing volume, mute, and audio track availability to the React store
+- **Action Bridge**: `useVolume()` provides `setVolume()`, `toggleMute()`, and `setMuted()` functions that control the native media element
+
+The hook automatically handles edge cases like setting volume to 0 (which automatically mutes) and provides a reset volume value when unmuting from 0.
+
+## API Reference
+
+### useVolumeStates()
+
+Sets up event listeners for volume changes and audio track changes. This hook should be called once in your `PlayerHooks` component.
+
+### useVolume()
+
+Returns control functions for managing volume and mute state.
+
+#### Returns
+
+| Property    | Type                        | Description                                    |
+| ----------- | --------------------------- | ---------------------------------------------- |
+| `setVolume` | `(volume: number, progress?: number, delta?: number) => void` | Sets the volume (0-1). Automatically mutes if volume is 0 |
+| `toggleMute` | `() => void`                | Toggles mute state                             |
+| `setMuted`  | `(muted: boolean) => void`  | Sets the mute state                            |
+
+#### setVolume Parameters
+
+| Parameter | Type     | Description                                                                 |
+| --------- | -------- | --------------------------------------------------------------------------- |
+| `volume`  | `number` | Target volume level (0-1)                                                   |
+| `progress` | `number` (optional) | Current playback progress or normalized position used when driving volume from a scrubber |
+| `delta`   | `number` (optional) | Change in volume since last call, useful for animation or smoothing        |
+
+**When to use optional parameters:**
+
+- **`progress`**: Pass when updating volume from a drag handler or scrubber interaction where you need to map a position to volume (e.g., `setVolume(0.5, event.clientX / sliderWidth)`).
+- **`delta`**: Pass when implementing animated volume changes or smoothing transitions (e.g., `setVolume(currentVolume, 0, 0.1)` to increment by 0.1).
+
+### Store State
+
+The volume store provides the following state accessed via `useMediaStore`:
+
+| Property | Type      | Description                                    |
+| -------- | --------- | ---------------------------------------------- |
+| `volume` | `number`  | Current volume level (0-1)                     |
+| `muted`  | `boolean` | Whether the media is muted                      |
+| `hasAudio` | `boolean` | Whether the media has audio tracks available    |
+
