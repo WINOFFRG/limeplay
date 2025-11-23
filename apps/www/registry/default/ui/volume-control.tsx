@@ -102,7 +102,7 @@ export const Track = React.forwardRef<
     <SliderPrimitive.Track
       ref={ref}
       className={cn(
-        "relative size-full overflow-hidden rounded-md bg-lp-accent/30",
+        "relative size-full overflow-hidden rounded-md bg-primary/30",
         className
       )}
       {...etc}
@@ -126,8 +126,8 @@ export const Progress = React.forwardRef<
       ref={ref}
       className={cn(
         `
-          h-full w-(--lp-volume-value) bg-lp-accent
-          data-[disabled]:bg-lp-accent/20
+          h-full w-(--lp-volume-value) bg-primary
+          data-disabled:bg-primary/20
         `,
         "data-[orientation=vertical]:h-(--lp-volume-value) data-[orientation=vertical]:w-full",
         className
@@ -163,9 +163,9 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
         ref={ref}
         className={cn(
           `
-            block size-2 rounded-full bg-lp-accent
-            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lp-accent/50
-            data-[disabled]:bg-lp-accent/85
+            block size-2 rounded-full bg-primary
+            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50
+            data-disabled:bg-primary/85
           `,
           className
         )}

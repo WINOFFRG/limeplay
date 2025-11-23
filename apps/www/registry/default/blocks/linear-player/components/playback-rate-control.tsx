@@ -11,26 +11,20 @@ export function PlaybackRateControl() {
         <PlaybackRate.SelectTrigger
           size="sm"
           className={`
-            border-none bg-transparent px-8
-            data-[highlighted]:!bg-accent/80
-            data-[popup-open]:!bg-accent
-            dark:bg-transparent
+            border-none bg-transparent px-8 shadow-none
+            hover:bg-foreground/10
+            dark:bg-transparent dark:shadow-none
           `}
         />
       </Button>
-      <Select.SelectPositioner className="z-[100]" align="start">
+      <Select.SelectPositioner className="z-100" align="start">
         <Select.SelectContent
           className={`
             min-w-24 backdrop-blur-md
             dark:bg-accent
           `}
         >
-          <PlaybackRate.SelectGroup
-            className={`
-              tracking-wider
-              dark:text-accent-foreground dark:hover:bg-primary/10
-            `}
-          />
+          <PlaybackRate.SelectGroup className={`tracking-wider`} />
         </Select.SelectContent>
       </Select.SelectPositioner>
     </PlaybackRate.SelectRoot>

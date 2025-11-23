@@ -5,6 +5,7 @@ import { z } from "zod"
 
 import { getRegistryComponent, getRegistryItem } from "@/lib/registry"
 import { atomReader } from "@/hooks/use-config"
+import { ThemeToggle } from "@/components/layouts/theme-toggle"
 
 export const revalidate = false
 export const dynamic = "force-static"
@@ -49,6 +50,9 @@ export default async function BlockPage({
 
   return (
     <div className={item.meta?.container}>
+      {process.env.NODE_ENV === "development" && (
+        <ThemeToggle className="absolute top-2 right-2 z-50" />
+      )}
       <Component {...item.meta?.props} />
     </div>
   )
