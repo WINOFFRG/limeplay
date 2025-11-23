@@ -1,4 +1,5 @@
 import { intervalToDuration } from "date-fns/intervalToDuration"
+import type shaka from "shaka-player"
 
 const MAX_SAFE_SECONDS = 8.64e12
 

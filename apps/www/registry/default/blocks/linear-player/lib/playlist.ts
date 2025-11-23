@@ -1,3 +1,5 @@
+import type shaka from "shaka-player"
+
 export interface DemoAsset {
   title: string
   description?: string

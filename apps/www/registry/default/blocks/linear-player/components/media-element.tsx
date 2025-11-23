@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import type shaka from "shaka-player"
 
 import { ASSETS } from "@/registry/default/blocks/linear-player/lib/playlist"
 import { Media } from "@/registry/default/ui/media"
