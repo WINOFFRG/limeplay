@@ -34,7 +34,7 @@ export function CaptionsStateControlDemo() {
         player.setTextTrackVisibility(true)
         console.log("Text track added")
       })
-      .catch((error) => {
+      .catch((error: unknown) => {
         console.error("Error adding text track:", error)
       })
   }, [readyState, player])

@@ -48,7 +48,9 @@ export function useCaptionsStates() {
       return
     }
 
-    const activeTextTrack = player.getTextTracks().find((t) => t.active)
+    const activeTextTrack = player
+      .getTextTracks()
+      .find((t: shaka.extern.TextTrack) => t.active)
 
     store.setState({ activeTextTrack })
   }
@@ -136,7 +138,9 @@ export function useCaptions() {
 
       player.selectTextTrack(track)
 
-      const activeTextTrack = player.getTextTracks().find((t) => t.active)
+      const activeTextTrack = player
+        .getTextTracks()
+        .find((t: shaka.extern.TextTrack) => t.active)
 
       store.setState({ activeTextTrack })
 
