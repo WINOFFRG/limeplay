@@ -1,4 +1,4 @@
-Limeplay is a shadcn/ui CLI based modern UI library for building media players in React. The goal øf this library is to allow industry level media players like Spotify, Netflix, Youtube and many more platform with ease. This is UI library focused on UI Logic, accessibility, composable architecture and headless design. This library provides unopiniated styles and works on top of Shaka Player which acts as a player engine for the same. All the components in `apps/www/registry/default/ui` provides the UI components and `apps/www/registry/default/hooks` provides the logic components, a lot of them are interlinked and can be used together to build a complete media player. Currently we are building `apps/www/registry/default/blocks/linear-player` as the first example which represents the true representation of using this media player library. Since we are developing at a high velocity, we need out documentation to be up to date and accurate. Each document also consists of an isolated code example which is rendered in docs page by writing `<ComponentPreview name="$$" withPlayer />` where name attribute represents the ID of that component registered in registry.
+Limeplay is a shadcn/ui CLI-based modern UI library for building media players in React. The goal of this library is to allow industry-level media players like Spotify, Netflix, YouTube and many more platforms with ease. This is a UI library focused on UI Logic, accessibility, composable architecture and headless design. This library provides unopinionated styles and works on top of Shaka Player which acts as a player engine for the same. All the components in `apps/www/registry/default/ui` provides the UI components and `apps/www/registry/default/hooks` provides the logic components, a lot of them are interlinked and can be used together to build a complete media player. Currently we are building `apps/www/registry/default/blocks/linear-player` as the first example which represents the true representation of using this media player library. Since we are developing at a high velocity, we need our documentation to be up to date and accurate. Each document also consists of an isolated code example which is rendered in docs page by writing `<ComponentPreview name="$$" withPlayer />` where name attribute represents the ID of that component registered in registry.
 
 ## Core Architecture Understanding
 
@@ -41,7 +41,7 @@ import { LinearMediaPlayer } from "@/blocks/linear-player"
 
 Coming back to the documentation, once we register the component it is ready to be used by the outside world. Now there are few things we need to ensure while writing the documentation. 
 
-1. Check if the documentation file exists or not in their relative domain `apps/www/content/docs` currently we are primarily focusing on `components`, `hooks` and `blocks` domains.
+1. Check whether the documentation file exists in the relative domain `apps/www/content/docs`; currently we are primarily focusing on the `components`, `hooks`, and `blocks` domains.
 2. If a component relies on a hook like `mute-control` component relies on `use-volume` hook, you MUST include both the hook import in `PlayerHooks` AND the store composition in `create-media-store.ts`. This implements the "Event & Action Bridge" pattern:
    - **Event Bridge**: Add `useVolumeStates()` to `PlayerHooks` component  
    - **Action Bridge**: Add `VolumeStore` to `TypeMediaStore` composition
@@ -49,7 +49,7 @@ Coming back to the documentation, once we register the component it is ready to 
    
    For example usage, always refer to `apps/www/content/docs/components/mute-control.mdx` documentation file. If there's doubt about usage patterns, notify the user immediately. Also reference `apps/www/registry/default/blocks` for working examples with proper hook integration. 
 3. Once we provide with the installation steps, we provide the usage. Same instructions as provided in point 2 applies here as well. 
-4. Till above is must not comes things like Understanding where we describe the respective hook or component. In understanding section we try to keep it as simple and explanatory as possible.
+4. Once the above steps are complete, proceed to the Understanding section, where we describe the respective hook or component. In the understanding section we try to keep it as simple and explanatory as possible.
 5. Once done we also provide with the API reference of that hook or component. Since we are using fumadocs we need to specify `<AutoTypeTable path="./registry/default/ui/media.tsx" name="MediaPropsDocs" />` where path stands for file and name stands for type to look. Now see there might be some edge cases for example in `apps/www/registry/default/ui/media.tsx` component we have a type which extends a type like `React.VideoHTMLAttributes` which could ruin the documentation, so in such cases we explicitly define a new type specifically for docs. I am attaching an example below.
     ```tsx
     export type MediaPropsDocs = Pick<MediaProps, "as">
@@ -100,7 +100,7 @@ export function Component({ asChild = false, ...props }: ComponentProps) {
 3. **Ref Composition**: Use `composeRefs` from `@radix-ui/react-compose-refs` for multiple refs
 4. **Slot Support**: Always support `asChild` prop for component composition
 
-6. The library also aims to create a composable architecture, You can again confirm this on https://www.components.build/ guidelines via the context7 MCP. In case you find any component or hook is not composable or can be improved, you can always notify the agent and I will myself update the codebase. We are always open to improve the codebase and make it more composable and reusable.
+6. The library also aims to create a composable architecture. You can again confirm this on [components.build](https://www.components.build/) guidelines via the context7 MCP. In case you find any component or hook is not composable or can be improved, you can always notify the agent and I will myself update the codebase. We are always open to improve the codebase and make it more composable and reusable.
 
 7. Components should follow WAI-ARIA guidelines and should be accessible. **Media Player Accessibility Requirements**:
    - **ARIA Labels**: All controls must have proper `aria-label` or `aria-labelledby` 
@@ -211,7 +211,7 @@ export function Component({ asChild = false, ...props }: ComponentProps) {
 
 9. We must all ensure that our code writing and style and patterns are consistent across the codebase. Some examples are: Using ...etc for spreading props, ensuring prop priority order, adding styles for hover, disabled, focus-visible states as well as dark mode. Composing events without blocking it via prop, using Slot for composable design, not force over-riding any prop and providing the ability to override the prop values.
 
-That's all most likely for the documentation, we will try to be consistent with the documentation in all the cases and ensure that a developer doesn't feel either overwhelmed with the information or confused with the usage. You should possibly think of all questions that a developer might have and try to answer them in the documentation. As an LLM it's your responsibility to ensure the documentation is up to date and accurate and LLM friendly as well.
+That's all most likely for the documentation, we will try to be consistent with the documentation in all the cases and ensure that a developer doesn't feel either overwhelmed with the information or confused with the usage. You should possibly think of all questions that a developer might have and try to answer them in the documentation. As an LLM it's your responsibility to ensure the documentation is up to date and accurate and LLM-friendly as well.
 
 In all the cases the developer is present and expects AI to notify or ask directly the user. In case of any missing codebase it should be updated in steps and notified the to the user during AI code review process. The agent should be responible in updating the codebase.
 
