@@ -15,18 +15,18 @@ export function PlaybackStateControl() {
   const status = useMediaStore((state) => state.status)
 
   return (
-    <Button size="icon" variant="glass" asChild>
-      <PlaybackControl>
+    <PlaybackControl asChild>
+      <Button variant="glass" size="icon" className="cursor-pointer">
         {status === "playing" ? (
-          <PauseIcon weight="fill" size={18} />
+          <PauseIcon weight="fill" />
         ) : status === "ended" ? (
-          <RepeatIcon size={18} />
+          <RepeatIcon />
         ) : status === "buffering" ? (
-          <CircleNotchIcon className="animate-spin" size={18} weight="bold" />
+          <CircleNotchIcon className="animate-spin" weight="bold" />
         ) : (
-          <PlayIcon weight="fill" size={18} />
+          <PlayIcon weight="fill" />
         )}
-      </PlaybackControl>
-    </Button>
+      </Button>
+    </PlaybackControl>
   )
 }

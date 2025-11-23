@@ -24,7 +24,7 @@ export const Elapsed = React.forwardRef<
       dateTime={durationDateTime(currentTime, player?.seekRange())}
       role="timer"
       {...etc}
-      className={cn("text-lp-accent tabular-nums", className)}
+      className={cn("tabular-nums", className)}
       ref={forwardedRef}
     >
       <span className="sr-only">Elapsed</span>
@@ -52,7 +52,7 @@ export const Remaining = React.forwardRef<
     <time
       dateTime={durationDateTime(duration - currentTime, player?.seekRange())}
       role="timer"
-      className={cn("text-lp-accent tabular-nums", className)}
+      className={cn("tabular-nums", className)}
       {...etc}
       ref={forwardedRef}
     >
@@ -81,7 +81,7 @@ export const Duration = React.forwardRef<
   return (
     <time
       dateTime={durationDateTime(duration, player?.seekRange())}
-      className={cn("text-lp-accent tabular-nums", className)}
+      className={cn("tabular-nums", className)}
       ref={forwardedRef}
       {...etc}
     >
@@ -108,7 +108,7 @@ export const HoverTime = React.forwardRef<
   return (
     <time
       dateTime={durationDateTime(hoveringTime, player?.seekRange())}
-      className={cn("text-lp-accent tabular-nums", className)}
+      className={cn("tabular-nums", className)}
       ref={forwardedRef}
       {...etc}
     >
@@ -130,11 +130,7 @@ export const LiveLatency = React.forwardRef<
   if (liveLatency == null) return null
 
   return (
-    <time
-      ref={forwardedRef}
-      {...etc}
-      className={cn("text-lp-accent tabular-nums", className)}
-    >
+    <time ref={forwardedRef} {...etc} className={cn("tabular-nums", className)}>
       <span className="sr-only">Live Latency:</span>
       <span aria-hidden>&minus;</span>
       {formatTimestamp(liveLatency, liveLatency > HOURS_IN_SECONDS)}
