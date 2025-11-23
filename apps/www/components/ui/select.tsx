@@ -66,7 +66,7 @@ function SelectTrigger({
           focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
           disabled:cursor-not-allowed disabled:opacity-50
           aria-invalid:border-destructive aria-invalid:ring-destructive/20
-          data-[placeholder]:text-muted-foreground
+          data-placeholder:text-muted-foreground
           data-[size=default]:h-9
           data-[size=sm]:h-8
           *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center
@@ -116,8 +116,8 @@ function SelectContent({
           `
             relative z-50 max-h-(--available-height) min-w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-md
             border bg-popover p-1 text-popover-foreground shadow-md
-            data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95
-            data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95
+            data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95
+            data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95
             data-[side=bottom]:slide-in-from-top-2
             data-[side=left]:slide-in-from-right-2
             data-[side=right]:slide-in-from-left-2
@@ -159,7 +159,7 @@ function SelectItem({
         `
           relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none
           focus:bg-accent focus:text-accent-foreground
-          data-[disabled]:pointer-events-none data-[disabled]:opacity-50
+          data-disabled:pointer-events-none data-disabled:opacity-50
           [&_svg]:pointer-events-none [&_svg]:shrink-0
           [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground
           *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2

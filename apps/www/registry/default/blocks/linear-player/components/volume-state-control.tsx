@@ -15,21 +15,16 @@ export function VolumeStateControl() {
   const volume = useMediaStore((state) => state.volume)
 
   return (
-    <Button
-      size="icon"
-      variant="glass"
-      asChild
-      className={"hover:bg-primary/30"}
-    >
-      <MuteControl>
+    <MuteControl asChild>
+      <Button variant="glass" size="icon" className="cursor-pointer">
         {muted || volume === 0 ? (
-          <SpeakerXIcon size={18} weight="fill" />
+          <SpeakerXIcon weight="fill" />
         ) : volume < 0.5 ? (
-          <SpeakerLowIcon size={18} weight="fill" />
+          <SpeakerLowIcon weight="fill" />
         ) : (
-          <SpeakerHighIcon size={18} weight="fill" />
+          <SpeakerHighIcon weight="fill" />
         )}
-      </MuteControl>
-    </Button>
+      </Button>
+    </MuteControl>
   )
 }
