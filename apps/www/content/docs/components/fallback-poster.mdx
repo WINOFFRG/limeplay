@@ -4,7 +4,7 @@ description: Background poster image for HTML Media Element
 ---
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 
-<ComponentPreview name="fallback-poster-demo" withPlayer type="overlay" className="border rounded-lg" />
+<ComponentPreview name="fallback-poster-demo" withPlayer type="overlay" className="border rounded-lg overflow-hidden" />
 
 ## Installation
 
@@ -23,3 +23,32 @@ This poster element wraps the player layout and serves two common use cases:
 
 1. Acts as a cover image for the player when in Picture-in-Picture (PiP) mode to remove the native black overlay (inspired by Prime Video).
 2. Provides a skeleton while the HTML media element loads; it will render fallback content while the media is mounting.
+
+## Components
+
+### FallbackPoster
+
+The main component that provides a background poster image for the HTML Media Element. It extends standard `div` props and can accept any React children.
+
+#### Basic Usage
+
+```tsx lineNumbers title="components/player/media-player.tsx"
+import { FallbackPoster } from "@/components/limeplay/fallback-poster"
+import { LimeplayLogo } from "@/components/limeplay/limeplay-logo"
+
+export function MediaPlayer() {
+  return (
+    <MediaProvider>
+      <PlayerHooks />
+      <Layout.RootContainer height={720} width={1280}>
+        <FallbackPoster>
+          <LimeplayLogo />
+        </FallbackPoster>
+        <Layout.PlayerContainer>
+          <MediaElement />
+        </Layout.PlayerContainer>
+      </Layout.RootContainer>
+    </MediaProvider>
+  )
+}
+```
