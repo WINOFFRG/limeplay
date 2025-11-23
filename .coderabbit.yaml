@@ -1,0 +1,21 @@
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - ".github/copilot-instructions.md"
+
+reviews:
+  enabled: true
+
+  paths:
+    include:
+      - "apps/www/registry/**"
+      - "apps/www/content/docs/**"
+    exclude:
+      - "**/node_modules/**"
+      - "**/out/**"
+      - "**/.next/**"
+
+  tools:
+    eslint:
+      enabled: true
