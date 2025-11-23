@@ -13,8 +13,8 @@ export function PlaybackStateControlDemo() {
   const status = useMediaStore((state) => state.status)
 
   return (
-    <Button size="icon" variant="glass" asChild>
-      <PlaybackControl>
+    <PlaybackControl asChild>
+      <Button size="icon" variant="ghost">
         {status === "playing" ? (
           <PauseIcon weight="fill" size={18} />
         ) : status === "ended" ? (
@@ -24,7 +24,7 @@ export function PlaybackStateControlDemo() {
         ) : (
           <PlayIcon weight="fill" size={18} />
         )}
-      </PlaybackControl>
-    </Button>
+      </Button>
+    </PlaybackControl>
   )
 }

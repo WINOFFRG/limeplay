@@ -28,7 +28,7 @@ import {
 <Steps>
 <Step>
 ### Install the components
-```bash
+```npm
 npx shadcn add @limeplay/captions
 ```
 </Step>
@@ -90,6 +90,9 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 
 The `CaptionsContainer` component serves as the rendering area for Shaka Player's text tracks. It automatically registers itself with the Shaka Player instance and provides proper positioning for caption overlay.
 
+#### API Reference
+<AutoTypeTable path="./registry/default/ui/captions.tsx" name="CaptionsContainerPropsDocs" />
+
 #### Basic Usage
 
 Place the captions container within your player layout to provide a rendering area for text tracks.
@@ -133,6 +136,9 @@ export function CustomCaptionsContainer() {
 
 The `CaptionsControl` component provides a standardized way to toggle captions visibility. It automatically disables when no text tracks are available and handles track selection automatically.
 
+#### API Reference
+<AutoTypeTable path="./registry/default/ui/captions.tsx" name="CaptionsControlPropsDocs" />
+
 #### Basic Usage
 
 Create a captions toggle button with appropriate icons and states.
@@ -164,8 +170,20 @@ export function CaptionsControlButton() {
 
 ### useCaptionsStates()
 
-Sets up event listeners for text track changes and visibility updates. This hook should be called once in your `PlayerHooks` component.
+Sets up event listeners for text track changes and visibility updates. This hook should be called once in your `PlayerHooks` component. See the [useCaptions hook documentation](/docs/hooks/use-captions) for more details.
 
 ### useCaptions()
 
-Returns captions control functions for managing text tracks.
+Returns captions control functions for managing text tracks. See the [useCaptions hook documentation](/docs/hooks/use-captions) for more details.
+
+### Store State
+
+The captions store provides the following state accessed via `useMediaStore`:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `activeTextTrack` | `shaka.extern.TextTrack \| null` | Currently active text track |
+| `textTracks` | `shaka.extern.TextTrack[] \| undefined` | Available text tracks |
+| `textTrackVisible` | `boolean` | Whether captions are currently visible |
+
+
