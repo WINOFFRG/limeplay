@@ -19,7 +19,7 @@ Limeplay uses a dual-bridge architecture for state synchronization:
 
 To understand registry you can simply ask for the "Shadcn UI Registry Template" contract on context7 MCP. The same concept is applied in `apps/www/registry/collection` each component, hook or even util from atomic level is registered right there which allows installation via the CLI. While we are developing we must ensure we don't miss to update the registry for the respective usage. We do have a build script which helps us ensure nothing is missing in registry which is also present in file but still we must ensure we don't miss to update the registry for the respective usage.
 
-We are using Next.js 16 and React 19.1.1 for the development with Tailwind CSS 4.0.0 for styling. So make sure you are using the correct version of the dependencies and guidelines for the same.
+We are using Next.js 16 and React 19.1.1 for the development with Tailwind CSS 4.0.0 for styling. So make sure you are using the correct version of the dependencies and guidelines for the same. So that means syntax of using variables directly like `--lp-transition-speed-regular` can be used as  `duration-(--lp-transition-speed-regular)` and in all other places, or z-[100] can be used as z-100, make sure to refer tailwindcss v4 docs in case of any class name clashes or syntax errors.
 
 ## Import Path Transformation (CRITICAL FOR DOCUMENTATION)
 

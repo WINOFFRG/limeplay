@@ -117,6 +117,19 @@ Returns control functions for managing volume and mute state.
 | `toggleMute` | `() => void`                | Toggles mute state                             |
 | `setMuted`  | `(muted: boolean) => void`  | Sets the mute state                            |
 
+#### setVolume Parameters
+
+| Parameter | Type     | Description                                                                 |
+| --------- | -------- | --------------------------------------------------------------------------- |
+| `volume`  | `number` | Target volume level (0-1)                                                   |
+| `progress` | `number` (optional) | Current playback progress or normalized position used when driving volume from a scrubber |
+| `delta`   | `number` (optional) | Change in volume since last call, useful for animation or smoothing        |
+
+**When to use optional parameters:**
+
+- **`progress`**: Pass when updating volume from a drag handler or scrubber interaction where you need to map a position to volume (e.g., `setVolume(0.5, event.clientX / sliderWidth)`).
+- **`delta`**: Pass when implementing animated volume changes or smoothing transitions (e.g., `setVolume(currentVolume, 0, 0.1)` to increment by 0.1).
+
 ### Store State
 
 The volume store provides the following state accessed via `useMediaStore`:
