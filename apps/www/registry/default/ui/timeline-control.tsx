@@ -73,9 +73,9 @@ export const Root = React.forwardRef<
       value={[currentValue]}
       className={cn(
         `
-          relative h-1 rounded-full transition-[height] duration-[var(--speed-regularTransition)] ease-[var(--ease-out-quad)]
-          data-[orientation=horizontal]:h-[var(--lp-timeline-track-height)]
-          active:data-[orientation=horizontal]:h-[var(--lp-timeline-track-height-active)]
+          relative h-1 rounded-full transition-[height] duration-(--speed-regularTransition) ease-out-quad
+          data-[orientation=horizontal]:h-(--lp-timeline-track-height)
+          active:data-[orientation=horizontal]:h-(--lp-timeline-track-height-active)
         `,
         className
       )}
@@ -103,7 +103,7 @@ export const Track = React.forwardRef<
       tabIndex={0}
       className={cn(
         `
-          relative flex h-full grow flex-row rounded-full bg-lp-accent/20
+          relative flex h-full grow flex-row rounded-full bg-foreground/20
           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50
         `,
         className
@@ -127,7 +127,7 @@ export const Progress = React.forwardRef<
     <SliderPrimitive.Indicator
       ref={ref}
       className={cn(
-        "h-full !w-(--lp-played-width) rounded-s-full bg-lp-accent",
+        "h-full w-(--lp-played-width)! rounded-s-full bg-primary",
         className
       )}
       style={
@@ -179,7 +179,7 @@ export const Buffered = React.forwardRef<HTMLDivElement, BufferedProps>(
           <SliderPrimitive.Indicator
             key={index}
             className={cn(
-              `left-[var(--lp-buffered-start)]! h-full w-[var(--lp-buffered-width)]! bg-lp-accent/30`,
+              `left-(--lp-buffered-start)! h-full w-(--lp-buffered-width)! bg-foreground/30`,
               variant === "from-zero" && "rounded-e-full",
               className
             )}
@@ -223,8 +223,8 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
       <SliderPrimitive.Thumb
         className={cn(
           `
-            left-(--lp-timeline-thumb-position)! size-4 rounded-full bg-lp-accent
-            data-[disabled]:bg-lp-accent/85
+            left-(--lp-timeline-thumb-position)! size-4 rounded-full bg-foreground
+            data-disabled:bg-foreground/85
           `,
           className
         )}

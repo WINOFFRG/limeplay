@@ -33,7 +33,7 @@ const buttonVariants = cva(
           hover:underline
         `,
         glass: `
-          bg-transparent text-lp-accent
+          bg-transparent
           hover:bg-primary/10
           active:scale-[0.97]
         `,
