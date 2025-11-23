@@ -40,14 +40,14 @@ export function CaptionsStateControlDemo() {
   }, [readyState, player])
 
   return (
-    <Button size="icon" variant="glass" asChild>
-      <CaptionsControl>
+    <CaptionsControl asChild>
+      <Button variant="ghost" size="icon">
         <ClosedCaptioningIcon
           weight={textTrackVisible ? "fill" : "regular"}
-          size={20}
+          size={18}
         />
-      </CaptionsControl>
-    </Button>
+      </Button>
+    </CaptionsControl>
   )
 }
 

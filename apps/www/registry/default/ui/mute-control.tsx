@@ -8,6 +8,11 @@ import { MediaReadyState } from "@/registry/default/hooks/use-player"
 import { useVolume } from "@/registry/default/hooks/use-volume"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
+export type MuteControlPropsDocs = Pick<
+  MuteControlProps,
+  "shortcut" | "asChild"
+>
+
 export interface MuteControlProps extends React.ComponentProps<typeof Button> {
   shortcut?: string
   asChild?: boolean

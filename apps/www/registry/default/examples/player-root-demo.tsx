@@ -62,12 +62,16 @@ export function PlayerLayoutDemo({
 }: PlayerDemoLayoutProps) {
   return (
     <MediaProvider>
-      <RootContainer height={720} width={1280} className="container p-0">
+      <RootContainer
+        height={720}
+        width={1280}
+        className="container rounded-lg border p-0"
+      >
         <Layout.PlayerContainer>
           {type === "poster" ? (
             children
           ) : (
-            <FallbackPoster className="bg-stone-900">
+            <FallbackPoster className="rounded-lg bg-background">
               <LimeplayLogo />
             </FallbackPoster>
           )}

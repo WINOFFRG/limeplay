@@ -64,7 +64,7 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 </Step>
 </Steps>
 
-## Usage
+## Example Usage
 
 1. Compose the labels
 
@@ -73,6 +73,7 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 
 import { useState } from "react"
 
+import { Button } from "@/components/ui/button"
 import { useMediaStore } from "@/components/limeplay/media-provider"
 import {
   Duration,
@@ -91,7 +92,8 @@ export function TimelineSliderControl() {
       {!isLive && <Elapsed className="text-xs font-medium" />}
       {!isLive && (
         <Button
-          size="icon"
+          variant="ghost"
+          size="sm"
           onClick={() => {
             setShowRemaining(!showRemaining)
           }}
@@ -114,7 +116,38 @@ export function TimelineSliderControl() {
 
 ## Understanding
 
-- `<Elapsed />` component shows current playback time
-- `<Remaining />` component shows remaining time (with minus sign)
-- `<Duration />` component shows total media duration
-- `<HoverTime />` component shows time at hover position on timeline
+Timeline Labels components use the [`useTimeline()`](/docs/hooks/use-timeline) hook to access timeline state from the media store.
+
+All components automatically:
+- Format time based on duration (HH:MM:SS or MM:SS)
+- Include proper `dateTime` attributes for semantic HTML
+- Provide screen reader support with `role="timer"` and hidden labels
+- Use `tabular-nums` for consistent number width
+
+### Accessibility Features
+
+- **Semantic HTML**: Uses `<time>` element with proper `dateTime` attribute
+- **Screen Reader Labels**: Hidden labels announce "Elapsed", "Remaining", "Duration", etc.
+- **ARIA Roles**: `role="timer"` for live-updating time displays
+- **Visual Clarity**: `tabular-nums` ensures numbers don't shift during playback
+
+## Components
+
+All timeline label components extend `React.HTMLProps<HTMLTimeElement>`, allowing you to pass standard HTML time element props like `className`, `style`, etc.
+
+### Elapsed
+Current playback time.
+
+### Remaining
+Time remaining (negative prefix).
+
+### Duration
+Total media duration.
+
+### HoverTime
+Time at cursor position on timeline.
+
+### LiveLatency
+Latency for live streams (null for VOD).
+
+

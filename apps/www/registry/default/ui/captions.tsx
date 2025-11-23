@@ -9,9 +9,22 @@ import { Button } from "@/components/ui/button"
 import { useCaptions } from "@/registry/default/hooks/use-captions"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
+export type CaptionsControlPropsDocs = Pick<
+  CaptionsControlProps,
+  "shortcut" | "asChild"
+>
+
 export interface CaptionsControlProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /**
+   * Render as child component using Radix Slot
+   * @default false
+   */
   asChild?: boolean
+  /**
+   * Keyboard shortcut hint displayed in aria-label
+   * @example "C"
+   */
   shortcut?: string
 }
 
@@ -65,7 +78,16 @@ export const CaptionsControl = React.forwardRef<
 
 CaptionsControl.displayName = "CaptionsControl"
 
+export type CaptionsContainerPropsDocs = Pick<
+  CaptionsContainerProps,
+  "fontScale"
+>
+
 interface CaptionsContainerProps extends React.ComponentPropsWithoutRef<"div"> {
+  /**
+   * Font scale factor for caption text size
+   * @default 1
+   */
   fontScale?: number
 }
 
