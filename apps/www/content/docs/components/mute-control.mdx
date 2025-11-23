@@ -60,7 +60,7 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 </Step>
 </Steps>
 
-## Usage
+## Example Usage
 
 1. Design the mute button with icons and states.
 
@@ -73,6 +73,7 @@ import {
   SpeakerXIcon,
 } from "@phosphor-icons/react"
 
+import { Button } from "@/components/ui/button"
 import { useMediaStore } from "@/components/limeplay/media-provider"
 import { MuteControl } from "@/components/limeplay/mute-control"
 
@@ -81,8 +82,8 @@ export function MuteControlButton() {
   const volume = useMediaStore((state) => state.volume)
 
   return (
-    <Button size="icon" asChild>
-      <MuteControl>
+    <MuteControl asChild>
+      <Button variant="ghost" size="icon">
         {muted || volume === 0 ? (
           <SpeakerXIcon size={18} weight="fill" />
         ) : volume < 0.5 ? (
@@ -90,18 +91,43 @@ export function MuteControlButton() {
         ) : (
           <SpeakerHighIcon size={18} weight="fill" />
         )}
-      </MuteControl>
-    </Button>
+      </Button>
+    </MuteControl>
   )
 }
 ```
 
-2. Place the button inside the `BottomControls` component.
+2. Use the component in your player.
 
-```tsx lineNumbers title="components/player/media-player.tsx"
-<Layout.ControlsContainer>
-  <BottomControls>
-    <MuteControlButton />
-  </BottomControls>
-</Layout.ControlsContainer>
+```tsx lineNumbers title="components/player/bottom-controls.tsx"
+<MuteControlButton />
 ```
+
+## Understanding
+
+The `MuteControl` component provides mute/unmute functionality for the media player. It follows the **Event & Action Bridge** pattern where:
+
+- **Event Bridge**: [`useVolumeStates()`](/docs/hooks/use-volume) hook (called in `PlayerHooks`) listens to the native `volumechange` event and synchronizes the mute state to the React store
+- **Action Bridge**: The `MuteControl` component uses [`useVolume()`](/docs/hooks/use-volume) to access `toggleMute()` which controls the native media element
+
+This separation ensures state updates are centralized and performant while UI controls remain decoupled.
+
+## Components
+
+### MuteControl
+
+The main component for toggling mute state. It supports the **Slot pattern** (`asChild` prop) for composition and includes automatic ARIA labels.
+
+#### API Reference
+
+<AutoTypeTable path="./registry/default/ui/mute-control.tsx" name="MuteControlPropsDocs" />
+
+#### Example with Keyboard Shortcut
+
+```tsx lineNumbers title="components/player/mute-control-shortcut.tsx"
+<MuteControl shortcut="M" aria-label="Toggle mute">
+  <VolumeIcon />
+</MuteControl>
+```
+
+

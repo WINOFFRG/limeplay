@@ -67,70 +67,82 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 </Step>
 </Steps>
 
-## Usage
+## Example Usage
 
 1. Design the playback rate selector with dropdown and states.
 
 ```tsx lineNumbers title="components/player/playback-rate-control.tsx"
 import { Button } from "@/components/ui/button"
+import * as Select from "@/components/ui/select"
 import * as PlaybackRate from "@/components/limeplay/playback-rate"
 
 export function PlaybackRateControl() {
   return (
-    <PlaybackRate.Select>
+    <PlaybackRate.SelectRoot>
       <Button variant="ghost" size="icon" asChild>
-        <PlaybackRate.Trigger
+        <PlaybackRate.SelectTrigger
           size="sm"
-          className={`
-            border-none bg-transparent px-8
-            data-[highlighted]:!bg-accent/80
-            data-[popup-open]:!bg-accent
-            dark:bg-transparent
-          `}
+          className="border-none bg-transparent px-8 shadow-none hover:bg-foreground/10 dark:bg-transparent dark:shadow-none"
         />
       </Button>
-      <PlaybackRate.Positioner className="z-[100]" align="start">
-        <PlaybackRate.Content
-          className={`
-            min-w-24 backdrop-blur-md
-            dark:bg-accent
-          `}
-        >
-          <PlaybackRate.Group
-            className={`
-              tracking-wider
-              dark:text-accent-foreground dark:hover:bg-primary/10
-            `}
-          />
-        </PlaybackRate.Content>
-      </PlaybackRate.Positioner>
-    </PlaybackRate.Select>
+      <Select.SelectPositioner className="z-100" align="start">
+        <Select.SelectContent className="min-w-24 backdrop-blur-md dark:bg-accent">
+          <PlaybackRate.SelectGroup className="tracking-wider" />
+        </Select.SelectContent>
+      </Select.SelectPositioner>
+    </PlaybackRate.SelectRoot>
   )
 }
 ```
 
-2. Place the control inside the `BottomControls` component.
+2. Use the component in your player.
 
-```tsx lineNumbers title="components/player/media-player.tsx"
-<Layout.ControlsContainer>
-  <BottomControls>
-    <PlaybackRateControl />
-  </BottomControls>
-</Layout.ControlsContainer>
+```tsx lineNumbers title="components/player/bottom-controls.tsx"
+<PlaybackRateControl />
 ```
 
 ## Understanding
 
-You can use the `playbackRate` and `playbackRates` fields from media store to get the current playback rate and available rates. The component provides:
+The Playback Rate Control uses the [`usePlaybackRate()`](/docs/hooks/use-playback-rate) hook to manage playback speed. You can use the `playbackRate` and `playbackRates` fields from media store to get the current playback rate and available rates. The component provides:
 
 | Field           | Type       | Description                                                 |
 | --------------- | ---------- | ----------------------------------------------------------- |
 | `playbackRate`  | `number`   | Current playback rate (e.g., 1, 1.5, 2)                     |
 | `playbackRates` | `number[]` | Available playback rates [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] |
 
-The `usePlaybackRate` hook provides methods to control playback rate:
+The [`usePlaybackRate()`](/docs/hooks/use-playback-rate) hook provides methods to control playback rate:
 
 | Method             | Description                                  |
 | ------------------ | -------------------------------------------- |
 | `setPlaybackRate`  | Sets the playback rate for the media element |
 | `setTrickplayRate` | Sets trickplay rate using Shaka Player       |
+
+## Components
+
+The Playback Rate components are built on top of the Select primitive.
+
+### SelectRoot
+
+Main container that manages playback rate state. Extends `Select` component props from `@/components/ui/select`.
+
+### SelectTrigger
+
+Button that displays current playback rate (e.g., "1x", "1.5x"). Extends `SelectTrigger` component props from `@/components/ui/select`.
+
+### SelectGroup
+
+Renders the list of available playback rates. Accepts a `suffix` prop (default: "x").
+
+#### Props
+
+| Prop   | Type     | Default | Description                    |
+|--------|----------|---------|--------------------------------|
+| suffix | `string` | `"x"`   | Suffix to append to rate value |
+
+### Available Playback Rates
+
+Default rates: `[0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]`
+
+These can be customized in your media store configuration.
+
+

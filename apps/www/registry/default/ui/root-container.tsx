@@ -6,9 +6,20 @@ import { composeRefs } from "@radix-ui/react-compose-refs"
 import { cn } from "@/lib/utils"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
+export type RootContainerPropsDocs = Pick<
+  RootContainerProps,
+  "height" | "width"
+>
+
 export interface RootContainerProps
   extends React.ComponentPropsWithoutRef<"div"> {
+  /**
+   * Height in pixels for aspect ratio calculation
+   */
   height?: number
+  /**
+   * Width in pixels for aspect ratio calculation
+   */
   width?: number
 }
 
