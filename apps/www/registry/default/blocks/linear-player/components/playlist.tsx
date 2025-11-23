@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react"
+import type shaka from "shaka-player"
 
 import {
   DropdownMenu,
