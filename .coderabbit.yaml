@@ -1,9 +1,11 @@
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - ".github/copilot-instructions.md"
+
 reviews:
   enabled: true
-
-  guidelines:
-    - path: ".github/copilot-instructions.md"
-      description: "Limeplay project guidelines, architecture patterns, and code review checklist"
 
   paths:
     include:

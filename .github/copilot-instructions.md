@@ -39,7 +39,7 @@ import { LinearMediaPlayer } from "@/blocks/linear-player"
 
 **CLI Target Paths**: Refer to `TARGET_BASE_PATH = "components/limeplay"` in registry files for correct transformation. 
 
-Coming back to the documentation, once we register the component it is ready to be used by the outside world. Now there are few things we need to ensure while writing the documentation. 
+Returning to documentation: once a component is registered, it is ready for external use. Now there are a few things we need to ensure while writing the documentation. 
 
 1. Check whether the documentation file exists in the relative domain `apps/www/content/docs`; currently we are primarily focusing on the `components`, `hooks`, and `blocks` domains.
 2. If a component relies on a hook like `mute-control` component relies on `use-volume` hook, you MUST include both the hook import in `PlayerHooks` AND the store composition in `create-media-store.ts`. This implements the "Event & Action Bridge" pattern:
@@ -209,7 +209,14 @@ export function Component({ asChild = false, ...props }: ComponentProps) {
     }
     ```
 
-9. We must all ensure that our code writing and style and patterns are consistent across the codebase. Some examples are: Using ...etc for spreading props, ensuring prop priority order, adding styles for hover, disabled, focus-visible states as well as dark mode. Composing events without blocking it via prop, using Slot for composable design, not force over-riding any prop and providing the ability to override the prop values.
+9. We must all ensure that our code writing style and patterns are consistent across the codebase. Some examples include:
+   - Use the spread operator (`...props`) for prop spreading
+   - Ensure correct prop priority order
+   - Add styles for hover, disabled, and focus-visible states
+   - Include dark mode styling
+   - Compose events without blocking them via props
+   - Use Slot for composable design
+   - Do not force overriding any prop; always provide the ability to override prop values
 
 That's all most likely for the documentation, we will try to be consistent with the documentation in all the cases and ensure that a developer doesn't feel either overwhelmed with the information or confused with the usage. You should possibly think of all questions that a developer might have and try to answer them in the documentation. As an LLM it's your responsibility to ensure the documentation is up to date and accurate and LLM-friendly as well.
 
