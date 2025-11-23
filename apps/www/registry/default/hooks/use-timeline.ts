@@ -2,6 +2,7 @@
 
 import React, { useCallback } from "react"
 import clamp from "lodash.clamp"
+import type shaka from "shaka-player"
 import type { StateCreator } from "zustand"
 
 import { useInterval } from "@/registry/default/hooks/use-interval"
