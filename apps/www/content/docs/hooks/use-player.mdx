@@ -1,0 +1,155 @@
+---
+title: use-player
+description: Core hook for managing media playback state and controls
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+## Installation
+
+<Steps>
+<Step>
+### Install the hook
+```npm
+npx shadcn add @limeplay/use-player
+```
+</Step>
+
+<Step>
+### Add Event & Action Bridge
+Import the `usePlayerStates` hook in your existing `PlayerHooks` component.
+
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+import React from "react"
+
+import { usePlayerStates } from "@/hooks/limeplay/use-player" // [!code ++]
+import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+
+export const PlayerHooks = React.memo(() => {
+  useShakaPlayer()
+  usePlayerStates() // [!code ++]
+
+  return null
+})
+```
+
+</Step>
+
+<Step>
+### Add the Store States
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+
+// [!code ++]
+
+export type TypeMediaStore = PlayerStore & {} // [!code ++]
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlayerStore(...etc), // [!code ++]
+    ...initProps,
+  }))
+  return mediaStore
+}
+```
+
+</Step>
+</Steps>
+
+## Example Usage
+
+Use the `usePlayer()` hook to control playback in your components.
+
+```tsx lineNumbers title="components/player/playback-control-button.tsx"
+import { usePlayer } from "@/hooks/limeplay/use-player"
+
+export function PlaybackControlButton() {
+  const { play, pause, togglePaused, restart } = usePlayer()
+
+  return (
+    <div>
+      <button onClick={play}>Play</button>
+      <button onClick={pause}>Pause</button>
+      <button onClick={togglePaused}>Toggle</button>
+      <button onClick={restart}>Restart</button>
+    </div>
+  )
+}
+```
+
+## Understanding
+
+The `use-player` hook provides the foundation for all media playback functionality. It implements the **Event & Action Bridge** pattern:
+
+- **Event Bridge**: `usePlayerStates()` listens to native media events (`play`, `pause`, `ended`, `buffering`, etc.) and synchronizes state to the React store
+- **Action Bridge**: `usePlayer()` provides control functions (`play()`, `pause()`, `togglePaused()`, etc.) that manipulate the native media element
+
+This hook is required for all other hooks and components as it provides the core media state management.
+
+### Media Status States
+
+The hook tracks the following media status values:
+
+| Status      | Description                                   |
+| ----------- | --------------------------------------------- |
+| `init`      | The media is initializing or has readyState 0 |
+| `loading`   | The media is loading                          |
+| `buffering` | The media is buffering                        |
+| `canplay`   | Enough data available to start playback       |
+| `canplaythrough` | Enough data available to play through without buffering |
+| `playing`   | The media is playing                          |
+| `paused`    | The media is paused                           |
+| `ended`     | The media has reached the end                 |
+| `error`     | The media has encountered an error            |
+| `stopped`   | The media has been stopped                    |
+
+## API Reference
+
+### usePlayerStates()
+
+Sets up event listeners for all media playback events. This hook should be called once in your `PlayerHooks` component. It automatically syncs the following state:
+
+- `paused`, `ended`, `loop` - Playback state
+- `status` - Current media status
+- `readyState` - Media ready state (0-4)
+- `canPlay`, `canPlayThrough` - Playback readiness
+- `error`, `networkState` - Error and network information
+
+### usePlayer()
+
+Returns control functions for managing media playback.
+
+#### Returns
+
+| Property      | Type                    | Description                                    |
+| ------------- | ----------------------- | ---------------------------------------------- |
+| `play`        | `() => void`            | Starts media playback                          |
+| `pause`       | `() => void`            | Pauses media playback                          |
+| `togglePaused`| `() => void`            | Toggles between play and pause                  |
+| `setLoop`     | `(loop: boolean) => void` | Sets the loop state of the media              |
+| `toggleLoop`  | `() => void`            | Toggles the loop state                         |
+| `restart`     | `() => void`            | Restarts playback from the beginning            |
+
+### Store State
+
+The player store provides the following state accessed via `useMediaStore`:
+
+| Property              | Type                                    | Description                                    |
+| --------------------- | --------------------------------------- | ---------------------------------------------- |
+| `idle`                | `boolean`                               | Whether the player is in idle state            |
+| `setIdle`             | `(idle: boolean) => void`               | Sets the idle state                            |
+| `mediaRef`            | `React.RefObject<HTMLMediaElement>`     | Reference to the media element                 |
+| `setMediaRef`         | `(ref: React.RefObject<HTMLMediaElement>) => void` | Sets the media element reference |
+| `player`              | `shaka.Player \| null`                 | Shaka Player instance                           |
+| `setPlayer`           | `(player: shaka.Player \| null) => void` | Sets the Shaka Player instance                 |
+| `paused`              | `boolean`                               | Whether the media is paused                     |
+| `ended`               | `boolean`                               | Whether the media has ended                     |
+| `loop`                | `boolean`                               | Whether the media is looping                   |
+| `status`              | `MediaStatus`                           | Current media status                            |
+| `readyState`          | `MediaReadyState`                       | Media ready state (0-4)                         |
+| `canPlay`             | `boolean`                               | Whether media can start playing                 |
+| `canPlayThrough`      | `boolean`                               | Whether media can play through without buffering |
+| `error`               | `MediaError \| null`                    | Current media error, if any                     |
+| `networkState`        | `number`                                | Network state of the media                      |
+

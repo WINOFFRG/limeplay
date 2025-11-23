@@ -1,5 +1,15 @@
 {
   "title": "Hooks",
   "description": "All hooks used in Player UI",
-  "pages": ["use-captions"]
+  "pages": [
+    "use-player",
+    "use-shaka-player",
+    "use-volume",
+    "use-timeline",
+    "use-playback-rate",
+    "use-captions",
+    "use-interval",
+    "use-track-events"
+  ],
+  "defaultOpen": true
 }
