@@ -14,11 +14,6 @@ reviews:
       - "**/out/**"
       - "**/.next/**"
 
-language:
-  typescript:
-    strict: true
-    no_any: true
-
-  react:
-    hooks_rules: true
-    performance_optimization: true
+  tools:
+    eslint:
+      enabled: true
