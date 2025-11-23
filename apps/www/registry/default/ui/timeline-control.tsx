@@ -223,8 +223,8 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
       <SliderPrimitive.Thumb
         className={cn(
           `
-            left-(--lp-timeline-thumb-position)! size-4 rounded-full bg-foreground
-            data-disabled:bg-foreground/85
+            left-(--lp-timeline-thumb-position)! size-4 rounded-full bg-primary
+            data-disabled:bg-primary/85
           `,
           className
         )}
