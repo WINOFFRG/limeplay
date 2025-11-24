@@ -10,5 +10,11 @@
       "destination": "/docs/quick-start"
     }
   ],
+  "headers": [
+    {
+      "source": "/llms.mdx/(.*)",
+      "headers": [{ "key": "Content-Type", "value": "text/markdown" }]
+    }
+  ],
   "bunVersion": "1.2.19"
 }
