@@ -14,7 +14,7 @@ const config = {
   headers() {
     return [
       {
-        source: "^/docs/(.+)\\.mdx$",
+        source: "/docs/(.+)\\.mdx$",
         headers: [{ key: "Content-Type", value: "text/markdown" }],
       },
       {
