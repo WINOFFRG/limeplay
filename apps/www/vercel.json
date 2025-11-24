@@ -2,12 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "source": "^/docs/(.+)\\.mdx$",
-      "destination": "/llms.mdx/$1.mdx"
-    },
-    {
       "source": "^/docs",
       "destination": "/docs/quick-start"
+    },
+    {
+      "source": "^/docs/(.+)\\.mdx$",
+      "destination": "/llms.mdx/$1"
     }
   ],
   "bunVersion": "1.2.19"
