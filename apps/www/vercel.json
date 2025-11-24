@@ -2,8 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "source": "^/docs/(.+)$",
-      "destination": "/llms.mdx/$1"
+      "source": "^/docs/(.+)\\.mdx$",
+      "destination": "/llms.mdx/$1.mdx"
     },
     {
       "source": "^/docs",
