@@ -5,6 +5,12 @@ import remarkGfm from "remark-gfm"
 
 export const docs = defineDocs({
   dir: "content/docs",
+  docs: {
+    postprocess: {
+      includeProcessedMarkdown: true,
+      extractLinkReferences: true,
+    },
+  },
 })
 
 export default defineConfig({
