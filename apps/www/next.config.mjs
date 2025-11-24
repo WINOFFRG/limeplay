@@ -11,11 +11,15 @@ const config = {
   images: {
     unoptimized: true,
   },
-  async rewrites() {
+  headers() {
     return [
       {
-        source: "/docs/:path*.mdx",
-        destination: "/llms.mdx/:path*",
+        source: "^/docs/(.+)\\.mdx$",
+        headers: [{ key: "Content-Type", value: "text/markdown" }],
+      },
+      {
+        source: "/llms.mdx/(.*)",
+        headers: [{ key: "Content-Type", value: "text/markdown" }],
       },
     ]
   },
