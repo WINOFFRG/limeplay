@@ -11,18 +11,6 @@ const config = {
   images: {
     unoptimized: true,
   },
-  headers() {
-    return [
-      {
-        source: "/docs/(.+)\\.mdx$",
-        headers: [{ key: "Content-Type", value: "text/markdown" }],
-      },
-      {
-        source: "/llms.mdx/(.*)",
-        headers: [{ key: "Content-Type", value: "text/markdown" }],
-      },
-    ]
-  },
 }
 
 export default withMDX(config)

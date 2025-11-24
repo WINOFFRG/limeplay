@@ -2,22 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "source": "^/docs/(.+)\\.mdx$",
-      "destination": "/llms.mdx/$1"
-    },
-    {
       "source": "^/docs",
       "destination": "/docs/quick-start"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/llms.mdx/(.*)",
-      "headers": [{ "key": "Content-Type", "value": "text/markdown" }]
     },
     {
       "source": "^/docs/(.+)\\.mdx$",
-      "headers": [{ "key": "Content-Type", "value": "text/markdown" }]
+      "destination": "/llms.mdx/$1.mdx"
     }
   ],
   "bunVersion": "1.2.19"

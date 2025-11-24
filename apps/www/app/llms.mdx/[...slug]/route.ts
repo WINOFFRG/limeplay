@@ -11,7 +11,14 @@ export async function GET(
   { params }: RouteContext<"/llms.mdx/[...slug]">
 ) {
   const slug = (await params).slug
-  const page = source.getPage(slug)
+  // Remove .mdx extension from the last segment if present
+  const processedSlug = slug.map((segment, index) => {
+    if (index === slug.length - 1 && segment.endsWith(".mdx")) {
+      return segment.slice(0, -4) // Remove .mdx extension
+    }
+    return segment
+  })
+  const page = source.getPage(processedSlug)
   if (!page) notFound()
 
   return new NextResponse(await getLLMText(page), {
@@ -26,17 +33,32 @@ export function generateStaticParams() {
 
   const disabledRoutes: (string | string[])[] = [["components"], ["hooks"]]
 
-  return routes.filter((route) => {
-    const slug = route.slug || []
-    
-    return !disabledRoutes.some((disabled) => {
-      if (Array.isArray(disabled)) {
-        return slug.length === disabled.length && 
-               disabled.every((segment, index) => slug[index] === segment)
-      }
-      return false
+  return routes
+    .filter((route) => {
+      const slug = route.slug
+      
+      return !disabledRoutes.some((disabled) => {
+        if (Array.isArray(disabled)) {
+          return slug.length === disabled.length && 
+                 disabled.every((segment, index) => slug[index] === segment)
+        }
+        return false
+      })
     })
-  })
+    .map((route) => {
+      const slug = route.slug
+      if (slug.length === 0) return route
+      
+      const lastIndex = slug.length - 1
+      const lastSegment = slug[lastIndex]
+      const newSlug = [...slug]
+      newSlug[lastIndex] = `${lastSegment}.mdx`
+      
+      return {
+        ...route,
+        slug: newSlug,
+      }
+    })
 }
 
 /**
