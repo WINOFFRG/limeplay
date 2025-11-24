@@ -17,11 +17,10 @@ import Link from "fumadocs-core/link"
 import { Loader2, MessageCircleIcon, RefreshCw, Send, X } from "lucide-react"
 import type { z } from "zod"
 
+import type { ProvideLinksToolSchema } from "@/lib/inkeep-qa-schema"
 import { cn } from "@/lib/utils"
-
-import type { ProvideLinksToolSchema } from "../lib/inkeep-qa-schema"
-import { Markdown } from "./markdown"
-import { buttonVariants } from "./ui/button"
+import { buttonVariants } from "@/components/ui/button"
+import { Markdown } from "@/components/markdown"
 
 const Context = createContext<{
   open: boolean
@@ -264,7 +263,7 @@ function Message({
   let markdown = ""
   let links: z.infer<typeof ProvideLinksToolSchema>["links"] = []
 
-  for (const part of message.parts ?? []) {
+  for (const part of message.parts) {
     if (part.type === "text") {
       markdown += part.text
       continue

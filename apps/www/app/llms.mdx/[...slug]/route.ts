@@ -1,25 +1,26 @@
-import { type NextRequest, NextResponse } from 'next/server';
-import { getLLMText } from '@/lib/get-llm-text';
-import { source } from '@/lib/source';
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation"
+import { NextResponse, type NextRequest } from "next/server"
 
-export const revalidate = false;
+import { getLLMText } from "@/lib/get-llm-text"
+import { source } from "@/lib/source"
+
+export const revalidate = false
 
 export async function GET(
   _req: NextRequest,
-  { params }: RouteContext<'/llms.mdx/[...slug]'>,
+  { params }: RouteContext<"/llms.mdx/[...slug]">
 ) {
-  const slug = (await params).slug;
-  const page = source.getPage(slug);
-  if (!page) notFound();
+  const slug = (await params).slug
+  const page = source.getPage(slug)
+  if (!page) notFound()
 
   return new NextResponse(await getLLMText(page), {
     headers: {
-      'Content-Type': 'text/markdown',
+      "Content-Type": "text/markdown",
     },
-  });
+  })
 }
 
 export function generateStaticParams() {
-  return source.generateParams();
+  return source.generateParams()
 }
