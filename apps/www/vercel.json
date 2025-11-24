@@ -6,13 +6,17 @@
       "destination": "/llms.mdx/$1"
     },
     {
-      "source": "/docs",
+      "source": "^/docs",
       "destination": "/docs/quick-start"
     }
   ],
   "headers": [
     {
       "source": "/llms.mdx/(.*)",
+      "headers": [{ "key": "Content-Type", "value": "text/markdown" }]
+    },
+    {
+      "source": "^/docs/(.+)\\.mdx$",
       "headers": [{ "key": "Content-Type", "value": "text/markdown" }]
     }
   ],
