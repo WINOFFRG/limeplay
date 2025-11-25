@@ -1,16 +1,16 @@
-import fs from "node:fs/promises";
-import type { ImageResponseOptions } from "next/server";
-import type { ReactNode } from "react";
+import fs from "node:fs/promises"
+import type { ReactNode } from "react"
+import type { ImageResponseOptions } from "next/server"
 
-export type GenerateProps = {
-  title: ReactNode;
-  description?: ReactNode;
-  site?: ReactNode;
-  logo?: ReactNode;
-};
+export interface GenerateProps {
+  title: ReactNode
+  description?: ReactNode
+  site?: ReactNode
+  logo?: ReactNode
+}
 
-const font = fs.readFile("./lib/og/JetBrainsMono-Regular.ttf");
-const fontBold = fs.readFile("./lib/og/JetBrainsMono-Bold.ttf");
+const font = fs.readFile("./lib/og/JetBrainsMono-Regular.ttf")
+const fontBold = fs.readFile("./lib/og/JetBrainsMono-Bold.ttf")
 
 export async function getImageResponseOptions(): Promise<ImageResponseOptions> {
   return {
@@ -28,7 +28,7 @@ export async function getImageResponseOptions(): Promise<ImageResponseOptions> {
         weight: 600,
       },
     ],
-  };
+  }
 }
 
 export function generate({
@@ -36,8 +36,8 @@ export function generate({
   description,
   site = "Limeplay",
 }: GenerateProps) {
-  const foreground = "rgb(244,244,244)";
-  const muted = "rgba(244,244,244,0.72)";
+  const foreground = "rgb(244,244,244)"
+  const muted = "rgba(244,244,244,0.72)"
 
   return (
     <div
@@ -125,5 +125,5 @@ export function generate({
         </div>
       </div>
     </div>
-  );
+  )
 }

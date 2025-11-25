@@ -1,10 +1,10 @@
-import React from "react";
+import React from "react"
 
-import { cn } from "@/lib/utils";
-import { durationDateTime, formatTimestamp } from "@/registry/default/lib/time";
-import { useMediaStore } from "@/registry/default/ui/media-provider";
+import { cn } from "@/lib/utils"
+import { durationDateTime, formatTimestamp } from "@/registry/default/lib/time"
+import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-const HOURS_IN_SECONDS = 60 * 60;
+const HOURS_IN_SECONDS = 60 * 60
 
 /**
  * Elapsed time
@@ -14,10 +14,10 @@ export const Elapsed = React.forwardRef<
   HTMLTimeElement,
   React.HTMLProps<HTMLTimeElement>
 >((props, forwardedRef) => {
-  const { className, ...etc } = props;
-  const currentTime = useMediaStore((s) => s.currentTime);
-  const duration = useMediaStore((s) => s.duration);
-  const player = useMediaStore((s) => s.player);
+  const { className, ...etc } = props
+  const currentTime = useMediaStore((s) => s.currentTime)
+  const duration = useMediaStore((s) => s.duration)
+  const player = useMediaStore((s) => s.player)
 
   return (
     <time
@@ -30,10 +30,10 @@ export const Elapsed = React.forwardRef<
       <span className="sr-only">Elapsed</span>
       {formatTimestamp(currentTime, duration > HOURS_IN_SECONDS)}
     </time>
-  );
-});
+  )
+})
 
-Elapsed.displayName = "Elapsed";
+Elapsed.displayName = "Elapsed"
 
 /**
  * Remaining time
@@ -43,16 +43,16 @@ export const Remaining = React.forwardRef<
   HTMLTimeElement,
   React.HTMLProps<HTMLTimeElement>
 >((props, forwardedRef) => {
-  const { className, ...etc } = props;
-  const duration = useMediaStore((s) => s.duration);
-  const currentTime = useMediaStore((s) => s.currentTime);
-  const player = useMediaStore((s) => s.player);
+  const { className, ...etc } = props
+  const duration = useMediaStore((s) => s.duration)
+  const currentTime = useMediaStore((s) => s.currentTime)
+  const player = useMediaStore((s) => s.player)
 
   return (
     <time
-      className={cn("tabular-nums", className)}
       dateTime={durationDateTime(duration - currentTime, player?.seekRange())}
       role="timer"
+      className={cn("tabular-nums", className)}
       {...etc}
       ref={forwardedRef}
     >
@@ -60,10 +60,10 @@ export const Remaining = React.forwardRef<
       <span aria-hidden>&minus;</span>
       {formatTimestamp(duration - currentTime, duration > HOURS_IN_SECONDS)}
     </time>
-  );
-});
+  )
+})
 
-Remaining.displayName = "Remaining";
+Remaining.displayName = "Remaining"
 
 /**
  * Total Duration of the content
@@ -74,62 +74,60 @@ export const Duration = React.forwardRef<
   HTMLTimeElement,
   React.HTMLProps<HTMLTimeElement>
 >((props, forwardedRef) => {
-  const { className, ...etc } = props;
-  const duration = useMediaStore((s) => s.duration);
-  const player = useMediaStore((s) => s.player);
+  const { className, ...etc } = props
+  const duration = useMediaStore((s) => s.duration)
+  const player = useMediaStore((s) => s.player)
 
   return (
     <time
-      className={cn("tabular-nums", className)}
       dateTime={durationDateTime(duration, player?.seekRange())}
+      className={cn("tabular-nums", className)}
       ref={forwardedRef}
       {...etc}
     >
       <span className="sr-only">Duration</span>
       {formatTimestamp(duration, duration > HOURS_IN_SECONDS)}
     </time>
-  );
-});
+  )
+})
 
-Duration.displayName = "Duration";
+Duration.displayName = "Duration"
 
 export const HoverTime = React.forwardRef<
   HTMLTimeElement,
   React.HTMLProps<HTMLTimeElement>
 >((props, forwardedRef) => {
-  const { className, ...etc } = props;
-  const hoveringTime = useMediaStore((s) => s.hoveringTime);
-  const player = useMediaStore((s) => s.player);
-  const duration = useMediaStore((s) => s.duration);
-  const isLive = useMediaStore((s) => s.isLive);
+  const { className, ...etc } = props
+  const hoveringTime = useMediaStore((s) => s.hoveringTime)
+  const player = useMediaStore((s) => s.player)
+  const duration = useMediaStore((s) => s.duration)
+  const isLive = useMediaStore((s) => s.isLive)
 
-  const hoverTime = isLive ? duration - hoveringTime : hoveringTime;
+  const hoverTime = isLive ? duration - hoveringTime : hoveringTime
 
   return (
     <time
-      className={cn("tabular-nums", className)}
       dateTime={durationDateTime(hoveringTime, player?.seekRange())}
+      className={cn("tabular-nums", className)}
       ref={forwardedRef}
       {...etc}
     >
       <span className="sr-only">Seek To:</span>
       {formatTimestamp(hoverTime, duration > HOURS_IN_SECONDS)}
     </time>
-  );
-});
+  )
+})
 
-HoverTime.displayName = "HoverTime";
+HoverTime.displayName = "HoverTime"
 
 export const LiveLatency = React.forwardRef<
   HTMLTimeElement,
   React.HTMLProps<HTMLTimeElement>
 >((props, forwardedRef) => {
-  const { className, ...etc } = props;
-  const liveLatency = useMediaStore((s) => s.liveLatency);
+  const { className, ...etc } = props
+  const liveLatency = useMediaStore((s) => s.liveLatency)
 
-  if (liveLatency == null) {
-    return null;
-  }
+  if (liveLatency == null) return null
 
   return (
     <time ref={forwardedRef} {...etc} className={cn("tabular-nums", className)}>
@@ -137,7 +135,7 @@ export const LiveLatency = React.forwardRef<
       <span aria-hidden>&minus;</span>
       {formatTimestamp(liveLatency, liveLatency > HOURS_IN_SECONDS)}
     </time>
-  );
-});
+  )
+})
 
-LiveLatency.displayName = "LiveLatency";
+LiveLatency.displayName = "LiveLatency"

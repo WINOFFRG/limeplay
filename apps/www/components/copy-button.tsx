@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import { Copy } from "lucide-react";
-import type { Variants } from "motion/react";
-import { motion } from "motion/react";
-import type React from "react";
-import { useCallback, useRef, useState } from "react";
-import { useCopyToClipboard } from "react-use";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import React, { useCallback, useRef, useState } from "react"
+import { Copy } from "lucide-react"
+import type { Variants } from "motion/react"
+import { motion } from "motion/react"
+import { useCopyToClipboard } from "react-use"
 
-type CopyButtonProps = {
-  className?: string;
-  onCopy?: () => Promise<void> | void;
-  containerRef?: React.RefObject<HTMLElement>;
-};
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+
+interface CopyButtonProps {
+  className?: string
+  onCopy?: () => Promise<void> | void
+  containerRef?: React.RefObject<HTMLElement>
+}
 
 const copyIconVariants: Variants = {
   idle: {
@@ -31,7 +31,7 @@ const copyIconVariants: Variants = {
     scale: 0.8,
     transition: { duration: 0.2, ease: "easeOut" },
   },
-};
+}
 
 const checkIconVariants: Variants = {
   idle: {
@@ -49,7 +49,7 @@ const checkIconVariants: Variants = {
     scale: 1,
     transition: { duration: 0.2, ease: "easeOut" },
   },
-};
+}
 
 const checkPathVariants: Variants = {
   idle: {
@@ -67,95 +67,91 @@ const checkPathVariants: Variants = {
     opacity: 1,
     transition: { duration: 0.3, ease: "easeOut" },
   },
-};
+}
 
-const MotionButton = motion.create(Button);
+const MotionButton = motion.create(Button)
 
 export const CopyButton: React.FC<CopyButtonProps> = ({
   onCopy,
   className,
   containerRef,
 }) => {
-  const [status, setStatus] = useState<"idle" | "copying" | "copied">("idle");
+  const [status, setStatus] = useState<"idle" | "copying" | "copied">("idle")
   const [backgroundState, setBackgroundState] = useState<
     "hidden" | "entering" | "centered" | "leaving"
-  >("hidden");
-  const [entryDirection, setEntryDirection] = useState({ x: 0, y: 0 });
-  const [leaveDirection, setLeaveDirection] = useState({ x: 0, y: 0 });
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const [, copyToClipboard] = useCopyToClipboard();
+  >("hidden")
+  const [entryDirection, setEntryDirection] = useState({ x: 0, y: 0 })
+  const [leaveDirection, setLeaveDirection] = useState({ x: 0, y: 0 })
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const [, copyToClipboard] = useCopyToClipboard()
 
   const handleCopy = async () => {
-    if (status !== "idle") {
-      return;
-    }
+    if (status !== "idle") return
 
-    setStatus("copying");
+    setStatus("copying")
     try {
       if (onCopy) {
-        await onCopy();
+        await onCopy()
       } else if (containerRef?.current) {
         const textContent =
-          containerRef.current.textContent || "No text content";
-        copyToClipboard(textContent);
+          containerRef.current.textContent || "No text content"
+        copyToClipboard(textContent)
       }
       setTimeout(() => {
-        setStatus("copied");
-      }, 100);
+        setStatus("copied")
+      }, 100)
 
       setTimeout(() => {
-        setStatus("idle");
-      }, 2000);
+        setStatus("idle")
+      }, 2000)
     } catch (error) {
-      console.error("Copy error:", error);
-      setStatus("idle");
+      console.error("Copy error:", error)
+      setStatus("idle")
     }
-  };
+  }
 
   const calculateDirection = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (!buttonRef.current) {
-        return { x: 0, y: 0 };
-      }
+      if (!buttonRef.current) return { x: 0, y: 0 }
 
-      const rect = buttonRef.current.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
+      const rect = buttonRef.current.getBoundingClientRect()
+      const centerX = rect.left + rect.width / 2
+      const centerY = rect.top + rect.height / 2
 
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
+      const mouseX = e.clientX
+      const mouseY = e.clientY
 
-      const offsetX = mouseX - centerX;
-      const offsetY = mouseY - centerY;
+      const offsetX = mouseX - centerX
+      const offsetY = mouseY - centerY
 
-      return { x: offsetX, y: offsetY };
+      return { x: offsetX, y: offsetY }
     },
     []
-  );
+  )
 
   const handleMouseEnter = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      const direction = calculateDirection(e);
-      setEntryDirection(direction);
-      setBackgroundState("entering");
+      const direction = calculateDirection(e)
+      setEntryDirection(direction)
+      setBackgroundState("entering")
       setTimeout(() => {
-        setBackgroundState("centered");
-      }, 10);
+        setBackgroundState("centered")
+      }, 10)
     },
     [calculateDirection]
-  );
+  )
 
   const handleMouseLeave = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      const direction = calculateDirection(e);
-      setLeaveDirection(direction);
-      setBackgroundState("leaving");
+      const direction = calculateDirection(e)
+      setLeaveDirection(direction)
+      setBackgroundState("leaving")
       setTimeout(() => {
-        setBackgroundState("hidden");
-      }, 150);
+        setBackgroundState("hidden")
+      }, 150)
     },
     [calculateDirection]
-  );
+  )
 
   const getBackgroundAnimation = useCallback(() => {
     switch (backgroundState) {
@@ -166,7 +162,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
           y: entryDirection.y,
           scale: 0.6,
           transition: { duration: 0 },
-        };
+        }
       case "entering":
         return {
           opacity: 0,
@@ -174,7 +170,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
           y: entryDirection.y,
           scale: 0.6,
           transition: { duration: 0 },
-        };
+        }
       case "centered":
         return {
           opacity: 1,
@@ -182,7 +178,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
           y: 0,
           scale: 1,
           transition: { duration: 0.15 },
-        };
+        }
       case "leaving":
         return {
           opacity: 0,
@@ -190,7 +186,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
           y: leaveDirection.y,
           scale: 1,
           transition: { duration: 0.15 },
-        };
+        }
       default:
         return {
           opacity: 0,
@@ -198,37 +194,40 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
           y: 0,
           scale: 0.6,
           transition: { duration: 0 },
-        };
+        }
     }
-  }, [backgroundState, entryDirection, leaveDirection]);
+  }, [backgroundState, entryDirection, leaveDirection])
 
   return (
     <div className="relative z-10 mb-1 ml-1">
       <motion.div
+        className="absolute inset-0 -z-1 rounded-md bg-muted"
         animate={getBackgroundAnimation()}
-        className="-z-1 absolute inset-0 rounded-md bg-muted"
       />
       <MotionButton
-        aria-label="Copy code"
-        className={cn(
-          "relative size-8 cursor-pointer bg-none text-muted-foreground transition duration-300 ease-out hover:scale-105 hover:bg-transparent hover:text-white",
-          className
-        )}
-        disabled={status !== "idle"}
+        ref={buttonRef}
         onClick={handleCopy}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        ref={buttonRef}
-        size="icon"
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
         variant="ghost"
+        size="icon"
+        className={cn(
+          `
+            relative size-8 cursor-pointer bg-none text-muted-foreground transition duration-300 ease-out
+            hover:scale-105 hover:bg-transparent hover:text-white
+          `,
+          className
+        )}
+        aria-label="Copy code"
         whileTap={{ scale: 0.9 }}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        disabled={status !== "idle"}
       >
         <div className="relative size-4">
           {/* Copy Icon */}
           <motion.div
-            animate={status}
             className="absolute inset-0 flex items-center justify-center"
+            animate={status}
             variants={copyIconVariants}
           >
             <Copy className="size-4" />
@@ -236,27 +235,27 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
 
           {/* Check Icon */}
           <motion.div
-            animate={status}
             className={cn(
               "absolute inset-0 flex items-center justify-center",
               status !== "copied" && "hidden"
             )}
+            animate={status}
             variants={checkIconVariants}
           >
             <svg
-              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              width={16}
               height={16}
+              viewBox="0 0 24 24"
+              fill="none"
               stroke="white"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              width={16}
-              xmlns="http://www.w3.org/2000/svg"
             >
               <motion.path
-                animate={status}
                 d="M4 12 9 17L20 6"
+                animate={status}
                 variants={checkPathVariants}
               />
             </svg>
@@ -264,5 +263,5 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
         </div>
       </MotionButton>
     </div>
-  );
-};
+  )
+}

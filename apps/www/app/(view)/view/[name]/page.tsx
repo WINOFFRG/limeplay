@@ -1,23 +1,24 @@
-import { notFound } from "next/navigation";
-import * as React from "react";
-import { registryItemSchema } from "shadcn/schema";
-import { z } from "zod";
-import { ThemeToggle } from "@/components/layouts/theme-toggle";
-import { atomReader } from "@/hooks/use-config";
-import { getRegistryComponent, getRegistryItem } from "@/lib/registry";
+import * as React from "react"
+import { notFound } from "next/navigation"
+import { registryItemSchema } from "shadcn/schema"
+import { z } from "zod"
 
-export const revalidate = false;
-export const dynamic = "force-static";
-export const dynamicParams = false;
+import { getRegistryComponent, getRegistryItem } from "@/lib/registry"
+import { atomReader } from "@/hooks/use-config"
+import { ThemeToggle } from "@/components/layouts/theme-toggle"
 
-const getCachedRegistryItem = React.cache(
-  async (name: string) => await getRegistryItem(name)
-);
+export const revalidate = false
+export const dynamic = "force-static"
+export const dynamicParams = false
+
+const getCachedRegistryItem = React.cache(async (name: string) => {
+  return await getRegistryItem(name)
+})
 
 export async function generateStaticParams() {
-  const { Index } = await import("@/registry/__index__");
-  const config = atomReader();
-  const index = z.record(registryItemSchema).parse(Index[config.style]);
+  const { Index } = await import("@/registry/__index__")
+  const config = atomReader()
+  const index = z.record(registryItemSchema).parse(Index[config.style])
 
   const result = Object.values(index)
     .filter((block) =>
@@ -27,24 +28,24 @@ export async function generateStaticParams() {
     )
     .map((block) => ({
       name: block.name,
-    }));
+    }))
 
-  return result;
+  return result
 }
 
 export default async function BlockPage({
   params,
 }: {
   params: Promise<{
-    name: string;
-  }>;
+    name: string
+  }>
 }) {
-  const { name } = await params;
-  const item = await getCachedRegistryItem(name);
-  const Component = getRegistryComponent(name);
+  const { name } = await params
+  const item = await getCachedRegistryItem(name)
+  const Component = getRegistryComponent(name)
 
-  if (!(item && Component)) {
-    return notFound();
+  if (!item || !Component) {
+    return notFound()
   }
 
   return (
@@ -54,5 +55,5 @@ export default async function BlockPage({
       )}
       <Component {...item.meta?.props} />
     </div>
-  );
+  )
 }

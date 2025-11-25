@@ -1,6 +1,6 @@
-import type { Registry } from "shadcn/schema";
+import { type Registry } from "shadcn/schema"
 
-const TARGET_BASE_PATH = "components/limeplay";
+const TARGET_BASE_PATH = "components/limeplay"
 
 export const ui: Registry["items"] = [
   {
@@ -286,4 +286,4 @@ export const ui: Registry["items"] = [
       },
     ],
   },
-];
+]

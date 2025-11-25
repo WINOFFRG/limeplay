@@ -1,8 +1,8 @@
-import nextPlugin from "@next/eslint-plugin-next";
-import pluginBetterTailwindcss from "eslint-plugin-better-tailwindcss";
-import tseslint from "typescript-eslint";
+import nextPlugin from "@next/eslint-plugin-next"
+import pluginBetterTailwindcss from "eslint-plugin-better-tailwindcss"
+import tseslint from "typescript-eslint"
 
-import { baseConfig } from "../../eslint.config.mjs";
+import { baseConfig } from "../../eslint.config.mjs"
 
 const eslintConfig = [
   {
@@ -50,6 +50,6 @@ const eslintConfig = [
     },
   },
   ...baseConfig,
-];
+]
 
-export default tseslint.config(eslintConfig);
+export default tseslint.config(eslintConfig)

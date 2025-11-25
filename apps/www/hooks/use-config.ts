@@ -1,28 +1,28 @@
-import { getDefaultStore, useAtom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
+import { getDefaultStore, useAtom } from "jotai"
+import { atomWithStorage } from "jotai/utils"
 
-import type { Style } from "@/registry/collection/registry-styles";
+import type { Style } from "@/registry/collection/registry-styles"
 
-type Config = {
-  style: Style["name"];
-  radius: number;
-  packageManager: "npm" | "yarn" | "pnpm" | "bun";
-  installationType: "cli" | "manual";
-};
+interface Config {
+  style: Style["name"]
+  radius: number
+  packageManager: "npm" | "yarn" | "pnpm" | "bun"
+  installationType: "cli" | "manual"
+}
 
 const configAtom = atomWithStorage<Config>("config", {
   style: "default",
   radius: 0.5,
   packageManager: "pnpm",
   installationType: "cli",
-});
+})
 
 export function useConfig() {
-  return useAtom(configAtom);
+  return useAtom(configAtom)
 }
 
 export function atomReader() {
-  const store = getDefaultStore();
-  const value = store.get(configAtom);
-  return value;
+  const store = getDefaultStore()
+  const value = store.get(configAtom)
+  return value
 }

@@ -1,12 +1,12 @@
-import type shaka from "shaka-player";
+import type shaka from "shaka-player"
 
-export type DemoAsset = {
-  title: string;
-  description?: string;
-  poster: string;
-  src: string;
-  config?: shaka.extern.PlayerConfiguration;
-};
+export interface DemoAsset {
+  title: string
+  description?: string
+  poster: string
+  src: string
+  config?: shaka.extern.PlayerConfiguration
+}
 
 export const ASSETS: DemoAsset[] = [
   {
@@ -48,4 +48,4 @@ export const ASSETS: DemoAsset[] = [
     poster: "https://demo.theoplayer.com/hubfs/videos/natgeo/poster.jpg",
     src: "https://demo.theoplayer.com/hubfs/videos/natgeo/playlist.m3u8",
   },
-];
+]

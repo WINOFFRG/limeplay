@@ -7,8 +7,7 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "isolatedModules": false,
-    "allowImportingTsExtensions": true,
-    "strictNullChecks": true
+    "allowImportingTsExtensions": true
   },
   "include": ["scripts/**/*.{ts,mts}", "registry/**/*"],
   "exclude": ["node_modules"]
