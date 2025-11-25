@@ -1,11 +1,11 @@
-import { registryItemSchema, type Registry } from "shadcn/schema"
-import { z } from "zod"
+import { type Registry, registryItemSchema } from "shadcn/schema";
+import { z } from "zod";
 
-import { blocks } from "@/registry/collection/registry-blocks"
-import { examples } from "@/registry/collection/registry-examples"
-import { hooks } from "@/registry/collection/registry-hooks"
-import { internal, lib } from "@/registry/collection/registry-lib"
-import { ui } from "@/registry/collection/registry-ui"
+import { blocks } from "@/registry/collection/registry-blocks";
+import { examples } from "@/registry/collection/registry-examples";
+import { hooks } from "@/registry/collection/registry-hooks";
+import { internal, lib } from "@/registry/collection/registry-lib";
+import { ui } from "@/registry/collection/registry-ui";
 
 export const registry: Registry = {
   name: "limeplay/ui",
@@ -27,4 +27,4 @@ export const registry: Registry = {
     ...internal,
     ...examples,
   ]),
-}
+};
