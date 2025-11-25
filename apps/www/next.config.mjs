@@ -17,7 +17,6 @@ const config = {
     "oxc-transform",
     "twoslash",
     "shiki",
-    "@takumi-rs/image-response",
   ],
 }
 
