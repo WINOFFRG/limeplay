@@ -11,7 +11,12 @@ export async function GET(
   { params }: RouteContext<"/llms.mdx/[...slug]">
 ) {
   const slug = (await params).slug
-  const page = source.getPage(slug)
+  const pageSlug = slug.map((segment, index) => 
+    index === slug.length - 1 && segment.endsWith('.mdx') 
+      ? segment.slice(0, -4) 
+      : segment
+  )
+  const page = source.getPage(pageSlug)
   if (!page) notFound()
 
   return new NextResponse(await getLLMText(page), {
@@ -26,17 +31,25 @@ export function generateStaticParams() {
 
   const disabledRoutes: (string | string[])[] = [["components"], ["hooks"]]
 
-  return routes.filter((route) => {
-    const slug = route.slug
-    
-    return !disabledRoutes.some((disabled) => {
-      if (Array.isArray(disabled)) {
-        return slug.length === disabled.length && 
-               disabled.every((segment, index) => slug[index] === segment)
-      }
-      return false
+  return routes
+    .filter((route) => {
+      const slug = route.slug
+      
+      return !disabledRoutes.some((disabled) => {
+        if (Array.isArray(disabled)) {
+          return slug.length === disabled.length && 
+                 disabled.every((segment, index) => slug[index] === segment)
+        }
+        return false
+      })
     })
-  })
+    .map((route) => {
+      const slug = [...route.slug]
+      if (slug.length > 0) {
+        slug[slug.length - 1] = `${slug[slug.length - 1]}.mdx`
+      }
+      return { slug }
+    })
 }
 
 /**
