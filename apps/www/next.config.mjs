@@ -11,7 +11,14 @@ const config = {
   images: {
     unoptimized: true,
   },
-  serverExternalPackages: ["@takumi-rs/image-response"],
+  serverExternalPackages: [
+    "ts-morph",
+    "typescript",
+    "oxc-transform",
+    "twoslash",
+    "shiki",
+    "@takumi-rs/image-response",
+  ],
 }
 
 export default withMDX(config)
