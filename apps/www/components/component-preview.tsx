@@ -6,11 +6,12 @@ import { Pre } from "fumadocs-ui/components/codeblock"
 
 import { cn } from "@/lib/utils"
 import { atomReader } from "@/hooks/use-config"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { TabsContent } from "@/components/ui/tabs"
 import { Index } from "@/registry/__index__"
 import { PlayerLayoutDemo } from "@/registry/default/examples/player-root-demo"
 
 import { CodeBlock as CustomCodeBlock } from "./codeblock"
+import { ComponentPreviewControl } from "./component-preview-control"
 import { PreviewTabComponent } from "./preview-tab-component"
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -60,38 +61,10 @@ export async function ComponentPreview({
       className={cn("group relative my-4 mb-12 flex flex-col space-y-2")}
       {...props}
     >
-      <Tabs
-        defaultValue="preview"
+      <ComponentPreviewControl
         className="relative mr-auto w-full rounded-none"
+        hideCode={hideCode}
       >
-        <div className="flex items-center justify-between pb-3">
-          {!hideCode && (
-            <TabsList className="w-fit justify-start rounded-none border-b bg-transparent p-0">
-              <TabsTrigger
-                value="preview"
-                className={`
-                  relative h-9 cursor-pointer rounded-b-none border-b-2 border-b-transparent bg-transparent px-6 py-3 font-semibold
-                  text-muted-foreground shadow-none transition-none
-                  data-[state=active]:border-b-primary! data-[state=active]:bg-primary/10! data-[state=active]:text-foreground
-                  data-[state=active]:shadow-none
-                `}
-              >
-                Preview
-              </TabsTrigger>
-              <TabsTrigger
-                value="code"
-                className={`
-                  relative h-9 cursor-pointer rounded-b-none border-b-2 border-b-transparent bg-transparent px-6 py-3 font-semibold
-                  text-muted-foreground shadow-none transition-none
-                  data-[state=active]:border-b-primary! data-[state=active]:bg-primary/10! data-[state=active]:text-foreground
-                  data-[state=active]:shadow-none
-                `}
-              >
-                Code
-              </TabsTrigger>
-            </TabsList>
-          )}
-        </div>
         <TabsContent
           value="preview"
           className={`
@@ -120,7 +93,7 @@ export async function ComponentPreview({
             {rendered}
           </CustomCodeBlock>
         </TabsContent>
-      </Tabs>
+      </ComponentPreviewControl>
     </div>
   )
 }
