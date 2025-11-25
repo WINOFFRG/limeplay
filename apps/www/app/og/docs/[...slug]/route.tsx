@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import { ImageResponse } from "@takumi-rs/image-response"
+import { ImageResponse } from "next/og"
 
 import {
   getImageResponseOptions,
