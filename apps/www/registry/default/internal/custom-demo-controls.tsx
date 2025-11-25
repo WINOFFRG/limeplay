@@ -1,18 +1,42 @@
 // @ts-nocheck fix css later
 
-import type React from "react";
+import React from "react"
 
 export function CustomDemoControls({ children }: React.PropsWithChildren) {
   return (
     <section
-      className={
-        "fade-in-100 relative mt-10 flex w-full animate-in flex-row bg-linear-to-br from-gray-100 to-primary px-8 py-3 transition-all duration-500 ease-in-out dark:from-neutral-900 dark:to-neutral-950"
-      }
+      className={`
+        relative mt-10 flex w-full animate-in flex-row bg-linear-to-br from-gray-100 to-primary px-8 py-3 transition-all duration-500 ease-in-out
+        fade-in-100
+        dark:from-neutral-900 dark:to-neutral-950
+      `}
     >
       <div
-        className={
-          "mask-exclude absolute top-0 left-[calc(var(--offset)/2*-1)] z-20 h-(--height) w-[calc(100%+var(--offset))] bg-[linear-gradient(to_right,var(--color),var(--color)_50%,transparent_0,transparent)] bg-size-[var(--width)_var(--height)] dark:bg-[linear-gradient(to_right,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]"
-        }
+        className={`
+          absolute top-0 left-[calc(var(--offset)/2*-1)] z-20 h-(--height) w-[calc(100%+var(--offset))]
+          bg-[linear-gradient(to_right,var(--color),var(--color)_50%,transparent_0,transparent)] bg-size-[var(--width)_var(--height)] mask-exclude
+          dark:bg-[linear-gradient(to_right,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]
+        `}
+        style={{
+          ["--background"]: "#ffffff",
+          "--color": "rgba(0, 0, 0, 0.2)",
+          "--height": "1px",
+          "--width": "5px",
+          "--fade-stop": "90%",
+          "--offset": "20px",
+          "--color-dark": "rgba(255, 255, 255, 0.2)",
+          maskComposite: "exclude",
+          maskImage:
+            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
+        }}
+      ></div>
+
+      <div
+        className={`
+          absolute top-auto bottom-0 left-[calc(var(--offset)/2*-1)] z-20 h-(--height) w-[calc(100%+var(--offset))]
+          bg-[linear-gradient(to_right,var(--color),var(--color)_50%,transparent_0,transparent)] bg-size-[var(--width)_var(--height)] mask-exclude
+          dark:bg-[linear-gradient(to_right,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]
+        `}
         style={{
           "--background": "#ffffff",
           "--color": "rgba(0, 0, 0, 0.2)",
@@ -25,30 +49,14 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
           maskImage:
             "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
         }}
-      />
+      ></div>
 
       <div
-        className={
-          "mask-exclude absolute top-auto bottom-0 left-[calc(var(--offset)/2*-1)] z-20 h-(--height) w-[calc(100%+var(--offset))] bg-[linear-gradient(to_right,var(--color),var(--color)_50%,transparent_0,transparent)] bg-size-[var(--width)_var(--height)] dark:bg-[linear-gradient(to_right,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]"
-        }
-        style={{
-          "--background": "#ffffff",
-          "--color": "rgba(0, 0, 0, 0.2)",
-          "--height": "1px",
-          "--width": "5px",
-          "--fade-stop": "90%",
-          "--offset": "20px",
-          "--color-dark": "rgba(255, 255, 255, 0.2)",
-          maskComposite: "exclude",
-          maskImage:
-            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
-        }}
-      />
-
-      <div
-        className={
-          "mask-exclude absolute top-[calc(var(--offset)/2*-1)] left-0 z-20 h-[calc(100%+var(--offset))] w-(--width) bg-[linear-gradient(to_bottom,var(--color),var(--color)_50%,transparent_0,transparent)] bg-size-[var(--width)_var(--height)] dark:bg-[linear-gradient(to_bottom,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]"
-        }
+        className={`
+          absolute top-[calc(var(--offset)/2*-1)] left-0 z-20 h-[calc(100%+var(--offset))] w-(--width)
+          bg-[linear-gradient(to_bottom,var(--color),var(--color)_50%,transparent_0,transparent)] bg-size-[var(--width)_var(--height)] mask-exclude
+          dark:bg-[linear-gradient(to_bottom,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]
+        `}
         style={{
           "--background": "#ffffff",
           "--color": "rgba(0, 0, 0, 0.2)",
@@ -61,12 +69,14 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
           maskImage:
             "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
         }}
-      />
+      ></div>
 
       <div
-        className={
-          "mask-exclude absolute top-[calc(var(--offset)/2*-1)] right-0 left-auto z-20 h-[calc(100%+var(--offset))] w-(--width) bg-[linear-gradient(to_bottom,var(--color),var(--color)_50%,transparent_0,transparent)] bg-size-[var(--width)_var(--height)] dark:bg-[linear-gradient(to_bottom,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]"
-        }
+        className={`
+          absolute top-[calc(var(--offset)/2*-1)] right-0 left-auto z-20 h-[calc(100%+var(--offset))] w-(--width)
+          bg-[linear-gradient(to_bottom,var(--color),var(--color)_50%,transparent_0,transparent)] bg-size-[var(--width)_var(--height)] mask-exclude
+          dark:bg-[linear-gradient(to_bottom,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]
+        `}
         style={{
           "--background": "#ffffff",
           "--color": "rgba(0, 0, 0, 0.2)",
@@ -79,8 +89,8 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
           maskImage:
             "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
         }}
-      />
+      ></div>
       {children}
     </section>
-  );
+  )
 }
