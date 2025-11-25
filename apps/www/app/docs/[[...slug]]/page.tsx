@@ -8,7 +8,7 @@ import {
   DocsTitle,
 } from "fumadocs-ui/page"
 
-import { source } from "@/lib/source"
+import { getPageImage, source } from "@/lib/source"
 import { LLMCopyButton, ViewOptions } from "@/components/ai/page-actions"
 import { getMDXComponents } from "@/components/mdx-components"
 
@@ -47,9 +47,9 @@ export function generateStaticParams() {
   return source.generateParams()
 }
 
-export async function generateMetadata(props: {
-  params: Promise<{ slug?: string[] }>
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: PageProps<"/docs/[[...slug]]">
+): Promise<Metadata> {
   const params = await props.params
   const page = source.getPage(params.slug)
   if (!page) notFound()
@@ -57,5 +57,8 @@ export async function generateMetadata(props: {
   return {
     title: page.data.title,
     description: page.data.description,
+    openGraph: {
+      images: getPageImage(page).url,
+    },
   }
 }

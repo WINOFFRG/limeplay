@@ -7,11 +7,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { ThemeProvider } from "next-themes"
 
-import {
-  PROD_BASE_HOST,
-  PRODUCT_DESCRIPTION,
-  PRODUCT_NAME,
-} from "@/lib/constants"
+import { PRODUCT_DESCRIPTION, PRODUCT_NAME } from "@/lib/constants"
 import { JsonLd } from "@/components/json-ld"
 
 const geist = Geist({
@@ -32,7 +28,6 @@ export const metadata: Metadata = {
     default: PRODUCT_NAME,
     template: `%s | ${PRODUCT_NAME}`,
   },
-  metadataBase: new URL(PROD_BASE_HOST),
   description: PRODUCT_DESCRIPTION,
   keywords: [
     "video player",
@@ -57,13 +52,12 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: PROD_BASE_HOST,
     title: PRODUCT_NAME,
     description: PRODUCT_DESCRIPTION,
     siteName: PRODUCT_NAME,
     images: [
       {
-        url: `${PROD_BASE_HOST}/opengraph-image.png`,
+        url: `/opengraph-image.png`,
         width: 1200,
         height: 630,
         alt: PRODUCT_NAME,
@@ -74,10 +68,10 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: PRODUCT_NAME,
     description: PRODUCT_DESCRIPTION,
-    images: [`${PROD_BASE_HOST}/opengraph-image.png`],
+    images: [`/opengraph-image.png`],
     creator: "@winoffrg",
   },
-  manifest: `${PROD_BASE_HOST}/site.webmanifest`,
+  manifest: `/site.webmanifest`,
   robots: "index, follow",
 }
 

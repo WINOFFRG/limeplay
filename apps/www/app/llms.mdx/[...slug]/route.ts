@@ -29,20 +29,7 @@ export async function GET(
 export function generateStaticParams() {
   const routes = source.generateParams()
 
-  const disabledRoutes: (string | string[])[] = [["components"], ["hooks"]]
-
   return routes
-    .filter((route) => {
-      const slug = route.slug
-      
-      return !disabledRoutes.some((disabled) => {
-        if (Array.isArray(disabled)) {
-          return slug.length === disabled.length && 
-                 disabled.every((segment, index) => slug[index] === segment)
-        }
-        return false
-      })
-    })
     .map((route) => {
       const slug = [...route.slug]
       if (slug.length > 0) {
