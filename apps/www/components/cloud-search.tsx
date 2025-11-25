@@ -27,20 +27,12 @@ const Context = createContext<{
   chat: UseChatHelpers<UIMessage>;
 } | null>(null);
 
-function useAISearch() {
-  const context = use(Context);
-  if (!context) {
-    throw new Error("useAISearch must be used within AISearchTrigger");
-  }
-  return context;
-}
-
 function useChatContext() {
-  return useAISearch().chat;
+  return use(Context)?.chat;
 }
 
 function Header() {
-  const { setOpen } = useAISearch();
+  const { setOpen } = use(Context)!;
 
   return (
     <div className="sticky top-0 flex items-start gap-2">
