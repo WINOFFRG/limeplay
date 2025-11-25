@@ -6,16 +6,14 @@ import type shaka from "shaka-player";
 import { useMediaStore } from "@/registry/default/ui/media-provider";
 
 declare global {
-  // biome-ignore lint/style/useConsistentTypeDefinitions: expected
-  interface HTMLMediaElement {
+  type HTMLMediaElement = {
     player: shaka.Player | null;
-  }
-  // biome-ignore lint/style/useConsistentTypeDefinitions: expected
-  interface Window {
+  };
+  type Window = {
     shaka: {
       Player: typeof shaka.Player;
     };
-  }
+  };
 }
 
 export function useShakaPlayer() {

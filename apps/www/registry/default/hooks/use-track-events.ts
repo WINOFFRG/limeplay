@@ -15,7 +15,9 @@ type UseTrackEventsProps<E extends HTMLElement> = {
     isPointerDown: boolean,
     event: React.PointerEvent<E>
   ) => void;
+  /*/
   onPointerUp?: (event: React.PointerEvent<E>) => void;
+  /*/
   onPointerOut?: (event: React.PointerEvent<E>) => void;
 };
 
