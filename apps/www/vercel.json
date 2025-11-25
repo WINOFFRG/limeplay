@@ -13,15 +13,5 @@
       "destination": "/llms.mdx/:path*"
     }
   ],
-  "headers": [
-    {
-      "source": "/docs/:path*",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/markdown"
-        }
-      ]
-    }
-  ]
+  "headers": []
 }
