@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react";
-import { useState } from "react";
-import type shaka from "shaka-player";
+import { useState } from "react"
+import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react"
+import type shaka from "shaka-player"
 
 import {
   DropdownMenu,
@@ -11,17 +11,17 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/registry/default/blocks/linear-player/ui/button";
-import { useMediaStore } from "@/registry/default/ui/media-provider";
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/registry/default/blocks/linear-player/ui/button"
+import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-export type DemoAsset = {
-  title: string;
-  description?: string;
-  poster: string;
-  src: string;
-  config?: shaka.extern.PlayerConfiguration;
-};
+export interface DemoAsset {
+  title: string
+  description?: string
+  poster: string
+  src: string
+  config?: shaka.extern.PlayerConfiguration
+}
 
 export const ASSETS: DemoAsset[] = [
   {
@@ -63,96 +63,98 @@ export const ASSETS: DemoAsset[] = [
     poster: "https://demo.theoplayer.com/hubfs/videos/natgeo/poster.jpg",
     src: "https://demo.theoplayer.com/hubfs/videos/natgeo/playlist.m3u8",
   },
-];
+]
 
 export function Playlist() {
-  const [currentAsset, setCurrentAsset] = useState<DemoAsset | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const player = useMediaStore((state) => state.player);
-  const setForceIdle = useMediaStore((state) => state.setForceIdle);
-  const mediaRef = useMediaStore((state) => state.mediaRef);
+  const [currentAsset, setCurrentAsset] = useState<DemoAsset | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
+  const player = useMediaStore((state) => state.player)
+  const setForceIdle = useMediaStore((state) => state.setForceIdle)
+  const mediaRef = useMediaStore((state) => state.mediaRef)
 
   const handleAssetSelect = async (asset: DemoAsset) => {
     if (!player) {
-      console.error("Shaka Player not initialized");
-      return;
+      console.error("Shaka Player not initialized")
+      return
     }
 
     try {
       if (asset.config) {
-        player.configure(asset.config);
+        player.configure(asset.config)
       }
 
-      await player.load(asset.src);
-      setCurrentAsset(asset);
+      await player.load(asset.src)
+      setCurrentAsset(asset)
 
       if (mediaRef.current?.paused) {
-        await mediaRef.current.play();
+        await mediaRef.current.play()
       }
     } catch (error) {
-      console.error("Error loading asset:", error);
+      console.error("Error loading asset:", error)
     }
-  };
+  }
 
   const handleOpenChange = (open: boolean) => {
-    setIsOpen(open);
+    setIsOpen(open)
     if (open) {
-      setForceIdle(true);
+      setForceIdle(true)
     } else {
-      setForceIdle(false);
+      setForceIdle(false)
     }
-  };
+  }
 
   const handlePointerDown = (e: React.PointerEvent) => {
     if (isOpen) {
-      e.stopPropagation();
+      e.stopPropagation()
     }
-  };
+  }
 
   return (
-    <DropdownMenu onOpenChange={handleOpenChange} open={isOpen}>
+    <DropdownMenu open={isOpen} onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger asChild>
-        <Button aria-label="Open episodes" size="icon" variant="glass">
+        <Button size="icon" variant="glass" aria-label="Open episodes">
           <CardsThreeIcon weight="fill" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        align="end"
-        alignOffset={-12}
-        className="w-sm p-2"
-        onPointerDown={handlePointerDown}
         side="top"
+        align="end"
+        className="w-sm p-2"
         sideOffset={24}
+        alignOffset={-12}
+        onPointerDown={handlePointerDown}
       >
         <DropdownMenuLabel>
           Episodes
-          <p className="mt-1 text-muted-foreground text-xs">
+          <p className="mt-1 text-xs text-muted-foreground">
             This is a draft version of Playlist component
           </p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <div className="space-y-2">
           {ASSETS.map((asset, index) => {
-            const isCurrentAsset = currentAsset?.src === asset.src;
+            const isCurrentAsset = currentAsset?.src === asset.src
             return (
               <DropdownMenuItem
-                className={`p-0 transition-colors ${
-                  isCurrentAsset
-                    ? "border-primary/20 bg-primary/10"
-                    : "hover:bg-accent/50"
-                }
-                `}
                 key={index}
+                className={`
+                  p-0 transition-colors
+                  ${
+                    isCurrentAsset
+                      ? "border-primary/20 bg-primary/10"
+                      : "hover:bg-accent/50"
+                  }
+                `}
                 onSelect={() => handleAssetSelect(asset)}
               >
                 <div className="flex w-full items-center gap-3 p-2">
                   <div className="relative aspect-video w-20 shrink-0 overflow-hidden rounded">
                     <img
+                      src={asset.poster}
                       alt={asset.title}
-                      className="object-cover"
                       // fill
                       sizes="80px"
-                      src={asset.poster}
+                      className="object-cover"
                       // priority={index < 2}
                     />
                     {isCurrentAsset && (
@@ -163,7 +165,7 @@ export function Playlist() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <div className="truncate font-medium text-sm">
+                      <div className="truncate text-sm font-medium">
                         {asset.title}
                       </div>
                       {isCurrentAsset && (
@@ -171,17 +173,17 @@ export function Playlist() {
                       )}
                     </div>
                     {asset.description && (
-                      <div className="line-clamp-2 text-muted-foreground text-xs">
+                      <div className="line-clamp-2 text-xs text-muted-foreground">
                         {asset.description}
                       </div>
                     )}
                   </div>
                 </div>
               </DropdownMenuItem>
-            );
+            )
           })}
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }
