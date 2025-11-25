@@ -1,17 +1,18 @@
-"use client";
+"use client"
 
-import { composeRefs } from "@radix-ui/react-compose-refs";
-import { Slot } from "@radix-ui/react-slot";
-import React, { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { useCaptions } from "@/registry/default/hooks/use-captions";
-import { useMediaStore } from "@/registry/default/ui/media-provider";
+import React, { useEffect } from "react"
+import { composeRefs } from "@radix-ui/react-compose-refs"
+import { Slot } from "@radix-ui/react-slot"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { useCaptions } from "@/registry/default/hooks/use-captions"
+import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export type CaptionsControlPropsDocs = Pick<
   CaptionsControlProps,
   "shortcut" | "asChild"
->;
+>
 
 export interface CaptionsControlProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -19,20 +20,20 @@ export interface CaptionsControlProps
    * Render as child component using Radix Slot
    * @default false
    */
-  asChild?: boolean;
+  asChild?: boolean
   /**
    * Keyboard shortcut hint displayed in aria-label
    * @example "C"
    */
-  shortcut?: string;
+  shortcut?: string
 }
 
 export const CaptionsControl = React.forwardRef<
   HTMLButtonElement,
   CaptionsControlProps
 >((props, forwardedRef) => {
-  const textTracks = useMediaStore((state) => state.textTracks);
-  const { toggleCaptionVisibility } = useCaptions();
+  const textTracks = useMediaStore((state) => state.textTracks)
+  const { toggleCaptionVisibility } = useCaptions()
 
   const {
     children,
@@ -42,63 +43,63 @@ export const CaptionsControl = React.forwardRef<
     shortcut,
     asChild = false,
     ...restProps
-  } = props;
+  } = props
 
-  const Comp = asChild ? Slot : Button;
+  const Comp = asChild ? Slot : Button
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    onClick?.(event);
+    onClick?.(event)
     if (!event.defaultPrevented) {
-      toggleCaptionVisibility();
+      toggleCaptionVisibility()
     }
-  };
+  }
 
-  const isDisabled = !textTracks || textTracks.length === 0 || userDisabled;
+  const isDisabled = !textTracks || textTracks.length === 0 || userDisabled
 
   const getDefaultAriaLabel = () => {
-    const shortcutText = shortcut ? ` (keyboard shortcut ${shortcut})` : "";
-    return `Captions${shortcutText}`;
-  };
+    const shortcutText = shortcut ? ` (keyboard shortcut ${shortcut})` : ""
+    return `Captions${shortcutText}`
+  }
 
   return (
     <Comp
-      aria-keyshortcuts={shortcut}
-      aria-label={ariaLabelProp ?? getDefaultAriaLabel()}
-      data-label="lp-captions-control"
       disabled={isDisabled}
+      data-label="lp-captions-control"
+      aria-label={ariaLabelProp ?? getDefaultAriaLabel()}
+      aria-keyshortcuts={shortcut}
       {...restProps}
-      onClick={handleClick}
       ref={forwardedRef}
+      onClick={handleClick}
     >
       {children}
     </Comp>
-  );
-});
+  )
+})
 
-CaptionsControl.displayName = "CaptionsControl";
+CaptionsControl.displayName = "CaptionsControl"
 
 export type CaptionsContainerPropsDocs = Pick<
   CaptionsContainerProps,
   "fontScale"
->;
+>
 
 interface CaptionsContainerProps extends React.ComponentPropsWithoutRef<"div"> {
   /**
    * Font scale factor for caption text size
    * @default 1
    */
-  fontScale?: number;
+  fontScale?: number
 }
 
 export const CaptionsContainer = React.forwardRef<
   HTMLDivElement,
   CaptionsContainerProps
 >((props, ref) => {
-  const { className, fontScale, ...etc } = props;
-  const player = useMediaStore((state) => state.player);
+  const { className, fontScale, ...etc } = props
+  const player = useMediaStore((state) => state.player)
   const setContainerElement = useMediaStore(
     (state) => state.setTextTrackContainerElement
-  );
+  )
 
   useEffect(() => {
     if (player && fontScale) {
@@ -106,20 +107,20 @@ export const CaptionsContainer = React.forwardRef<
         textDisplayer: {
           fontScaleFactor: fontScale,
         },
-      });
+      })
     }
-  }, [player, fontScale]);
+  }, [player, fontScale])
 
   return (
     <div
+      ref={composeRefs(ref, setContainerElement)}
       className={cn(
         "relative flex w-full grow flex-col justify-end text-lg",
         className
       )}
-      ref={composeRefs(ref, setContainerElement)}
       {...etc}
     />
-  );
-});
+  )
+})
 
-CaptionsContainer.displayName = "CaptionsContainer";
+CaptionsContainer.displayName = "CaptionsContainer"

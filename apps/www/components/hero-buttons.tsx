@@ -1,36 +1,41 @@
-"use client";
+"use client"
 
-import { Check, Copy } from "lucide-react";
-import { motion } from "motion/react";
-import Link from "next/link";
-import { useCopyToClipboard } from "react-use";
+import Link from "next/link"
+import { Check, Copy } from "lucide-react"
+import { motion } from "motion/react"
+import { useCopyToClipboard } from "react-use"
 
-const command = "npx shadcn add @limeplay/linear-player";
+const command = "npx shadcn add @limeplay/linear-player"
 
 export default function HeroButtons() {
-  const [isCopied, copyToClipboard] = useCopyToClipboard();
+  const [isCopied, copyToClipboard] = useCopyToClipboard()
 
   return (
     <div
-      className={
-        "flex flex-col items-center justify-center gap-3 sm:gap-3 md:flex-row md:gap-2"
-      }
+      className={`
+        flex flex-col items-center justify-center gap-3
+        sm:gap-3
+        md:flex-row md:gap-2
+      `}
     >
       <motion.div
-        className={
-          "group relative flex h-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-neutral-800/20 font-mono text-slate-700 backdrop-blur-lg sm:h-11 md:h-12"
-        }
-        initial={{ padding: "0px 20px" }}
         onClick={() => {
-          copyToClipboard(command);
+          copyToClipboard(command)
         }}
+        initial={{ padding: "0px 20px" }}
+        whileHover={{ padding: "0px 32px" }}
+        whileTap={{ padding: "0px 20px" }}
         transition={{
           duration: 1,
           bounce: 0.6,
           type: "spring",
         }}
-        whileHover={{ padding: "0px 32px" }}
-        whileTap={{ padding: "0px 20px" }}
+        className={`
+          group relative flex h-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-neutral-800/20 font-mono text-slate-700
+          backdrop-blur-lg
+          sm:h-11
+          md:h-12
+        `}
       >
         <div
           className="pointer-events-none absolute inset-0 opacity-30"
@@ -40,25 +45,30 @@ export default function HeroButtons() {
           }}
         />
         <div
-          className={
-            "flex items-center gap-px text-xs group-active:scale-[0.999] sm:text-sm"
-          }
+          className={`
+            flex items-center gap-px text-xs
+            group-active:scale-[0.999]
+            sm:text-sm
+          `}
         >
           <span>{command.split("/")[0]}/</span>
           <span className="flex items-center gap-2 opacity-40">
             {command.split("/")[1]}
             <motion.span
-              animate={{ scale: 1, opacity: 1 }}
               aria-label="Copy to clipboard"
-              className={"hidden lg:block"}
-              exit={{ scale: 1.2, opacity: 0 }}
-              initial={{ scale: 0, opacity: 0 }}
               key={isCopied.value ? "check" : "copy"}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 1.2, opacity: 0 }}
               transition={{
                 duration: 0.5,
                 type: "spring",
                 bounce: 0.3,
               }}
+              className={`
+                hidden
+                lg:block
+              `}
             >
               {isCopied.value ? (
                 <Check className="h-4 w-4" />
@@ -71,21 +81,23 @@ export default function HeroButtons() {
       </motion.div>
       <Link href="/docs/quick-start">
         <motion.div
-          className={
-            "hidden h-12 w-fit cursor-pointer items-center justify-center rounded-xl bg-neutral-600 font-medium text-sm hover:bg-neutral-700 md:flex"
-          }
           initial={{ padding: "0px 20px" }}
+          whileHover={{ padding: "0px 32px" }}
+          whileTap={{ padding: "0px 20px" }}
           transition={{
             duration: 1,
             bounce: 0.6,
             type: "spring",
           }}
-          whileHover={{ padding: "0px 32px" }}
-          whileTap={{ padding: "0px 20px" }}
+          className={`
+            hidden h-12 w-fit cursor-pointer items-center justify-center rounded-xl bg-neutral-600 text-sm font-medium
+            hover:bg-neutral-700
+            md:flex
+          `}
         >
           Quick Start
         </motion.div>
       </Link>
     </div>
-  );
+  )
 }
