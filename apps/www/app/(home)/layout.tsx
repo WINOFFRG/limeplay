@@ -1,14 +1,13 @@
-import Script from "next/script"
-
-import { Header } from "@/components/layouts/header"
-import { slot } from "@/components/layouts/shared"
-import { VideoBackground } from "@/components/video-background"
-import { baseOptions, HEADER_LINKS } from "@/app/layout.config"
+import Script from "next/script";
+import { baseOptions, HEADER_LINKS } from "@/app/layout.config";
+import { Header } from "@/components/layouts/header";
+import { slot } from "@/components/layouts/shared";
+import { VideoBackground } from "@/components/video-background";
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <>
@@ -31,5 +30,5 @@ export default function RootLayout({
         {children}
       </main>
     </>
-  )
+  );
 }

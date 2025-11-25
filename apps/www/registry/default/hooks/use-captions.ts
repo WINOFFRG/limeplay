@@ -1,23 +1,23 @@
-"use client"
+"use client";
 
-import { useCallback, useEffect } from "react"
-import type shaka from "shaka-player"
-import type { StateCreator } from "zustand"
+import { useCallback, useEffect } from "react";
+import type shaka from "shaka-player";
+import type { StateCreator } from "zustand";
 
-import type { PlayerStore } from "@/registry/default/hooks/use-player"
-import { getDeviceLanguage, off, on } from "@/registry/default/lib/utils"
+import type { PlayerStore } from "@/registry/default/hooks/use-player";
+import { getDeviceLanguage, off, on } from "@/registry/default/lib/utils";
 import {
   useGetStore,
   useMediaStore,
-} from "@/registry/default/ui/media-provider"
+} from "@/registry/default/ui/media-provider";
 
-export interface CaptionsStore {
-  activeTextTrack: shaka.extern.TextTrack | null
-  textTracks?: shaka.extern.TextTrack[]
-  textTrackVisible: boolean
-  textTrackContainerElement: HTMLDivElement | null
-  setTextTrackContainerElement: (ref: HTMLDivElement | null) => void
-}
+export type CaptionsStore = {
+  activeTextTrack: shaka.extern.TextTrack | null;
+  textTracks?: shaka.extern.TextTrack[];
+  textTrackVisible: boolean;
+  textTrackContainerElement: HTMLDivElement | null;
+  setTextTrackContainerElement: (ref: HTMLDivElement | null) => void;
+};
 
 export const createCaptionsStore: StateCreator<
   CaptionsStore & PlayerStore,
@@ -32,145 +32,154 @@ export const createCaptionsStore: StateCreator<
   setTextTrackContainerElement: (element: HTMLDivElement | null) => {
     set({
       textTrackContainerElement: element,
-    })
+    });
   },
-})
+});
 
 export function useCaptionsStates() {
-  const store = useGetStore()
-  const player = useMediaStore((s) => s.player)
-  const containerElement = useMediaStore((s) => s.textTrackContainerElement)
-  const mediaRef = useMediaStore((state) => state.mediaRef)
-  const canPlay = useMediaStore((state) => state.canPlay)
+  const store = useGetStore();
+  const player = useMediaStore((s) => s.player);
+  const containerElement = useMediaStore((s) => s.textTrackContainerElement);
+  const mediaRef = useMediaStore((state) => state.mediaRef);
+  const canPlay = useMediaStore((state) => state.canPlay);
 
   const onTextTrackChanged = () => {
     if (!player) {
-      return
+      return;
     }
 
     const activeTextTrack = player
       .getTextTracks()
-      .find((t: shaka.extern.TextTrack) => t.active)
+      .find((t: shaka.extern.TextTrack) => t.active);
 
-    store.setState({ activeTextTrack })
-  }
+    store.setState({ activeTextTrack });
+  };
 
   const onTracksChanged = () => {
     if (!player) {
-      return
+      return;
     }
 
-    const tracks = player.getTextTracks()
-    store.setState({ textTracks: tracks })
-  }
+    const tracks = player.getTextTracks();
+    store.setState({ textTracks: tracks });
+  };
 
   const onTextTrackVisibility = () => {
     if (!player) {
-      return
+      return;
     }
 
-    const isVisible = player.isTextTrackVisible()
+    const isVisible = player.isTextTrackVisible();
 
-    store.setState({ textTrackVisible: isVisible })
-  }
+    store.setState({ textTrackVisible: isVisible });
+  };
 
   useEffect(() => {
-    if (!player || !containerElement) {
-      return
+    if (!(player && containerElement)) {
+      return;
     }
 
-    player.setVideoContainer(containerElement)
-  }, [containerElement, player])
+    player.setVideoContainer(containerElement);
+  }, [containerElement, player]);
 
   useEffect(() => {
-    if (!mediaRef.current || !player) return
+    if (!(mediaRef.current && player)) {
+      return;
+    }
 
     if (canPlay) {
-      onTracksChanged()
+      onTracksChanged();
     }
 
-    on(player, "textchanged", onTextTrackChanged)
-    on(player, ["trackschanged", "loading"], onTracksChanged)
-    on(player, "texttrackvisibility", onTextTrackVisibility)
+    on(player, "textchanged", onTextTrackChanged);
+    on(player, ["trackschanged", "loading"], onTracksChanged);
+    on(player, "texttrackvisibility", onTextTrackVisibility);
 
     return () => {
-      off(player, "textchanged", onTextTrackChanged)
-      off(player, ["trackschanged", "loading"], onTracksChanged)
-      off(player, "texttrackvisibility", onTextTrackVisibility)
-    }
-  }, [mediaRef, player, canPlay])
+      off(player, "textchanged", onTextTrackChanged);
+      off(player, ["trackschanged", "loading"], onTracksChanged);
+      off(player, "texttrackvisibility", onTextTrackVisibility);
+    };
+  }, [
+    mediaRef,
+    player,
+    canPlay,
+    onTextTrackChanged,
+    onTextTrackVisibility,
+    onTracksChanged,
+  ]);
 }
 
 export function useCaptions() {
-  const store = useGetStore()
-  const player = useMediaStore((s) => s.player)
-  const activeTextTrack = useMediaStore((s) => s.activeTextTrack)
-  const textTracks = useMediaStore((s) => s.textTracks)
+  const store = useGetStore();
+  const player = useMediaStore((s) => s.player);
+  const activeTextTrack = useMediaStore((s) => s.activeTextTrack);
+  const textTracks = useMediaStore((s) => s.textTracks);
 
   const findDefaultTrack = useCallback(() => {
     if (!textTracks) {
-      console.warn("No text tracks found")
-      return
+      console.warn("No text tracks found");
+      return;
     }
 
     if (textTracks.length === 1) {
-      return textTracks[0]
+      return textTracks[0];
     }
 
-    const deviceLanguage = getDeviceLanguage()
+    const deviceLanguage = getDeviceLanguage();
 
     const regionalTrack = textTracks.find(
       (track) => track.language === deviceLanguage
-    )
+    );
 
     if (regionalTrack) {
-      return regionalTrack
+      return regionalTrack;
     }
 
-    return textTracks[0]
-  }, [textTracks])
+    return textTracks[0];
+  }, [textTracks]);
 
   const selectTrack = useCallback(
     (track: shaka.extern.TextTrack) => {
-      if (!player || !textTracks) {
-        return false
+      if (!(player && textTracks)) {
+        return false;
       }
 
-      player.selectTextTrack(track)
+      player.selectTextTrack(track);
 
       const activeTextTrack = player
         .getTextTracks()
-        .find((t: shaka.extern.TextTrack) => t.active)
+        .find((t: shaka.extern.TextTrack) => t.active);
 
-      store.setState({ activeTextTrack })
+      store.setState({ activeTextTrack });
 
-      return true
+      return true;
     },
-    [player, textTracks]
-  )
+    [player, textTracks, store.setState]
+  );
 
   const toggleCaptionVisibility = () => {
     if (!player) {
-      return
+      return;
     }
 
     if (!activeTextTrack) {
-      const defaultTrack = findDefaultTrack()
+      const defaultTrack = findDefaultTrack();
       if (defaultTrack) {
-        const isSuccess = selectTrack(defaultTrack)
+        const isSuccess = selectTrack(defaultTrack);
 
         if (!isSuccess) {
-          console.error("Failed to select default text track")
-          return
+          console.error("Failed to select default text track");
+          return;
         }
       }
     }
 
-    const isVisible = store.getState().textTrackVisible
-    player.setTextTrackVisibility(!isVisible)
-  }
+    const isVisible = store.getState().textTrackVisible;
+    player.setTextTrackVisibility(!isVisible);
+  };
 
   return {
     toggleCaptionVisibility,
-  }
+  };
 }

@@ -1,32 +1,32 @@
-"use client"
+"use client";
 
-import { useConfig } from "@/hooks/use-config"
-import { Index } from "@/registry/__index__"
+import { useConfig } from "@/hooks/use-config";
+import { Index } from "@/registry/__index__";
 
 export function PreviewTabComponent({
   componentName,
 }: {
-  componentName: string
+  componentName: string;
 }) {
   if (!componentName) {
-    throw new Error("component name is required")
+    throw new Error("component name is required");
   }
 
-  const [config] = useConfig()
+  const [config] = useConfig();
 
-  const Component = Index[config.style][componentName]?.component
+  const Component = Index[config.style][componentName]?.component;
 
   if (!Component) {
     return (
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         Component{" "}
         <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm">
           {componentName}
         </code>{" "}
         not found in registry.
       </p>
-    )
+    );
   }
 
-  return <Component />
+  return <Component />;
 }

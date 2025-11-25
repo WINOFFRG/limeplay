@@ -1,6 +1,6 @@
-import { type Registry } from "shadcn/schema"
+import type { Registry } from "shadcn/schema";
 
-const BASE_SRC_URL = "blocks/linear-player"
+const BASE_SRC_URL = "blocks/linear-player";
 
 export const blocks: Registry["items"] = [
   {
@@ -142,24 +142,24 @@ export const blocks: Registry["items"] = [
     ],
     files: [
       {
-        path: `blocks/basic-player/page.tsx`,
+        path: "blocks/basic-player/page.tsx",
         type: "registry:page",
         target: "app/player/page.tsx",
       },
       {
-        path: `blocks/basic-player/components/media-player.tsx`,
+        path: "blocks/basic-player/components/media-player.tsx",
         type: "registry:component",
       },
       {
-        path: `blocks/basic-player/components/playback-state-control.tsx`,
+        path: "blocks/basic-player/components/playback-state-control.tsx",
         type: "registry:component",
       },
       {
-        path: `blocks/basic-player/components/player-hooks.tsx`,
+        path: "blocks/basic-player/components/player-hooks.tsx",
         type: "registry:component",
       },
       {
-        path: `blocks/basic-player/components/media-element.tsx`,
+        path: "blocks/basic-player/components/media-element.tsx",
         type: "registry:component",
       },
     ],
@@ -170,4 +170,4 @@ export const blocks: Registry["items"] = [
       },
     },
   },
-]
+];

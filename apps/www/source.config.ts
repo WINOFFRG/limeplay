@@ -1,7 +1,7 @@
-import { defineConfig, defineDocs } from "fumadocs-mdx/config"
-import rehypeSlug from "rehype-slug"
-import { codeImport } from "remark-code-import"
-import remarkGfm from "remark-gfm"
+import { defineConfig, defineDocs } from "fumadocs-mdx/config";
+import rehypeSlug from "rehype-slug";
+import { codeImport } from "remark-code-import";
+import remarkGfm from "remark-gfm";
 
 export const docs = defineDocs({
   dir: "content/docs",
@@ -11,7 +11,7 @@ export const docs = defineDocs({
       extractLinkReferences: true,
     },
   },
-})
+});
 
 export default defineConfig({
   mdxOptions: {
@@ -30,4 +30,4 @@ export default defineConfig({
     remarkPlugins: [remarkGfm, codeImport],
     rehypePlugins: [rehypeSlug],
   },
-})
+});

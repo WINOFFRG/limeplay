@@ -1,17 +1,17 @@
-import Image from "next/image"
-import LogoDark from "@/public/product-icon-dark.svg"
-import Logo from "@/public/product-icon.svg"
 import {
   BlueprintIcon,
   BookIcon,
   QuestionIcon,
   SparkleIcon,
-} from "@phosphor-icons/react/dist/ssr"
-import type { LinkItemType } from "fumadocs-ui/layouts/links"
+} from "@phosphor-icons/react/dist/ssr";
+import type { LinkItemType } from "fumadocs-ui/layouts/links";
+import Image from "next/image";
+import { Icons } from "@/components/icons";
+import type { BaseLayoutProps } from "@/components/layouts/shared";
 
-import { DISCORD_URL, GITHUB_URL, PRODUCT_NAME } from "@/lib/constants"
-import { Icons } from "@/components/icons"
-import type { BaseLayoutProps } from "@/components/layouts/shared"
+import { DISCORD_URL, GITHUB_URL, PRODUCT_NAME } from "@/lib/constants";
+import Logo from "@/public/product-icon.svg";
+import LogoDark from "@/public/product-icon-dark.svg";
 
 const COMMON_LINKS: LinkItemType[] = [
   {
@@ -28,7 +28,7 @@ const COMMON_LINKS: LinkItemType[] = [
     icon: <Icons.discord />,
     external: true,
   },
-]
+];
 
 export const baseOptions: BaseLayoutProps = {
   nav: {
@@ -36,23 +36,17 @@ export const baseOptions: BaseLayoutProps = {
       <>
         <Image
           alt={PRODUCT_NAME}
-          src={Logo}
-          className={`
-            hidden size-4
-            dark:block
-          `}
           aria-label={PRODUCT_NAME}
+          className={"hidden size-4 dark:block"}
+          src={Logo}
         />
         <Image
           alt={PRODUCT_NAME}
-          src={LogoDark}
-          className={`
-            block size-4
-            dark:hidden
-          `}
           aria-label={PRODUCT_NAME}
+          className={"block size-4 dark:hidden"}
+          src={LogoDark}
         />
-        <span className="text-base font-medium">Limeplay</span>
+        <span className="font-medium text-base">Limeplay</span>
       </>
     ),
   },
@@ -78,7 +72,7 @@ export const baseOptions: BaseLayoutProps = {
 
     ...COMMON_LINKS,
   ],
-}
+};
 
 export const HEADER_LINKS: LinkItemType[] = [
   {
@@ -93,4 +87,4 @@ export const HEADER_LINKS: LinkItemType[] = [
     url: "/blocks",
   },
   ...COMMON_LINKS,
-]
+];
