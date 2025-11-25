@@ -1,65 +1,65 @@
-"use client"
+"use client";
 
-import React, { useRef } from "react"
-import type shaka from "shaka-player"
+import React, { useRef } from "react";
+import type shaka from "shaka-player";
 
-import { useMediaStore } from "@/registry/default/ui/media-provider"
+import { useMediaStore } from "@/registry/default/ui/media-provider";
 
 declare global {
-  interface HTMLMediaElement {
-    player: shaka.Player | null
-  }
-  interface Window {
+  type HTMLMediaElement = {
+    player: shaka.Player | null;
+  };
+  type Window = {
     shaka: {
-      Player: typeof shaka.Player
-    }
-  }
+      Player: typeof shaka.Player;
+    };
+  };
 }
 
 export function useShakaPlayer() {
-  const setPlayer = useMediaStore((state) => state.setPlayer)
-  const mediaRef = useMediaStore((state) => state.mediaRef)
-  const debug = useMediaStore((state) => state.debug)
-  const isServer = typeof window === "undefined"
-  const playerInstance = useRef<shaka.Player | null>(null)
+  const setPlayer = useMediaStore((state) => state.setPlayer);
+  const mediaRef = useMediaStore((state) => state.mediaRef);
+  const debug = useMediaStore((state) => state.debug);
+  const isServer = typeof window === "undefined";
+  const playerInstance = useRef<shaka.Player | null>(null);
 
   React.useEffect(() => {
     if (isServer) {
-      console.warn("skipping shaka load on server")
-      return
+      console.warn("skipping shaka load on server");
+      return;
     }
 
-    const mediaElement = mediaRef.current
+    const mediaElement = mediaRef.current;
 
     async function loadPlayer() {
       const shakaLib = debug
         ? await import("shaka-player/dist/shaka-player.compiled.debug")
-        : await import("shaka-player")
+        : await import("shaka-player");
 
       if (!mediaElement) {
-        return
+        return;
       }
 
-      playerInstance.current = new shakaLib.Player()
-      setPlayer(playerInstance.current)
+      playerInstance.current = new shakaLib.Player();
+      setPlayer(playerInstance.current);
 
-      await playerInstance.current.attach(mediaElement)
+      await playerInstance.current.attach(mediaElement);
 
-      mediaElement.player = playerInstance.current
-      window.shaka = shakaLib
+      mediaElement.player = playerInstance.current;
+      window.shaka = shakaLib;
     }
 
-    void loadPlayer()
+    void loadPlayer();
 
     return () => {
       if (playerInstance.current) {
         if (mediaElement) {
-          mediaElement.pause()
+          mediaElement.pause();
         }
-        void playerInstance.current.destroy()
+        void playerInstance.current.destroy();
       }
-    }
-  }, [isServer, mediaRef, debug, setPlayer])
+    };
+  }, [isServer, mediaRef, debug, setPlayer]);
 
-  return playerInstance.current
+  return playerInstance.current;
 }

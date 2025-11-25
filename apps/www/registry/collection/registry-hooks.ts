@@ -1,6 +1,6 @@
-import { type Registry } from "shadcn/schema"
+import type { Registry } from "shadcn/schema";
 
-const TARGET_BASE_PATH = "hooks/limeplay"
+const TARGET_BASE_PATH = "hooks/limeplay";
 
 export const hooks: Registry["items"] = [
   {
@@ -129,4 +129,4 @@ export const hooks: Registry["items"] = [
       },
     ],
   },
-]
+];

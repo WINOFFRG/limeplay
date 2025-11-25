@@ -1,42 +1,43 @@
-import { notFound } from "next/navigation"
-import { NextResponse, type NextRequest } from "next/server"
+import { notFound } from "next/navigation";
+import { type NextRequest, NextResponse } from "next/server";
 
-import { getLLMText } from "@/lib/get-llm-text"
-import { source } from "@/lib/source"
+import { getLLMText } from "@/lib/get-llm-text";
+import { source } from "@/lib/source";
 
-export const revalidate = false
+export const revalidate = false;
 
 export async function GET(
   _req: NextRequest,
   { params }: RouteContext<"/llms.mdx/[...slug]">
 ) {
-  const slug = (await params).slug
-  const pageSlug = slug.map((segment, index) => 
-    index === slug.length - 1 && segment.endsWith('.mdx') 
-      ? segment.slice(0, -4) 
+  const slug = (await params).slug;
+  const pageSlug = slug.map((segment, index) =>
+    index === slug.length - 1 && segment.endsWith(".mdx")
+      ? segment.slice(0, -4)
       : segment
-  )
-  const page = source.getPage(pageSlug)
-  if (!page) notFound()
+  );
+  const page = source.getPage(pageSlug);
+  if (!page) {
+    notFound();
+  }
 
   return new NextResponse(await getLLMText(page), {
     headers: {
       "Content-Type": "text/markdown",
     },
-  })
+  });
 }
 
 export function generateStaticParams() {
-  const routes = source.generateParams()
+  const routes = source.generateParams();
 
-  return routes
-    .map((route) => {
-      const slug = [...route.slug]
-      if (slug.length > 0) {
-        slug[slug.length - 1] = `${slug[slug.length - 1]}.mdx`
-      }
-      return { slug }
-    })
+  return routes.map((route) => {
+    const slug = [...route.slug];
+    if (slug.length > 0) {
+      slug[slug.length - 1] = `${slug.at(-1)}.mdx`;
+    }
+    return { slug };
+  });
 }
 
 /**

@@ -1,12 +1,11 @@
-import type { ReactNode } from "react"
-import { DocsLayout } from "fumadocs-ui/layouts/docs"
-import { RootProvider } from "fumadocs-ui/provider/next"
+import { DocsLayout } from "fumadocs-ui/layouts/docs";
+import { RootProvider } from "fumadocs-ui/provider/next";
+import type { ReactNode } from "react";
+import { baseOptions } from "@/app/layout.config";
+import SearchDialog from "@/components/search";
+import { source } from "@/lib/source";
 
-import { source } from "@/lib/source"
-import SearchDialog from "@/components/search"
-import { baseOptions } from "@/app/layout.config"
-
-import "@/app/docs/docs.css"
+import "@/app/docs/docs.css";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
@@ -19,5 +18,5 @@ export default function Layout({ children }: { children: ReactNode }) {
         {children}
       </DocsLayout>
     </RootProvider>
-  )
+  );
 }

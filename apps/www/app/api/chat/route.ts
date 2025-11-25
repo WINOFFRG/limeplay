@@ -1,19 +1,19 @@
-import type { ServerRuntime } from "next"
-import { createOpenAICompatible } from "@ai-sdk/openai-compatible"
-import { convertToModelMessages, streamText } from "ai"
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
+import { convertToModelMessages, streamText } from "ai";
+import type { ServerRuntime } from "next";
 
-import { ProvideLinksToolSchema } from "@/lib/inkeep-qa-schema"
+import { ProvideLinksToolSchema } from "@/lib/inkeep-qa-schema";
 
-export const runtime: ServerRuntime = "nodejs"
+export const runtime: ServerRuntime = "nodejs";
 
 const openai = createOpenAICompatible({
   name: "inkeep",
   apiKey: process.env.INKEEP_API_KEY,
   baseURL: "https://api.inkeep.com/v1",
-})
+});
 
 export async function POST(req: Request) {
-  const reqJson = await req.json()
+  const reqJson = await req.json();
 
   const result = streamText({
     model: openai("inkeep-qa-sonnet-4"),
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       ignoreIncompleteToolCalls: true,
     }),
     toolChoice: "auto",
-  })
+  });
 
-  return result.toUIMessageStreamResponse()
+  return result.toUIMessageStreamResponse();
 }

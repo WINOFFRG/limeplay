@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
-import throttle from "lodash.throttle"
+import throttle from "lodash.throttle";
+import { useEffect, useState } from "react";
 
-import { off, on } from "@/registry/default/lib/utils"
+import { off, on } from "@/registry/default/lib/utils";
 
 const defaultEvents = [
   "mousemove",
@@ -10,65 +10,65 @@ const defaultEvents = [
   "keydown",
   "touchstart",
   "wheel",
-]
-const oneMinute = 60e3
+];
+const oneMinute = 60e3;
 
 const useIdle = (
   ms: number = oneMinute,
   initialState = false,
   events: string[] = defaultEvents
 ): boolean => {
-  const [state, setState] = useState<boolean>(initialState)
+  const [state, setState] = useState<boolean>(initialState);
 
   useEffect(() => {
-    let mounted = true
-    let timeout: NodeJS.Timeout | undefined
-    let localState: boolean = state
+    let mounted = true;
+    let timeout: NodeJS.Timeout | undefined;
+    let localState: boolean = state;
     const set = (newState: boolean) => {
       if (mounted) {
-        localState = newState
-        setState(newState)
+        localState = newState;
+        setState(newState);
       }
-    }
+    };
 
     const onEvent = throttle(() => {
       if (localState) {
-        set(false)
+        set(false);
       }
 
-      clearTimeout(timeout)
+      clearTimeout(timeout);
       timeout = setTimeout(() => {
-        set(true)
-      }, ms)
-    }, 50)
+        set(true);
+      }, ms);
+    }, 50);
 
     const onVisibility = () => {
       if (!document.hidden) {
-        onEvent()
+        onEvent();
       }
-    }
+    };
 
     for (const event of events) {
-      on(window, event, onEvent)
+      on(window, event, onEvent);
     }
-    on(document, "visibilitychange", onVisibility)
+    on(document, "visibilitychange", onVisibility);
 
     timeout = setTimeout(() => {
-      set(true)
-    }, ms)
+      set(true);
+    }, ms);
 
     return () => {
-      mounted = false
-      clearTimeout(timeout)
+      mounted = false;
+      clearTimeout(timeout);
 
       for (const event of events) {
-        off(window, event, onEvent)
+        off(window, event, onEvent);
       }
-      off(document, "visibilitychange", onVisibility)
-    }
-  }, [ms, events])
+      off(document, "visibilitychange", onVisibility);
+    };
+  }, [ms, events, state]);
 
-  return state
-}
+  return state;
+};
 
-export default useIdle
+export default useIdle;

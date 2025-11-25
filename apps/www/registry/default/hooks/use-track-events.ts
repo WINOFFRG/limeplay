@@ -1,11 +1,11 @@
-import * as React from "react"
-import clamp from "lodash.clamp"
+import clamp from "lodash.clamp";
+import * as React from "react";
 
-interface UseTrackEventsProps<E extends HTMLElement> {
+type UseTrackEventsProps<E extends HTMLElement> = {
   /** Orientation of the track. @default "horizontal" */
-  orientation?: "horizontal" | "vertical"
+  orientation?: "horizontal" | "vertical";
   /** Progress is 0-1 based on the width of the bar and the pointer event, clamped */
-  onPointerDown: (progress: number, event: React.PointerEvent<E>) => void
+  onPointerDown: (progress: number, event: React.PointerEvent<E>) => void;
   /**
    * Progress is 0-1 based on the width of the bar and the pointer event, clamped
    * Fires on every move, even if the pointer is not down, use isPointerDown to disambiguate
@@ -14,88 +14,88 @@ interface UseTrackEventsProps<E extends HTMLElement> {
     progress: number,
     isPointerDown: boolean,
     event: React.PointerEvent<E>
-  ) => void
-  /**  */
-  onPointerUp?: (event: React.PointerEvent<E>) => void
-  /**  */
-  onPointerOut?: (event: React.PointerEvent<E>) => void
-}
+  ) => void;
+  /*/
+  onPointerUp?: (event: React.PointerEvent<E>) => void;
+  /*/
+  onPointerOut?: (event: React.PointerEvent<E>) => void;
+};
 
 /** Events for a track/slider bar */
 export function useTrackEvents<E extends HTMLElement>(
   props: UseTrackEventsProps<E>
 ) {
-  const { orientation = "horizontal" } = props
+  const { orientation = "horizontal" } = props;
 
   const getProgress = React.useCallback(
     (e: React.PointerEvent<E>) => {
-      const rect = e.currentTarget.getBoundingClientRect()
-      let value: number
+      const rect = e.currentTarget.getBoundingClientRect();
+      let value: number;
 
       if (orientation === "vertical") {
-        value = 1 - (e.clientY - rect.top) / e.currentTarget.offsetHeight
+        value = 1 - (e.clientY - rect.top) / e.currentTarget.offsetHeight;
       } else {
-        value = (e.clientX - rect.left) / e.currentTarget.offsetWidth
+        value = (e.clientX - rect.left) / e.currentTarget.offsetWidth;
       }
 
-      return clamp(value, 0, 1)
+      return clamp(value, 0, 1);
     },
     [orientation]
-  )
+  );
 
   const onPointerDown = React.useCallback(
     (e: React.PointerEvent<E>) => {
       // Ignore non-left clicks
       if (e.button !== 0) {
-        return
+        return;
       }
 
-      e.stopPropagation()
-      e.preventDefault()
+      e.stopPropagation();
+      e.preventDefault();
 
-      e.currentTarget.setPointerCapture(e.pointerId)
-      const value = getProgress(e)
-      const progress = clamp(value, 0, 1)
-      props.onPointerDown(progress, e)
+      e.currentTarget.setPointerCapture(e.pointerId);
+      const value = getProgress(e);
+      const progress = clamp(value, 0, 1);
+      props.onPointerDown(progress, e);
     },
     [props.onPointerDown, getProgress]
-  )
+  );
 
   const onPointerMove = React.useCallback(
     (e: React.PointerEvent<E>) => {
-      e.stopPropagation()
-      e.preventDefault()
+      e.stopPropagation();
+      e.preventDefault();
 
-      const value = getProgress(e)
-      const progress = clamp(value, 0, 1)
+      const value = getProgress(e);
+      const progress = clamp(value, 0, 1);
       props.onPointerMove(
         progress,
         e.currentTarget.hasPointerCapture(e.pointerId),
         e
-      )
+      );
     },
     [props.onPointerMove, getProgress]
-  )
+  );
 
   const onPointerUp = React.useCallback(
     (e: React.PointerEvent<E>) => {
-      e.stopPropagation()
-      e.preventDefault()
+      e.stopPropagation();
+      e.preventDefault();
 
-      e.currentTarget.releasePointerCapture(e.pointerId)
-      props.onPointerUp?.(e)
+      e.currentTarget.releasePointerCapture(e.pointerId);
+      props.onPointerUp?.(e);
     },
     [props.onPointerUp]
-  )
+  );
 
   const onPointerOut = React.useCallback(
     (e: React.PointerEvent<E>) => {
-      e.stopPropagation()
-      e.preventDefault()
-      props.onPointerOut?.(e)
+      e.stopPropagation();
+      e.preventDefault();
+      props.onPointerOut?.(e);
     },
     [props.onPointerOut]
-  )
+  );
 
-  return { onPointerDown, onPointerMove, onPointerUp, onPointerOut }
+  return { onPointerDown, onPointerMove, onPointerUp, onPointerOut };
 }

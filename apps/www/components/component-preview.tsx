@@ -1,26 +1,25 @@
-import fs from "fs"
-import path from "path"
-import React from "react"
-import { highlight } from "fumadocs-core/highlight"
-import { Pre } from "fumadocs-ui/components/codeblock"
+import fs from "node:fs";
+import path from "node:path";
+import { highlight } from "fumadocs-core/highlight";
+import { Pre } from "fumadocs-ui/components/codeblock";
+import React from "react";
+import { TabsContent } from "@/components/ui/tabs";
+import { atomReader } from "@/hooks/use-config";
+import { cn } from "@/lib/utils";
+import { Index } from "@/registry/__index__";
+import { PlayerLayoutDemo } from "@/registry/default/examples/player-root-demo";
 
-import { cn } from "@/lib/utils"
-import { atomReader } from "@/hooks/use-config"
-import { TabsContent } from "@/components/ui/tabs"
-import { Index } from "@/registry/__index__"
-import { PlayerLayoutDemo } from "@/registry/default/examples/player-root-demo"
-
-import { CodeBlock as CustomCodeBlock } from "./codeblock"
-import { ComponentPreviewControl } from "./component-preview-control"
-import { PreviewTabComponent } from "./preview-tab-component"
+import { CodeBlock as CustomCodeBlock } from "./codeblock";
+import { ComponentPreviewControl } from "./component-preview-control";
+import { PreviewTabComponent } from "./preview-tab-component";
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
-  hideCode?: boolean
-  type?: "overlay" | "block"
-  withPlayer?: boolean
-  name: string
-  overlayChildren?: React.ReactNode
-  blockChildren?: React.ReactNode
+  hideCode?: boolean;
+  type?: "overlay" | "block";
+  withPlayer?: boolean;
+  name: string;
+  overlayChildren?: React.ReactNode;
+  blockChildren?: React.ReactNode;
 }
 
 export async function ComponentPreview({
@@ -33,17 +32,17 @@ export async function ComponentPreview({
   blockChildren,
   ...props
 }: ComponentPreviewProps) {
-  const config = atomReader()
-  const Component = (Index[config.style] as Record<string, any>)[name]
+  const config = atomReader();
+  const Component = (Index[config.style] as Record<string, any>)[name];
 
   if (!Component) {
-    throw new Error(`Component ${name} not found in registry`)
+    throw new Error(`Component ${name} not found in registry`);
   }
 
-  const filePath = path.join(Component?.files?.[0]?.path)
-  const fileContent = await fs.promises.readFile(filePath, "utf-8")
-  const fileName = path.basename(filePath)
-  const PreviewComponent = withPlayer ? PlayerLayoutDemo : React.Fragment
+  const filePath = path.join(Component?.files?.[0]?.path);
+  const fileContent = await fs.promises.readFile(filePath, "utf-8");
+  const fileName = path.basename(filePath);
+  const PreviewComponent = withPlayer ? PlayerLayoutDemo : React.Fragment;
 
   const rendered = await highlight(fileContent, {
     lang: "tsx",
@@ -54,7 +53,7 @@ export async function ComponentPreview({
     components: {
       pre: (props) => <Pre {...props} />,
     },
-  })
+  });
 
   return (
     <div
@@ -66,18 +65,15 @@ export async function ComponentPreview({
         hideCode={hideCode}
       >
         <TabsContent
-          value="preview"
-          className={`
-            relative hidden
-            data-[state=active]:block
-          `}
+          className={"relative hidden data-[state=active]:block"}
           forceMount
+          value="preview"
         >
           <div className={className}>
             <PreviewComponent
-              type={type}
-              overlayChildren={overlayChildren}
               blockChildren={blockChildren}
+              overlayChildren={overlayChildren}
+              type={type}
             >
               <PreviewTabComponent componentName={name} />
             </PreviewComponent>
@@ -85,9 +81,9 @@ export async function ComponentPreview({
         </TabsContent>
         <TabsContent value="code">
           <CustomCodeBlock
-            title={fileName}
             data-line-numbers
             data-line-numbers-start={1}
+            title={fileName}
             {...props}
           >
             {rendered}
@@ -95,5 +91,5 @@ export async function ComponentPreview({
         </TabsContent>
       </ComponentPreviewControl>
     </div>
-  )
+  );
 }
