@@ -11,6 +11,7 @@ const config = {
   images: {
     unoptimized: true,
   },
+  serverExternalPackages: ["@takumi-rs/image-response"],
 }
 
 export default withMDX(config)
