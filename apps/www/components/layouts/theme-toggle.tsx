@@ -1,17 +1,17 @@
 "use client"
 
-import { useLayoutEffect, useState, type HTMLAttributes } from "react"
 import { cva } from "class-variance-authority"
 import { Airplay, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
+import { type HTMLAttributes, useLayoutEffect, useState } from "react"
 
 import { cn } from "@/lib/utils"
 
 const itemVariants = cva("size-6 rounded-full p-1 text-muted-foreground", {
   variants: {
     active: {
-      true: "bg-accent text-accent-foreground",
       false: "text-muted-foreground",
+      true: "bg-accent text-accent-foreground",
     },
   },
 })
@@ -29,7 +29,7 @@ export function ThemeToggle({
 }: HTMLAttributes<HTMLElement> & {
   mode?: "light-dark" | "light-dark-system"
 }) {
-  const { setTheme, theme, resolvedTheme } = useTheme()
+  const { resolvedTheme, setTheme, theme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
   useLayoutEffect(() => {
@@ -46,12 +46,12 @@ export function ThemeToggle({
 
     return (
       <button
-        className={container}
         aria-label={`Toggle Theme`}
+        className={container}
+        data-theme-toggle=""
         onClick={() => {
           setTheme(value === "light" ? "dark" : "light")
         }}
-        data-theme-toggle=""
         {...props}
       >
         {full.map(([key, Icon]) => {
@@ -59,9 +59,9 @@ export function ThemeToggle({
 
           return (
             <Icon
-              key={key}
-              fill="currentColor"
               className={cn(itemVariants({ active: value === key }))}
+              fill="currentColor"
+              key={key}
             />
           )
         })}
@@ -75,9 +75,9 @@ export function ThemeToggle({
     <div className={container} data-theme-toggle="" {...props}>
       {full.map(([key, Icon]) => (
         <button
-          key={key}
           aria-label={key}
           className={cn(itemVariants({ active: value === key }))}
+          key={key}
           onClick={() => {
             setTheme(key)
           }}

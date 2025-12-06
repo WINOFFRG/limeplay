@@ -2,24 +2,24 @@ import Link from "next/link"
 
 const links = [
   {
-    title: "X",
     href: "https://x.com/winoffrg",
+    title: "X",
   },
   {
-    title: "Github",
     href: "https://github.com/winoffrg/limeplay",
+    title: "Github",
   },
   {
-    title: "Components",
     href: "/docs/components",
+    title: "Components",
   },
   {
-    title: "Get Started",
     href: "/docs/quick-start",
+    title: "Get Started",
   },
   {
-    title: "Blocks",
     href: "/blocks",
+    title: "Blocks",
   },
 ]
 
@@ -49,12 +49,12 @@ export function Footer() {
           >
             {links.map((link, index) => (
               <Link
-                key={index}
-                href={link.href}
                 className={`
                   block text-muted-foreground duration-150
                   hover:text-black
                 `}
+                href={link.href}
+                key={index}
               >
                 <span>{link.title}</span>
               </Link>

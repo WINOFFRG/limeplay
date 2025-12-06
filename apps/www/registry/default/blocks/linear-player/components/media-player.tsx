@@ -12,21 +12,18 @@ import * as Layout from "@/registry/default/ui/player-layout"
 import { RootContainer } from "@/registry/default/ui/root-container"
 
 export interface LinearMediaPlayerProps {
-  src?: string
-  debug?: boolean
   className?: string
+  debug?: boolean
+  src?: string
 }
 
 export const LinearMediaPlayer = React.forwardRef<
   HTMLDivElement,
   LinearMediaPlayerProps
->(({ debug = false, className }, ref) => {
+>(({ className, debug = false }, ref) => {
   return (
     <MediaProvider debug={debug}>
       <RootContainer
-        ref={ref}
-        height={720}
-        width={1280}
         className={cn(
           `
             m-auto w-full
@@ -34,6 +31,9 @@ export const LinearMediaPlayer = React.forwardRef<
           `,
           className
         )}
+        height={720}
+        ref={ref}
+        width={1280}
       >
         <Layout.PlayerContainer>
           <FallbackPoster className="bg-black">

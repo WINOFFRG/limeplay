@@ -9,13 +9,13 @@ import { SeekControl } from "@/registry/default/ui/seek-controls"
 export function SeekControlDemo() {
   return (
     <div className="flex items-center gap-2">
-      <SeekControl offset={-10} asChild>
-        <Button variant="ghost" size="icon">
+      <SeekControl asChild offset={-10}>
+        <Button size="icon" variant="ghost">
           <CaretCircleDoubleLeftIcon />
         </Button>
       </SeekControl>
-      <SeekControl offset={10} asChild>
-        <Button variant="ghost" size="icon">
+      <SeekControl asChild offset={10}>
+        <Button size="icon" variant="ghost">
           <CaretCircleDoubleRightIcon />
         </Button>
       </SeekControl>

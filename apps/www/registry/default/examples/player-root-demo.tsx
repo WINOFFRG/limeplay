@@ -14,6 +14,49 @@ import {
 import * as Layout from "@/registry/default/ui/player-layout"
 import { RootContainer } from "@/registry/default/ui/root-container"
 
+interface PlayerDemoLayoutProps extends React.PropsWithChildren {
+  blockChildren?: React.ReactNode
+  overlayChildren?: React.ReactNode
+  type: "block" | "hybrid" | "overlay" | "poster"
+}
+
+export function PlayerLayoutDemo({
+  blockChildren,
+  children,
+  overlayChildren,
+  type,
+}: PlayerDemoLayoutProps) {
+  return (
+    <MediaProvider>
+      <RootContainer
+        className="container rounded-lg border p-0"
+        height={720}
+        width={1280}
+      >
+        <Layout.PlayerContainer>
+          {type === "poster" ? (
+            children
+          ) : (
+            <FallbackPoster className="rounded-lg bg-background">
+              <LimeplayLogo />
+            </FallbackPoster>
+          )}
+          <MediaElement />
+          <PlayerHooks />
+          <Layout.ControlsContainer>
+            {type === "overlay" && children}
+            {type === "hybrid" && overlayChildren}
+          </Layout.ControlsContainer>
+        </Layout.PlayerContainer>
+      </RootContainer>
+      {type === "block" && <CustomDemoControls>{children}</CustomDemoControls>}
+      {type === "hybrid" && (
+        <CustomDemoControls>{blockChildren}</CustomDemoControls>
+      )}
+    </MediaProvider>
+  )
+}
+
 function MediaElement() {
   const player = useMediaStore((state) => state.player)
 
@@ -39,54 +82,11 @@ function MediaElement() {
   return (
     <Media
       as="video"
-      controls={true}
-      className="m-0! size-full rounded-lg bg-black object-cover"
-      poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
-      muted
       autoPlay={false}
+      className="m-0! size-full rounded-lg bg-black object-cover"
+      controls={true}
+      muted
+      poster={"https://files.vidstack.io/sprite-fight/poster.webp"}
     />
-  )
-}
-
-interface PlayerDemoLayoutProps extends React.PropsWithChildren {
-  type: "overlay" | "block" | "poster" | "hybrid"
-  overlayChildren?: React.ReactNode
-  blockChildren?: React.ReactNode
-}
-
-export function PlayerLayoutDemo({
-  children,
-  type,
-  overlayChildren,
-  blockChildren,
-}: PlayerDemoLayoutProps) {
-  return (
-    <MediaProvider>
-      <RootContainer
-        height={720}
-        width={1280}
-        className="container rounded-lg border p-0"
-      >
-        <Layout.PlayerContainer>
-          {type === "poster" ? (
-            children
-          ) : (
-            <FallbackPoster className="rounded-lg bg-background">
-              <LimeplayLogo />
-            </FallbackPoster>
-          )}
-          <MediaElement />
-          <PlayerHooks />
-          <Layout.ControlsContainer>
-            {type === "overlay" && children}
-            {type === "hybrid" && overlayChildren}
-          </Layout.ControlsContainer>
-        </Layout.PlayerContainer>
-      </RootContainer>
-      {type === "block" && <CustomDemoControls>{children}</CustomDemoControls>}
-      {type === "hybrid" && (
-        <CustomDemoControls>{blockChildren}</CustomDemoControls>
-      )}
-    </MediaProvider>
   )
 }

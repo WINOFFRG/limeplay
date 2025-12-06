@@ -1,10 +1,23 @@
 import { notFound } from "next/navigation"
-import { NextResponse, type NextRequest } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 
 import { getLLMText } from "@/lib/get-llm-text"
 import { source } from "@/lib/source"
 
 export const revalidate = false
+
+export function generateStaticParams() {
+  const routes = source.generateParams()
+
+  return routes
+    .map((route) => {
+      const slug = [...route.slug]
+      if (slug.length > 0) {
+        slug[slug.length - 1] = `${slug[slug.length - 1]}.mdx`
+      }
+      return { slug }
+    })
+}
 
 export async function GET(
   _req: NextRequest,
@@ -24,19 +37,6 @@ export async function GET(
       "Content-Type": "text/markdown",
     },
   })
-}
-
-export function generateStaticParams() {
-  const routes = source.generateParams()
-
-  return routes
-    .map((route) => {
-      const slug = [...route.slug]
-      if (slug.length > 0) {
-        slug[slug.length - 1] = `${slug[slug.length - 1]}.mdx`
-      }
-      return { slug }
-    })
 }
 
 /**

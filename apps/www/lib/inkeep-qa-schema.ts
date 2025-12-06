@@ -18,11 +18,11 @@ const LinkType = z.union([
 ])
 
 const LinkSchema = z.object({
+  breadcrumbs: z.array(z.string()).nullish(),
   label: z.string().nullish(), // the value of the footnote, e.g. `1`
-  url: z.string(),
   title: z.string().nullish(),
   type: LinkType.nullish(),
-  breadcrumbs: z.array(z.string()).nullish(),
+  url: z.string(),
 })
 
 const LinksSchema = z.array(LinkSchema).nullish()

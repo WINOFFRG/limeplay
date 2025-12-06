@@ -2,8 +2,13 @@ import { type Registry } from "shadcn/schema"
 
 export const examples: Registry["items"] = [
   {
+    files: [
+      {
+        path: "examples/player-root-demo.tsx",
+        type: "registry:example",
+      },
+    ],
     name: "player-root-demo",
-    type: "registry:example",
     registryDependencies: [
       "player-layout",
       "media-provider",
@@ -15,134 +20,129 @@ export const examples: Registry["items"] = [
       "root-container",
       "media-provider",
     ],
-    files: [
-      {
-        path: "examples/player-root-demo.tsx",
-        type: "registry:example",
-      },
-    ],
+    type: "registry:example",
   },
   {
-    name: "fallback-poster-demo",
-    type: "registry:example",
-    registryDependencies: ["fallback-poster", "limeplay-logo"],
     files: [
       {
         path: "examples/fallback-poster-demo.tsx",
         type: "registry:example",
       },
     ],
+    name: "fallback-poster-demo",
+    registryDependencies: ["fallback-poster", "limeplay-logo"],
+    type: "registry:example",
   },
   {
-    name: "playback-state-control-demo",
-    type: "registry:example",
-    registryDependencies: ["media-provider", "playback-control"],
     files: [
       {
         path: "examples/playback-state-control-demo.tsx",
         type: "registry:example",
       },
     ],
+    name: "playback-state-control-demo",
+    registryDependencies: ["media-provider", "playback-control"],
+    type: "registry:example",
   },
   {
-    name: "volume-slider-control-horizontal-demo",
-    type: "registry:example",
-    registryDependencies: ["volume-control", "volume-state-control-demo"],
     files: [
       {
         path: "examples/volume-slider-control-horizontal-demo.tsx",
         type: "registry:example",
       },
     ],
+    name: "volume-slider-control-horizontal-demo",
+    registryDependencies: ["volume-control", "volume-state-control-demo"],
+    type: "registry:example",
   },
   {
-    name: "volume-slider-control-vertical-demo",
-    type: "registry:example",
-    registryDependencies: ["volume-control", "volume-state-control-demo"],
     files: [
       {
         path: "examples/volume-slider-control-vertical-demo.tsx",
         type: "registry:example",
       },
     ],
+    name: "volume-slider-control-vertical-demo",
+    registryDependencies: ["volume-control", "volume-state-control-demo"],
+    type: "registry:example",
   },
   {
-    name: "volume-state-control-demo",
-    type: "registry:example",
-    registryDependencies: ["media-provider", "mute-control"],
     files: [
       {
         path: "examples/volume-state-control-demo.tsx",
         type: "registry:example",
       },
     ],
+    name: "volume-state-control-demo",
+    registryDependencies: ["media-provider", "mute-control"],
+    type: "registry:example",
   },
   {
-    name: "timeline-control-demo",
-    type: "registry:example",
-    registryDependencies: [
-      "media-provider",
-      "timeline-control",
-      "timeline-labels",
-    ],
     files: [
       {
         path: "examples/timeline-control-demo.tsx",
         type: "registry:example",
       },
     ],
-  },
-  {
-    name: "timeline-labels-demo",
-    type: "registry:example",
+    name: "timeline-control-demo",
     registryDependencies: [
       "media-provider",
       "timeline-control",
       "timeline-labels",
-      "use-timeline",
     ],
+    type: "registry:example",
+  },
+  {
     files: [
       {
         path: "examples/timeline-labels-demo.tsx",
         type: "registry:example",
       },
     ],
+    name: "timeline-labels-demo",
+    registryDependencies: [
+      "media-provider",
+      "timeline-control",
+      "timeline-labels",
+      "use-timeline",
+    ],
+    type: "registry:example",
   },
   {
-    name: "captions-state-control-demo",
-    type: "registry:example",
-    registryDependencies: ["media-provider", "captions", "use-player"],
     files: [
       {
         path: "examples/captions-state-control-demo.tsx",
         type: "registry:example",
       },
     ],
+    name: "captions-state-control-demo",
+    registryDependencies: ["media-provider", "captions", "use-player"],
+    type: "registry:example",
   },
   {
-    name: "playback-rate-demo",
-    type: "registry:example",
-    registryDependencies: [
-      "media-provider",
-      "playback-rate",
-      "use-playback-rate",
-    ],
     files: [
       {
         path: "examples/playback-rate-demo.tsx",
         type: "registry:example",
       },
     ],
+    name: "playback-rate-demo",
+    registryDependencies: [
+      "media-provider",
+      "playback-rate",
+      "use-playback-rate",
+    ],
+    type: "registry:example",
   },
   {
-    name: "seek-control-demo",
-    type: "registry:example",
-    registryDependencies: ["media-provider", "seek-controls"],
     files: [
       {
         path: "examples/seek-control-demo.tsx",
         type: "registry:example",
       },
     ],
+    name: "seek-control-demo",
+    registryDependencies: ["media-provider", "seek-controls"],
+    type: "registry:example",
   },
 ]

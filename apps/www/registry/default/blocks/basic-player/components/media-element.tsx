@@ -42,10 +42,10 @@ export function MediaElement({ src }: { src: string }) {
   return (
     <Media
       as="video"
-      className="size-full bg-background object-cover"
       autoPlay={false}
-      muted
+      className="size-full bg-background object-cover"
       loop
+      muted
     />
   )
 }

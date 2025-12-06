@@ -1,7 +1,7 @@
 "use client"
 
-import * as React from "react"
 import * as Primitive from "@radix-ui/react-navigation-menu"
+import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
@@ -12,10 +12,10 @@ const NavigationMenuList = Primitive.List
 const NavigationMenuItem = React.forwardRef<
   React.ComponentRef<typeof Primitive.NavigationMenuItem>,
   React.ComponentPropsWithoutRef<typeof Primitive.NavigationMenuItem>
->(({ className, children, ...props }, ref) => (
+>(({ children, className, ...props }, ref) => (
   <Primitive.NavigationMenuItem
-    ref={ref}
     className={cn("list-none", className)}
+    ref={ref}
     {...props}
   >
     {children}
@@ -27,10 +27,10 @@ NavigationMenuItem.displayName = Primitive.NavigationMenuItem.displayName
 const NavigationMenuTrigger = React.forwardRef<
   React.ComponentRef<typeof Primitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof Primitive.Trigger>
->(({ className, children, ...props }, ref) => (
+>(({ children, className, ...props }, ref) => (
   <Primitive.Trigger
-    ref={ref}
     className={cn("data-[state=open]:bg-accent/50", className)}
+    ref={ref}
     {...props}
   >
     {children}
@@ -43,7 +43,6 @@ const NavigationMenuContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof Primitive.Content>
 >(({ className, ...props }, ref) => (
   <Primitive.Content
-    ref={ref}
     className={cn(
       `
         absolute inset-x-0 top-0
@@ -54,6 +53,7 @@ const NavigationMenuContent = React.forwardRef<
       `,
       className
     )}
+    ref={ref}
     {...props}
   />
 ))
@@ -65,7 +65,7 @@ const NavigationMenuViewport = React.forwardRef<
   React.ComponentRef<typeof Primitive.Viewport>,
   React.ComponentPropsWithoutRef<typeof Primitive.Viewport>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className="flex w-full justify-center">
+  <div className="flex w-full justify-center" ref={ref}>
     <Primitive.Viewport
       {...props}
       className={cn(
@@ -84,10 +84,10 @@ NavigationMenuViewport.displayName = Primitive.Viewport.displayName
 
 export {
   NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
   NavigationMenuContent,
-  NavigationMenuTrigger,
+  NavigationMenuItem,
   NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
   NavigationMenuViewport,
 }

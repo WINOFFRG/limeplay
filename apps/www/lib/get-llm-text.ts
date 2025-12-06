@@ -7,11 +7,11 @@ export async function getLLMText(page: Page) {
 
   const category =
     {
+      architecture: "Limeplay Architecture",
       components: "Limeplay UI Components",
       hooks: "Limeplay Hooks",
       "quick-start": "Limeplay Quick Start",
       "what-is-limeplay": "Limeplay Introduction",
-      architecture: "Limeplay Architecture",
     }[page.slugs[0] ?? ""] ?? page.slugs[0]
 
   const processed = await (

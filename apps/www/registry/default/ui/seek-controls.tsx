@@ -1,19 +1,15 @@
 "use client"
 
-import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
+import * as React from "react"
 
 import { Button } from "@/components/ui/button"
 import { MediaReadyState } from "@/registry/default/hooks/use-player"
 import { useSeek } from "@/registry/default/hooks/use-seek"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-export type SeekControlPropsDocs = Pick<
-  SeekControlProps,
-  "offset" | "shortcut" | "asChild"
->
-
 export interface SeekControlProps extends React.ComponentProps<typeof Button> {
+  asChild?: boolean
   /**
    * The amount of time (in seconds) to seek.
    * Positive values seek forward, negative values seek backward.
@@ -21,8 +17,12 @@ export interface SeekControlProps extends React.ComponentProps<typeof Button> {
    */
   offset: number
   shortcut?: string
-  asChild?: boolean
 }
+
+export type SeekControlPropsDocs = Pick<
+  SeekControlProps,
+  "asChild" | "offset" | "shortcut"
+>
 
 export const SeekControl = React.forwardRef<
   HTMLButtonElement,
@@ -32,13 +32,13 @@ export const SeekControl = React.forwardRef<
   const { seek } = useSeek()
 
   const {
-    children,
-    onClick,
-    disabled: userDisabled,
     "aria-label": ariaLabelProp,
-    offset,
-    shortcut,
     asChild = false,
+    children,
+    disabled: userDisabled,
+    offset,
+    onClick,
+    shortcut,
     ...restProps
   } = props
 
@@ -62,13 +62,13 @@ export const SeekControl = React.forwardRef<
 
   return (
     <Comp
+      aria-keyshortcuts={shortcut}
+      aria-label={ariaLabelProp ?? getDefaultAriaLabel()}
       data-label="lp-seek-control"
       disabled={isDisabled}
-      aria-label={ariaLabelProp ?? getDefaultAriaLabel()}
-      aria-keyshortcuts={shortcut}
       {...restProps}
-      ref={forwardedRef}
       onClick={handleClick}
+      ref={forwardedRef}
     >
       {children}
     </Comp>

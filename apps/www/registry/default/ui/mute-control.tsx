@@ -1,22 +1,22 @@
 "use client"
 
-import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
+import * as React from "react"
 
 import { Button } from "@/components/ui/button"
 import { MediaReadyState } from "@/registry/default/hooks/use-player"
 import { useVolume } from "@/registry/default/hooks/use-volume"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
+export interface MuteControlProps extends React.ComponentProps<typeof Button> {
+  asChild?: boolean
+  shortcut?: string
+}
+
 export type MuteControlPropsDocs = Pick<
   MuteControlProps,
-  "shortcut" | "asChild"
+  "asChild" | "shortcut"
 >
-
-export interface MuteControlProps extends React.ComponentProps<typeof Button> {
-  shortcut?: string
-  asChild?: boolean
-}
 
 export const MuteControl = React.forwardRef<
   HTMLButtonElement,
@@ -27,12 +27,12 @@ export const MuteControl = React.forwardRef<
   const { toggleMute } = useVolume()
 
   const {
-    children,
-    onClick,
-    disabled: userDisabled,
     "aria-label": ariaLabelProp,
-    shortcut,
     asChild = false,
+    children,
+    disabled: userDisabled,
+    onClick,
+    shortcut,
     ...restProps
   } = props
 
@@ -55,13 +55,13 @@ export const MuteControl = React.forwardRef<
 
   return (
     <Comp
+      aria-keyshortcuts={shortcut}
+      aria-label={ariaLabelProp ?? getDefaultAriaLabel()}
       data-label="lp-mute-control"
       disabled={isDisabled}
-      aria-label={ariaLabelProp ?? getDefaultAriaLabel()}
-      aria-keyshortcuts={shortcut}
       {...restProps}
-      ref={forwardedRef}
       onClick={handleClick}
+      ref={forwardedRef}
     >
       {children}
     </Comp>

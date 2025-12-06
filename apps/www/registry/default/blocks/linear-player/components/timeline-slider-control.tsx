@@ -29,20 +29,20 @@ export function TimelineSliderControl() {
             <TimelineSlider.Buffered variant="combined" />
           </TimelineSlider.Track>
           <TimelineSlider.Thumb
-            showWithHover
             className={`
               absolute h-8 w-px rounded-full bg-primary/60 opacity-0 transition-opacity duration-(--lp-transition-speed-regular)
               group-hover/timeline:opacity-100
               group-active/timeline:bg-white
             `}
+            showWithHover
           />
           <TimelineSlider.Thumb
-            showWithHover
             className={`
               top-auto! bottom-[calc(100%+16px)] flex h-auto w-fit bg-transparent text-xs font-medium opacity-0 transition-opacity
               duration-(--lp-transition-speed-regular)
               group-hover/timeline:opacity-100
             `}
+            showWithHover
           >
             <HoverTime />
             {!isLive && (
@@ -56,8 +56,10 @@ export function TimelineSliderControl() {
       </div>
       {!isLive && (
         <Button
-          variant="glass"
-          size="sm"
+          aria-label={
+            showRemaining ? "Show total duration" : "Show remaining time"
+          }
+          aria-pressed={showRemaining}
           className={`
             h-6 w-14 cursor-pointer
             hover:bg-transparent
@@ -66,10 +68,8 @@ export function TimelineSliderControl() {
           onClick={() => {
             setShowRemaining(!showRemaining)
           }}
-          aria-label={
-            showRemaining ? "Show total duration" : "Show remaining time"
-          }
-          aria-pressed={showRemaining}
+          size="sm"
+          variant="glass"
         >
           {showRemaining ? (
             <Remaining className="text-xs font-medium" />
@@ -82,11 +82,11 @@ export function TimelineSliderControl() {
         <>
           <LiveLatency className="text-xs font-medium" />
           <Button
-            variant="glass"
-            size="icon"
+            aria-label="Go to live"
             className="h-6 w-fit cursor-pointer"
             onClick={() => void player.goToLive()}
-            aria-label="Go to live"
+            size="icon"
+            variant="glass"
           >
             <span className="text-xs font-medium text-primary">Go to live</span>
           </Button>

@@ -1,26 +1,8 @@
-import { intervalToDuration } from "date-fns/intervalToDuration"
 import type shaka from "shaka-player"
 
+import { intervalToDuration } from "date-fns/intervalToDuration"
+
 const MAX_SAFE_SECONDS = 8.64e12
-
-export function formatTimestamp(seconds: number, showHours = false): string {
-  if (!Number.isFinite(seconds) || seconds <= 0 || seconds > MAX_SAFE_SECONDS) {
-    return showHours ? "00:00:00" : "00:00"
-  }
-
-  const totalSeconds = Math.floor(seconds)
-  const HH = Math.floor(totalSeconds / 3600)
-    .toString()
-    .padStart(2, "0")
-  const MM = Math.floor((totalSeconds % 3600) / 60)
-    .toString()
-    .padStart(2, "0")
-  const SS = Math.floor(totalSeconds % 60)
-    .toString()
-    .padStart(2, "0")
-
-  return showHours ? `${HH}:${MM}:${SS}` : `${MM}:${SS}`
-}
 
 export function durationDateTime(
   durationSeconds: number,
@@ -33,8 +15,8 @@ export function durationDateTime(
   // TODO: There is a possible bug here as seekRange returns in seconds
   const duration = intervalToDuration(
     seekRange ?? {
-      start: 0,
       end: durationSeconds * 1000,
+      start: 0,
     }
   )
 
@@ -59,4 +41,23 @@ export function durationDateTime(
   }
 
   return "P" + dateStr + "T" + timeStr
+}
+
+export function formatTimestamp(seconds: number, showHours = false): string {
+  if (!Number.isFinite(seconds) || seconds <= 0 || seconds > MAX_SAFE_SECONDS) {
+    return showHours ? "00:00:00" : "00:00"
+  }
+
+  const totalSeconds = Math.floor(seconds)
+  const HH = Math.floor(totalSeconds / 3600)
+    .toString()
+    .padStart(2, "0")
+  const MM = Math.floor((totalSeconds % 3600) / 60)
+    .toString()
+    .padStart(2, "0")
+  const SS = Math.floor(totalSeconds % 60)
+    .toString()
+    .padStart(2, "0")
+
+  return showHours ? `${HH}:${MM}:${SS}` : `${MM}:${SS}`
 }

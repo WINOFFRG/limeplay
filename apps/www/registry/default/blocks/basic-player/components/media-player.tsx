@@ -12,9 +12,9 @@ import { RootContainer } from "@/registry/default/ui/root-container"
 
 export interface BasicMediaPlayerProps
   extends React.ComponentPropsWithoutRef<"div"> {
-  src: string
-  debug?: boolean
   className?: string
+  debug?: boolean
+  src: string
 }
 
 export const LimeplayMediaPlayer = React.forwardRef<
@@ -26,9 +26,6 @@ export const LimeplayMediaPlayer = React.forwardRef<
   return (
     <MediaProvider>
       <RootContainer
-        ref={ref}
-        height={720}
-        width={1280}
         className={cn(
           `
             m-auto w-full
@@ -36,6 +33,9 @@ export const LimeplayMediaPlayer = React.forwardRef<
           `,
           className
         )}
+        height={720}
+        ref={ref}
+        width={1280}
         {...etc}
       >
         <Layout.PlayerContainer>

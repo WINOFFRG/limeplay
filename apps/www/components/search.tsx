@@ -15,27 +15,19 @@ import {
 } from "fumadocs-ui/components/dialog/search"
 import { useI18n } from "fumadocs-ui/contexts/i18n"
 
-function initOrama() {
-  return create({
-    schema: { _: "string" },
-    // https://docs.orama.com/docs/orama-js/supported-languages
-    language: "english",
-  })
-}
-
 export default function DefaultSearchDialog(props: SharedProps) {
   const { locale } = useI18n() // (optional) for i18n
-  const { search, setSearch, query } = useDocsSearch({
-    type: "static",
+  const { query, search, setSearch } = useDocsSearch({
     initOrama,
     locale,
+    type: "static",
   })
 
   return (
     <SearchDialog
-      search={search}
-      onSearchChange={setSearch}
       isLoading={query.isLoading}
+      onSearchChange={setSearch}
+      search={search}
       {...props}
     >
       <SearchDialogOverlay />
@@ -49,4 +41,12 @@ export default function DefaultSearchDialog(props: SharedProps) {
       </SearchDialogContent>
     </SearchDialog>
   )
+}
+
+function initOrama() {
+  return create({
+    // https://docs.orama.com/docs/orama-js/supported-languages
+    language: "english",
+    schema: { _: "string" },
+  })
 }

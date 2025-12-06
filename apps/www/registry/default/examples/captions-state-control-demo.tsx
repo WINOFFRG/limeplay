@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect } from "react"
 import { ClosedCaptioningIcon } from "@phosphor-icons/react"
+import { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
 import { MediaReadyState } from "@/registry/default/hooks/use-player"
@@ -10,6 +10,10 @@ import {
   CaptionsControl,
 } from "@/registry/default/ui/captions"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
+
+export function CaptionsHybridDemo() {
+  return <CaptionsContainer className="mb-16" />
+}
 
 export function CaptionsStateControlDemo() {
   const textTrackVisible = useMediaStore((state) => state.textTrackVisible)
@@ -41,16 +45,12 @@ export function CaptionsStateControlDemo() {
 
   return (
     <CaptionsControl asChild>
-      <Button variant="ghost" size="icon">
+      <Button size="icon" variant="ghost">
         <ClosedCaptioningIcon
-          weight={textTrackVisible ? "fill" : "regular"}
           size={18}
+          weight={textTrackVisible ? "fill" : "regular"}
         />
       </Button>
     </CaptionsControl>
   )
-}
-
-export function CaptionsHybridDemo() {
-  return <CaptionsContainer className="mb-16" />
 }

@@ -1,18 +1,19 @@
 "use client"
 
 import type { ComponentProps, ReactNode } from "react"
+
 import { motion, useReducedMotion } from "motion/react"
 
 type ViewAnimationProps = {
-  delay?: number
-  className?: ComponentProps<typeof motion.div>["className"]
   children: ReactNode
+  className?: ComponentProps<typeof motion.div>["className"]
+  delay?: number
 }
 
 export function AnimatedContainer({
+  children,
   className,
   delay = 0.1,
-  children,
 }: ViewAnimationProps) {
   const shouldReduceMotion = useReducedMotion()
 
@@ -23,10 +24,10 @@ export function AnimatedContainer({
   return (
     <motion.div
       className={className}
-      initial={{ filter: "blur(4px)", translateY: -8, opacity: 0 }}
+      initial={{ filter: "blur(4px)", opacity: 0, translateY: -8 }}
       transition={{ delay, duration: 0.8 }}
       viewport={{ once: true }}
-      whileInView={{ filter: "blur(0px)", translateY: 0, opacity: 1 }}
+      whileInView={{ filter: "blur(0px)", opacity: 1, translateY: 0 }}
     >
       {children}
     </motion.div>
