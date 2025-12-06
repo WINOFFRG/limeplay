@@ -50,26 +50,26 @@ export function Hero() {
             <Icons.shaka />
             &nbsp;
             <Link
-              href={"https://github.com/shaka-project/shaka-player/"}
               className={`
                 underline underline-offset-2 transition-colors
                 hover:text-neutral-900
               `}
-              target="_blank"
+              href={"https://github.com/shaka-project/shaka-player/"}
               rel="noopener noreferrer"
+              target="_blank"
             >
               shaka-player
             </Link>
             &nbsp;and&nbsp;
             <Icons.shadcn />
             <Link
-              href={"https://ui.shadcn.com/"}
               className={`
                 underline underline-offset-2 transition-colors
                 hover:text-neutral-900
               `}
-              target="_blank"
+              href={"https://ui.shadcn.com/"}
               rel="noopener noreferrer"
+              target="_blank"
             >
               shadcn/ui
             </Link>

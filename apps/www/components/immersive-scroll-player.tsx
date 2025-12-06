@@ -1,29 +1,12 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 
 interface ImmersiveScrollPlayerProps {
   children: React.ReactNode
-}
-
-function useViewportSize() {
-  const [size, setSize] = useState({ width: 1200, height: 800 })
-
-  useEffect(() => {
-    const update = () => {
-      setSize({ width: window.innerWidth, height: window.innerHeight })
-    }
-    update()
-    window.addEventListener("resize", update)
-    return () => {
-      window.removeEventListener("resize", update)
-    }
-  }, [])
-
-  return size
 }
 
 export function ImmersiveScrollPlayer({
@@ -33,11 +16,11 @@ export function ImmersiveScrollPlayer({
   const isMobile = useIsMobile()
 
   const { scrollYProgress } = useScroll({
-    target: containerRef,
     offset: ["start end", "end end"],
+    target: containerRef,
   })
 
-  const { width: vw, height: vh } = useViewportSize()
+  const { height: vh, width: vw } = useViewportSize()
 
   const [initialWidthPx, _, finalWidthPx] = useMemo(() => {
     const fitByHeight = Math.round((vh * 16) / 9)
@@ -81,8 +64,10 @@ export function ImmersiveScrollPlayer({
 
   return (
     <motion.div
-      ref={containerRef}
+      animate="show"
       className="relative h-[250vh]"
+      initial="hidden"
+      ref={containerRef}
       variants={{
         hidden: { opacity: 0 },
         show: {
@@ -90,8 +75,6 @@ export function ImmersiveScrollPlayer({
           transition: { staggerChildren: 0.08, when: "beforeChildren" },
         },
       }}
-      initial="hidden"
-      animate="show"
     >
       <div
         className={`sticky top-0 grid h-svh w-full snap-proximity snap-normal place-items-center overflow-hidden`}
@@ -101,15 +84,15 @@ export function ImmersiveScrollPlayer({
           style={{ backgroundColor }}
         />
         <motion.div
-          style={{ width, borderRadius }}
           className="relative z-10 aspect-video origin-center overflow-hidden will-change-transform"
+          style={{ borderRadius, width }}
           variants={{
-            hidden: { opacity: 0, y: 10, scale: 0.98 },
+            hidden: { opacity: 0, scale: 0.98, y: 10 },
             show: {
               opacity: 1,
-              y: 0,
               scale: 1,
               transition: { duration: 0.5 },
+              y: 0,
             },
           }}
         >
@@ -118,4 +101,21 @@ export function ImmersiveScrollPlayer({
       </div>
     </motion.div>
   )
+}
+
+function useViewportSize() {
+  const [size, setSize] = useState({ height: 800, width: 1200 })
+
+  useEffect(() => {
+    const update = () => {
+      setSize({ height: window.innerHeight, width: window.innerWidth })
+    }
+    update()
+    window.addEventListener("resize", update)
+    return () => {
+      window.removeEventListener("resize", update)
+    }
+  }, [])
+
+  return size
 }

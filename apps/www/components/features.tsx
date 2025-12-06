@@ -1,35 +1,35 @@
-import Link from "next/link"
 import {
   CodesandboxLogoIcon,
   CommandIcon,
   SparkleIcon,
 } from "@phosphor-icons/react/dist/ssr"
 import { ArrowRightIcon } from "lucide-react"
+import Link from "next/link"
 
-import { cn } from "@/lib/utils"
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 
 // import { TextEffect } from "@/components/ui/text-effect"
 
 const features = [
   {
-    title: "Customizable",
     description:
       "Separate UI and Logic - completely headless for infinite possibilities. Bake anything like you want",
     icon: CodesandboxLogoIcon,
+    title: "Customizable",
   },
   {
-    title: "Accessible",
     description:
       "WAI-ARIA compliant, Screen reader friendly, Keyboard navigation support and shortcuts",
     icon: CommandIcon,
+    title: "Accessible",
   },
   {
-    title: "Feature Rich",
     description:
       "Shaka Player as playback engine comes with the support of ABR Streaming, DASH/HLS Support, DRM Protection",
     icon: SparkleIcon,
+    title: "Feature Rich",
   },
 ]
 
@@ -109,12 +109,12 @@ export function Features() {
         >
           {features.map((feature) => (
             <Card
-              key={feature.title}
               className={`
                 group relative overflow-hidden border border-border/40 bg-card transition-all duration-300
                 hover:border-primary/40 hover:shadow-lg
                 dark:border-border/30 dark:bg-card/60 dark:hover:border-primary/50 dark:hover:bg-card/80
               `}
+              key={feature.title}
             >
               <div
                 className={`

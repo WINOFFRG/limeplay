@@ -1,11 +1,38 @@
 import type { ReactNode } from "react"
+
 import { Slot } from "@radix-ui/react-slot"
 
 import type { LinkItemType } from "@/components/layouts/links"
 
+export interface BaseLayoutProps {
+  children?: ReactNode
+
+  links: LinkItemType[]
+
+  /**
+   * Replace or disable navbar
+   */
+  nav?: Partial<NavOptions>
+  searchToggle?: Partial<{
+    components: Partial<{
+      lg: ReactNode
+      sm: ReactNode
+    }>
+    enabled: boolean
+  }>
+
+  themeSwitch?: {
+    component?: ReactNode
+    enabled?: boolean
+    mode?: "light-dark" | "light-dark-system"
+  }
+}
+
 export interface NavOptions {
-  enabled: boolean
+  children?: ReactNode
   component: ReactNode
+
+  enabled: boolean
 
   title?: ReactNode
 
@@ -14,43 +41,17 @@ export interface NavOptions {
    * @defaultValue '/'
    */
   url?: string
-
-  children?: ReactNode
-}
-
-export interface BaseLayoutProps {
-  themeSwitch?: {
-    enabled?: boolean
-    component?: ReactNode
-    mode?: "light-dark" | "light-dark-system"
-  }
-
-  searchToggle?: Partial<{
-    enabled: boolean
-    components: Partial<{
-      sm: ReactNode
-      lg: ReactNode
-    }>
-  }>
-
-  links: LinkItemType[]
-  /**
-   * Replace or disable navbar
-   */
-  nav?: Partial<NavOptions>
-
-  children?: ReactNode
 }
 
 export { type LinkItemType }
 
 export function slot(
   obj:
+    | undefined
     | {
-        enabled?: boolean
         component?: ReactNode
-      }
-    | undefined,
+        enabled?: boolean
+      },
   def: ReactNode,
   customComponentProps?: object,
   disabled?: ReactNode

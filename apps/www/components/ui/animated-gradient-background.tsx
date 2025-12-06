@@ -1,18 +1,38 @@
-import React, { useEffect, useRef } from "react"
 import { motion } from "motion/react"
+import React, { useEffect, useRef } from "react"
 
 interface AnimatedGradientBackgroundProps {
   /**
-   * Initial size of the radial gradient, defining the starting width.
-   * @default 110
+   * Speed of the breathing animation.
+   * Lower values result in slower animation.
+   * @default 0.02
    */
-  startingGap?: number
+  animationSpeed?: number
 
   /**
    * Enables or disables the breathing animation effect.
    * @default false
    */
   Breathing?: boolean
+
+  /**
+   * Maximum range for the breathing animation in percentage points.
+   * Determines how much the gradient "breathes" by expanding and contracting.
+   * @default 5
+   */
+  breathingRange?: number
+
+  /**
+   * Additional class names for the gradient container.
+   * @default ""
+   */
+  containerClassName?: string
+
+  /**
+   * Additional inline styles for the gradient container.
+   * @default {}
+   */
+  containerStyle?: React.CSSProperties
 
   /**
    * Array of colors to use in the radial gradient.
@@ -29,30 +49,10 @@ interface AnimatedGradientBackgroundProps {
   gradientStops?: number[]
 
   /**
-   * Speed of the breathing animation.
-   * Lower values result in slower animation.
-   * @default 0.02
+   * Initial size of the radial gradient, defining the starting width.
+   * @default 110
    */
-  animationSpeed?: number
-
-  /**
-   * Maximum range for the breathing animation in percentage points.
-   * Determines how much the gradient "breathes" by expanding and contracting.
-   * @default 5
-   */
-  breathingRange?: number
-
-  /**
-   * Additional inline styles for the gradient container.
-   * @default {}
-   */
-  containerStyle?: React.CSSProperties
-
-  /**
-   * Additional class names for the gradient container.
-   * @default ""
-   */
-  containerClassName?: string
+  startingGap?: number
 
   /**
    * Additional top offset for the gradient container form the top to have a more flexible control over the gradient.
@@ -72,8 +72,11 @@ interface AnimatedGradientBackgroundProps {
  * @returns JSX.Element
  */
 const AnimatedGradientBackground: React.FC<AnimatedGradientBackgroundProps> = ({
-  startingGap = 125,
+  animationSpeed = 0.02,
   Breathing = false,
+  breathingRange = 5,
+  containerClassName = "",
+  containerStyle = {},
   gradientColors = [
     "#0A0A0A",
     "#2979FF",
@@ -84,11 +87,8 @@ const AnimatedGradientBackground: React.FC<AnimatedGradientBackgroundProps> = ({
     "#3D5AFE",
   ],
   gradientStops = [35, 50, 60, 70, 80, 90, 100],
-  animationSpeed = 0.02,
-  breathingRange = 5,
-  containerStyle = {},
+  startingGap = 125,
   topOffset = 0,
-  containerClassName = "",
 }) => {
   // Validation: Ensure gradientStops and gradientColors lengths match
   if (gradientColors.length !== gradientStops.length) {
@@ -145,11 +145,6 @@ const AnimatedGradientBackground: React.FC<AnimatedGradientBackgroundProps> = ({
 
   return (
     <motion.div
-      key="animated-gradient-background"
-      initial={{
-        opacity: 0,
-        scale: 1.5,
-      }}
       animate={{
         opacity: 1,
         scale: 1,
@@ -162,11 +157,16 @@ const AnimatedGradientBackground: React.FC<AnimatedGradientBackgroundProps> = ({
         absolute inset-0 overflow-hidden
         ${containerClassName}
       `}
+      initial={{
+        opacity: 0,
+        scale: 1.5,
+      }}
+      key="animated-gradient-background"
     >
       <div
+        className="absolute inset-0 transition-transform"
         ref={containerRef}
         style={containerStyle}
-        className="absolute inset-0 transition-transform"
       />
     </motion.div>
   )

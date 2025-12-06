@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useImperativeHandle, useRef, useState } from "react"
 import { Slider as SliderPrimitive } from "@base-ui-components/react/slider"
+import React, { useImperativeHandle, useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
 import { MediaReadyState } from "@/registry/default/hooks/use-player"
@@ -13,7 +13,7 @@ const VOLUME_RESET_BASE = 0.05
 
 export type VolumeRootPropsDocs = Pick<
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>,
-  "orientation" | "disabled"
+  "disabled" | "orientation"
 >
 
 export const Root = React.forwardRef<
@@ -78,16 +78,16 @@ export const Root = React.forwardRef<
 
   return (
     <SliderPrimitive.Root
-      ref={internalRef}
-      min={0}
-      max={1}
-      step={0.01}
-      value={[currentVolumeValue]}
       className={cn(
         "relative flex touch-none items-center justify-center select-none",
         className
       )}
+      max={1}
+      min={0}
       orientation={orientation}
+      ref={internalRef}
+      step={0.01}
+      value={[currentVolumeValue]}
       {...trackEvents}
       {...etc}
       disabled={disabled}
@@ -105,11 +105,11 @@ export const Track = React.forwardRef<
 
   return (
     <SliderPrimitive.Track
-      ref={ref}
       className={cn(
         "relative size-full overflow-hidden rounded-md bg-primary/30",
         className
       )}
+      ref={ref}
       {...etc}
     />
   )
@@ -128,7 +128,6 @@ export const Progress = React.forwardRef<
 
   return (
     <SliderPrimitive.Indicator
-      ref={ref}
       className={cn(
         `
           h-full w-(--lp-volume-value) bg-primary
@@ -137,6 +136,7 @@ export const Progress = React.forwardRef<
         "data-[orientation=vertical]:h-(--lp-volume-value) data-[orientation=vertical]:w-full",
         className
       )}
+      ref={ref}
       style={
         {
           "--lp-volume-value": `${(currentValue * 100).toString()}%`,
@@ -168,7 +168,13 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
 
     return (
       <SliderPrimitive.Thumb
-        ref={ref}
+        aria-label="Volume"
+        aria-valuemax={100}
+        aria-valuemin={0}
+        aria-valuenow={displayValue}
+        aria-valuetext={
+          showVolumeText ? `${displayValue.toString()}% volume` : undefined
+        }
         className={cn(
           `
             block size-2 rounded-full bg-primary
@@ -177,13 +183,7 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
           `,
           className
         )}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={displayValue}
-        aria-valuetext={
-          showVolumeText ? `${displayValue.toString()}% volume` : undefined
-        }
-        aria-label="Volume"
+        ref={ref}
         {...etc}
       />
     )

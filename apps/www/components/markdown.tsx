@@ -1,6 +1,7 @@
-import { remark } from 'remark';
-import remarkGfm from 'remark-gfm';
-import remarkRehype from 'remark-rehype';
+import type { ElementContent, Root, RootContent } from 'hast';
+
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { toJsxRuntime } from 'hast-util-to-jsx-runtime';
 import {
   Children,
@@ -12,10 +13,10 @@ import {
   useDeferredValue,
 } from 'react';
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
-import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import defaultMdxComponents from 'fumadocs-ui/mdx';
+import { remark } from 'remark';
+import remarkGfm from 'remark-gfm';
+import remarkRehype from 'remark-rehype';
 import { visit } from 'unist-util-visit';
-import type { ElementContent, Root, RootContent } from 'hast';
 
 export interface Processor {
   process: (content: string) => Promise<ReactNode>;
@@ -34,20 +35,20 @@ export function rehypeWrapWords() {
         if (word.length === 0) return [];
 
         return {
-          type: 'element',
-          tagName: 'span',
+          children: [{ type: 'text', value: word }],
           properties: {
             class: 'animate-fd-fade-in',
           },
-          children: [{ type: 'text', value: word }],
+          tagName: 'span',
+          type: 'element',
         };
       });
 
       Object.assign(node, {
-        type: 'element',
-        tagName: 'span',
-        properties: {},
         children: newNodes,
+        properties: {},
+        tagName: 'span',
+        type: 'element',
       } satisfies RootContent);
       return 'skip';
     });
@@ -66,15 +67,15 @@ function createProcessor(): Processor {
       const hast = await processor.run(nodes);
 
       return toJsxRuntime(hast, {
-        development: false,
-        jsx,
-        jsxs,
-        Fragment,
         components: {
           ...defaultMdxComponents,
-          pre: Pre,
           img: undefined, // use JSX
+          pre: Pre,
         },
+        development: false,
+        Fragment,
+        jsx,
+        jsxs,
       });
     },
   };
@@ -94,7 +95,7 @@ function Pre(props: ComponentProps<'pre'>) {
 
   if (lang === 'mdx') lang = 'md';
 
-  return <DynamicCodeBlock lang={lang} code={content.trimEnd()} />;
+  return <DynamicCodeBlock code={content.trimEnd()} lang={lang} />;
 }
 
 const processor = createProcessor();

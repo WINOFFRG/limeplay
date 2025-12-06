@@ -16,13 +16,13 @@ export function PlaybackStateControlDemo() {
     <PlaybackControl asChild>
       <Button size="icon" variant="ghost">
         {status === "playing" ? (
-          <PauseIcon weight="fill" size={18} />
+          <PauseIcon size={18} weight="fill" />
         ) : status === "ended" ? (
           <RepeatIcon size={18} />
         ) : status === "buffering" ? (
           <CircleNotchIcon className="animate-spin" size={18} weight="bold" />
         ) : (
-          <PlayIcon weight="fill" size={18} />
+          <PlayIcon size={18} weight="fill" />
         )}
       </Button>
     </PlaybackControl>

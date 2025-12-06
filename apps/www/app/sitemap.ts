@@ -10,18 +10,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticPages = [
     {
-      url: baseUrl,
-      lastModified: new Date(),
       changeFrequency: "weekly" as const,
+      lastModified: new Date(),
       priority: 1,
+      url: baseUrl,
+    },
+    {
+      changeFrequency: "weekly" as const,
+      lastModified: new Date(),
+      priority: 1,
+      url: `${baseUrl}/docs`,
     },
   ]
 
   const docsPages = source.getPages().map((page) => ({
-    url: `${baseUrl}${page.url}`,
-    lastModified: new Date(),
     changeFrequency: "weekly" as const,
+    lastModified: new Date(),
     priority: 0.9,
+    url: `${baseUrl}${page.url}`,
   }))
 
   return [...staticPages, ...docsPages]

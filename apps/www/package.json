@@ -66,7 +66,6 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^4.5.1",
     "@tailwindcss/postcss": "^4.1.11",
     "@types/lodash.clamp": "^4.0.9",
     "@types/lodash.throttle": "^4.1.9",
@@ -84,41 +83,5 @@
     "shadcn": "^3.2.1",
     "tailwindcss": "^4.1.11",
     "typescript": "^5.8.3"
-  },
-  "prettier": {
-    "endOfLine": "lf",
-    "semi": false,
-    "singleQuote": false,
-    "tabWidth": 2,
-    "trailingComma": "es5",
-    "importOrder": [
-      "^(react/(.*)$)|^(react$)",
-      "^(next/(.*)$)|^(next$)",
-      "<THIRD_PARTY_MODULES>",
-      "",
-      "^@workspace/(.*)$",
-      "",
-      "^types$",
-      "^@/types/(.*)$",
-      "^@/config/(.*)$",
-      "^@/lib/(.*)$",
-      "^@/hooks/(.*)$",
-      "^@/components/ui/(.*)$",
-      "^@/components/(.*)$",
-      "^@/registry/(.*)$",
-      "^@/styles/(.*)$",
-      "^@/app/(.*)$",
-      "^@/www/(.*)$",
-      "",
-      "^[./]"
-    ],
-    "importOrderParserPlugins": [
-      "typescript",
-      "jsx",
-      "decorators-legacy"
-    ],
-    "plugins": [
-      "@ianvs/prettier-plugin-sort-imports"
-    ]
   }
 }

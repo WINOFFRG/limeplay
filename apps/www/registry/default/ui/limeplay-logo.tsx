@@ -14,9 +14,9 @@ export function LimeplayLogo(props: React.SVGProps<SVGSVGElement>) {
         `,
         className
       )}
+      viewBox="248.92 245.57 243.13 238.13"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-      viewBox="248.92 245.57 243.13 238.13"
       {...etc}
     >
       <g fill="currentColor" transform="scale(0.921622 0.921622)">

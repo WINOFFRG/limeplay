@@ -21,8 +21,8 @@ export const SelectRoot = React.forwardRef<
 
   return (
     <SelectPrimitive
-      value={playbackRate.toString()}
       onValueChange={(value) => setPlaybackRate(Number(value))}
+      value={playbackRate.toString()}
       {...props}
     />
   )

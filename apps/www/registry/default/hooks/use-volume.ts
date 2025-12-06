@@ -1,13 +1,21 @@
-import React from "react"
-import clamp from "lodash.clamp"
 import type { StateCreator } from "zustand"
 
+import clamp from "lodash.clamp"
+import React from "react"
+
 import type { PlayerStore } from "@/registry/default/hooks/use-player"
+
 import { noop, off, on } from "@/registry/default/lib/utils"
 import {
   useGetStore,
   useMediaStore,
 } from "@/registry/default/ui/media-provider"
+
+export interface VolumeStore {
+  hasAudio: boolean
+  muted: boolean
+  volume: number
+}
 
 export function useVolumeStates() {
   const store = useGetStore()
@@ -21,8 +29,8 @@ export function useVolumeStates() {
 
     const volumeHandler = () => {
       store.setState({
-        volume: media.volume,
         muted: media.muted,
+        volume: media.volume,
       })
     }
 
@@ -48,23 +56,17 @@ export function useVolumeStates() {
   }, [store, mediaRef, player])
 }
 
-export interface VolumeStore {
-  volume: number
-  muted: boolean
-  hasAudio: boolean
-}
-
 const BASE_RESET_VOLUME = 0.05
 
 export const createVolumeStore: StateCreator<
-  VolumeStore & PlayerStore,
+  PlayerStore & VolumeStore,
   [],
   [],
   VolumeStore
 > = () => ({
-  volume: 1,
-  muted: false,
   hasAudio: true,
+  muted: false,
+  volume: 1,
 })
 
 export function useVolume() {
@@ -122,8 +124,8 @@ export function useVolume() {
   }
 
   return {
+    setMuted,
     setVolume,
     toggleMute,
-    setMuted,
   }
 }

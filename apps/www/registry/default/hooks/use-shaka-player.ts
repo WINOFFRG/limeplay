@@ -1,13 +1,14 @@
 "use client"
 
-import React, { useRef } from "react"
 import type shaka from "shaka-player"
+
+import React, { useRef } from "react"
 
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 declare global {
   interface HTMLMediaElement {
-    player: shaka.Player | null
+    player: null | shaka.Player
   }
   interface Window {
     shaka: {
@@ -21,7 +22,7 @@ export function useShakaPlayer() {
   const mediaRef = useMediaStore((state) => state.mediaRef)
   const debug = useMediaStore((state) => state.debug)
   const isServer = typeof window === "undefined"
-  const playerInstance = useRef<shaka.Player | null>(null)
+  const playerInstance = useRef<null | shaka.Player>(null)
 
   React.useEffect(() => {
     if (isServer) {

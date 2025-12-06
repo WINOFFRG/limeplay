@@ -1,74 +1,59 @@
 "use client"
 
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
-  forwardRef,
   type AnchorHTMLAttributes,
+  forwardRef,
   type HTMLAttributes,
   type ReactNode,
 } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
 
 import { isActive } from "@/lib/utils"
 
-interface BaseItem {
-  /**
-   * Restrict where the item is displayed
-   *
-   * @defaultValue 'all'
-   */
-  on?: "menu" | "nav" | "all"
-}
-
 export interface BaseLinkType extends BaseItem {
-  url: string
   /**
    * When the item is marked as active
    *
    * @defaultValue 'url'
    */
-  active?: "url" | "nested-url" | "none"
+  active?: "nested-url" | "none" | "url"
   external?: boolean
-}
-
-export interface MainItemType extends BaseLinkType {
-  type?: "main"
-  icon?: ReactNode
-  text: ReactNode
-  description?: ReactNode
+  url: string
 }
 
 export interface IconItemType extends BaseLinkType {
-  type: "icon"
+  icon: ReactNode
   /**
    * `aria-label` of icon button
    */
   label?: string
-  icon: ReactNode
-  text: ReactNode
   /**
    * @defaultValue true
    */
   secondary?: boolean
+  text: ReactNode
+  type: "icon"
 }
 
-interface ButtonItem extends BaseLinkType {
-  type: "button"
+export type LinkItemType =
+  | ButtonItem
+  | CustomItem
+  | IconItemType
+  | MainItemType
+  | MenuItemType
+
+export interface MainItemType extends BaseLinkType {
+  description?: ReactNode
   icon?: ReactNode
   text: ReactNode
-  /**
-   * @defaultValue false
-   */
-  secondary?: boolean
+  type?: "main"
 }
 
 export interface MenuItemType extends BaseItem {
-  type: "menu"
   icon?: ReactNode
-  text: ReactNode
-
-  url?: string
   items: (
+    | CustomItem
     | (MainItemType & {
         /**
          * Options when displayed on navigation menu
@@ -77,30 +62,45 @@ export interface MenuItemType extends BaseItem {
           banner?: ReactNode
         }
       })
-    | CustomItem
   )[]
-
   /**
    * @defaultValue false
    */
   secondary?: boolean
+
+  text: ReactNode
+  type: "menu"
+
+  url?: string
+}
+
+interface BaseItem {
+  /**
+   * Restrict where the item is displayed
+   *
+   * @defaultValue 'all'
+   */
+  on?: "all" | "menu" | "nav"
+}
+
+interface ButtonItem extends BaseLinkType {
+  icon?: ReactNode
+  /**
+   * @defaultValue false
+   */
+  secondary?: boolean
+  text: ReactNode
+  type: "button"
 }
 
 interface CustomItem extends BaseItem {
-  type: "custom"
+  children: ReactNode
   /**
    * @defaultValue false
    */
   secondary?: boolean
-  children: ReactNode
+  type: "custom"
 }
-
-export type LinkItemType =
-  | MainItemType
-  | IconItemType
-  | ButtonItem
-  | MenuItemType
-  | CustomItem
 
 export const BaseLinkItem = forwardRef<
   HTMLAnchorElement,
@@ -114,8 +114,8 @@ export const BaseLinkItem = forwardRef<
 
   return (
     <Link
-      ref={ref}
       href={item.url}
+      ref={ref}
       {...(item.external && {
         target: "_blank",
       })}

@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useImperativeHandle, useRef } from "react"
 import { Slider as SliderPrimitive } from "@base-ui-components/react/slider"
+import React, { useImperativeHandle, useRef } from "react"
 
 import { cn } from "@/lib/utils"
 import { MediaReadyState } from "@/registry/default/hooks/use-player"
@@ -11,7 +11,7 @@ import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export type TimelineRootPropsDocs = Pick<
   React.ComponentProps<typeof SliderPrimitive.Root>,
-  "orientation" | "disabled"
+  "disabled" | "orientation"
 >
 
 export const Root = React.forwardRef<
@@ -33,7 +33,7 @@ export const Root = React.forwardRef<
   const disabled = props.disabled || readyState < MediaReadyState.HAVE_METADATA
 
   useImperativeHandle(ref, () => internalRef.current)
-  const { seek, setHoveringTime, setIsHovering, getTimeFromEvent } =
+  const { getTimeFromEvent, seek, setHoveringTime, setIsHovering } =
     useTimeline()
 
   const trackEvents = useTrackEvents({
@@ -75,7 +75,7 @@ export const Root = React.forwardRef<
 
   return (
     <SliderPrimitive.Root
-      value={[currentValue]}
+      aria-label="Timeline Slider"
       className={cn(
         `
           relative h-1 rounded-full transition-[height] duration-(--speed-regularTransition) ease-out-quad
@@ -84,9 +84,9 @@ export const Root = React.forwardRef<
         `,
         className
       )}
-      aria-label="Timeline Slider"
       orientation={orientation}
       ref={internalRef}
+      value={[currentValue]}
       {...trackEvents}
       {...etc}
       disabled={disabled}
@@ -104,8 +104,6 @@ export const Track = React.forwardRef<
 
   return (
     <SliderPrimitive.Track
-      ref={ref}
-      tabIndex={0}
       className={cn(
         `
           relative flex h-full grow flex-row rounded-full bg-foreground/20
@@ -113,6 +111,8 @@ export const Track = React.forwardRef<
         `,
         className
       )}
+      ref={ref}
+      tabIndex={0}
       {...etc}
     />
   )
@@ -130,11 +130,11 @@ export const Progress = React.forwardRef<
 
   return (
     <SliderPrimitive.Indicator
-      ref={ref}
       className={cn(
         "h-full w-(--lp-played-width)! rounded-s-full bg-primary",
         className
       )}
+      ref={ref}
       style={
         {
           "--lp-played-width": `${progress * 100}%`,
@@ -147,10 +147,24 @@ export const Progress = React.forwardRef<
 
 Progress.displayName = "SliderProgress"
 
+export type TimelineBufferedPropsDocs = Pick<BufferedProps, "variant">
+
 export type TimelineThumbPropsDocs = Pick<
   ThumbProps,
   "position" | "showWithHover"
 >
+
+interface BufferedProps
+  extends React.ComponentProps<typeof SliderPrimitive.Track> {
+  /**
+   * How to render buffered ranges
+   * - "default": Show each buffered range separately
+   * - "combined": Merge all ranges into one
+   * - "from-zero": Show ranges from start to their end
+   * @default "default"
+   */
+  variant?: "combined" | "default" | "from-zero"
+}
 
 interface ThumbProps
   extends React.ComponentProps<typeof SliderPrimitive.Thumb> {
@@ -162,20 +176,6 @@ interface ThumbProps
    * Thumb moves with the cursor seeking over the timeline
    */
   showWithHover?: boolean
-}
-
-export type TimelineBufferedPropsDocs = Pick<BufferedProps, "variant">
-
-interface BufferedProps
-  extends React.ComponentProps<typeof SliderPrimitive.Track> {
-  /**
-   * How to render buffered ranges
-   * - "default": Show each buffered range separately
-   * - "combined": Merge all ranges into one
-   * - "from-zero": Show ranges from start to their end
-   * @default "default"
-   */
-  variant?: "combined" | "from-zero" | "default"
 }
 
 export const Buffered = React.forwardRef<HTMLDivElement, BufferedProps>(
@@ -193,15 +193,15 @@ export const Buffered = React.forwardRef<HTMLDivElement, BufferedProps>(
     const normalizedPercentages = processBufferedRanges(buffered, variant)
 
     return (
-      <div ref={ref} className={cn("absolute size-full", className)} {...etc}>
+      <div className={cn("absolute size-full", className)} ref={ref} {...etc}>
         {normalizedPercentages.map(({ startPercent, widthPercent }, index) => (
           <SliderPrimitive.Indicator
-            key={`${index}_${startPercent}`}
             className={cn(
               `left-(--lp-buffered-start)! h-full w-(--lp-buffered-width)! bg-foreground/30`,
               variant === "from-zero" && "rounded-e-full",
               className
             )}
+            key={`${index}_${startPercent}`}
             style={
               {
                 "--lp-buffered-start": `${startPercent}%`,

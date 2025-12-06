@@ -7,27 +7,27 @@ export const docs = defineDocs({
   dir: "content/docs",
   docs: {
     postprocess: {
-      includeProcessedMarkdown: true,
       extractLinkReferences: true,
+      includeProcessedMarkdown: true,
     },
   },
 })
 
 export default defineConfig({
   mdxOptions: {
+    rehypeCodeOptions: {
+      themes: {
+        dark: "min-dark",
+        light: "github-light",
+      },
+    },
+    rehypePlugins: [rehypeSlug],
+    remarkCodeTabOptions: {},
     remarkNpmOptions: {
       persist: {
         id: "pkg-manager",
       },
     },
-    remarkCodeTabOptions: {},
-    rehypeCodeOptions: {
-      themes: {
-        light: "github-light",
-        dark: "min-dark",
-      },
-    },
     remarkPlugins: [remarkGfm, codeImport],
-    rehypePlugins: [rehypeSlug],
   },
 })

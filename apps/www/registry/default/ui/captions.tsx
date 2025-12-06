@@ -1,18 +1,13 @@
 "use client"
 
-import React, { useEffect } from "react"
 import { composeRefs } from "@radix-ui/react-compose-refs"
 import { Slot } from "@radix-ui/react-slot"
+import React, { useEffect } from "react"
 
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { useCaptions } from "@/registry/default/hooks/use-captions"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
-
-export type CaptionsControlPropsDocs = Pick<
-  CaptionsControlProps,
-  "shortcut" | "asChild"
->
 
 export interface CaptionsControlProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -28,6 +23,11 @@ export interface CaptionsControlProps
   shortcut?: string
 }
 
+export type CaptionsControlPropsDocs = Pick<
+  CaptionsControlProps,
+  "asChild" | "shortcut"
+>
+
 export const CaptionsControl = React.forwardRef<
   HTMLButtonElement,
   CaptionsControlProps
@@ -36,12 +36,12 @@ export const CaptionsControl = React.forwardRef<
   const { toggleCaptionVisibility } = useCaptions()
 
   const {
-    children,
-    onClick,
-    disabled: userDisabled,
     "aria-label": ariaLabelProp,
-    shortcut,
     asChild = false,
+    children,
+    disabled: userDisabled,
+    onClick,
+    shortcut,
     ...restProps
   } = props
 
@@ -63,13 +63,13 @@ export const CaptionsControl = React.forwardRef<
 
   return (
     <Comp
-      disabled={isDisabled}
-      data-label="lp-captions-control"
-      aria-label={ariaLabelProp ?? getDefaultAriaLabel()}
       aria-keyshortcuts={shortcut}
+      aria-label={ariaLabelProp ?? getDefaultAriaLabel()}
+      data-label="lp-captions-control"
+      disabled={isDisabled}
       {...restProps}
-      ref={forwardedRef}
       onClick={handleClick}
+      ref={forwardedRef}
     >
       {children}
     </Comp>
@@ -113,11 +113,11 @@ export const CaptionsContainer = React.forwardRef<
 
   return (
     <div
-      ref={composeRefs(ref, setContainerElement)}
       className={cn(
         "relative flex w-full grow flex-col justify-end text-lg",
         className
       )}
+      ref={composeRefs(ref, setContainerElement)}
       {...etc}
     />
   )

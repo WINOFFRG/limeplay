@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect } from "react"
 import type { StateCreator } from "zustand"
+
+import { useEffect } from "react"
 
 import { type PlayerStore } from "@/registry/default/hooks/use-player"
 import { off, on } from "@/registry/default/lib/utils"

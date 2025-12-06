@@ -1,12 +1,12 @@
 import fs from "fs"
-import path from "path"
-import React from "react"
 import { highlight } from "fumadocs-core/highlight"
 import { Pre } from "fumadocs-ui/components/codeblock"
+import path from "path"
+import React from "react"
 
-import { cn } from "@/lib/utils"
-import { atomReader } from "@/hooks/use-config"
 import { TabsContent } from "@/components/ui/tabs"
+import { atomReader } from "@/hooks/use-config"
+import { cn } from "@/lib/utils"
 import { Index } from "@/registry/__index__"
 import { PlayerLayoutDemo } from "@/registry/default/examples/player-root-demo"
 
@@ -15,22 +15,22 @@ import { ComponentPreviewControl } from "./component-preview-control"
 import { PreviewTabComponent } from "./preview-tab-component"
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
+  blockChildren?: React.ReactNode
   hideCode?: boolean
-  type?: "overlay" | "block"
-  withPlayer?: boolean
   name: string
   overlayChildren?: React.ReactNode
-  blockChildren?: React.ReactNode
+  type?: "block" | "overlay"
+  withPlayer?: boolean
 }
 
 export async function ComponentPreview({
-  name,
-  className,
-  withPlayer = false,
-  hideCode = false,
-  type = "block",
-  overlayChildren,
   blockChildren,
+  className,
+  hideCode = false,
+  name,
+  overlayChildren,
+  type = "block",
+  withPlayer = false,
   ...props
 }: ComponentPreviewProps) {
   const config = atomReader()
@@ -46,13 +46,13 @@ export async function ComponentPreview({
   const PreviewComponent = withPlayer ? PlayerLayoutDemo : React.Fragment
 
   const rendered = await highlight(fileContent, {
-    lang: "tsx",
-    themes: {
-      light: "github-light",
-      dark: "min-dark",
-    },
     components: {
       pre: (props) => <Pre {...props} />,
+    },
+    lang: "tsx",
+    themes: {
+      dark: "min-dark",
+      light: "github-light",
     },
   })
 
@@ -66,18 +66,18 @@ export async function ComponentPreview({
         hideCode={hideCode}
       >
         <TabsContent
-          value="preview"
           className={`
             relative hidden
             data-[state=active]:block
           `}
           forceMount
+          value="preview"
         >
           <div className={className}>
             <PreviewComponent
-              type={type}
-              overlayChildren={overlayChildren}
               blockChildren={blockChildren}
+              overlayChildren={overlayChildren}
+              type={type}
             >
               <PreviewTabComponent componentName={name} />
             </PreviewComponent>
@@ -85,9 +85,9 @@ export async function ComponentPreview({
         </TabsContent>
         <TabsContent value="code">
           <CustomCodeBlock
-            title={fileName}
             data-line-numbers
             data-line-numbers-start={1}
+            title={fileName}
             {...props}
           >
             {rendered}

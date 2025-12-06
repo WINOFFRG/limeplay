@@ -1,33 +1,34 @@
 "use client"
 
-import type { JSX, ReactNode } from "react"
-import React from "react"
 import type { Variants } from "motion/react"
-import { motion } from "motion/react"
+import type { JSX, ReactNode } from "react"
 
-export type PresetType =
-  | "fade"
-  | "slide"
-  | "scale"
-  | "blur"
-  | "blur-slide"
-  | "zoom"
-  | "flip"
-  | "bounce"
-  | "rotate"
-  | "swing"
+import { motion } from "motion/react"
+import React from "react"
 
 export type AnimatedGroupProps = {
+  as?: React.ElementType
+  asChild?: React.ElementType
   children: ReactNode
   className?: string
+  preset?: PresetType
   variants?: {
     container?: Variants
     item?: Variants
   }
-  preset?: PresetType
-  as?: React.ElementType
-  asChild?: React.ElementType
 }
+
+export type PresetType =
+  | "blur"
+  | "blur-slide"
+  | "bounce"
+  | "fade"
+  | "flip"
+  | "rotate"
+  | "scale"
+  | "slide"
+  | "swing"
+  | "zoom"
 
 const defaultContainerVariants: Variants = {
   visible: {
@@ -43,15 +44,6 @@ const defaultItemVariants: Variants = {
 }
 
 const presetVariants: Record<PresetType, Variants> = {
-  fade: {},
-  slide: {
-    hidden: { y: 20 },
-    visible: { y: 0 },
-  },
-  scale: {
-    hidden: { scale: 0.8 },
-    visible: { scale: 1 },
-  },
   blur: {
     hidden: { filter: "blur(4px)" },
     visible: { filter: "blur(0px)" },
@@ -60,39 +52,48 @@ const presetVariants: Record<PresetType, Variants> = {
     hidden: { filter: "blur(4px)", y: 20 },
     visible: { filter: "blur(0px)", y: 0 },
   },
-  zoom: {
-    hidden: { scale: 0.5 },
+  bounce: {
+    hidden: { y: -50 },
     visible: {
-      scale: 1,
-      transition: { type: "spring", stiffness: 300, damping: 20 },
+      transition: { damping: 10, stiffness: 400, type: "spring" },
+      y: 0,
     },
   },
+  fade: {},
   flip: {
     hidden: { rotateX: -90 },
     visible: {
       rotateX: 0,
-      transition: { type: "spring", stiffness: 300, damping: 20 },
-    },
-  },
-  bounce: {
-    hidden: { y: -50 },
-    visible: {
-      y: 0,
-      transition: { type: "spring", stiffness: 400, damping: 10 },
+      transition: { damping: 20, stiffness: 300, type: "spring" },
     },
   },
   rotate: {
     hidden: { rotate: -180 },
     visible: {
       rotate: 0,
-      transition: { type: "spring", stiffness: 200, damping: 15 },
+      transition: { damping: 15, stiffness: 200, type: "spring" },
     },
+  },
+  scale: {
+    hidden: { scale: 0.8 },
+    visible: { scale: 1 },
+  },
+  slide: {
+    hidden: { y: 20 },
+    visible: { y: 0 },
   },
   swing: {
     hidden: { rotate: -10 },
     visible: {
       rotate: 0,
-      transition: { type: "spring", stiffness: 300, damping: 8 },
+      transition: { damping: 8, stiffness: 300, type: "spring" },
+    },
+  },
+  zoom: {
+    hidden: { scale: 0.5 },
+    visible: {
+      scale: 1,
+      transition: { damping: 20, stiffness: 300, type: "spring" },
     },
   },
 }
@@ -103,16 +104,16 @@ const addDefaultVariants = (variants: Variants) => ({
 })
 
 function AnimatedGroup({
-  children,
-  className,
-  variants,
-  preset,
   as = "div",
   asChild = "div",
+  children,
+  className,
+  preset,
+  variants,
 }: AnimatedGroupProps) {
   const selectedVariants = {
-    item: addDefaultVariants(preset ? presetVariants[preset] : {}),
     container: addDefaultVariants(defaultContainerVariants),
+    item: addDefaultVariants(preset ? presetVariants[preset] : {}),
   }
   const containerVariants = variants?.container || selectedVariants.container
   const itemVariants = variants?.item || selectedVariants.item
@@ -128,10 +129,10 @@ function AnimatedGroup({
 
   return (
     <MotionComponent
-      initial="hidden"
       animate="visible"
-      variants={containerVariants}
       className={className}
+      initial="hidden"
+      variants={containerVariants}
     >
       {React.Children.map(children, (child, index) => (
         <MotionChild key={index} variants={itemVariants}>

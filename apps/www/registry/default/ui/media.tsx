@@ -1,20 +1,20 @@
-import * as React from "react"
 import { composeRefs } from "@radix-ui/react-compose-refs"
+import * as React from "react"
 
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-export type MediaPropsDocs = Pick<MediaProps, "as">
-
 export type MediaProps =
-  | ({
+  | (React.AudioHTMLAttributes<HTMLAudioElement> & { as: "audio" })
+  | (React.VideoHTMLAttributes<HTMLVideoElement> & {
       /**
        * Type of Media Element to Render
        *
        * @default video
        */
       as: "video"
-    } & React.VideoHTMLAttributes<HTMLVideoElement>)
-  | ({ as: "audio" } & React.AudioHTMLAttributes<HTMLAudioElement>)
+    })
+
+export type MediaPropsDocs = Pick<MediaProps, "as">
 
 export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
   (props, forwardedRef) => {
@@ -33,9 +33,9 @@ export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
 
     return (
       <Element
+        aria-busy={status === "buffering"}
         controls={false}
         ref={composeRefs(forwardedRef, mediaRef)}
-        aria-busy={status === "buffering"}
         {...etc}
       />
     )
