@@ -134,4 +134,15 @@ export const examples: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "seek-control-demo",
+    type: "registry:example",
+    registryDependencies: ["media-provider", "seek-controls"],
+    files: [
+      {
+        path: "examples/seek-control-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
 ]
