@@ -6,6 +6,7 @@
     "playback-control",
     "playback-rate",
     "mute-control",
+    "seek-controls",
     "volume-control",
     "timeline-control",
     "timeline-labels",

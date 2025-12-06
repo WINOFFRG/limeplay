@@ -29,7 +29,7 @@ export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
       }
 
       setMediaRef(mediaRef as React.RefObject<HTMLMediaElement>)
-    }, [mediaRef, setMediaRef])
+    }, [setMediaRef])
 
     return (
       <Element
