@@ -286,4 +286,17 @@ export const ui: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "seek-controls",
+    type: "registry:ui",
+    dependencies: ["@radix-ui/react-slot"],
+    registryDependencies: ["media-provider", "use-seek", "use-player"],
+    files: [
+      {
+        path: "ui/seek-controls.tsx",
+        type: "registry:ui",
+        target: `${TARGET_BASE_PATH}/seek-controls.tsx`,
+      },
+    ],
+  },
 ]
