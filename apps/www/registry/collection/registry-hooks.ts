@@ -129,4 +129,16 @@ export const hooks: Registry["items"] = [
       },
     ],
   },
+  {
+    name: "use-seek",
+    type: "registry:hook",
+    registryDependencies: ["media-provider"],
+    files: [
+      {
+        path: "hooks/use-seek.ts",
+        type: "registry:hook",
+        target: `${TARGET_BASE_PATH}/use-seek.ts`,
+      },
+    ],
+  },
 ]
