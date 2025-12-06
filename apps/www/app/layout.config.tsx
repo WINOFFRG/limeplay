@@ -7,7 +7,7 @@ import {
   QuestionIcon,
   SparkleIcon,
 } from "@phosphor-icons/react/dist/ssr"
-import type { LinkItemType } from "fumadocs-ui/layouts/links"
+import type { LinkItemType } from "fumadocs-ui/layouts/shared"
 
 import { DISCORD_URL, GITHUB_URL, PRODUCT_NAME } from "@/lib/constants"
 import { Icons } from "@/components/icons"
