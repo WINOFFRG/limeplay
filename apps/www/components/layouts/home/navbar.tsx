@@ -1,16 +1,17 @@
 "use client"
 
-import React, { useState, type ComponentProps } from "react"
-import type { LinkProps } from "next/link"
-import Link from "next/link"
 import type {
   NavigationMenuContentProps,
   NavigationMenuTriggerProps,
 } from "@radix-ui/react-navigation-menu"
+import type { LinkProps } from "next/link"
+
 import { cva, type VariantProps } from "class-variance-authority"
 import { motion, useMotionValueEvent, useScroll } from "motion/react"
+import Link from "next/link"
+import React, { type ComponentProps, useState } from "react"
 
-import { cn } from "@/lib/utils"
+import { BaseLinkItem } from "@/components/layouts/links"
 import { buttonVariants } from "@/components/ui/button"
 import {
   NavigationMenu,
@@ -20,7 +21,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
-import { BaseLinkItem } from "@/components/layouts/links"
+import { cn } from "@/lib/utils"
 
 const navItemVariants = cva(
   `
@@ -41,7 +42,7 @@ export function Navbar(props: NavbarProps) {
   const [value, setValue] = useState("")
   const [isScrolled, setIsScrolled] = useState(false)
   const [isHidden, setIsHidden] = useState(false)
-  const [scrollDirection, setScrollDirection] = useState<"up" | "down">("down")
+  const [scrollDirection, setScrollDirection] = useState<"down" | "up">("down")
   const { scrollY } = useScroll()
 
   // Replace the complex useEffect with Framer Motion's useMotionValueEvent
@@ -68,11 +69,15 @@ export function Navbar(props: NavbarProps) {
   }, [value])
 
   return (
-    <NavigationMenu value={value} onValueChange={setValue}>
+    <NavigationMenu onValueChange={setValue} value={value}>
       <motion.header
         id="nd-nav"
         initial={false}
         {...props}
+        animate={{
+          opacity: isHidden ? 0 : 1,
+          y: isHidden ? -120 : 0,
+        }}
         className={cn(
           `fixed left-1/2 z-50 -translate-x-1/2 transition-[top,width] duration-300 ease-in-out will-change-transform`,
           `top-0 w-full`,
@@ -80,10 +85,6 @@ export function Navbar(props: NavbarProps) {
           isScrolled && `md:top-[30px] md:w-[min(960px,calc(100%-2rem))]`,
           props.className
         )}
-        animate={{
-          y: isHidden ? -120 : 0,
-          opacity: isHidden ? 0 : 1,
-        }}
         transition={{
           duration: isHidden && scrollDirection === "up" ? 0.4 : 0.3,
           ease:
@@ -122,13 +123,13 @@ export function Navbar(props: NavbarProps) {
           )}
         >
           <NavigationMenuList
+            asChild
             className={cn(
               `flex w-full flex-row items-center justify-between`,
               `h-[44px] px-2`,
               `md:px-3`,
               !isScrolled || value.length > 0 ? "md:h-[44px]" : "md:h-[40px]"
             )}
-            asChild
           >
             <div>{props.children}</div>
           </NavigationMenuList>
@@ -139,6 +140,10 @@ export function Navbar(props: NavbarProps) {
 }
 
 export const NavbarMenu = NavigationMenuItem
+
+interface NavbarMenuLinkProps extends React.PropsWithChildren<LinkProps> {
+  className?: string
+}
 
 export function NavbarMenuContent(props: NavigationMenuContentProps) {
   return (
@@ -156,21 +161,6 @@ export function NavbarMenuContent(props: NavigationMenuContentProps) {
       {props.children}
     </NavigationMenuContent>
   )
-}
-
-export function NavbarMenuTrigger(props: NavigationMenuTriggerProps) {
-  return (
-    <NavigationMenuTrigger
-      {...props}
-      className={cn(navItemVariants(), "rounded-md", props.className)}
-    >
-      {props.children}
-    </NavigationMenuTrigger>
-  )
-}
-
-interface NavbarMenuLinkProps extends React.PropsWithChildren<LinkProps> {
-  className?: string
 }
 
 export function NavbarMenuLink(props: NavbarMenuLinkProps) {
@@ -192,22 +182,33 @@ export function NavbarMenuLink(props: NavbarMenuLinkProps) {
   )
 }
 
+export function NavbarMenuTrigger(props: NavigationMenuTriggerProps) {
+  return (
+    <NavigationMenuTrigger
+      {...props}
+      className={cn(navItemVariants(), "rounded-md", props.className)}
+    >
+      {props.children}
+    </NavigationMenuTrigger>
+  )
+}
+
 const linkVariants = cva("", {
-  variants: {
-    variant: {
-      main: navItemVariants(),
-      button: buttonVariants({
-        variant: "secondary",
-        className: "gap-1.5 [&_svg]:size-4",
-      }),
-      icon: buttonVariants({
-        variant: "ghost",
-        size: "icon",
-      }),
-    },
-  },
   defaultVariants: {
     variant: "main",
+  },
+  variants: {
+    variant: {
+      button: buttonVariants({
+        className: "gap-1.5 [&_svg]:size-4",
+        variant: "secondary",
+      }),
+      icon: buttonVariants({
+        size: "icon",
+        variant: "ghost",
+      }),
+      main: navItemVariants(),
+    },
   },
 })
 
@@ -221,8 +222,8 @@ export function NavbarLink({
       <NavigationMenuLink asChild>
         <BaseLinkItem
           {...props}
-          item={item}
           className={cn(linkVariants({ variant }), props.className)}
+          item={item}
         >
           {props.children}
         </BaseLinkItem>

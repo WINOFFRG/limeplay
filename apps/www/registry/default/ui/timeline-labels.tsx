@@ -50,9 +50,9 @@ export const Remaining = React.forwardRef<
 
   return (
     <time
+      className={cn("tabular-nums", className)}
       dateTime={durationDateTime(duration - currentTime, player?.seekRange())}
       role="timer"
-      className={cn("tabular-nums", className)}
       {...etc}
       ref={forwardedRef}
     >
@@ -80,8 +80,8 @@ export const Duration = React.forwardRef<
 
   return (
     <time
-      dateTime={durationDateTime(duration, player?.seekRange())}
       className={cn("tabular-nums", className)}
+      dateTime={durationDateTime(duration, player?.seekRange())}
       ref={forwardedRef}
       {...etc}
     >
@@ -107,8 +107,8 @@ export const HoverTime = React.forwardRef<
 
   return (
     <time
-      dateTime={durationDateTime(hoveringTime, player?.seekRange())}
       className={cn("tabular-nums", className)}
+      dateTime={durationDateTime(hoveringTime, player?.seekRange())}
       ref={forwardedRef}
       {...etc}
     >

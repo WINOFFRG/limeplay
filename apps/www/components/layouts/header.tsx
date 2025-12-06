@@ -1,5 +1,11 @@
-import { Fragment } from "react"
 import Link from "next/link"
+import { Fragment } from "react"
+
+import type {
+  BaseLayoutProps,
+  LinkItemType,
+  NavOptions,
+} from "@/components/layouts/shared"
 
 import {
   Navbar,
@@ -9,11 +15,6 @@ import {
   NavbarMenuLink,
   NavbarMenuTrigger,
 } from "@/components/layouts/home/navbar"
-import type {
-  BaseLayoutProps,
-  LinkItemType,
-  NavOptions,
-} from "@/components/layouts/shared"
 
 export interface HomeLayoutProps extends BaseLayoutProps {
   nav?: Partial<
@@ -26,17 +27,17 @@ export interface HomeLayoutProps extends BaseLayoutProps {
   >
 }
 
-export function Header({ nav = {}, links }: HomeLayoutProps) {
+export function Header({ links, nav = {} }: HomeLayoutProps) {
   const navItems = links.filter((item) =>
-    ["nav", "all"].includes(item.on ?? "all")
+    ["all", "nav"].includes(item.on ?? "all")
   )
 
   return (
     <Navbar>
       <Link
         aria-label="Navigate to Home"
-        href={nav.url ?? "/"}
         className="inline-flex items-center gap-2.5 font-semibold"
+        href={nav.url ?? "/"}
       >
         {nav.title}
       </Link>
@@ -51,15 +52,21 @@ export function Header({ nav = {}, links }: HomeLayoutProps) {
         {navItems
           .filter((item) => !isSecondary(item))
           .map((item, i) => {
-            return <NavbarLinkItem key={i} item={item} />
+            return <NavbarLinkItem item={item} key={i} />
           })}
       </ul>
       <ul className="ml-2 flex flex-row items-center gap-2">
         {navItems.filter(isSecondary).map((item, i) => (
-          <NavbarLinkItem key={i} item={item} className="-me-1.5" />
+          <NavbarLinkItem className="-me-1.5" item={item} key={i} />
         ))}
       </ul>
     </Navbar>
+  )
+}
+
+function isSecondary(item: LinkItemType): boolean {
+  return (
+    ("secondary" in item && item.secondary === true) || item.type === "icon"
   )
 }
 
@@ -67,8 +74,8 @@ function NavbarLinkItem({
   item,
   ...props
 }: {
-  item: LinkItemType
   className?: string
+  item: LinkItemType
 }) {
   if (item.type === "custom") return <>{item.children}</>
 
@@ -92,7 +99,7 @@ function NavbarLinkItem({
       } = child.menu ?? {}
 
       return (
-        <NavbarMenuLink key={j} href={child.url} {...rest}>
+        <NavbarMenuLink href={child.url} key={j} {...rest}>
           {rest.children ?? (
             <>
               {banner}
@@ -122,17 +129,11 @@ function NavbarLinkItem({
     <NavbarLink
       className="text-sm font-medium"
       {...props}
+      aria-label={item.type === "icon" ? item.label : undefined}
       item={item}
       variant={item.type}
-      aria-label={item.type === "icon" ? item.label : undefined}
     >
       {item.type === "icon" ? item.icon : item.text}
     </NavbarLink>
-  )
-}
-
-function isSecondary(item: LinkItemType): boolean {
-  return (
-    ("secondary" in item && item.secondary === true) || item.type === "icon"
   )
 }

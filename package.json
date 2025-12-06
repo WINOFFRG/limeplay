@@ -13,6 +13,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-config-turbo": "^2.5.8",
     "eslint-plugin-better-tailwindcss": "^3.7.10",
+    "eslint-plugin-perfectionist": "^4.15.1",
     "eslint-plugin-turbo": "^2.5.8",
     "lefthook": "^2.0.0",
     "prettier": "^3.6.2",

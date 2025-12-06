@@ -1,4 +1,4 @@
-import { registryItemSchema, type Registry } from "shadcn/schema"
+import { type Registry, registryItemSchema } from "shadcn/schema"
 import { z } from "zod"
 
 import { blocks } from "@/registry/collection/registry-blocks"
@@ -8,17 +8,16 @@ import { internal, lib } from "@/registry/collection/registry-lib"
 import { ui } from "@/registry/collection/registry-ui"
 
 export const registry: Registry = {
-  name: "limeplay/ui",
   homepage: "https://limeplay.winoffrg.dev",
   items: z.array(registryItemSchema).parse([
     {
-      name: "index",
-      type: "registry:style",
+      cssVars: {},
       dependencies: ["class-variance-authority", "lucide-react"],
       devDependencies: ["tw-animate-css"],
-      registryDependencies: ["utils"],
-      cssVars: {},
       files: [],
+      name: "index",
+      registryDependencies: ["utils"],
+      type: "registry:style",
     },
     ...ui,
     ...blocks,
@@ -27,4 +26,5 @@ export const registry: Registry = {
     ...internal,
     ...examples,
   ]),
+  name: "limeplay/ui",
 }

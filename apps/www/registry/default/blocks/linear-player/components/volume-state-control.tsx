@@ -16,7 +16,7 @@ export function VolumeStateControl() {
 
   return (
     <MuteControl asChild>
-      <Button variant="glass" size="icon" className="cursor-pointer">
+      <Button className="cursor-pointer" size="icon" variant="glass">
         {muted || volume === 0 ? (
           <SpeakerXIcon weight="fill" />
         ) : volume < 0.5 ? (

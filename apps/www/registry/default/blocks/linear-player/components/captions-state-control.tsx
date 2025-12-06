@@ -11,7 +11,7 @@ export function CaptionsStateControl() {
 
   return (
     <CaptionsControl asChild>
-      <Button variant="glass" size="icon" className="cursor-pointer">
+      <Button className="cursor-pointer" size="icon" variant="glass">
         <ClosedCaptioningIcon weight={textTrackVisible ? "fill" : "regular"} />
       </Button>
     </CaptionsControl>

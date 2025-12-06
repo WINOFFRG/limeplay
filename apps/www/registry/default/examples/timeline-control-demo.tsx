@@ -26,25 +26,25 @@ export function TimelineControlDemo() {
             <TimelineControlPrimitive.Buffered variant="combined" />
           </TimelineControlPrimitive.Track>
           <TimelineControlPrimitive.Thumb
-            showWithHover
             className={`
               absolute h-8 w-px rounded-full bg-primary/60 opacity-0 transition-opacity duration-(--lp-transition-speed-regular)
               group-hover/timeline:opacity-100
               group-active/timeline:bg-primary
             `}
+            showWithHover
           />
         </TimelineControlPrimitive.Root>
       </div>
       <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => {
-          setShowRemaining(!showRemaining)
-        }}
         aria-label={
           showRemaining ? "Show total duration" : "Show remaining time"
         }
         aria-pressed={showRemaining}
+        onClick={() => {
+          setShowRemaining(!showRemaining)
+        }}
+        size="sm"
+        variant="ghost"
       >
         {showRemaining ? (
           <Remaining className="text-xs font-medium" />

@@ -4,63 +4,46 @@ const TARGET_BASE_PATH = "components/limeplay"
 
 export const ui: Registry["items"] = [
   {
-    name: "fallback-poster",
-    type: "registry:ui",
-    registryDependencies: ["media-provider"],
     files: [
       {
         path: "ui/fallback-poster.tsx",
-        type: "registry:ui",
         target: `${TARGET_BASE_PATH}/fallback-poster.tsx`,
+        type: "registry:ui",
       },
     ],
+    name: "fallback-poster",
+    registryDependencies: ["media-provider"],
+    type: "registry:ui",
   },
   {
-    name: "mute-control",
-    type: "registry:ui",
     dependencies: ["@radix-ui/react-slot"],
-    registryDependencies: ["media-provider", "use-volume", "use-player"],
     files: [
       {
         path: "ui/mute-control.tsx",
-        type: "registry:ui",
         target: `${TARGET_BASE_PATH}/mute-control.tsx`,
+        type: "registry:ui",
       },
     ],
+    name: "mute-control",
+    registryDependencies: ["media-provider", "use-volume", "use-player"],
+    type: "registry:ui",
   },
   {
-    name: "media-provider",
-    type: "registry:ui",
-    dependencies: ["zustand"],
-    registryDependencies: ["create-media-store"],
-    files: [
-      {
-        path: "ui/media-provider.tsx",
-        type: "registry:ui",
-        target: `${TARGET_BASE_PATH}/media-provider.tsx`,
-      },
-    ],
-    cssVars: {
-      dark: {
-        "lp-primary": "oklch(0.205 0 0)",
-        "lp-primary-foreground": "oklch(0.985 0 0)",
-        "lp-accent": "oklch(0.97 0 0)",
-      },
-      light: {
-        "lp-primary": "oklch(0.205 0 0)",
-        "lp-primary-foreground": "oklch(0.985 0 0)",
-        "lp-accent": "oklch(0.269 0 0)",
-      },
-    },
     css: {
+      "@utility -focus-area-x-*": {
+        "--x": "--value(number) * -1",
+      },
+      "@utility -focus-area-y-*": {
+        "--y": "--value(number) * -1",
+      },
       "@utility focus-area": {
-        position: "relative",
-
         "&:before": {
-          position: "absolute",
           content: '""',
           inset: "calc(var(--y) * 1px) calc(var(--x) * 1px)",
+          position: "absolute",
         },
+
+        position: "relative",
       },
       "@utility focus-area-x-*": {
         "--x": "--value(number)",
@@ -68,26 +51,32 @@ export const ui: Registry["items"] = [
       "@utility focus-area-y-*": {
         "--y": "--value(number)",
       },
-      "@utility -focus-area-x-*": {
-        "--x": "--value(number) * -1",
+    },
+    cssVars: {
+      dark: {
+        "lp-accent": "oklch(0.97 0 0)",
+        "lp-primary": "oklch(0.205 0 0)",
+        "lp-primary-foreground": "oklch(0.985 0 0)",
       },
-      "@utility -focus-area-y-*": {
-        "--y": "--value(number) * -1",
+      light: {
+        "lp-accent": "oklch(0.269 0 0)",
+        "lp-primary": "oklch(0.205 0 0)",
+        "lp-primary-foreground": "oklch(0.985 0 0)",
       },
     },
-  },
-  {
-    name: "player-layout",
-    type: "registry:ui",
-    dependencies: ["@radix-ui/react-compose-refs", "@radix-ui/react-slot"],
-    registryDependencies: ["media-provider"],
+    dependencies: ["zustand"],
     files: [
       {
-        path: "ui/player-layout.tsx",
+        path: "ui/media-provider.tsx",
+        target: `${TARGET_BASE_PATH}/media-provider.tsx`,
         type: "registry:ui",
-        target: `${TARGET_BASE_PATH}/player-layout.tsx`,
       },
     ],
+    name: "media-provider",
+    registryDependencies: ["create-media-store"],
+    type: "registry:ui",
+  },
+  {
     cssVars: {
       dark: {
         "background-image-lp-controls-fade": ` linear-gradient(
@@ -132,24 +121,41 @@ export const ui: Registry["items"] = [
         )`,
       },
     },
+    dependencies: ["@radix-ui/react-compose-refs", "@radix-ui/react-slot"],
+    files: [
+      {
+        path: "ui/player-layout.tsx",
+        target: `${TARGET_BASE_PATH}/player-layout.tsx`,
+        type: "registry:ui",
+      },
+    ],
+    name: "player-layout",
+    registryDependencies: ["media-provider"],
+    type: "registry:ui",
   },
   {
-    name: "media",
-    type: "registry:ui",
     dependencies: ["@radix-ui/react-compose-refs", "@radix-ui/react-slot"],
-    registryDependencies: ["media-provider"],
     files: [
       {
         path: "ui/media.tsx",
-        type: "registry:ui",
         target: `${TARGET_BASE_PATH}/media.tsx`,
+        type: "registry:ui",
       },
     ],
+    name: "media",
+    registryDependencies: ["media-provider"],
+    type: "registry:ui",
   },
   {
-    name: "volume-control",
-    type: "registry:ui",
     dependencies: ["@base-ui-components/react"],
+    files: [
+      {
+        path: "ui/volume-control.tsx",
+        target: `${TARGET_BASE_PATH}/volume-control.tsx`,
+        type: "registry:ui",
+      },
+    ],
+    name: "volume-control",
     registryDependencies: [
       "media-provider",
       "utils",
@@ -157,72 +163,84 @@ export const ui: Registry["items"] = [
       "use-track-events",
       "use-player",
     ],
-    files: [
-      {
-        path: "ui/volume-control.tsx",
-        type: "registry:ui",
-        target: `${TARGET_BASE_PATH}/volume-control.tsx`,
-      },
-    ],
+    type: "registry:ui",
   },
   {
-    name: "playback-control",
-    type: "registry:ui",
     dependencies: ["@radix-ui/react-slot"],
-    registryDependencies: ["media-provider", "use-player"],
     files: [
       {
         path: "ui/playback-control.tsx",
-        type: "registry:ui",
         target: `${TARGET_BASE_PATH}/playback-control.tsx`,
+        type: "registry:ui",
       },
     ],
+    name: "playback-control",
+    registryDependencies: ["media-provider", "use-player"],
+    type: "registry:ui",
   },
   {
-    name: "playback-rate",
-    type: "registry:ui",
     dependencies: ["@radix-ui/react-slot"],
+    files: [
+      {
+        path: "ui/playback-rate.tsx",
+        target: `${TARGET_BASE_PATH}/playback-rate.tsx`,
+        type: "registry:ui",
+      },
+    ],
+    name: "playback-rate",
     registryDependencies: [
       "media-provider",
       "use-playback-rate",
       "@basecn/select",
     ],
-    files: [
-      {
-        path: "ui/playback-rate.tsx",
-        type: "registry:ui",
-        target: `${TARGET_BASE_PATH}/playback-rate.tsx`,
-      },
-    ],
+    type: "registry:ui",
   },
   {
-    name: "timeline-labels",
-    type: "registry:ui",
-    registryDependencies: ["media-provider", "utils", "time"],
     files: [
       {
         path: "ui/timeline-labels.tsx",
-        type: "registry:ui",
         target: `${TARGET_BASE_PATH}/timeline-labels.tsx`,
+        type: "registry:ui",
       },
     ],
+    name: "timeline-labels",
+    registryDependencies: ["media-provider", "utils", "time"],
+    type: "registry:ui",
   },
   {
-    name: "player-hooks",
-    type: "registry:ui",
-    registryDependencies: ["use-shaka-player"],
     files: [
       {
         path: "ui/player-hooks.tsx",
-        type: "registry:ui",
         target: `${TARGET_BASE_PATH}/player-hooks.tsx`,
+        type: "registry:ui",
       },
     ],
+    name: "player-hooks",
+    registryDependencies: ["use-shaka-player"],
+    type: "registry:ui",
   },
   {
-    name: "timeline-control",
-    type: "registry:ui",
+    cssVars: {
+      dark: {
+        "lp-timeline-buffered-color": "oklch(0.985 0 0 / 0.4)",
+      },
+      light: {
+        "lp-timeline-buffered-color": "oklch(0.985 0 0 / 0.4)",
+      },
+      theme: {
+        "lp-timeline-track-height": "4px",
+        "lp-timeline-track-height-active": "7px",
+      },
+    },
     dependencies: ["@base-ui-components/react"],
+    files: [
+      {
+        path: "ui/timeline-control.tsx",
+        target: `${TARGET_BASE_PATH}/timeline-control.tsx`,
+        type: "registry:ui",
+      },
+    ],
+    name: "timeline-control",
     registryDependencies: [
       "media-provider",
       "utils",
@@ -230,73 +248,55 @@ export const ui: Registry["items"] = [
       "use-track-events",
       "use-player",
     ],
-    files: [
-      {
-        path: "ui/timeline-control.tsx",
-        type: "registry:ui",
-        target: `${TARGET_BASE_PATH}/timeline-control.tsx`,
-      },
-    ],
-    cssVars: {
-      theme: {
-        "lp-timeline-track-height": "4px",
-        "lp-timeline-track-height-active": "7px",
-      },
-      light: {
-        "lp-timeline-buffered-color": "oklch(0.985 0 0 / 0.4)",
-      },
-      dark: {
-        "lp-timeline-buffered-color": "oklch(0.985 0 0 / 0.4)",
-      },
-    },
+    type: "registry:ui",
   },
   {
-    name: "limeplay-logo",
-    type: "registry:ui",
     files: [
       {
         path: "ui/limeplay-logo.tsx",
-        type: "registry:ui",
         target: `${TARGET_BASE_PATH}/limeplay-logo.tsx`,
+        type: "registry:ui",
       },
     ],
+    name: "limeplay-logo",
+    type: "registry:ui",
   },
   {
-    name: "root-container",
-    type: "registry:ui",
-    registryDependencies: ["media-provider"],
     files: [
       {
         path: "ui/root-container.tsx",
-        type: "registry:ui",
         target: `${TARGET_BASE_PATH}/root-container.tsx`,
+        type: "registry:ui",
       },
     ],
+    name: "root-container",
+    registryDependencies: ["media-provider"],
+    type: "registry:ui",
   },
   {
-    name: "captions",
-    type: "registry:ui",
     dependencies: ["@radix-ui/react-compose-refs", "@radix-ui/react-slot"],
-    registryDependencies: ["media-provider", "use-captions"],
     files: [
       {
         path: "ui/captions.tsx",
-        type: "registry:ui",
         target: `${TARGET_BASE_PATH}/captions.tsx`,
+        type: "registry:ui",
       },
     ],
+    name: "captions",
+    registryDependencies: ["media-provider", "use-captions"],
+    type: "registry:ui",
   },
   {
-    name: "seek-controls",
-    type: "registry:ui",
     dependencies: ["@radix-ui/react-slot"],
-    registryDependencies: ["media-provider", "use-seek", "use-player"],
     files: [
       {
         path: "ui/seek-controls.tsx",
-        type: "registry:ui",
         target: `${TARGET_BASE_PATH}/seek-controls.tsx`,
+        type: "registry:ui",
       },
     ],
+    name: "seek-controls",
+    registryDependencies: ["media-provider", "use-seek", "use-player"],
+    type: "registry:ui",
   },
 ]

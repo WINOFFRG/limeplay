@@ -19,7 +19,7 @@ const useIsomorphicLayoutEffect =
  * useInterval(handleInterval, 1000);
  * ```
  */
-export function useInterval(callback: () => void, delay: number | null) {
+export function useInterval(callback: () => void, delay: null | number) {
   const savedCallback = useRef(callback)
 
   // Remember the latest callback if it changes.

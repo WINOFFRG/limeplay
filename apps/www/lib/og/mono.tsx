@@ -1,40 +1,22 @@
-import fs from "node:fs/promises"
-import type { ReactNode } from "react"
 import type { ImageResponseOptions } from "next/server"
+import type { ReactNode } from "react"
+
+import fs from "node:fs/promises"
 
 export interface GenerateProps {
-  title: ReactNode
   description?: ReactNode
-  site?: ReactNode
   logo?: ReactNode
+  site?: ReactNode
+  title: ReactNode
 }
 
 const font = fs.readFile("./lib/og/JetBrainsMono-Regular.ttf")
 const fontBold = fs.readFile("./lib/og/JetBrainsMono-Bold.ttf")
 
-export async function getImageResponseOptions(): Promise<ImageResponseOptions> {
-  return {
-    width: 1200,
-    height: 630,
-    fonts: [
-      {
-        name: "Mono",
-        data: await font,
-        weight: 400,
-      },
-      {
-        name: "Mono",
-        data: await fontBold,
-        weight: 600,
-      },
-    ],
-  }
-}
-
 export function generate({
-  title,
   description,
   site = "Limeplay",
+  title,
 }: GenerateProps) {
   const foreground = "rgb(244,244,244)"
   const muted = "rgba(244,244,244,0.72)"
@@ -42,57 +24,57 @@ export function generate({
   return (
     <div
       style={{
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        height: "100%",
-        padding: "64px",
-        color: foreground,
         backgroundColor: "black",
         border: "1px solid rgba(255,255,255,0.04)",
+        color: foreground,
+        display: "flex",
+        flexDirection: "column",
         fontFamily: '"Mono", "JetBrains Mono", monospace',
+        height: "100%",
         overflow: "hidden",
+        padding: "64px",
+        position: "relative",
+        width: "100%",
       }}
     >
       <div
         style={{
-          position: "absolute",
-          inset: 32,
-          borderRadius: "32px",
-          border: "1px solid rgba(255,255,255,0.05)",
           background:
             "linear-gradient(130deg, rgba(255,255,255,0.04), rgba(255,255,255,0))",
+          border: "1px solid rgba(255,255,255,0.05)",
+          borderRadius: "32px",
+          inset: 32,
+          position: "absolute",
         }}
       />
       <div
         style={{
-          position: "relative",
           display: "flex",
           flexDirection: "column",
-          height: "100%",
           gap: "32px",
+          height: "100%",
+          position: "relative",
           zIndex: 1,
         }}
       >
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
             alignItems: "center",
-            fontSize: "28px",
             color: muted,
+            display: "flex",
+            fontSize: "28px",
+            justifyContent: "space-between",
           }}
         >
           <span
             style={{
-              padding: "8px 20px",
-              borderRadius: "999px",
               border: "1px solid rgba(255,255,255,0.4)",
+              borderRadius: "999px",
+              color: foreground,
               fontSize: "24px",
               letterSpacing: "0.08em",
+              padding: "8px 20px",
               textTransform: "uppercase",
-              color: foreground,
             }}
           >
             {site}
@@ -102,8 +84,8 @@ export function generate({
         <div style={{ display: "flex", flexDirection: "column" }}>
           <p
             style={{
-              fontWeight: 600,
               fontSize: "60px",
+              fontWeight: 600,
               margin: "0",
               padding: "0",
             }}
@@ -113,10 +95,10 @@ export function generate({
           {description ? (
             <p
               style={{
-                padding: "0",
+                color: muted,
                 fontSize: "38px",
                 margin: "0",
-                color: muted,
+                padding: "0",
               }}
             >
               {description}
@@ -126,4 +108,23 @@ export function generate({
       </div>
     </div>
   )
+}
+
+export async function getImageResponseOptions(): Promise<ImageResponseOptions> {
+  return {
+    fonts: [
+      {
+        data: await font,
+        name: "Mono",
+        weight: 400,
+      },
+      {
+        data: await fontBold,
+        name: "Mono",
+        weight: 600,
+      },
+    ],
+    height: 630,
+    width: 1200,
+  }
 }

@@ -20,11 +20,11 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
         style={{
           ["--background"]: "#ffffff",
           "--color": "rgba(0, 0, 0, 0.2)",
-          "--height": "1px",
-          "--width": "5px",
-          "--fade-stop": "90%",
-          "--offset": "20px",
           "--color-dark": "rgba(255, 255, 255, 0.2)",
+          "--fade-stop": "90%",
+          "--height": "1px",
+          "--offset": "20px",
+          "--width": "5px",
           maskComposite: "exclude",
           maskImage:
             "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
@@ -40,11 +40,11 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
         style={{
           "--background": "#ffffff",
           "--color": "rgba(0, 0, 0, 0.2)",
-          "--height": "1px",
-          "--width": "5px",
-          "--fade-stop": "90%",
-          "--offset": "20px",
           "--color-dark": "rgba(255, 255, 255, 0.2)",
+          "--fade-stop": "90%",
+          "--height": "1px",
+          "--offset": "20px",
+          "--width": "5px",
           maskComposite: "exclude",
           maskImage:
             "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
@@ -60,11 +60,11 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
         style={{
           "--background": "#ffffff",
           "--color": "rgba(0, 0, 0, 0.2)",
-          "--height": "5px",
-          "--width": "1px",
-          "--fade-stop": "90%",
-          "--offset": "40px",
           "--color-dark": "rgba(255, 255, 255, 0.2)",
+          "--fade-stop": "90%",
+          "--height": "5px",
+          "--offset": "40px",
+          "--width": "1px",
           maskComposite: "exclude",
           maskImage:
             "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
@@ -80,11 +80,11 @@ export function CustomDemoControls({ children }: React.PropsWithChildren) {
         style={{
           "--background": "#ffffff",
           "--color": "rgba(0, 0, 0, 0.2)",
-          "--height": "5px",
-          "--width": "1px",
-          "--fade-stop": "90%",
-          "--offset": "40px",
           "--color-dark": "rgba(255, 255, 255, 0.2)",
+          "--fade-stop": "90%",
+          "--height": "5px",
+          "--offset": "40px",
+          "--width": "1px",
           maskComposite: "exclude",
           maskImage:
             "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
