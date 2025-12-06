@@ -1,0 +1,91 @@
+---
+title: use-seek
+description: Hook for seeking forward or backward in media playback
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+## Installation
+
+<Steps>
+<Step>
+### Install the hook
+```npm
+npx shadcn add @limeplay/use-seek
+```
+</Step>
+
+<Step>
+### Ready to Use
+
+The `useSeek` hook only requires the `MediaProvider` context. No store setup or event bridge configuration is needed.
+
+</Step>
+</Steps>
+
+## Example Usage
+
+Use the `useSeek()` hook to control seeking in your components.
+
+```tsx lineNumbers title="components/player/seek-buttons.tsx"
+import { useSeek } from "@/hooks/limeplay/use-seek"
+
+export function SeekButtons() {
+  const { seek } = useSeek()
+
+  return (
+    <div>
+      <button onClick={() => seek(-10)}>Back 10s</button>
+      <button onClick={() => seek(10)}>Forward 10s</button>
+      <button onClick={() => seek(-30)}>Back 30s</button>
+      <button onClick={() => seek(30)}>Forward 30s</button>
+    </div>
+  )
+}
+```
+
+## Understanding
+
+The `use-seek` hook provides direct seeking functionality following a simplified **Action Bridge** pattern:
+
+- **Action Only**: `seek(offset)` directly modifies `currentTime` on the native media element
+- **No Event Bridge**: Unlike volume or playback hooks, seeking doesn't require state synchronization since timeline state is tracked separately by [`useTimelineStates()`](/docs/hooks/use-timeline)
+
+The hook automatically:
+- Clamps seek positions to valid ranges (0 to media duration)
+- Resets the `idle` state to keep player controls visible after seeking
+- Handles edge cases like undefined duration gracefully
+
+## API Reference
+
+### useSeek()
+
+Returns control functions for seeking within the media.
+
+#### Returns
+
+| Property | Type                     | Description                                           |
+| -------- | ------------------------ | ----------------------------------------------------- |
+| `seek`   | `(offset: number) => void` | Seeks by the given offset in seconds (positive = forward, negative = backward) |
+
+#### seek Parameters
+
+| Parameter | Type     | Description                                                       |
+| --------- | -------- | ----------------------------------------------------------------- |
+| `offset`  | `number` | Number of seconds to seek. Positive values seek forward, negative values seek backward |
+
+**Example usages:**
+
+```tsx
+const { seek } = useSeek()
+
+// Seek forward 10 seconds
+seek(10)
+
+// Seek backward 30 seconds  
+seek(-30)
+
+// Seek to start (assuming current time > 0)
+seek(-Infinity) // Will clamp to 0
+```
+
