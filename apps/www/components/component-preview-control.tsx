@@ -1,11 +1,11 @@
 "use client"
 
-import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { motion } from "motion/react"
+import * as React from "react"
 
-import { cn } from "@/lib/utils"
 import { Tabs, TabsList } from "@/components/ui/tabs"
+import { cn } from "@/lib/utils"
 
 interface ComponentPreviewControlProps {
   children: React.ReactNode
@@ -22,10 +22,10 @@ export function ComponentPreviewControl({
 
   return (
     <Tabs
-      defaultValue="preview"
-      value={activeTab}
-      onValueChange={setActiveTab}
       className={cn("relative mr-auto w-full rounded-none", className)}
+      defaultValue="preview"
+      onValueChange={setActiveTab}
+      value={activeTab}
     >
       <div className="flex items-center justify-between pb-3">
         {!hideCode && (
@@ -37,8 +37,6 @@ export function ComponentPreviewControl({
           >
             {["preview", "code"].map((tab) => (
               <TabsPrimitive.Trigger
-                key={tab}
-                value={tab}
                 className={cn(
                   `
                     relative inline-flex h-8 min-w-24 cursor-pointer items-center justify-center rounded-full px-4 text-sm font-medium
@@ -53,15 +51,17 @@ export function ComponentPreviewControl({
                       hover:text-foreground
                     `
                 )}
+                key={tab}
+                value={tab}
               >
                 {activeTab === tab && (
                   <motion.div
-                    layoutId="active-tab-indicator"
                     className="absolute inset-0 rounded-full bg-muted"
+                    layoutId="active-tab-indicator"
                     transition={{
-                      type: "spring",
                       bounce: 0.2,
                       duration: 0.6,
+                      type: "spring",
                     }}
                   />
                 )}

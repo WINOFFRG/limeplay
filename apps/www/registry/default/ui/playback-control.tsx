@@ -1,7 +1,7 @@
 "use client"
 
-import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
+import * as React from "react"
 
 import { Button } from "@/components/ui/button"
 import { MediaReadyState, usePlayer } from "@/registry/default/hooks/use-player"
@@ -9,20 +9,20 @@ import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export type PlaybackControlPropsDocs = Pick<
   PlaybackControlProps,
-  "shortcut" | "asChild"
+  "asChild" | "shortcut"
 >
 
 interface PlaybackControlProps extends React.ComponentProps<typeof Button> {
-  /**
-   * Keyboard shortcut hint displayed in aria-label
-   * @example "Space"
-   */
-  shortcut?: string
   /**
    * Render as child component using Radix Slot
    * @default false
    */
   asChild?: boolean
+  /**
+   * Keyboard shortcut hint displayed in aria-label
+   * @example "Space"
+   */
+  shortcut?: string
 }
 
 export const PlaybackControl = React.forwardRef<
@@ -34,12 +34,12 @@ export const PlaybackControl = React.forwardRef<
   const { togglePaused } = usePlayer()
 
   const {
-    children,
-    onClick,
-    disabled: userDisabled,
     "aria-label": ariaLabelProp,
-    shortcut,
     asChild = false,
+    children,
+    disabled: userDisabled,
+    onClick,
+    shortcut,
     ...restProps
   } = props
 
@@ -60,9 +60,9 @@ export const PlaybackControl = React.forwardRef<
   const getDefaultAriaLabel = () => {
     const shortcutText = shortcut ? ` (keyboard shortcut ${shortcut})` : ""
     const labels = {
+      default: "Play",
       ended: "Replay",
       playing: "Pause",
-      default: "Play",
     }
 
     const label =
@@ -76,13 +76,13 @@ export const PlaybackControl = React.forwardRef<
 
   return (
     <Comp
+      aria-keyshortcuts={shortcut}
+      aria-label={ariaLabelProp ?? getDefaultAriaLabel()}
       data-label="lp-playback-control"
       disabled={isDisabled}
-      aria-label={ariaLabelProp ?? getDefaultAriaLabel()}
-      aria-keyshortcuts={shortcut}
       {...restProps}
-      ref={forwardedRef}
       onClick={handleClick}
+      ref={forwardedRef}
     >
       {children}
     </Comp>

@@ -1,5 +1,6 @@
 import eslint from "@eslint/js"
 import eslintPluginBetterTailwindcss from "eslint-plugin-better-tailwindcss"
+import perfectionist from "eslint-plugin-perfectionist"
 import turboPlugin from "eslint-plugin-turbo"
 import tseslint from "typescript-eslint"
 
@@ -20,6 +21,7 @@ export const baseConfig = [
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
+  perfectionist.configs["recommended-natural"],
   {
     languageOptions: {
       parserOptions: {
@@ -36,7 +38,7 @@ export const baseConfig = [
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/restrict-template-expressions": "off",
       "@typescript-eslint/no-unsafe-assignment": "off",
-      "@typescript-eslint/no-explicit-any": "off",
+
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
@@ -59,6 +61,7 @@ export const baseConfig = [
           allowConstantLoopConditions: true,
         },
       ],
+      "perfectionist/sort-imports": "error",
     },
   },
 ]

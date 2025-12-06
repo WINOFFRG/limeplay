@@ -20,12 +20,12 @@ export function TimelineLabelsDemo() {
               <TimelineControlPrimitive.Buffered variant="combined" />
             </TimelineControlPrimitive.Track>
             <TimelineControlPrimitive.Thumb
-              showWithHover
               className={`
                 absolute h-8 w-px rounded-full bg-primary/60 opacity-0 transition-opacity duration-(--lp-transition-speed-regular)
                 group-hover/timeline:opacity-100
                 group-active/timeline:bg-primary
               `}
+              showWithHover
             />
           </TimelineControlPrimitive.Root>
         </div>

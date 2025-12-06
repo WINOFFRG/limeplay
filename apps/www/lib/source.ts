@@ -1,4 +1,5 @@
 import type { InferPageType } from "fumadocs-core/source"
+
 import { loader } from "fumadocs-core/source"
 import { docs } from "fumadocs-mdx:collections/server"
 

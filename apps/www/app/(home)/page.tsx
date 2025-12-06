@@ -16,8 +16,8 @@ export default function Home() {
           <Suspense
             fallback={
               <div
-                className="aspect-video w-full animate-pulse"
                 aria-hidden="true"
+                className="aspect-video w-full animate-pulse"
               />
             }
           >

@@ -1,15 +1,16 @@
-import * as React from "react"
-import { highlight } from "fumadocs-core/highlight"
 import type { registryItemFileSchema } from "shadcn/schema"
 import type { z } from "zod"
 
+import { highlight } from "fumadocs-core/highlight"
+import * as React from "react"
+
+import { BlockViewer } from "@/components/block-viewer"
+import { ComponentPreview } from "@/components/component-preview"
 import {
   createFileTreeForRegistryItemFiles,
   getRegistryItem,
 } from "@/lib/registry"
 import { cn } from "@/lib/utils"
-import { BlockViewer } from "@/components/block-viewer"
-import { ComponentPreview } from "@/components/component-preview"
 
 export async function BlockDisplay({ name }: { name: string }) {
   const item = await getCachedRegistryItem(name)
@@ -24,11 +25,11 @@ export async function BlockDisplay({ name }: { name: string }) {
   ])
 
   return (
-    <BlockViewer item={item} tree={tree} highlightedFiles={highlightedFiles}>
+    <BlockViewer highlightedFiles={highlightedFiles} item={item} tree={tree}>
       <ComponentPreview
-        name={item.name}
-        hideCode
         className={cn("", item.meta?.containerClassName)}
+        hideCode
+        name={item.name}
       />
     </BlockViewer>
   )

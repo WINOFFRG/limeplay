@@ -1,5 +1,12 @@
 import React from "react"
 
+export interface OrientationState {
+  angle: number
+  isLandscape: boolean
+  isPortrait: boolean
+  type: OrientationType
+}
+
 export type OrientationType =
   | "landscape-primary"
   | "landscape-secondary"
@@ -7,19 +14,12 @@ export type OrientationType =
   | "portrait-secondary"
   | "UNKNOWN"
 
-export interface OrientationState {
-  angle: number
-  type: OrientationType
-  isPortrait: boolean
-  isLandscape: boolean
-}
-
 export function useOrientation(): OrientationState {
   const [orientation, setOrientation] = React.useState<OrientationState>({
     angle: 0,
-    type: "UNKNOWN",
-    isPortrait: false,
     isLandscape: false,
+    isPortrait: false,
+    type: "UNKNOWN",
   })
 
   React.useLayoutEffect(() => {
@@ -30,17 +30,17 @@ export function useOrientation(): OrientationState {
         const { angle, type } = window.screen.orientation
         newOrientation = {
           angle,
-          type: type as OrientationType,
-          isPortrait: type.includes("portrait"),
           isLandscape: type.includes("landscape"),
+          isPortrait: type.includes("portrait"),
+          type: type as OrientationType,
         }
       } else {
         const isPortrait = window.innerHeight > window.innerWidth
         newOrientation = {
           angle: 0,
-          type: isPortrait ? "portrait-primary" : "landscape-primary",
-          isPortrait,
           isLandscape: !isPortrait,
+          isPortrait,
+          type: isPortrait ? "portrait-primary" : "landscape-primary",
         }
       }
 

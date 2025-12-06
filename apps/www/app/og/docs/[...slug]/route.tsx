@@ -9,6 +9,14 @@ import { getPageImage, source } from "@/lib/source"
 
 export const revalidate = false
 
+export function generateStaticParams(): {
+  slug: string[]
+}[] {
+  return source.getPages().map((page) => ({
+    slug: getPageImage(page).segments,
+  }))
+}
+
 export async function GET(
   _req: Request,
   { params }: RouteContext<"/og/docs/[...slug]">
@@ -20,19 +28,11 @@ export async function GET(
   return new ImageResponse(
     (
       <MetadataImage
-        title={page.data.title}
         description={page.data.description}
         site="Limeplay"
+        title={page.data.title}
       />
     ),
     await getImageResponseOptions()
   )
-}
-
-export function generateStaticParams(): {
-  slug: string[]
-}[] {
-  return source.getPages().map((page) => ({
-    slug: getPageImage(page).segments,
-  }))
 }

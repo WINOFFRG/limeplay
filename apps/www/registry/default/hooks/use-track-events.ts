@@ -1,9 +1,7 @@
-import * as React from "react"
 import clamp from "lodash.clamp"
+import * as React from "react"
 
 interface UseTrackEventsProps<E extends HTMLElement> {
-  /** Orientation of the track. @default "horizontal" */
-  orientation?: "horizontal" | "vertical"
   /** Progress is 0-1 based on the width of the bar and the pointer event, clamped */
   onPointerDown: (progress: number, event: React.PointerEvent<E>) => void
   /**
@@ -16,9 +14,11 @@ interface UseTrackEventsProps<E extends HTMLElement> {
     event: React.PointerEvent<E>
   ) => void
   /**  */
-  onPointerUp?: (event: React.PointerEvent<E>) => void
-  /**  */
   onPointerOut?: (event: React.PointerEvent<E>) => void
+  /**  */
+  onPointerUp?: (event: React.PointerEvent<E>) => void
+  /** Orientation of the track. @default "horizontal" */
+  orientation?: "horizontal" | "vertical"
 }
 
 /** Events for a track/slider bar */
@@ -97,5 +97,5 @@ export function useTrackEvents<E extends HTMLElement>(
     [props.onPointerOut]
   )
 
-  return { onPointerDown, onPointerMove, onPointerUp, onPointerOut }
+  return { onPointerDown, onPointerMove, onPointerOut, onPointerUp }
 }

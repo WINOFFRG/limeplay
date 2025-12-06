@@ -1,5 +1,6 @@
 import type React from "react"
-import { clsx, type ClassValue } from "clsx"
+
+import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -25,32 +26,17 @@ export function cn(...inputs: ClassValue[]) {
 //     : never
 //   : never
 
-/**
- * Overloaded function for React synthetic events
- */
-export function on<R extends HTMLElement>(
-  element: EventTarget,
-  events: string | string[],
-  callback: (event: React.SyntheticEvent<R>) => void
-): EventTarget
+export function getDeviceLanguage() {
+  const primaryLocale = navigator.language
+  return primaryLocale.split("-")[0]
+}
 
 /**
- * Implementation
+ * No-op function
+ * @returns undefined
  */
-export function on(
-  element: EventTarget,
-  events: string | string[],
-  callback: (event: any) => void
-): EventTarget {
-  if (Array.isArray(events)) {
-    events.forEach((event) => {
-      element.addEventListener(event, callback as EventListener)
-    })
-  } else {
-    element.addEventListener(events, callback as EventListener)
-  }
-
-  return element
+export function noop() {
+  // noop
 }
 
 /**
@@ -82,19 +68,34 @@ export function off(
 }
 
 /**
- * No-op function
- * @returns undefined
+ * Overloaded function for React synthetic events
  */
-export function noop() {
-  // noop
+export function on<R extends HTMLElement>(
+  element: EventTarget,
+  events: string | string[],
+  callback: (event: React.SyntheticEvent<R>) => void
+): EventTarget
+
+/**
+ * Implementation
+ */
+export function on(
+  element: EventTarget,
+  events: string | string[],
+  callback: (event: any) => void
+): EventTarget {
+  if (Array.isArray(events)) {
+    events.forEach((event) => {
+      element.addEventListener(event, callback as EventListener)
+    })
+  } else {
+    element.addEventListener(events, callback as EventListener)
+  }
+
+  return element
 }
 
 export function toFixedNumber(num: number, digits: number, base = 10) {
   const pow = Math.pow(base, digits)
   return Math.round(num * pow) / pow
-}
-
-export function getDeviceLanguage() {
-  const primaryLocale = navigator.language
-  return primaryLocale.split("-")[0]
 }
