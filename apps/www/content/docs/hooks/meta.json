@@ -5,6 +5,7 @@
     "use-player",
     "use-shaka-player",
     "use-volume",
+    "use-seek",
     "use-timeline",
     "use-playback-rate",
     "use-captions",

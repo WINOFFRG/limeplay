@@ -196,7 +196,7 @@ export const Buffered = React.forwardRef<HTMLDivElement, BufferedProps>(
       <div ref={ref} className={cn("absolute size-full", className)} {...etc}>
         {normalizedPercentages.map(({ startPercent, widthPercent }, index) => (
           <SliderPrimitive.Indicator
-            key={index}
+            key={`${index}_${startPercent}`}
             className={cn(
               `left-(--lp-buffered-start)! h-full w-(--lp-buffered-width)! bg-foreground/30`,
               variant === "from-zero" && "rounded-e-full",
