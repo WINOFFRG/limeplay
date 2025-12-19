@@ -6,16 +6,3 @@ pre-commit:
 
     - run: bun prettier --write {staged_files}
       glob: "*.{js,ts,jsx,tsx,json,css,md,mdx}"
-
-    - name: sync-submodule-commit
-      run: ./scripts/sync-commit.sh
-
-pre-push:
-  commands:
-    sync-submodule-push:
-      run: ./scripts/sync-push.sh
-
-post-checkout:
-  commands:
-    sync-submodule:
-      run: ./scripts/sync-branch.sh
