@@ -4,24 +4,20 @@ import { exec } from "child_process"
 import { promises as fs } from "fs"
 import path from "path"
 import { rimraf } from "rimraf"
-import { registryItemSchema, type Registry } from "shadcn/schema"
+import { type Registry, registryItemSchema } from "shadcn/schema"
 import { z } from "zod"
 
-import { blocks } from "@/registry/collection/registry-blocks"
-import { examples } from "@/registry/collection/registry-examples"
-import { hooks } from "@/registry/collection/registry-hooks"
-import { internal, lib } from "@/registry/collection/registry-lib"
-import { ui } from "@/registry/collection/registry-ui"
+import { registry } from "@/registry/collection/index"
 
 // Log level configuration
-type LogLevel = "error" | "warn" | "info" | "debug"
+type LogLevel = "debug" | "error" | "info" | "warn"
 const LOG_LEVEL: LogLevel = (process.env.LOG_LEVEL ?? "info") as LogLevel
 
 const logLevels: Record<LogLevel, number> = {
-  error: 0,
-  warn: 1,
-  info: 2,
   debug: 3,
+  error: 0,
+  info: 2,
+  warn: 1,
 }
 
 const shouldLog = (level: LogLevel): boolean => {
@@ -29,27 +25,31 @@ const shouldLog = (level: LogLevel): boolean => {
 }
 
 const logger = {
+  debug: (message: string) => {
+    shouldLog("debug") && console.debug(message)
+  },
   error: (message: string) => {
     console.error(message)
-  },
-  warn: (message: string) => {
-    shouldLog("warn") && console.warn(message)
   },
   info: (message: string) => {
     shouldLog("info") && console.log(message)
   },
-  debug: (message: string) => {
-    shouldLog("debug") && console.debug(message)
+  warn: (message: string) => {
+    shouldLog("warn") && console.warn(message)
   },
 }
 
 const STYLE = "default"
+const PRO_STYLE = "pro"
 const DEPRECATED_ITEMS = ["test"]
 // Get registry host from env variable or use default
 const REGISTRY_HOST = process.env.REGISTRY_HOST ?? "http://localhost:3000"
 const BASE_URL = `${REGISTRY_HOST}/r`
+const PRO_BASE_URL = `${REGISTRY_HOST}/r/pro`
 
 logger.info(`🌐 Using registry host: ${REGISTRY_HOST}`)
+
+// Registry tier type
 
 // Path mappings for automatic target generation
 const PATH_MAPPINGS = [
@@ -70,109 +70,173 @@ const PATH_MAPPINGS = [
   // { pattern: "ui/", targetFn: ... },
 ]
 
-// Create a map of all registry items for quick lookup
-const registryItemsMap = new Map()
-;[...ui, ...lib, ...hooks, ...examples, ...blocks, ...internal].forEach(
-  (item) => {
-    if (item.name && !DEPRECATED_ITEMS.includes(item.name)) {
-      registryItemsMap.set(item.name, item)
-    }
-  }
-)
-
 // Create a map of all file paths to their corresponding items
-const filePathToItemMap = new Map<string, string>()
-;[...ui, ...lib, ...hooks, ...examples, ...blocks, ...internal].forEach(
-  (item) => {
+function createFilePathToItemMap(
+  items: Registry["items"]
+): Map<string, string> {
+  const map = new Map<string, string>()
+  items.forEach((item) => {
     if (item.files) {
       item.files.forEach((file) => {
         const filePath = typeof file === "string" ? file : file.path
-        filePathToItemMap.set(filePath, item.name)
+        map.set(filePath, item.name)
       })
     }
-  }
-)
-
-// Function to convert dependency string to URL if it exists in registry
-function resolveRegistryDependency(dependency: string): string {
-  // Skip if already a URL
-  if (typeof dependency !== "string" || dependency.startsWith("http")) {
-    return dependency
-  }
-
-  // Check if dependency exists in registry
-  if (registryItemsMap.has(dependency)) {
-    return `${BASE_URL}/${dependency}.json`
-  }
-
-  // Return original if not found
-  return dependency
+  })
+  return map
 }
 
-// Build the registry items
-const registryItems = [
-  {
-    name: "index",
-    type: "registry:style",
-    dependencies: [
-      "tw-animate-css",
-      "class-variance-authority",
-      "lucide-react",
-    ],
-    registryDependencies: ["utils"],
-    cssVars: {},
-    files: [],
-  },
-  ...ui,
-  ...lib,
-  ...hooks,
-  ...internal,
-  ...examples,
-  ...blocks,
-]
-  .filter((item) => {
-    return !DEPRECATED_ITEMS.includes(item.name)
+// Create a map of all registry items for quick lookup
+function createRegistryItemsMap(
+  items: Registry["items"]
+): Map<string, Registry["items"][number]> {
+  const map = new Map()
+  items.forEach((item) => {
+    if (item.name && !DEPRECATED_ITEMS.includes(item.name)) {
+      map.set(item.name, item)
+    }
   })
-  .map((item) => {
-    // Process registry dependencies
-    if (item.registryDependencies?.length) {
-      item.registryDependencies = item.registryDependencies.map(
-        resolveRegistryDependency
+  return map
+}
+
+/**
+ * Dynamically load pro registry items if available.
+ */
+// Unified registry items from index
+const registryItems = registry.items
+const registryItemsMap = createRegistryItemsMap(registryItems)
+const filePathToItemMap = createFilePathToItemMap(registryItems)
+
+// Helper to check if item is pro
+const isProItem = (item: Registry["items"][number]) => {
+  return item.categories?.includes("pro")
+}
+
+async function buildCombinedRegistryIndex(
+  registries: Array<{ registry: Registry; style: string }>
+) {
+  logger.info(
+    `🗂️ Building registry/__index__.tsx with ${registries.length} tier(s)...`
+  )
+
+  let index = `/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
+// This file is autogenerated by scripts/build-registry.ts
+// Do not edit this file directly.
+
+import * as React from "react"
+
+export const Index: Record<string, any> = {`
+
+  for (const { registry, style } of registries) {
+    index += `
+  "${style}": {`
+
+    for (const item of registry.items) {
+      const resolveFiles = item.files?.map(
+        (file) => `registry/${style}/${file.path}`
       )
+      if (!resolveFiles) {
+        continue
+      }
+
+      const componentPath = item.files?.[0]?.path
+        ? `@/registry/${style}/${item.files[0].path}`
+        : ""
+
+      index += `
+    "${item.name}": {
+      name: "${item.name}",
+      description: "${item.description ?? ""}",
+      type: "${item.type}",
+      registryDependencies: ${JSON.stringify(item.registryDependencies)},
+      files: [${item.files?.map((file) => {
+        const filePath = `registry/${style}/${
+          typeof file === "string" ? file : file.path
+        }`
+        const resolvedFilePath = path.resolve(filePath)
+        return typeof file === "string"
+          ? `"${resolvedFilePath}"`
+          : `{
+        path: "${filePath}",
+        type: "${file.type}",
+        target: "${file.target ?? ""}"
+      }`
+      })}],
+      component: ${
+        componentPath
+          ? `React.lazy(async () => {
+        const mod = await import("${componentPath}")
+        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "${item.name}"
+        return { default: mod.default || mod[exportName] }
+      })`
+          : "null"
+      },
+      meta: ${JSON.stringify(item.meta)},
+    },`
     }
 
-    // Add targets for files where needed
-    if (item.files) {
-      item.files = item.files.map((file) => {
-        // Skip string files
-        if (typeof file === "string") return file
+    index += `
+  },`
+  }
 
-        // Skip if target already exists
-        if (file.target) return file
+  index += `
+}`
 
-        // Check against path mappings
-        for (const mapping of PATH_MAPPINGS) {
-          if (file.path.includes(mapping.pattern)) {
-            const target = mapping.targetFn(file.path)
-            if (target) {
-              logger.info(`✅ Added target for "${file.path}" → "${target}"`)
-              return { ...file, target }
-            }
-          }
+  // Create registry directory if it doesn't exist
+  const registryDir = path.join(process.cwd(), "registry")
+  await fs.mkdir(registryDir, { recursive: true })
+
+  // Write combined index
+  rimraf.sync(path.join(registryDir, "__index__.tsx"))
+  await fs.writeFile(path.join(registryDir, "__index__.tsx"), index)
+}
+
+async function buildRegistryJsonFile(
+  registry: Registry,
+  style: string,
+  fileName = "registry.json"
+) {
+  logger.info(`💅 Building ${fileName}...`)
+  // 1. Fix the path for registry items.
+  const fixedRegistry = {
+    ...registry,
+    items: registry.items.map((item) => {
+      const files = item.files?.map((file) => {
+        return {
+          ...file,
+          path: `registry/${style}/${file.path}`,
         }
-
-        return file
       })
-    }
 
-    return item
-  })
+      return {
+        ...item,
+        files,
+      }
+    }),
+  }
 
-const registry = {
-  name: "winoffrg/limeplay",
-  homepage: "https://limeplay.winoffrg.com",
-  items: z.array(registryItemSchema).parse(registryItems),
-} satisfies Registry
+  // 2. Write the content of the registry
+  rimraf.sync(path.join(process.cwd(), fileName))
+  await fs.writeFile(
+    path.join(process.cwd(), fileName),
+    JSON.stringify(fixedRegistry, null, 2)
+  )
+}
+
+// Build free registry
+// Helper to create registry object
+function createRegistry(
+  items: Registry["items"],
+  name = "winoffrg/limeplay"
+): Registry {
+  return {
+    homepage: "https://limeplay.winoffrg.com",
+    items: z.array(registryItemSchema).parse(processRegistryItems(items)),
+    name,
+  }
+}
 
 // Fetch and parse shadcn registry into a map keyed by name (no top-level await)
 async function getShadcnRegistryMap(): Promise<Map<string, unknown>> {
@@ -183,6 +247,132 @@ async function getShadcnRegistryMap(): Promise<Map<string, unknown>> {
     return parseShadcnRegistryItemsToMap(items as Array<{ name?: string }>)
   } catch {
     return new Map<string, unknown>()
+  }
+}
+
+async function main() {
+  try {
+    logger.info("🧐 Validating dependencies...")
+
+    const hasProRegistry = await proRegistryExists()
+
+    // Split items based on category
+    // Free items: No 'pro' category
+    const freeItems = registryItems.filter((item) => !isProItem(item))
+
+    // Pro items: Have 'pro' category
+    const proItems = registryItems.filter((item) => isProItem(item))
+
+    // Check if we have pro items defined but missing submodule
+    if (proItems.length > 0 && !hasProRegistry) {
+      logger.warn(
+        "⚠️ Pro items found in registry but Pro submodule missing. Pro build will be skipped."
+      )
+    }
+
+    // Prepare Free Registry items (include index metadata)
+    const freeRegistryItemsWithIndex = [
+      {
+        cssVars: {},
+        dependencies: [
+          "tw-animate-css",
+          "class-variance-authority",
+          "lucide-react",
+        ],
+        files: [],
+        name: "index",
+        registryDependencies: ["utils"],
+        type: "registry:style" as const,
+      },
+      ...freeItems,
+    ]
+
+    // Build free registry
+    const freeRegistry = createRegistry(freeRegistryItemsWithIndex)
+
+    // Validate dependencies for free registry (only checking against free items and shadcn)
+    // We pass the global registryItemsMap but validateDependencies logic might need adjustment if it expects map to only contain valid items.
+    // Actually, validateDependencies checks undefined dependencies.
+    // If a free item depends on a pro item (which is in registryItemsMap), it is technically found.
+    // But we should ban free -> pro dependency.
+    // For now we'll rely on good faith or add a check later.
+    await validateDependencies(
+      freeRegistry,
+      registryItemsMap,
+      filePathToItemMap
+    )
+
+    // Build free registry JSON
+    await buildRegistryJsonFile(freeRegistry, STYLE)
+
+    // Run shadcn build for free components
+    // Output to /public/r (root - backwards compat) AND /public/r/free
+    await runShadcnBuild("registry.json", "../www/public/r")
+
+    // Copy to /r/free for explicit free path
+    const freeOutputDir = path.join(process.cwd(), "public/r/free")
+    await fs.mkdir(freeOutputDir, { recursive: true })
+    const rootOutputDir = path.join(process.cwd(), "public/r")
+    const rootFiles = await fs.readdir(rootOutputDir)
+    for (const file of rootFiles) {
+      if (file.endsWith(".json") && file !== "registry.json") {
+        // Skip directories like 'free' and 'pro'
+        const srcPath = path.join(rootOutputDir, file)
+        const stat = await fs.stat(srcPath)
+        if (stat.isFile()) {
+          await fs.copyFile(srcPath, path.join(freeOutputDir, file))
+        }
+      }
+    }
+    // Copy registry.json to free dir as well
+    await fs.copyFile(
+      path.join(rootOutputDir, "registry.json"),
+      path.join(freeOutputDir, "registry.json")
+    )
+    logger.info("✅ Copied free components to /r/free/")
+
+    // Prepare for combined index
+    const registriesToIndex = [{ registry: freeRegistry, style: STYLE }]
+
+    // Build pro registry if available and submodule exists
+    if (proItems.length > 0 && hasProRegistry) {
+      logger.info("🔐 Building pro registry...")
+      const proRegistry = createRegistry(proItems, "winoffrg/limeplay-pro")
+
+      // Validate dependencies for pro registry
+      // It can depend on free items + pro items
+      // We use the same map.
+      await validateDependencies(
+        proRegistry,
+        registryItemsMap,
+        filePathToItemMap,
+        PRO_BASE_URL
+      )
+
+      // Add to index list
+      registriesToIndex.push({ registry: proRegistry, style: PRO_STYLE })
+
+      // Build pro registry JSON
+      await buildRegistryJsonFile(proRegistry, PRO_STYLE, "registry-pro.json")
+
+      // Run shadcn build for pro components
+      await runShadcnBuild("registry-pro.json", "../www/public/r/pro")
+      logger.info("✅ Pro registry built successfully")
+    } else {
+      if (proItems.length === 0) {
+        logger.info("⏭️ No Pro items defined in registry.")
+      } else {
+        logger.info("⏭️ Skipping pro registry build (missing submodule)")
+      }
+    }
+
+    // Build combined index
+    await buildCombinedRegistryIndex(registriesToIndex)
+
+    logger.info("🎉 Registry build complete!")
+  } catch (error) {
+    logger.error(`${error}`)
+    process.exit(1)
   }
 }
 
@@ -203,27 +393,137 @@ function parseShadcnRegistryItemsToMap(
   return byName
 }
 
-// Resolved on-demand via getShadcnRegistryMap()
+function processRegistryItems(items: Registry["items"]): Registry["items"] {
+  return items
+    .filter((item) => !DEPRECATED_ITEMS.includes(item.name))
+    .map((item) => {
+      // Process registry dependencies
+      if (item.registryDependencies?.length) {
+        item.registryDependencies = item.registryDependencies.map((dep) =>
+          resolveRegistryDependency(dep)
+        )
+      }
+
+      // Add targets for files where needed
+      if (item.files) {
+        item.files = item.files.map((file) => {
+          // Skip string files
+          if (typeof file === "string") return file
+
+          // Skip if target already exists
+          if (file.target) return file
+
+          // Check against path mappings
+          for (const mapping of PATH_MAPPINGS) {
+            if (file.path.includes(mapping.pattern)) {
+              const target = mapping.targetFn(file.path)
+              if (target) {
+                logger.debug(`✅ Added target for "${file.path}" → "${target}"`)
+                return { ...file, target }
+              }
+            }
+          }
+
+          return file
+        })
+      }
+
+      return item
+    })
+}
+
+/**
+ * Check if the pro registry has actual components.
+ * Returns true only if pro/ui directory exists and has .tsx/.ts files.
+ */
+async function proRegistryExists(): Promise<boolean> {
+  try {
+    const proUiPath = path.join(process.cwd(), "registry/pro/ui")
+    const stat = await fs.stat(proUiPath)
+    if (!stat.isDirectory()) return false
+
+    const files = await fs.readdir(proUiPath)
+    // Has actual component files (not just .git, README, etc.)
+    return files.some((f) => f.endsWith(".tsx") || f.endsWith(".ts"))
+  } catch {
+    return false
+  }
+}
+
+// Function to convert dependency string to URL if it exists in registry
+// Function to convert dependency string to URL if it exists in registry
+function resolveRegistryDependency(dependency: string): string {
+  // Skip if already a URL
+  if (typeof dependency !== "string" || dependency.startsWith("http")) {
+    return dependency
+  }
+
+  // Check if dependency exists in registry
+  if (registryItemsMap.has(dependency)) {
+    const item = registryItemsMap.get(dependency)
+    // If it's a pro item, check category
+    if (isProItem(item!)) {
+      return `${PRO_BASE_URL}/${dependency}.json`
+    }
+    return `${BASE_URL}/${dependency}.json`
+  }
+
+  // Return original if not found
+  return dependency
+}
+
+async function runShadcnBuild(
+  registryFile: string,
+  outputDir: string
+): Promise<void> {
+  logger.info(`🏗️ Building ${registryFile} to ${outputDir}...`)
+  return new Promise((resolve, reject) => {
+    const proc = exec(
+      `bun x shadcn build ${registryFile} --output ${outputDir}`
+    )
+
+    // Capture stdout
+    proc.stdout?.on("data", (data) => {
+      console.log(data)
+    })
+
+    // Capture stderr
+    proc.stderr?.on("data", (data) => {
+      console.error(data)
+    })
+
+    proc.on("exit", (code) => {
+      if (code === 0) {
+        resolve(undefined)
+      } else {
+        reject(new Error(`Process exited with code ${code}`))
+      }
+    })
+  })
+}
 
 // Check for missing and undefined dependencies
-async function validateDependencies() {
+async function validateDependencies(
+  registry: Registry,
+  itemsMap: Map<string, Registry["items"][number]>,
+  filePathMap: Map<string, string>,
+  baseUrl: string = BASE_URL
+) {
   logger.info("🔍 Validating dependencies based on imports...")
   const shadcnRegistryMap = await getShadcnRegistryMap()
 
   // Regex to find imports from our registry
-  const importRegex = /@\/registry\/default\/([^"']+)/g
+  const importRegex = /@\/registry\/(default|pro)\/([^"']+)/g
 
   // Additional regex to catch import * as Namespace patterns
   const namespaceImportRegex =
-    /import\s+\*\s+as\s+\w+\s+from\s+["']@\/registry\/default\/([^"']+)["']/g
+    /import\s+\*\s+as\s+\w+\s+from\s+["']@\/registry\/(default|pro)\/([^"']+)["']/g
 
   // Track missing registry entries
   const missingRegistryItems = new Map<string, Set<string>>()
 
   // Debug registry items
-  logger.debug(
-    "📋 Registry items: " + Array.from(registryItemsMap.keys()).join(", ")
-  )
+  logger.debug("📋 Registry items: " + Array.from(itemsMap.keys()).join(", "))
 
   // Check for undefined dependencies first
   for (const item of registry.items) {
@@ -242,10 +542,7 @@ async function validateDependencies() {
       }
 
       // Check if dependency exists
-      if (
-        !registryItemsMap.has(dependency) &&
-        !shadcnRegistryMap.has(dependency)
-      ) {
+      if (!itemsMap.has(dependency) && !shadcnRegistryMap.has(dependency)) {
         undefinedDependencies.push(dependency)
       }
     }
@@ -261,11 +558,19 @@ async function validateDependencies() {
     }
   }
 
-  // Check for missing dependencies
+  // Check for missing dependencies based on imports
   for (const item of registry.items) {
     if (!item.files) continue
 
-    const declaredDependencies = new Set(item.registryDependencies ?? [])
+    const declaredDependencies = new Set(
+      (item.registryDependencies ?? []).map((dep) => {
+        // Extract component name from URL if needed
+        if (dep.startsWith("http")) {
+          return dep.split("/").pop()?.replace(".json", "") || dep
+        }
+        return dep
+      })
+    )
     logger.debug(
       `📦 Checking ${item.name} with dependencies: ${
         declaredDependencies.size
@@ -280,7 +585,14 @@ async function validateDependencies() {
       if (typeof file === "string") continue
 
       try {
-        const filePath = path.join(process.cwd(), "registry", STYLE, file.path)
+        // Determine the correct style directory based on item category
+        const styleDir = isProItem(item) ? PRO_STYLE : STYLE
+        const filePath = path.join(
+          process.cwd(),
+          "registry",
+          styleDir,
+          file.path
+        )
         if (
           !(await fs
             .stat(filePath)
@@ -309,8 +621,11 @@ async function validateDependencies() {
         }
 
         for (const match of allMatches) {
-          const importPath = match[1]
-          logger.debug(`  - Found import: @/registry/default/${importPath}`)
+          const importStyle = match[1] // "default" or "pro"
+          const importPath = match[2]
+          logger.debug(
+            `  - Found import: @/registry/${importStyle}/${importPath}`
+          )
 
           const importParts = importPath.split("/")
 
@@ -325,10 +640,10 @@ async function validateDependencies() {
           logger.debug(`    - Import type: ${importType}, name: ${importName}`)
 
           // Try to find the component by name
-          if (registryItemsMap.has(importName)) {
+          if (itemsMap.has(importName)) {
             logger.debug(`    - Component exists: ${importName}`)
             // Component exists by name - check if it's already a dependency
-            const dependencyUrl = `${BASE_URL}/${importName}.json`
+            const dependencyUrl = `${baseUrl}/${importName}.json`
             if (
               !declaredDependencies.has(importName) &&
               !declaredDependencies.has(dependencyUrl)
@@ -351,8 +666,8 @@ async function validateDependencies() {
 
           // Find the component that provides this file
           const componentPath = `${importParts[0]}/${importParts[1]}`
-          const possibleFilePaths = Array.from(filePathToItemMap.keys()).filter(
-            (path) => path.startsWith(componentPath)
+          const possibleFilePaths = Array.from(filePathMap.keys()).filter((p) =>
+            p.startsWith(componentPath)
           )
 
           logger.debug(
@@ -363,14 +678,14 @@ async function validateDependencies() {
           )
 
           if (possibleFilePaths.length > 0) {
-            for (const filePath of possibleFilePaths) {
-              const componentName = filePathToItemMap.get(filePath) ?? ""
+            for (const fp of possibleFilePaths) {
+              const componentName = filePathMap.get(fp) ?? ""
               logger.debug(
-                `      - Matched file: ${filePath} → component: ${componentName}`
+                `      - Matched file: ${fp} → component: ${componentName}`
               )
 
               // Check if this component is already in dependencies
-              const dependencyUrl = `${BASE_URL}/${componentName}.json`
+              const dependencyUrl = `${baseUrl}/${componentName}.json`
               if (
                 componentName &&
                 componentName !== item.name &&
@@ -432,144 +747,6 @@ async function validateDependencies() {
 
     // Force log flush by adding a slight delay
     await new Promise((resolve) => setTimeout(resolve, 100))
-  }
-}
-
-async function buildRegistryIndex() {
-  logger.info("🗂️ Building registry/__index__.tsx...")
-  let index = `/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// @ts-nocheck
-// This file is autogenerated by scripts/build-registry.ts
-// Do not edit this file directly.
-
-import * as React from "react"
-
-export const Index: Record<string, any> = {
-  "${STYLE}": {`
-
-  for (const item of registry.items) {
-    const resolveFiles = item.files?.map(
-      (file) => `registry/${STYLE}/${file.path}`
-    )
-    if (!resolveFiles) {
-      continue
-    }
-
-    const componentPath = item.files?.[0]?.path
-      ? `@/registry/${STYLE}/${item.files[0].path}`
-      : ""
-
-    index += `
-    "${item.name}": {
-      name: "${item.name}",
-      description: "${item.description ?? ""}",
-      type: "${item.type}",
-      registryDependencies: ${JSON.stringify(item.registryDependencies)},
-      files: [${item.files?.map((file) => {
-        const filePath = `registry/${STYLE}/${
-          typeof file === "string" ? file : file.path
-        }`
-        const resolvedFilePath = path.resolve(filePath)
-        return typeof file === "string"
-          ? `"${resolvedFilePath}"`
-          : `{
-        path: "${filePath}",
-        type: "${file.type}",
-        target: "${file.target ?? ""}"
-      }`
-      })}],
-      component: ${
-        componentPath
-          ? `React.lazy(async () => {
-        const mod = await import("${componentPath}")
-        const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || "${item.name}"
-        return { default: mod.default || mod[exportName] }
-      })`
-          : "null"
-      },
-      meta: ${JSON.stringify(item.meta)},
-    },`
-  }
-
-  index += `
-  }
-}`
-
-  // Create registry directory if it doesn't exist
-  const registryDir = path.join(process.cwd(), "registry")
-  await fs.mkdir(registryDir, { recursive: true })
-
-  // Write style index.
-  rimraf.sync(path.join(registryDir, "__index__.tsx"))
-  await fs.writeFile(path.join(registryDir, "__index__.tsx"), index)
-}
-
-async function buildRegistryJsonFile() {
-  logger.info("💅 Building registry.json...")
-  // 1. Fix the path for registry items.
-  const fixedRegistry = {
-    ...registry,
-    items: registry.items.map((item) => {
-      const files = item.files?.map((file) => {
-        return {
-          ...file,
-          path: `registry/${STYLE}/${file.path}`,
-        }
-      })
-
-      return {
-        ...item,
-        files,
-      }
-    }),
-  }
-
-  // 2. Write the content of the registry to `registry.json`
-  rimraf.sync(path.join(process.cwd(), `registry.json`))
-  await fs.writeFile(
-    path.join(process.cwd(), `registry.json`),
-    JSON.stringify(fixedRegistry, null, 2)
-  )
-}
-
-async function buildRegistry() {
-  logger.info("🏗️ Building registry...")
-  return new Promise((resolve, reject) => {
-    const process = exec(
-      `bun x shadcn build registry.json --output ../www/public/r`
-    )
-
-    // Capture stdout
-    process.stdout?.on("data", (data) => {
-      console.log(data)
-    })
-
-    // Capture stderr
-    process.stderr?.on("data", (data) => {
-      console.error(data)
-    })
-
-    process.on("exit", (code) => {
-      if (code === 0) {
-        resolve(undefined)
-      } else {
-        reject(new Error(`Process exited with code ${code}`))
-      }
-    })
-  })
-}
-
-async function main() {
-  try {
-    logger.info("🧐 Validating dependencies...")
-    await validateDependencies()
-    await buildRegistryIndex()
-    await buildRegistryJsonFile()
-    await buildRegistry()
-  } catch (error) {
-    logger.error(`${error}`)
-    process.exit(1)
   }
 }
 
