@@ -9,7 +9,8 @@
     "registry:build": "REGISTRY_HOST=https://limeplay.winoffrg.dev tsx --tsconfig ./tsconfig.scripts.json ./scripts/build-registry.ts",
     "registry:dev": "REGISTRY_HOST=http://localhost:3000 tsx --watch --tsconfig ./tsconfig.scripts.json ./scripts/build-registry.ts --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache --config ../../prettier.config.cjs && next lint",
-    "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache --config ../../prettier.config.cjs"
+    "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache --config ../../prettier.config.cjs",
+    "install:vercel": "bash ./scripts/vercel-install.sh"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "^1.0.27",
