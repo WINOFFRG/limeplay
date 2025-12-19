@@ -1,30 +1,34 @@
 #!/usr/bin/env bash
 set -euo pipefail
- 
-# Move to the repo root
-cd "$(git rev-parse --show-toplevel)"
- 
-# Ensure we’re not in a detached HEAD or bare repo
-if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  echo "Not inside a valid Git working tree."
+
+echo "Starting Vercel submodule setup..."
+
+# Check if GITHUB_REPO_CLONE_TOKEN is set (matching User's variable)
+if [[ -z "${GITHUB_REPO_CLONE_TOKEN:-}" ]]; then
+  echo "Error: GITHUB_REPO_CLONE_TOKEN is not set."
+  echo "Please set this environment variable in Vercel project settings."
   exit 1
 fi
- 
-# Remove existing submodule entry (if any)
-if git config --file .gitmodules --get-regexp "^submodule\.content\." > /dev/null 2>&1; then
-  echo "Removing existing submodule config..."
-  git submodule deinit -f content || true
-  git rm -f content || true
-  rm -rf .git/modules/content
-fi
- 
-# Clean local content dir if needed
-rm -rf content
- 
-# Add the submodule
-echo "Adding submodule..."
-git submodule add -f "https://winoffrg:${GITHUB_REPO_CLONE_TOKEN}@github.com/WINOFFRG/limeplay-pro.git" content
- 
-# Sync & init
-git submodule sync
+
+# Configure git to use the token for all GitHub URLs
+# This dynamically handles any submodule defined in .gitmodules without hardcoding paths.
+# usage: https://x-access-token:<token>@github.com/
+echo "Configuring git credential helper..."
+git config --global url."https://x-access-token:${GITHUB_REPO_CLONE_TOKEN}@github.com/".insteadOf "git@github.com:"
+git config --global url."https://x-access-token:${GITHUB_REPO_CLONE_TOKEN}@github.com/".insteadOf "https://github.com/"
+
+# Move to the repo root to perform git operations
+cd "$(git rev-parse --show-toplevel)"
+
+# Update submodules respecting .gitmodules
+echo "Updating submodules..."
+git submodule sync --recursive
 git submodule update --init --recursive
+
+echo "Submodule setup complete."
+
+# Run install as per package.json (usually bun install)
+# This script is called by "install:vercel", the next step is usually implicit or handled by Vercel's loop,
+# but if this REPLACES the install command, we must run install.
+echo "Running package installation..."
+bun install
