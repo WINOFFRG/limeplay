@@ -2,33 +2,21 @@
 set -e
 
 SUBMODULE_PATH="apps/www/registry/pro"
-MSG="$1"
 
-if [[ -z "$MSG" ]]; then
-  echo "Usage: bun commit \"your commit message\""
-  exit 1
-fi
-
-echo "Committing..."
-
-# 1. Commit in Submodule
 if [[ -d "$SUBMODULE_PATH" ]]; then
   pushd "$SUBMODULE_PATH" > /dev/null
+  # Check for changes in the submodule (staged or unstaged)
   if [[ -n $(git status --porcelain) ]]; then
-    echo "Changes detected in submodule. Committing..."
+    echo "Changes detected in submodule. Auto-committing..."
     git add .
-    git commit -m "$MSG" || echo "Submodule commit failed or empty?"
+    # Note: We use a generic message because pre-commit hooks don't have easy access 
+    # to the user's incoming commit message for the main repo.
+    git commit -m "chore: auto-sync submodule"
+    popd > /dev/null
+    
+    # Stage the updated submodule state in the main repo so it's included in the current commit
+    git add "$SUBMODULE_PATH"
   else
-    echo "No changes in submodule."
+    popd > /dev/null
   fi
-  popd > /dev/null
 fi
-
-# 2. Add Submodule update to Main Repo
-git add "$SUBMODULE_PATH"
-
-# 3. Commit in Main Repo
-git add .
-git commit -m "$MSG"
-
-echo "Done. Synced commit."
