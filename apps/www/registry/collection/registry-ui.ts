@@ -300,7 +300,7 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
   },
   {
-    categories: ["pro", "test1"],
+    categories: ["pro"],
     files: [
       {
         path: "ui/pip-control.tsx",
