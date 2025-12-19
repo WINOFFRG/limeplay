@@ -9,7 +9,6 @@ import { z } from "zod"
 
 import { registry } from "@/registry/collection/index"
 
-// Log level configuration
 type LogLevel = "debug" | "error" | "info" | "warn"
 const LOG_LEVEL: LogLevel = (process.env.LOG_LEVEL ?? "info") as LogLevel
 
@@ -42,16 +41,12 @@ const logger = {
 const STYLE = "default"
 const PRO_STYLE = "pro"
 const DEPRECATED_ITEMS = ["test"]
-// Get registry host from env variable or use default
 const REGISTRY_HOST = process.env.REGISTRY_HOST ?? "http://localhost:3000"
 const BASE_URL = `${REGISTRY_HOST}/r`
 const PRO_BASE_URL = `${REGISTRY_HOST}/r/pro`
 
 logger.info(`🌐 Using registry host: ${REGISTRY_HOST}`)
 
-// Registry tier type
-
-// Path mappings for automatic target generation
 const PATH_MAPPINGS = [
   {
     pattern: "blocks/",
@@ -232,7 +227,7 @@ function createRegistry(
   name = "winoffrg/limeplay"
 ): Registry {
   return {
-    homepage: "https://limeplay.winoffrg.com",
+    homepage: "https://limeplay.winoffrg.dev",
     items: z.array(registryItemSchema).parse(processRegistryItems(items)),
     name,
   }
@@ -397,23 +392,18 @@ function processRegistryItems(items: Registry["items"]): Registry["items"] {
   return items
     .filter((item) => !DEPRECATED_ITEMS.includes(item.name))
     .map((item) => {
-      // Process registry dependencies
       if (item.registryDependencies?.length) {
         item.registryDependencies = item.registryDependencies.map((dep) =>
           resolveRegistryDependency(dep)
         )
       }
 
-      // Add targets for files where needed
       if (item.files) {
         item.files = item.files.map((file) => {
-          // Skip string files
           if (typeof file === "string") return file
 
-          // Skip if target already exists
           if (file.target) return file
 
-          // Check against path mappings
           for (const mapping of PATH_MAPPINGS) {
             if (file.path.includes(mapping.pattern)) {
               const target = mapping.targetFn(file.path)
@@ -443,32 +433,25 @@ async function proRegistryExists(): Promise<boolean> {
     if (!stat.isDirectory()) return false
 
     const files = await fs.readdir(proUiPath)
-    // Has actual component files (not just .git, README, etc.)
     return files.some((f) => f.endsWith(".tsx") || f.endsWith(".ts"))
   } catch {
     return false
   }
 }
 
-// Function to convert dependency string to URL if it exists in registry
-// Function to convert dependency string to URL if it exists in registry
 function resolveRegistryDependency(dependency: string): string {
-  // Skip if already a URL
   if (typeof dependency !== "string" || dependency.startsWith("http")) {
     return dependency
   }
 
-  // Check if dependency exists in registry
   if (registryItemsMap.has(dependency)) {
     const item = registryItemsMap.get(dependency)
-    // If it's a pro item, check category
     if (isProItem(item!)) {
       return `${PRO_BASE_URL}/${dependency}.json`
     }
     return `${BASE_URL}/${dependency}.json`
   }
 
-  // Return original if not found
   return dependency
 }
 
@@ -482,12 +465,10 @@ async function runShadcnBuild(
       `bun x shadcn build ${registryFile} --output ${outputDir}`
     )
 
-    // Capture stdout
     proc.stdout?.on("data", (data) => {
       console.log(data)
     })
 
-    // Capture stderr
     proc.stderr?.on("data", (data) => {
       console.error(data)
     })
