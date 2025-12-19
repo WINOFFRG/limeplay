@@ -1,38 +1,60 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -e
 
-echo "Starting Vercel submodule setup..."
+echo "Starting Vercel submodule setup (Manual Clone Method)..."
 
-# Move to the repo root to perform git operations
-cd "$(git rev-parse --show-toplevel)"
+# Configuration
+SUBMODULE_PATH="apps/www/registry/pro"
+SUBMODULE_GITHUB_URL="github.com/WINOFFRG/limeplay-pro.git"
 
-# Check if GITHUB_REPO_CLONE_TOKEN is set
+# Verify Token
 if [[ -z "${GITHUB_REPO_CLONE_TOKEN:-}" ]]; then
   echo "Error: GITHUB_REPO_CLONE_TOKEN is not set."
-  echo "Please set this environment variable in Vercel project settings."
   exit 1
 fi
 
-# Configure git LOCALLY for this repository
-# Using --global in CI can be flaky or permission-restricted.
-# Local config (.git/config) is reliable for the current build.
-echo "Configuring git credential helper (local)..."
-# We unconfigure any previous settings just in case
-git config --unset-all url."https://x-access-token:${GITHUB_REPO_CLONE_TOKEN}@github.com/".insteadOf || true
+# Move to repo root
+cd "$(git rev-parse --show-toplevel)"
 
-# Set the replacement rules
-git config url."https://x-access-token:${GITHUB_REPO_CLONE_TOKEN}@github.com/".insteadOf "git@github.com:"
-git config url."https://x-access-token:${GITHUB_REPO_CLONE_TOKEN}@github.com/".insteadOf "https://github.com/"
+echo "Processing submodule: $SUBMODULE_PATH"
 
-# Debug: Print config to verify (masking token for safety if we wanted, but here just checking keys)
-echo "Active 'insteadOf' configurations:"
-git config --get-regexp "url\..*\.insteadOf" | sed "s/${GITHUB_REPO_CLONE_TOKEN}/[TOKEN]/g" || true
+# 1. Get the expected commit hash for the submodule
+# Output format: "-<commit> <path>" or "+<commit> <path>" or " <commit> <path>"
+# We use awk to extract the commit hash (column 1, stripping prefix symbols)
+SUBMODULE_STATUS=$(git submodule status "$SUBMODULE_PATH")
+COMMIT_HASH=$(echo "$SUBMODULE_STATUS" | awk '{print $1}' | sed 's/^[+\-]//')
 
-echo "Updating submodules..."
-# Sync resets submodule URLs in .git/config to match .gitmodules (which uses SSH)
-git submodule sync --recursive
+echo "Target commit: $COMMIT_HASH"
 
-# Update uses the URLs from .git/config, which will be intercepted by the insteadOf rule
-git submodule update --init --recursive
+if [[ -z "$COMMIT_HASH" ]]; then
+  echo "Error: Could not determine commit hash for $SUBMODULE_PATH"
+  exit 1
+fi
+
+# 2. Clone to a temporary directory
+TEMP_DIR="tmp_submodule_clone"
+rm -rf "$TEMP_DIR" || true
+mkdir -p "$TEMP_DIR"
+
+echo "Cloning $SUBMODULE_GITHUB_URL to temporary directory..."
+git clone --depth 1 "https://${GITHUB_REPO_CLONE_TOKEN}@${SUBMODULE_GITHUB_URL}" "$TEMP_DIR"
+
+# 3. Checkout the specific commit
+pushd "$TEMP_DIR" > /dev/null
+echo "Fetching specific commit: $COMMIT_HASH"
+git fetch origin "$COMMIT_HASH"
+git checkout "$COMMIT_HASH"
+popd > /dev/null
+
+# 4. Move files to the submodule path
+echo "Moving submodule files to $SUBMODULE_PATH..."
+rm -rf "$SUBMODULE_PATH"
+mkdir -p "$SUBMODULE_PATH"
+
+# Move content, excluding .git
+rsync -av --exclude='.git' "$TEMP_DIR/" "$SUBMODULE_PATH/"
+
+# 5. Cleanup
+rm -rf "$TEMP_DIR"
 
 echo "Submodule setup complete."
