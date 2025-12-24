@@ -17,16 +17,14 @@ export function PlaybackRateControl() {
           size="sm"
         />
       </Button>
-      <Select.SelectPositioner align="start" className="z-100">
-        <Select.SelectContent
-          className={`
-            min-w-24 backdrop-blur-md
-            dark:bg-accent
-          `}
-        >
-          <PlaybackRate.SelectGroup className={`tracking-wider`} />
-        </Select.SelectContent>
-      </Select.SelectPositioner>
+      <Select.SelectContent
+        className={`
+          min-w-24 backdrop-blur-md
+          dark:bg-accent
+        `}
+      >
+        <PlaybackRate.SelectGroup className={`tracking-wider`} />
+      </Select.SelectContent>
     </PlaybackRate.SelectRoot>
   )
 }
