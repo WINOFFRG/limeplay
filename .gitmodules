@@ -1,0 +1,3 @@
+[submodule "apps/www/registry/pro"]
+    path = apps/www/registry/pro
+    url = git@github.com:WINOFFRG/limeplay-pro.git
