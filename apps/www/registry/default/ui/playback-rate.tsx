@@ -12,10 +12,9 @@ import {
 import { usePlaybackRate } from "@/registry/default/hooks/use-playback-rate"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-export const SelectRoot = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<typeof SelectPrimitive>
->((props, _) => {
+export function SelectRoot(
+  props: React.ComponentProps<typeof SelectPrimitive>
+) {
   const playbackRate = useMediaStore((state) => state.playbackRate)
   const { setPlaybackRate } = usePlaybackRate()
 
@@ -26,51 +25,42 @@ export const SelectRoot = React.forwardRef<
       {...props}
     />
   )
-})
+}
 
 SelectRoot.displayName = "PlaybackRateSelectRoot"
 
-export const SelectTrigger = React.forwardRef<
-  HTMLButtonElement,
-  React.ComponentProps<typeof SelectTriggerPrimitive>
->((props, forwardedRef) => {
-  const playbackRate = useMediaStore((state) => state.playbackRate)
-
+export function SelectTrigger(
+  props: React.ComponentProps<typeof SelectTriggerPrimitive>
+) {
   return (
-    <SelectTriggerPrimitive ref={forwardedRef} {...props}>
-      <SelectValue
-        placeholder={playbackRate.toString()}
-        render={(_, { value }) => {
-          return <span>{value}x</span>
-        }}
-      />
+    <SelectTriggerPrimitive {...props}>
+      <SelectValue />
     </SelectTriggerPrimitive>
   )
-})
+}
 
 SelectTrigger.displayName = "PlaybackRateSelectTrigger"
 
-interface SelectGroupProps
-  extends React.ComponentProps<typeof SelectGroupPrimitive> {
+interface SelectGroupProps extends React.ComponentProps<
+  typeof SelectGroupPrimitive
+> {
   suffix?: string
 }
 
-export const SelectGroup = React.forwardRef<HTMLDivElement, SelectGroupProps>(
-  (props, forwardedRef) => {
-    const playbackRates = useMediaStore((state) => state.playbackRates)
-    const { suffix = "x" } = props
+export function SelectGroup(props: SelectGroupProps) {
+  const playbackRates = useMediaStore((state) => state.playbackRates)
+  const { suffix = "x" } = props
 
-    return (
-      <SelectGroupPrimitive ref={forwardedRef} {...props}>
-        {playbackRates.map((rate) => (
-          <SelectItem key={rate} value={rate.toString()}>
-            {rate}
-            {suffix && <span className="text-xs">{suffix}</span>}
-          </SelectItem>
-        ))}
-      </SelectGroupPrimitive>
-    )
-  }
-)
+  return (
+    <SelectGroupPrimitive {...props}>
+      {playbackRates.map((rate) => (
+        <SelectItem key={rate} value={rate.toString()}>
+          {rate}
+          {suffix && <span className="text-xs">{suffix}</span>}
+        </SelectItem>
+      ))}
+    </SelectGroupPrimitive>
+  )
+}
 
 SelectGroup.displayName = "PlaybackRateSelectGroup"
