@@ -17,7 +17,6 @@
     "@ai-sdk/react": "^2.0.93",
     "@base-ui/react": "^1.0.0",
     "@lottiefiles/dotlottie-react": "^0.14.4",
-    "@orama/orama": "^3.1.16",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-compose-refs": "^1.1.2",
