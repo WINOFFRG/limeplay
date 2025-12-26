@@ -49,10 +49,11 @@ interface SelectGroupProps extends React.ComponentProps<
 
 export function SelectGroup(props: SelectGroupProps) {
   const playbackRates = useMediaStore((state) => state.playbackRates)
-  const { suffix = "x" } = props
+  const { children, suffix = "x", ...etc } = props
 
   return (
-    <SelectGroupPrimitive {...props}>
+    <SelectGroupPrimitive {...etc}>
+      {children}
       {playbackRates.map((rate) => (
         <SelectItem key={rate} value={rate.toString()}>
           {rate}

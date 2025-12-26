@@ -1,29 +1,29 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import * as Select from "@/components/ui/select"
 import * as PlaybackRate from "@/registry/default/ui/playback-rate"
 
 export function PlaybackRateControl() {
   return (
     <PlaybackRate.SelectRoot>
-      <Button asChild size="icon" variant="ghost">
-        <PlaybackRate.SelectTrigger
-          className={`
-            border-none bg-transparent px-8 shadow-none
-            hover:bg-foreground/10
-            dark:bg-transparent dark:shadow-none
-          `}
-          size="sm"
-        />
-      </Button>
-      <Select.SelectContent
+      <Select.SelectTrigger
         className={`
-          min-w-24 backdrop-blur-md
-          dark:bg-accent
+          border-none bg-transparent shadow-none
+          hover:bg-foreground/10
+          dark:bg-transparent dark:shadow-none
         `}
+        size="sm"
       >
-        <PlaybackRate.SelectGroup className={`tracking-wider`} />
+        <Select.SelectValue />
+      </Select.SelectTrigger>
+      <Select.SelectContent
+        align="start"
+        className={`min-w-24 bg-background/60 backdrop-blur-md backdrop-saturate-[1.15]`}
+        position="popper"
+      >
+        <PlaybackRate.SelectGroup className={`tracking-wider`}>
+          <Select.SelectLabel>Playback Rate</Select.SelectLabel>
+        </PlaybackRate.SelectGroup>
       </Select.SelectContent>
     </PlaybackRate.SelectRoot>
   )

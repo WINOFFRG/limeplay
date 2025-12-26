@@ -1,9 +1,11 @@
 import { LinearMediaPlayer } from "@/registry/default/blocks/linear-player/components/media-player"
 
+import { ASSETS } from "./components/playlist"
+
 export default function Page() {
   return (
     <section className="flex h-dvh w-dvw bg-black">
-      <LinearMediaPlayer src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8" />
+      <LinearMediaPlayer config={ASSETS[0].config} src={ASSETS[0].src} />
     </section>
   )
 }
