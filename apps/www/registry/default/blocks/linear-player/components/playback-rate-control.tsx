@@ -18,8 +18,9 @@ export function PlaybackRateControl() {
       </Select.SelectTrigger>
       <Select.SelectContent
         align="start"
-        className={`min-w-24 bg-background/60 backdrop-blur-md backdrop-saturate-[1.15]`}
+        className={`dark min-w-24 bg-background/60 backdrop-blur-md backdrop-saturate-[1.15]`}
         position="popper"
+        side="left"
       >
         <PlaybackRate.SelectGroup className={`tracking-wider`}>
           <Select.SelectLabel>Playback Rate</Select.SelectLabel>
