@@ -120,7 +120,7 @@ export function Playlist() {
       <DropdownMenuContent
         align="end"
         alignOffset={-12}
-        className="w-sm p-2"
+        className="dark w-sm p-2"
         onPointerDown={handlePointerDown}
         side="top"
         sideOffset={24}
