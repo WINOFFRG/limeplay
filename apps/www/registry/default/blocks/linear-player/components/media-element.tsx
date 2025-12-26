@@ -4,27 +4,20 @@ import type shaka from "shaka-player"
 
 import { useEffect } from "react"
 
-import { ASSETS } from "@/registry/default/blocks/linear-player/lib/playlist"
 import { Media } from "@/registry/default/ui/media"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-export function MediaElement({
-  config,
-  src,
-}: {
+export type MediaElementProps = {
   config?: shaka.extern.PlayerConfiguration
-  src?: string
-}) {
+  src: string
+}
+
+export function MediaElement({ config, src }: MediaElementProps) {
   const player = useMediaStore((state) => state.player)
   const mediaRef = useMediaStore((state) => state.mediaRef)
 
   useEffect(() => {
     const mediaElement = mediaRef.current
-
-    if (!src || !config) {
-      src = ASSETS[0].src
-      config = ASSETS[0].config
-    }
 
     if (player && mediaElement) {
       if (src) {

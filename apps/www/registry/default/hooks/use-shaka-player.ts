@@ -41,13 +41,13 @@ export function useShakaPlayer() {
         return
       }
 
-      playerInstance.current = new shakaLib.Player()
+      playerInstance.current = new shakaLib.default.Player() as shaka.Player
       setPlayer(playerInstance.current)
 
       await playerInstance.current.attach(mediaElement)
 
       mediaElement.player = playerInstance.current
-      window.shaka = shakaLib
+      window.shaka = shakaLib.default as unknown as Window["shaka"]
     }
 
     void loadPlayer()

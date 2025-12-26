@@ -138,7 +138,7 @@ export function Playlist() {
             return (
               <DropdownMenuItem
                 className={`
-                  p-0 transition-colors
+                  dark p-0 transition-colors
                   ${
                     isCurrentAsset
                       ? "border-primary/20 bg-primary/10"

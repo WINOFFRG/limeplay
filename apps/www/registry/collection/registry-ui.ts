@@ -147,7 +147,7 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
   },
   {
-    dependencies: ["@base-ui-components/react"],
+    dependencies: ["@base-ui/react"],
     files: [
       {
         path: "ui/volume-control.tsx",
@@ -188,11 +188,7 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "playback-rate",
-    registryDependencies: [
-      "media-provider",
-      "use-playback-rate",
-      "@basecn/select",
-    ],
+    registryDependencies: ["media-provider", "use-playback-rate", "select"],
     type: "registry:ui",
   },
   {
@@ -232,7 +228,7 @@ export const ui: Registry["items"] = [
         "lp-timeline-track-height-active": "7px",
       },
     },
-    dependencies: ["@base-ui-components/react"],
+    dependencies: ["@base-ui/react"],
     files: [
       {
         path: "ui/timeline-control.tsx",
