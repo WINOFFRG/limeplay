@@ -188,11 +188,7 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "playback-rate",
-    registryDependencies: [
-      "media-provider",
-      "use-playback-rate",
-      "@basecn/select",
-    ],
+    registryDependencies: ["media-provider", "use-playback-rate"],
     type: "registry:ui",
   },
   {
