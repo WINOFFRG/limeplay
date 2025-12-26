@@ -1,5 +1,7 @@
 import React from "react"
 
+import type { MediaElementProps } from "@/registry/default/blocks/linear-player/components/media-element"
+
 import { cn } from "@/lib/utils"
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
 import { MediaElement } from "@/registry/default/blocks/linear-player/components/media-element"
@@ -11,16 +13,15 @@ import { MediaProvider } from "@/registry/default/ui/media-provider"
 import * as Layout from "@/registry/default/ui/player-layout"
 import { RootContainer } from "@/registry/default/ui/root-container"
 
-export interface LinearMediaPlayerProps {
+export interface LinearMediaPlayerProps extends MediaElementProps {
   className?: string
   debug?: boolean
-  src?: string
 }
 
 export const LinearMediaPlayer = React.forwardRef<
   HTMLDivElement,
   LinearMediaPlayerProps
->(({ className, debug = false }, ref) => {
+>(({ className, config, debug = false, src }, ref) => {
   return (
     <MediaProvider debug={debug}>
       <RootContainer
@@ -39,7 +40,7 @@ export const LinearMediaPlayer = React.forwardRef<
           <FallbackPoster className="bg-black">
             <LimeplayLogo />
           </FallbackPoster>
-          <MediaElement />
+          <MediaElement config={config} src={src} />
           <PlayerHooks />
           <Layout.ControlsOverlayContainer />
           <Layout.ControlsContainer className="pb-6">
