@@ -1,6 +1,6 @@
 "use client"
 
-import { Slider as SliderPrimitive } from "@base-ui-components/react/slider"
+import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 import React, { useImperativeHandle, useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
@@ -151,8 +151,9 @@ Progress.displayName = "VolumeProgress"
 
 export type VolumeThumbPropsDocs = Pick<ThumbProps, "showVolumeText">
 
-interface ThumbProps
-  extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Thumb> {
+interface ThumbProps extends React.ComponentPropsWithoutRef<
+  typeof SliderPrimitive.Thumb
+> {
   /**
    * Whether to show volume percentage as aria text
    * @default true

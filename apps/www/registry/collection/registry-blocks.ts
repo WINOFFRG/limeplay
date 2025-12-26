@@ -7,7 +7,7 @@ export const blocks: Registry["items"] = [
     author: "Rohan Gupta (@winoffrg)",
     dependencies: [
       "@phosphor-icons/react",
-      "@base-ui-components/react",
+      "@base-ui/react",
       "@radix-ui/react-toggle",
       "zustand",
       "shaka-player",
