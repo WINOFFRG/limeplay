@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useAnimationControls } from "motion/react"
+import { motion, useAnimationControls, useReducedMotion } from "motion/react"
 import Link from "next/link"
 import { useRef } from "react"
 
@@ -19,6 +19,8 @@ export function NavTabs({ tabs }: NavTabsProps) {
   const navContainerRef = useRef<HTMLElement>(null)
   const hoveredElementRef = useRef<HTMLElement | null>(null)
   const animationControls = useAnimationControls()
+
+  const shouldReduceMotion = useReducedMotion()
 
   const handleMouseEnter = async (target: HTMLElement) => {
     if (!navContainerRef.current) return
@@ -41,11 +43,11 @@ export function NavTabs({ tabs }: NavTabsProps) {
       })
     } else {
       animationControls.set({
-        filter: "blur(2px)",
+        filter: shouldReduceMotion ? "blur(0px)" : "blur(2px)",
         height: "100%",
         left: `${leftOffset}px`,
         opacity: 0,
-        scale: 1.5,
+        scale: shouldReduceMotion ? 1 : 1.5,
         transformOrigin: "center",
         width: `${targetRect.width}px`,
       })
@@ -66,9 +68,9 @@ export function NavTabs({ tabs }: NavTabsProps) {
   const handleMouseLeave = () => {
     hoveredElementRef.current = null
     animationControls.start({
-      filter: "blur(2px)",
+      filter: shouldReduceMotion ? "blur(0px)" : "blur(2px)",
       opacity: 0,
-      scale: 1.5,
+      scale: shouldReduceMotion ? 1 : 1.5,
       transition: { duration: 0.3, ease: "easeOut" },
     })
   }

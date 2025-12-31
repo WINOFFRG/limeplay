@@ -42,7 +42,7 @@ const buttonVariants = cva(
           bg-primary text-primary-foreground
           hover:bg-primary/90
         `,
-        ghost: `hover:bg-background/80 hover:text-foreground hover:ring hover:ring-tertiary`,
+        ghost: `hover:bg-background/80 hover:text-foreground`,
         glass: `
           bg-transparent
           hover:bg-primary/10

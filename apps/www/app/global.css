@@ -33,7 +33,7 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
+  --border: oklch(0.9 .003 63.23);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --sidebar: oklch(0.985 0 0);
@@ -47,10 +47,6 @@
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --surface: oklch(0.98 0 0);
-
-  /* Custom */
-
-  --tertiary: oklch(90% .003 63.23);
 
   /* Limeplay Static */
   --lp-timeline-track-height: 4px;
@@ -162,7 +158,6 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-surface: var(--surface);
-  --color-tertiary: var(--tertiary);
 
   /* Limeplay */
   --color-outline: var(--lp-outline-color);
@@ -265,4 +260,3 @@
 @utility animate-blur-fade-slide-in {
   animation: blur-fade-slide-in 0.6s ease-out forwards;
 }
-

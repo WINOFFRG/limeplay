@@ -26,8 +26,8 @@ export default function Home() {
       <div className="mx-auto w-full px-page">
         <div
           className={`
-            z-1 mx-auto h-10 w-full max-w-5xl border-x border-b border-tertiary bg-linear-to-r
-            bg-[repeating-linear-gradient(-45deg,var(--color-tertiary),var(--color-tertiary)_1px,transparent_1px,transparent_6px)] ring-tertiary
+            z-1 mx-auto h-10 w-full max-w-5xl border-x border-b bg-linear-to-r
+            bg-[repeating-linear-gradient(-45deg,var(--color-border),var(--color-border)_1px,transparent_1px,transparent_6px)] ring-border
             md:h-16
           `}
         />
@@ -36,8 +36,8 @@ export default function Home() {
       <div className="mx-auto w-full px-page">
         <div
           className={`
-            z-1 mx-auto h-10 w-full max-w-5xl border-x border-t border-tertiary
-            bg-[repeating-linear-gradient(-45deg,var(--color-tertiary),var(--color-tertiary)_1px,transparent_1px,transparent_6px)] ring-tertiary
+            z-1 mx-auto h-10 w-full max-w-5xl border-x border-t
+            bg-[repeating-linear-gradient(-45deg,var(--color-border),var(--color-border)_1px,transparent_1px,transparent_6px)] ring-border
             md:h-16
           `}
         />
