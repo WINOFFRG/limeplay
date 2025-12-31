@@ -19,7 +19,7 @@ export function VideoBackground() {
   return (
     <motion.div
       animate={{ opacity: 1 }}
-      className="pointer-events-none fixed inset-0 z-0 transform-gpu overflow-hidden will-change-transform select-none"
+      className="pointer-events-none fixed inset-0 z-0 transform-gpu overflow-hidden select-none"
       initial={{ opacity: 0 }}
       style={{ opacity, scale }}
       transition={{

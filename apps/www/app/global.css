@@ -5,17 +5,18 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --safe-area-inset-left: max(env(safe-area-inset-left), 24px);
-  --safe-area-inset-right: max(env(safe-area-inset-right), 24px);
-  --page-padding-inline: 24px;
-  --page-padding-left: max(
+  --safe-area-inset-left: max(env(safe-area-inset-left), 1rem);
+  --safe-area-inset-right: max(env(safe-area-inset-right), 1rem);
+  --page-padding-inline: 1rem;
+
+  --page-padding: max(
     var(--safe-area-inset-left),
     var(--page-padding-inline)
-  );
-  --page-padding-right: max(
+  ) max(
     var(--safe-area-inset-right),
     var(--page-padding-inline)
   );
+
   --radius: 0.625rem;
   --speed-regularTransition: 150ms;
   --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -46,6 +47,10 @@
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --surface: oklch(0.98 0 0);
+
+  /* Custom */
+
+  --tertiary: oklch(90% .003 63.23);
 
   /* Limeplay Static */
   --lp-timeline-track-height: 4px;
@@ -157,6 +162,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-surface: var(--surface);
+  --color-tertiary: var(--tertiary);
 
   /* Limeplay */
   --color-outline: var(--lp-outline-color);
@@ -192,6 +198,22 @@
     30%,
     60% {
       background-position: calc(100% + var(--shiny-width)) 0;
+    }
+  }
+
+  --animate-blur-fade-slide-in: blur-fade-slide-in 0.6s ease-out forwards;
+  --padding-page: var(--page-padding);
+
+  @keyframes blur-fade-slide-in {
+    0% {
+      opacity: 0;
+      filter: blur(10px);
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
     }
   }
 }
@@ -239,3 +261,8 @@
     display: none;
   }
 }
+
+@utility animate-blur-fade-slide-in {
+  animation: blur-fade-slide-in 0.6s ease-out forwards;
+}
+

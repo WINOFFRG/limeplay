@@ -1,8 +1,7 @@
-import Script from "next/script"
+// import Script from "next/script"
 
-import { baseOptions, HEADER_LINKS } from "@/app/layout.config"
-import { Header } from "@/components/layouts/header"
-import { slot } from "@/components/layouts/shared"
+import { Footer } from "@/components/footer"
+import { Header } from "@/components/header"
 import { VideoBackground } from "@/components/video-background"
 
 export default function RootLayout({
@@ -12,23 +11,21 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      {process.env.NODE_ENV === "development" && (
+      {/* {process.env.NODE_ENV === "development" && (
         <Script
           crossOrigin="anonymous"
           src="//unpkg.com/react-scan/dist/auto.global.js"
         />
-      )}
+      )} */}
       <main
         className={
-          "w-dvw bg-linear-to-br from-slate-50 via-amber-50 to-neutral-200"
+          "w-dvw overscroll-contain bg-linear-to-br from-slate-50 to-neutral-200"
         }
       >
         <VideoBackground />
-        {slot(
-          baseOptions.nav,
-          <Header links={HEADER_LINKS} nav={baseOptions.nav} />
-        )}
+        <Header />
         {children}
+        <Footer />
       </main>
     </>
   )

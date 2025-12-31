@@ -1,64 +1,41 @@
 import Link from "next/link"
 
-const links = [
-  {
-    href: "https://x.com/winoffrg",
-    title: "X",
-  },
-  {
-    href: "https://github.com/winoffrg/limeplay",
-    title: "Github",
-  },
-  {
-    href: "/docs/components",
-    title: "Components",
-  },
-  {
-    href: "/docs/quick-start",
-    title: "Get Started",
-  },
-  {
-    href: "/blocks",
-    title: "Blocks",
-  },
-]
+import { Button } from "@/components/ui/button"
 
 export function Footer() {
   return (
-    <footer
-      className={`
-        border-b bg-white py-12
-        dark:bg-transparent
-      `}
-    >
-      <div className="mx-auto max-w-5xl px-6">
-        <div className="flex flex-wrap justify-between gap-6">
-          <span
-            className={`
-              order-last block text-center text-sm text-muted-foreground
-              md:order-first
-            `}
-          >
-            © {new Date().getFullYear()} Limeplay, All rights reserved
-          </span>
-          <div
-            className={`
-              order-first flex flex-wrap justify-center gap-6 text-sm
-              md:order-last
-            `}
-          >
-            {links.map((link, index) => (
+    <footer className="mx-auto w-full border-t border-tertiary px-4">
+      <div className="relative z-1 mx-auto w-full max-w-5xl border-x border-tertiary">
+        <div
+          className={`
+            flex w-full flex-col items-center gap-6 py-12
+            md:py-20
+          `}
+        >
+          <div className="flex flex-row items-center gap-2">
+            <Button asChild size="xs" variant="ghost">
               <Link
-                className={`
-                  block text-muted-foreground duration-150
-                  hover:text-black
-                `}
-                href={link.href}
-                key={index}
+                href="https://limeplay.userjot.com"
+                rel="noopener noreferrer"
+                target="_blank"
               >
-                <span>{link.title}</span>
+                Give Feedback
               </Link>
-            ))}
+            </Button>
+            <Button asChild size="xs" variant="ghost">
+              <Link
+                href="https://x.com/winoffrg"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Reach out on X
+              </Link>
+            </Button>
+          </div>
+          <div className="flex flex-row items-center gap-2">
+            <p className="text-xs font-medium text-muted-foreground">
+              © {new Date().getFullYear()} Limeplay
+            </p>
           </div>
         </div>
       </div>

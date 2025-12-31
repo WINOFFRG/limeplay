@@ -1,7 +1,6 @@
 import { Suspense } from "react"
 
-import { Features } from "@/components/features"
-import { Footer } from "@/components/footer"
+import { FeatureGrid } from "@/components/features"
 import { Hero } from "@/components/hero"
 import { ImmersiveScrollPlayer } from "@/components/immersive-scroll-player"
 import { PlayerContainer } from "@/components/player-container"
@@ -10,24 +9,39 @@ import { ScrollIndicator } from "@/components/scroll-indicator"
 export default function Home() {
   return (
     <>
-      <section>
-        <Hero />
-        <ImmersiveScrollPlayer>
-          <Suspense
-            fallback={
-              <div
-                aria-hidden="true"
-                className="aspect-video w-full animate-pulse"
-              />
-            }
-          >
-            <PlayerContainer />
-          </Suspense>
-        </ImmersiveScrollPlayer>
-        <ScrollIndicator />
-        <Features />
-      </section>
-      <Footer />
+      <Hero />
+      <ImmersiveScrollPlayer>
+        <Suspense
+          fallback={
+            <div
+              aria-hidden="true"
+              className="aspect-video w-full animate-pulse"
+            />
+          }
+        >
+          <PlayerContainer />
+        </Suspense>
+      </ImmersiveScrollPlayer>
+      <ScrollIndicator />
+      <div className="mx-auto w-full px-page">
+        <div
+          className={`
+            z-1 mx-auto h-10 w-full max-w-5xl border-x border-b border-tertiary bg-linear-to-r
+            bg-[repeating-linear-gradient(-45deg,var(--color-tertiary),var(--color-tertiary)_1px,transparent_1px,transparent_6px)] ring-tertiary
+            md:h-16
+          `}
+        />
+      </div>
+      <FeatureGrid />
+      <div className="mx-auto w-full px-page">
+        <div
+          className={`
+            z-1 mx-auto h-10 w-full max-w-5xl border-x border-t border-tertiary
+            bg-[repeating-linear-gradient(-45deg,var(--color-tertiary),var(--color-tertiary)_1px,transparent_1px,transparent_6px)] ring-tertiary
+            md:h-16
+          `}
+        />
+      </div>
     </>
   )
 }
