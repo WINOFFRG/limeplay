@@ -51,7 +51,7 @@ export const Icons = {
   ),
   shadcn: (props: IconProps) => (
     <svg
-      className="inline text-background"
+      className="inline"
       fill="none"
       height="16"
       viewBox="0 0 256 256"
