@@ -38,7 +38,7 @@ const features: {
   },
   {
     description:
-      "Simple & intutive APIs, easy state management for a smooth developer experience.",
+      "Simple & intuitive APIs, easy state management for a smooth developer experience.",
     icon: CodeIcon,
     title: "DX",
   },
@@ -52,8 +52,8 @@ const features: {
 
 export function FeatureGrid() {
   return (
-    <div className="z-10 mx-auto w-full px-page ring-1 ring-tertiary">
-      <div className="relative z-1 mx-auto w-full max-w-5xl border-x border-tertiary">
+    <div className="z-10 mx-auto w-full px-page ring-1 ring-border">
+      <div className="relative z-1 mx-auto w-full max-w-5xl border-x border-border">
         <div className="w-full">
           <div
             className={`
@@ -65,7 +65,7 @@ export function FeatureGrid() {
             {features.map((feature, index) => (
               <div
                 className={`
-                  relative flex animate-blur-fade-slide-in flex-col gap-2 p-6 opacity-0 ring-[0.5px] ring-tertiary will-change-transform
+                  relative flex animate-blur-fade-slide-in flex-col gap-2 p-6 opacity-0 ring-[0.5px] ring-border will-change-transform
                   md:p-8
                 `}
                 key={feature.title}

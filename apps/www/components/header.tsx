@@ -28,10 +28,10 @@ const navLinks = [
 export function Header() {
   return (
     <header
-      className={`top-0 right-0 left-0 z-20 flex w-full flex-row items-center justify-center border-b border-tertiary px-page backdrop-blur-xl`}
+      className={`top-0 right-0 left-0 z-20 flex w-full flex-row items-center justify-center border-b border-border px-page backdrop-blur-xl`}
     >
       <div
-        className={`relative z-1 mx-auto flex w-full max-w-5xl origin-center flex-row items-center justify-center border-x border-tertiary py-3`}
+        className={`relative z-1 mx-auto flex w-full max-w-5xl origin-center flex-row items-center justify-center border-x border-border py-3`}
       >
         <div className="z-300 flex w-full max-w-5xl shrink-0 flex-row items-center justify-between gap-2 rounded-lg px-2">
           <Link className="flex flex-1 shrink-0 px-1" href="/">
@@ -48,7 +48,7 @@ export function Header() {
           <div className="flex flex-1 items-center justify-end gap-2 px-0">
             <Button
               className={`
-                hidden h-7 gap-1.5 rounded-md bg-background px-2.5 text-sm font-medium text-foreground/90 ring ring-tertiary
+                hidden h-7 gap-1.5 rounded-md bg-background px-2.5 text-sm font-medium text-foreground/90 ring ring-border
                 hover:bg-background hover:text-foreground
                 md:flex
               `}
@@ -91,7 +91,7 @@ export function Header() {
                   <div className="grid grid-cols-2 gap-2">
                     <Button
                       className={`
-                        h-9 gap-1.5 rounded-md bg-background px-2.5 text-sm font-medium text-foreground/90 ring ring-tertiary
+                        h-9 gap-1.5 rounded-md bg-background px-2.5 text-sm font-medium text-foreground/90 ring ring-border
                         hover:bg-background hover:text-foreground
                       `}
                       disabled
