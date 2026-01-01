@@ -49,7 +49,7 @@ export function Hero() {
               &nbsp;
               <Link
                 className={`
-                  underline underline-offset-2 transition-colors
+                  rounded-sm underline underline-offset-2 focus-ring transition-colors
                   hover:text-foreground
                 `}
                 href={"https://github.com/shaka-project/shaka-player/"}
@@ -62,7 +62,7 @@ export function Hero() {
               <Icons.shadcn />
               <Link
                 className={`
-                  underline underline-offset-2 transition-colors
+                  rounded-sm underline underline-offset-2 focus-ring transition-colors
                   hover:text-foreground
                 `}
                 href={"https://ui.shadcn.com/"}
