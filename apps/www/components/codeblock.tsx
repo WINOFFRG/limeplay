@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils"
 import { CopyButton } from "./copy-button"
 
 export interface CodeBlockProps extends ComponentProps<"figure"> {
-  Actions?: (props: { children?: ReactNode; className?: string; }) => ReactNode
+  Actions?: (props: { children?: ReactNode; className?: string }) => ReactNode
 
   /**
    * Allow to copy code with copy button

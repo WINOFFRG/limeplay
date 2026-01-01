@@ -18,7 +18,7 @@ export function PlaybackRateControl() {
       </Select.SelectTrigger>
       <Select.SelectContent
         align="start"
-        className={`dark min-w-24 bg-background/60 backdrop-blur-md backdrop-saturate-[1.15]`}
+        className={`dark min-w-24 border border-border bg-background/70 backdrop-blur-md backdrop-saturate-[1.15]`}
         position="popper"
         side="top"
       >
