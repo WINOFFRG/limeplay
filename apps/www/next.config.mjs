@@ -6,6 +6,9 @@ const withMDX = createMDX({})
  * @type {import('next').NextConfig}
  */
 const config = {
+  experimental: {
+    turbopackFileSystemCacheForDev: true,
+  },
   images: {
     unoptimized: true,
   },

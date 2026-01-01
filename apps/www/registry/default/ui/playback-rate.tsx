@@ -41,9 +41,8 @@ export function SelectTrigger(
 
 SelectTrigger.displayName = "PlaybackRateSelectTrigger"
 
-interface SelectGroupProps extends React.ComponentProps<
-  typeof SelectGroupPrimitive
-> {
+interface SelectGroupProps
+  extends React.ComponentProps<typeof SelectGroupPrimitive> {
   suffix?: string
 }
 

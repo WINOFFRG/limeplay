@@ -1,14 +1,11 @@
-import type { LinkItemType } from "fumadocs-ui/layouts/shared"
+import type { BaseLayoutProps, LinkItemType } from "fumadocs-ui/layouts/shared"
 
 import {
   BlueprintIcon,
-  BookIcon,
   QuestionIcon,
   SparkleIcon,
 } from "@phosphor-icons/react/dist/ssr"
 import Image from "next/image"
-
-import type { BaseLayoutProps } from "@/components/layouts/shared"
 
 import { Icons } from "@/components/icons"
 import { DISCORD_URL, GITHUB_URL, PRODUCT_NAME } from "@/lib/constants"
@@ -81,18 +78,3 @@ export const baseOptions: BaseLayoutProps = {
     ),
   },
 }
-
-export const HEADER_LINKS: LinkItemType[] = [
-  {
-    icon: <BookIcon />,
-    text: "Documentation",
-    type: "main",
-    url: "/docs/quick-start",
-  },
-  {
-    text: "Blocks",
-    type: "main",
-    url: "/blocks",
-  },
-  ...COMMON_LINKS,
-]

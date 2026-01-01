@@ -3,25 +3,19 @@ import "@/app/global.css"
 import type { Metadata } from "next"
 import type { ReactNode } from "react"
 
+import { UserJotProvider } from "@userjot/next"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { ThemeProvider } from "next-themes"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Inter } from "next/font/google"
 
 import { JsonLd } from "@/components/json-ld"
 import { PRODUCT_DESCRIPTION, PRODUCT_NAME } from "@/lib/constants"
 
-const geist = Geist({
+const inter = Inter({
   display: "swap",
   preload: true,
   subsets: ["latin"],
   variable: "--font-sans",
-})
-
-const mono = Geist_Mono({
-  display: "swap",
-  subsets: ["latin"],
-  variable: "--font-mono",
 })
 
 export const metadata: Metadata = {
@@ -78,25 +72,15 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <html
-      className={`
-        ${geist.variable}
-        ${mono.variable}
-      `}
-      lang="en"
-      suppressHydrationWarning
-    >
+    <html className={inter.className} lang="en" suppressHydrationWarning>
+      <head>
+        <UserJotProvider projectId="cmjs634l4043b15ldylgedgwi" />
+      </head>
       <body className="antialiased">
         <JsonLd />
         <Analytics />
         <SpeedInsights />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          storageKey="limeplay-ui-theme"
-        >
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   )
