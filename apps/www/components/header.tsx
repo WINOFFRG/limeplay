@@ -34,7 +34,10 @@ export function Header() {
         className={`relative z-1 mx-auto flex w-full max-w-5xl origin-center flex-row items-center justify-center border-x border-border py-3`}
       >
         <div className="z-300 flex w-full max-w-5xl shrink-0 flex-row items-center justify-between gap-2 rounded-lg px-2">
-          <Link className="flex flex-1 shrink-0 px-1" href="/">
+          <Link
+            className="flex flex-1 shrink-0 rounded-sm px-1 focus-ring"
+            href="/"
+          >
             <LimeplayLogo className="size-6! shrink-0 text-foreground/80" />
           </Link>
           <div
@@ -78,7 +81,7 @@ export function Header() {
                   {navLinks.map((link) => (
                     <Link
                       className={`
-                        text-sm font-medium transition-colors
+                        rounded-sm text-sm font-medium focus-ring transition-colors
                         hover:text-primary
                       `}
                       href={link.href}

@@ -10,28 +10,6 @@
     max(env(safe-area-inset-right), var(--page-padding-inline));
 }
 
-.dark {
-  --background-image-lp-controls-fade: linear-gradient(
-    to bottom,
-    hsla(0, 0%, 0%, 0) 0%,
-    hsla(0, 0%, 0%, 0.009) 8.1%,
-    hsla(0, 0%, 0%, 0.035) 15.5%,
-    hsla(0, 0%, 0%, 0.074) 22.5%,
-    hsla(0, 0%, 0%, 0.125) 29%,
-    hsla(0, 0%, 0%, 0.184) 35.3%,
-    hsla(0, 0%, 0%, 0.25) 41.2%,
-    hsla(0, 0%, 0%, 0.32) 47.1%,
-    hsla(0, 0%, 0%, 0.39) 52.9%,
-    hsla(0, 0%, 0%, 0.46) 58.8%,
-    hsla(0, 0%, 0%, 0.526) 64.7%,
-    hsla(0, 0%, 0%, 0.585) 71%,
-    hsla(0, 0%, 0%, 0.636) 77.5%,
-    hsla(0, 0%, 0%, 0.675) 84.5%,
-    hsla(0, 0%, 0%, 0.701) 91.9%,
-    hsla(0, 0%, 0%, 0.71) 100%
-  );
-}
-
 @theme inline {
   --animate-blur-fade-slide-in: blur-fade-slide-in 0.6s ease-out forwards;
   --padding-page: var(--page-padding);
@@ -61,4 +39,8 @@
 
 @utility animate-blur-fade-slide-in {
   animation: blur-fade-slide-in 0.6s ease-out forwards;
+}
+
+@utility focus-ring {
+  @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50
 }

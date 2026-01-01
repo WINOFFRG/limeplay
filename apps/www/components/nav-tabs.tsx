@@ -90,7 +90,7 @@ export function NavTabs({ tabs }: NavTabsProps) {
           <li key={tab.label}>
             <Link
               className={`
-                flex h-7 items-center gap-2 rounded-full px-3 text-sm font-medium text-foreground/70 transition-colors duration-200
+                flex h-7 items-center gap-2 rounded-full px-3 text-sm font-medium text-foreground/70 focus-ring transition-colors duration-200
                 hover:text-foreground
               `}
               href={tab.href}

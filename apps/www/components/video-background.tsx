@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform } from "motion/react"
 import Image from "next/image"
 
-import ShadowOverlay28 from "@/public/shadow-overlays-028.png"
+import ShadowOverlay28 from "@/public/shadow-overlays-087.png"
 
 export function VideoBackground() {
   const { scrollYProgress } = useScroll()
@@ -41,16 +41,16 @@ export function VideoBackground() {
         }}
       >
         <Image
-          alt="Tree shadow"
+          alt="shadow page background"
           className={`
-            size-full object-cover opacity-50 mix-blend-multiply blur-xs
+            size-full object-cover opacity-25 mix-blend-multiply
             sm:scale-120 sm:object-fill
           `}
           priority
           quality={75}
           src={ShadowOverlay28}
           style={{
-            transform: "translate3d(-8%, -3%, 0)",
+            transform: "translate3d(-5%, -3%, 0)",
           }}
         />
       </motion.div>
