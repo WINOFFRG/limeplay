@@ -83,7 +83,7 @@ export function BlockViewerFileTree() {
   }
 
   return (
-    <SidebarProvider className="flex !min-h-full w-full flex-col border-r border-border bg-background">
+    <SidebarProvider className="flex min-h-full! w-full flex-col border-r border-border bg-background">
       <Sidebar className="w-full flex-1 bg-card" collapsible="none">
         <SidebarGroupLabel className="h-12 rounded-none border-b border-border px-4 text-sm font-medium text-foreground">
           Files
@@ -340,7 +340,7 @@ function BlockViewerToolbar() {
           <ToggleGroup
             className={`
               gap-1
-              *:data-[slot=toggle-group-item]:!size-6 *:data-[slot=toggle-group-item]:!rounded-sm
+              *:data-[slot=toggle-group-item]:size-6! *:data-[slot=toggle-group-item]:rounded-sm!
             `}
             defaultValue="100"
             onValueChange={(value) => {
@@ -453,7 +453,7 @@ function BlockViewerView() {
         <ResizablePanelGroup
           className={`
             relative z-10
-            after:absolute after:inset-0 after:right-3 after:z-0 after:rounded-xl after:bg-surface/50
+            after:absolute after:inset-0 after:right-3 after:z-0 after:rounded-xl after:bg-background/50
           `}
           direction="horizontal"
         >
@@ -483,7 +483,7 @@ function BlockViewerView() {
   )
 }
 
-function Tree({ index, item }: { index: number; item: FileTree; }) {
+function Tree({ index, item }: { index: number; item: FileTree }) {
   const { activeFile, setActiveFile } = useBlockViewer()
 
   if (!item.children) {

@@ -29,14 +29,14 @@ export function PlayerContainer() {
       <LinearMediaPlayer
         className={cn(
           `
-            mx-auto w-[calc(100%-2rem)] overflow-hidden
+            dark mx-auto w-[calc(100%-2rem)] overflow-hidden rounded-sm
             sm:mx-2 sm:w-full
-            md:mx-0
+            md:mx-0 md:rounded-none
           `,
           isMobilePortrait &&
             `
               bg-black/90
-              [&_[data-layout-type='player-container']]:hidden
+              **:data-[layout-type='player-container']:hidden
             `
         )}
         debug={debug}

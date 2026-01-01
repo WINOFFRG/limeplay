@@ -57,7 +57,7 @@ export function ImmersiveScrollPlayer({
   if (isMobile) {
     return (
       <div className="relative w-full" ref={containerRef}>
-        <div className="aspect-video w-full">{children}</div>
+        {children}
       </div>
     )
   }

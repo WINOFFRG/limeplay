@@ -13,16 +13,14 @@ export default function HeroButtons() {
   return (
     <div
       className={`
-        flex flex-col items-center justify-center gap-3
-        sm:gap-3
-        md:flex-row md:gap-2
+        flex flex-col items-center justify-center gap-8
+        md:flex-row md:gap-4
       `}
     >
       <motion.div
         className={`
-          group relative flex h-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-neutral-800/20 font-mono text-slate-700
-          backdrop-blur-lg
-          sm:h-11
+          group relative flex h-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-foreground/15 font-mono text-foreground/70
+          focus-ring backdrop-blur-sm
           md:h-12
         `}
         initial={{ padding: "0px 20px" }}
@@ -79,25 +77,25 @@ export default function HeroButtons() {
           </span>
         </div>
       </motion.div>
-      <Link href="/docs/quick-start">
-        <motion.div
-          className={`
-            hidden h-12 w-fit cursor-pointer items-center justify-center rounded-xl bg-neutral-600 text-sm font-medium
-            hover:bg-neutral-700
-            md:flex
-          `}
-          initial={{ padding: "0px 20px" }}
-          transition={{
-            bounce: 0.6,
-            duration: 1,
-            type: "spring",
-          }}
-          whileHover={{ padding: "0px 32px" }}
-          whileTap={{ padding: "0px 20px" }}
-        >
+      <motion.div
+        className={`
+          hidden h-12 w-fit cursor-pointer items-center justify-center rounded-xl bg-primary text-sm font-medium text-primary-foreground focus-ring
+          hover:bg-primary/90
+          md:flex
+        `}
+        initial={{ padding: "0px 20px" }}
+        transition={{
+          bounce: 0.6,
+          duration: 1,
+          type: "spring",
+        }}
+        whileHover={{ padding: "0px 32px" }}
+        whileTap={{ padding: "0px 20px" }}
+      >
+        <Link href="/docs/quick-start" tabIndex={-1}>
           Quick Start
-        </motion.div>
-      </Link>
+        </Link>
+      </motion.div>
     </div>
   )
 }

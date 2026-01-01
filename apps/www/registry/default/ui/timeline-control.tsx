@@ -78,7 +78,7 @@ export const Root = React.forwardRef<
       aria-label="Timeline Slider"
       className={cn(
         `
-          relative h-1 rounded-full transition-[height] duration-(--speed-regularTransition) ease-out-quad
+          relative h-1 rounded-full transition-[height] duration-150 ease-out-quad
           data-[orientation=horizontal]:h-(--lp-timeline-track-height)
           active:data-[orientation=horizontal]:h-(--lp-timeline-track-height-active)
         `,
@@ -154,9 +154,8 @@ export type TimelineThumbPropsDocs = Pick<
   "position" | "showWithHover"
 >
 
-interface BufferedProps extends React.ComponentProps<
-  typeof SliderPrimitive.Track
-> {
+interface BufferedProps
+  extends React.ComponentProps<typeof SliderPrimitive.Track> {
   /**
    * How to render buffered ranges
    * - "default": Show each buffered range separately
@@ -167,9 +166,8 @@ interface BufferedProps extends React.ComponentProps<
   variant?: "combined" | "default" | "from-zero"
 }
 
-interface ThumbProps extends React.ComponentProps<
-  typeof SliderPrimitive.Thumb
-> {
+interface ThumbProps
+  extends React.ComponentProps<typeof SliderPrimitive.Thumb> {
   /**
    * Custom position of the thumb in percentage
    */

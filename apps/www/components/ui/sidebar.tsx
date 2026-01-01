@@ -671,11 +671,12 @@ function SidebarMenuButton({
   tooltip,
   variant = "default",
   ...props
-}: React.ComponentProps<"button"> & VariantProps<typeof sidebarMenuButtonVariants> & {
-  asChild?: boolean
-  isActive?: boolean
-  tooltip?: React.ComponentProps<typeof TooltipContent> | string
-}) {
+}: React.ComponentProps<"button"> &
+  VariantProps<typeof sidebarMenuButtonVariants> & {
+    asChild?: boolean
+    isActive?: boolean
+    tooltip?: React.ComponentProps<typeof TooltipContent> | string
+  }) {
   const Comp = asChild ? Slot : "button"
   const { isMobile, state } = useSidebar()
 
