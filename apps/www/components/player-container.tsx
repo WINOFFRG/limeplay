@@ -36,7 +36,7 @@ export function PlayerContainer() {
           isMobilePortrait &&
             `
               bg-black/90
-              [&_[data-layout-type='player-container']]:hidden
+              **:data-[layout-type='player-container']:hidden
             `
         )}
         debug={debug}

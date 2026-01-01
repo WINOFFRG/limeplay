@@ -151,9 +151,8 @@ Progress.displayName = "VolumeProgress"
 
 export type VolumeThumbPropsDocs = Pick<ThumbProps, "showVolumeText">
 
-interface ThumbProps extends React.ComponentPropsWithoutRef<
-  typeof SliderPrimitive.Thumb
-> {
+interface ThumbProps
+  extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Thumb> {
   /**
    * Whether to show volume percentage as aria text
    * @default true

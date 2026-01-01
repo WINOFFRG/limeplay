@@ -21,7 +21,7 @@ export function TimelineLabelsDemo() {
             </TimelineControlPrimitive.Track>
             <TimelineControlPrimitive.Thumb
               className={`
-                absolute h-8 w-px rounded-full bg-primary/60 opacity-0 transition-opacity duration-(--lp-transition-speed-regular)
+                absolute h-8 w-px rounded-full bg-primary/60 opacity-0 transition-opacity duration-300
                 group-hover/timeline:opacity-100
                 group-active/timeline:bg-primary
               `}

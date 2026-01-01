@@ -30,7 +30,7 @@ export function TimelineSliderControl() {
           </TimelineSlider.Track>
           <TimelineSlider.Thumb
             className={`
-              absolute h-8 w-px rounded-full bg-primary/60 opacity-0 transition-opacity duration-(--lp-transition-speed-regular)
+              absolute h-8 w-px rounded-full bg-primary/60 opacity-0 transition-opacity duration-300
               group-hover/timeline:opacity-100
               group-active/timeline:bg-white
             `}
@@ -38,8 +38,7 @@ export function TimelineSliderControl() {
           />
           <TimelineSlider.Thumb
             className={`
-              top-auto! bottom-[calc(100%+16px)] flex h-auto w-fit bg-transparent text-xs font-medium opacity-0 transition-opacity
-              duration-(--lp-transition-speed-regular)
+              top-auto! bottom-[calc(100%+16px)] flex h-auto w-fit bg-transparent text-xs font-medium opacity-0 transition-opacity duration-300
               group-hover/timeline:opacity-100
             `}
             showWithHover
