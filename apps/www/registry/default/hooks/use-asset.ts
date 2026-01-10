@@ -113,15 +113,17 @@ export function useAsset(): UseAssetReturn {
     },
   })
 
+  const onItemEnded = () => {
+    if (playlist.hasNext()) {
+      playlist.next()
+    }
+  }
+
   useEffect(() => {
     store.setState({
-      onEnded: () => {
-        if (playlist.hasNext()) {
-          playlist.next()
-        }
-      },
+      onEnded: onItemEnded,
     })
-  }, [playlist])
+  }, [onItemEnded])
 
   /**
    * Load a playlist of assets
@@ -178,11 +180,3 @@ export function useAsset(): UseAssetReturn {
     preloadNext,
   }
 }
-
-/**
- * 
-    1. fix play to async
-    2. add safe autoplay
-    3. review use `use-asset` hook
-
- */

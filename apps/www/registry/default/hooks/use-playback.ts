@@ -153,6 +153,7 @@ export function usePlayback(): UsePlaybackReturn {
 
     store.setState({
       idle: false,
+      loop,
     })
   }
 
@@ -301,16 +302,6 @@ export function usePlaybackStates() {
       })
     }
 
-    const readyStateChangeHandler = () => {
-      const readyState = media.readyState as MediaReadyState
-
-      store.setState({
-        canPlay: readyState >= MediaReadyState.HAVE_FUTURE_DATA,
-        canPlayThrough: readyState >= MediaReadyState.HAVE_ENOUGH_DATA,
-        readyState,
-      })
-    }
-
     const waitingHandler = () => {
       const prevStatus = store.getState().status
       store.setState({ status: "buffering" })
@@ -334,18 +325,11 @@ export function usePlaybackStates() {
       })
     }
 
-    const loopChangeHandler = () => {
-      store.setState({
-        loop: media.loop,
-      })
-    }
-
     on(media, "loadstart", loadStartHandler)
     on(media, "loadedmetadata", loadedMetadataHandler)
     on(media, "loadeddata", loadedDataHandler)
     on(media, "canplay", canPlayHandler)
     on(media, "canplaythrough", canPlayThroughHandler)
-    on(media, "readystatechange", readyStateChangeHandler)
     on(media, "play", playHandler)
     on(media, "playing", playingHandler)
     on(media, "pause", pauseHandler)
@@ -353,7 +337,6 @@ export function usePlaybackStates() {
     on(media, "waiting", waitingHandler)
     on(media, "stalled", stalledHandler)
     on(media, "error", errorHandler)
-    on(media, "loopchange", loopChangeHandler)
 
     setInitialState()
 
@@ -363,7 +346,6 @@ export function usePlaybackStates() {
       off(media, "loadeddata", loadedDataHandler)
       off(media, "canplay", canPlayHandler)
       off(media, "canplaythrough", canPlayThroughHandler)
-      off(media, "readystatechange", readyStateChangeHandler)
       off(media, "play", playHandler)
       off(media, "playing", playingHandler)
       off(media, "pause", pauseHandler)
@@ -371,7 +353,6 @@ export function usePlaybackStates() {
       off(media, "waiting", waitingHandler)
       off(media, "stalled", stalledHandler)
       off(media, "error", errorHandler)
-      off(media, "loopchange", loopChangeHandler)
     }
   }, [store, mediaRef])
 }

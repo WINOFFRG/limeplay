@@ -613,7 +613,10 @@ export function usePlaylist<T>(
    * Has next item in queue
    */
   const hasNext = React.useCallback((): boolean => {
-    const { currentIndex, queue } = store.getState()
+    const { currentIndex, queue, repeatMode } = store.getState()
+    if (repeatMode === "all" && queue.length > 0) {
+      return true
+    }
     return currentIndex >= 0 && currentIndex < queue.length - 1
   }, [store])
 
@@ -675,6 +678,10 @@ export function usePlaylistStates() {
       if (repeatMode === "one") {
         if (!media.loop) {
           media.loop = true
+        }
+      } else {
+        if (media.loop) {
+          media.loop = false
         }
       }
     }

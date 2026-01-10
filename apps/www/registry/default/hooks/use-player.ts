@@ -226,12 +226,22 @@ export function usePlayerStates() {
       setPlayer(localPlayer)
       playerInstance.current = localPlayer
 
-      await localPlayer.attach(mediaElement)
+      try {
+        await localPlayer.attach(mediaElement)
 
-      mediaElement.player = playerInstance.current
-      window.shaka = shakaLib as unknown as Window["shaka"]
+        mediaElement.player = playerInstance.current
+        window.shaka = shakaLib as unknown as Window["shaka"]
 
-      store.getState().onPlayerReady?.({ player: localPlayer })
+        store.getState().onPlayerReady?.({ player: localPlayer })
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error(String(error))
+        console.error(
+          "[usePlayer] Failed to attach player to media element:",
+          err
+        )
+
+        store.getState().onError?.({ error: err })
+      }
     }
 
     if (!playerInstance.current) {
