@@ -165,12 +165,7 @@ export const hooks: Registry["items"] = [
       },
     ],
     name: "use-playlist",
-    registryDependencies: [
-      "use-player",
-      "use-playback",
-      "utils",
-      "media-provider",
-    ],
+    registryDependencies: ["utils", "media-provider"],
     type: "registry:hook",
   },
   {

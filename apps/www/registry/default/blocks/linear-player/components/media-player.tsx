@@ -1,5 +1,7 @@
 import React from "react"
 
+import type { Asset } from "@/registry/default/hooks/use-asset"
+
 import { cn } from "@/lib/utils"
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
 import { PlayerHooks } from "@/registry/default/blocks/linear-player/components/player-hooks"
@@ -12,6 +14,7 @@ import * as Layout from "@/registry/default/ui/player-layout"
 import { RootContainer } from "@/registry/default/ui/root-container"
 
 export interface LinearMediaPlayerProps {
+  asset?: Asset
   className?: string
   debug?: boolean
 }
