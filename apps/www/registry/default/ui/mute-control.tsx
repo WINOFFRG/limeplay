@@ -4,7 +4,7 @@ import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
-import { MediaReadyState } from "@/registry/default/hooks/use-player"
+import { MediaReadyState } from "@/registry/default/hooks/use-playback"
 import { useVolume } from "@/registry/default/hooks/use-volume"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 

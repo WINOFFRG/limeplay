@@ -4,7 +4,7 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 import React, { useImperativeHandle, useRef } from "react"
 
 import { cn } from "@/lib/utils"
-import { MediaReadyState } from "@/registry/default/hooks/use-player"
+import { MediaReadyState } from "@/registry/default/hooks/use-playback"
 import { useTimeline } from "@/registry/default/hooks/use-timeline"
 import { useTrackEvents } from "@/registry/default/hooks/use-track-events"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
@@ -154,8 +154,9 @@ export type TimelineThumbPropsDocs = Pick<
   "position" | "showWithHover"
 >
 
-interface BufferedProps
-  extends React.ComponentProps<typeof SliderPrimitive.Track> {
+interface BufferedProps extends React.ComponentProps<
+  typeof SliderPrimitive.Track
+> {
   /**
    * How to render buffered ranges
    * - "default": Show each buffered range separately
@@ -166,8 +167,9 @@ interface BufferedProps
   variant?: "combined" | "default" | "from-zero"
 }
 
-interface ThumbProps
-  extends React.ComponentProps<typeof SliderPrimitive.Thumb> {
+interface ThumbProps extends React.ComponentProps<
+  typeof SliderPrimitive.Thumb
+> {
   /**
    * Custom position of the thumb in percentage
    */

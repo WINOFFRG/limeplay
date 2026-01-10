@@ -5,7 +5,7 @@ import type { StateCreator } from "zustand"
 
 import { useCallback, useEffect } from "react"
 
-import type { PlayerStore } from "@/registry/default/hooks/use-player"
+import type { PlaybackStore } from "@/registry/default/hooks/use-playback"
 
 import { getDeviceLanguage, off, on } from "@/registry/default/lib/utils"
 import {
@@ -15,30 +15,45 @@ import {
 
 export interface CaptionsStore {
   activeTextTrack: null | shaka.extern.TextTrack
+  onCaptionsChange?: (payload: {
+    track?: shaka.extern.TextTrack
+    visible: boolean
+  }) => void
+  onTextTrackChange?: (payload: { track?: shaka.extern.TextTrack }) => void
   setTextTrackContainerElement: (ref: HTMLDivElement | null) => void
+
   textTrackContainerElement: HTMLDivElement | null
   textTracks?: shaka.extern.TextTrack[]
+
   textTrackVisible: boolean
 }
 
 export const createCaptionsStore: StateCreator<
-  CaptionsStore & PlayerStore,
+  CaptionsStore & PlaybackStore,
   [],
   [],
   CaptionsStore
 > = (set) => ({
   activeTextTrack: null,
+  onCaptionsChange: undefined,
+  onTextTrackChange: undefined,
   setTextTrackContainerElement: (element: HTMLDivElement | null) => {
     set({
       textTrackContainerElement: element,
     })
   },
+
   textTrackContainerElement: null,
   textTracks: undefined,
+
   textTrackVisible: false,
 })
 
-export function useCaptions() {
+export interface UseCaptionsReturn {
+  toggleCaptionVisibility: () => void
+}
+
+export function useCaptions(): UseCaptionsReturn {
   const store = useGetStore()
   const player = useMediaStore((s) => s.player)
   const activeTextTrack = useMediaStore((s) => s.activeTextTrack)
@@ -129,6 +144,8 @@ export function useCaptionsStates() {
       .find((t: shaka.extern.TextTrack) => t.active)
 
     store.setState({ activeTextTrack })
+
+    store.getState().onTextTrackChange?.({ track: activeTextTrack })
   }
 
   const onTracksChanged = () => {
@@ -146,8 +163,14 @@ export function useCaptionsStates() {
     }
 
     const isVisible = player.isTextTrackVisible()
+    const activeTrack = store.getState().activeTextTrack
 
     store.setState({ textTrackVisible: isVisible })
+
+    store.getState().onCaptionsChange?.({
+      track: activeTrack || undefined,
+      visible: isVisible,
+    })
   }
 
   useEffect(() => {

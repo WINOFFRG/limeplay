@@ -22,11 +22,13 @@ Import the `useTimelineStates` hook in your existing `PlayerHooks` component.
 ```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
 import React from "react"
 
-import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
+import { usePlayerStates } from "@/hooks/limeplay/use-player"
 import { useTimelineStates } from "@/hooks/limeplay/use-timeline" // [!code ++]
 
 export const PlayerHooks = React.memo(() => {
-  useShakaPlayer()
+  usePlayerStates()
+  usePlaybackStates()
   useTimelineStates() // [!code ++]
 
   return null
@@ -39,6 +41,7 @@ export const PlayerHooks = React.memo(() => {
 ### Add the Store States
 
 ```tsx lineNumbers title="lib/create-media-store.ts"
+import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
 import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
 import {
   createTimelineStore,
@@ -47,10 +50,14 @@ import {
 
 // [!code ++]
 
-export type TypeMediaStore = PlayerStore & TimelineStore & {} // [!code ++]
+export type TypeMediaStore = PlaybackStore &
+  PlayerStore &
+  TimelineStore & // [!code ++]
+  {}
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlaybackStore(...etc),
     ...createPlayerStore(...etc),
     ...createTimelineStore(...etc), // [!code ++]
     ...initProps,
@@ -118,9 +125,10 @@ Sets up polling and event listeners for timeline state updates.
 
 #### Parameters
 
-| Property        | Type     | Default | Description                                    |
-| --------------- | -------- | ------- | ---------------------------------------------- |
-| `updateDuration` | `number` | `500`   | Interval in milliseconds to update timeline state |
+<AutoTypeTable
+  path="./registry/default/hooks/use-timeline.ts"
+  name="useTimelineStatesProps"
+/>
 
 ### useTimeline()
 
@@ -128,26 +136,17 @@ Returns control functions for timeline interactions.
 
 #### Returns
 
-| Property              | Type                                                      | Description                                    |
-| --------------------- | --------------------------------------------------------- | ---------------------------------------------- |
-| `seek`                | `(time: number) => void`                                  | Seeks to the specified time (handles live streams) |
-| `setHoveringTime`     | `(time: number) => void`                                  | Sets the hover time for timeline preview        |
-| `setIsHovering`       | `(isHovering: boolean) => void`                           | Sets the hovering state                         |
-| `getTimeFromEvent`    | `(event: React.PointerEvent) => number`                    | Calculates time from pointer event position     |
-| `processBufferedRanges` | `(ranges: BufferedRange[], variant?: string) => Array` | Processes buffered ranges for display           |
+<AutoTypeTable
+  path="./registry/default/hooks/use-timeline.ts"
+  name="UseTimelineReturn"
+/>
 
 ### Store State
 
 The timeline store provides the following state accessed via `useMediaStore`:
 
-| Property        | Type                          | Description                                    |
-| --------------- | ----------------------------- | ---------------------------------------------- |
-| `duration`      | `number`                      | Total media duration in seconds                 |
-| `currentTime`   | `number`                      | Current playback time in seconds                |
-| `progress`      | `number`                      | Playback progress (0-1)                         |
-| `hoveringTime`  | `number`                      | Time at cursor position on timeline             |
-| `isHovering`    | `boolean`                     | Whether the user is hovering over the timeline  |
-| `buffered`      | `shaka.extern.BufferedRange[]` | Array of buffered time ranges                   |
-| `liveLatency`   | `number \| null`              | Live stream latency in seconds (null for VOD)  |
-| `isLive`        | `boolean`                     | Whether the media is a live stream              |
+<AutoTypeTable
+  path="./registry/default/hooks/use-timeline.ts"
+  name="TimelineStore"
+/>
 

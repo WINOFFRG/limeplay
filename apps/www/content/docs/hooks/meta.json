@@ -2,13 +2,15 @@
   "title": "Hooks",
   "description": "All hooks used in Player UI",
   "pages": [
+    "use-asset",
+    "use-playlist",
     "use-player",
-    "use-shaka-player",
+    "use-playback",
     "use-volume",
-    "use-seek",
     "use-timeline",
     "use-playback-rate",
     "use-captions",
+    "use-seek",
     "use-interval",
     "use-track-events"
   ],

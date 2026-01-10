@@ -116,7 +116,7 @@ export const examples: Registry["items"] = [
       },
     ],
     name: "captions-state-control-demo",
-    registryDependencies: ["media-provider", "captions", "use-player"],
+    registryDependencies: ["media-provider", "captions", "use-playback"],
     type: "registry:example",
   },
   {

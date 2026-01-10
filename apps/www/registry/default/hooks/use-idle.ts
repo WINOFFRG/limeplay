@@ -13,16 +13,34 @@ const defaultEvents = [
 ]
 const oneMinute = 60e3
 
-const useIdle = (
-  ms: number = oneMinute,
+export interface UseIdleOptions {
+  /**
+   * List of events to listen for to reset the idle timer.
+   * @default ['mousemove', 'mousedown', 'resize', 'keydown', 'touchstart', 'wheel']
+   */
+  events?: string[]
+  /**
+   * Initial idle state.
+   * @default false
+   */
+  initialState?: boolean
+  /**
+   * Time in milliseconds before state becomes idle.
+   * @default 60000 (1 min)
+   */
+  timeout?: number
+}
+
+export function useIdle({
+  events = defaultEvents,
   initialState = false,
-  events: string[] = defaultEvents
-): boolean => {
+  timeout = oneMinute,
+}: UseIdleOptions = {}): boolean {
   const [state, setState] = useState<boolean>(initialState)
 
   useEffect(() => {
     let mounted = true
-    let timeout: NodeJS.Timeout | undefined
+    let timer: NodeJS.Timeout | undefined
     let localState: boolean = state
     const set = (newState: boolean) => {
       if (mounted) {
@@ -36,10 +54,10 @@ const useIdle = (
         set(false)
       }
 
-      clearTimeout(timeout)
-      timeout = setTimeout(() => {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
         set(true)
-      }, ms)
+      }, timeout)
     }, 50)
 
     const onVisibility = () => {
@@ -53,22 +71,20 @@ const useIdle = (
     }
     on(document, "visibilitychange", onVisibility)
 
-    timeout = setTimeout(() => {
+    timer = setTimeout(() => {
       set(true)
-    }, ms)
+    }, timeout)
 
     return () => {
       mounted = false
-      clearTimeout(timeout)
+      clearTimeout(timer)
 
       for (const event of events) {
         off(window, event, onEvent)
       }
       off(document, "visibilitychange", onVisibility)
     }
-  }, [ms, events])
+  }, [timeout, events])
 
   return state
 }
-
-export default useIdle
