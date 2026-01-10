@@ -2,14 +2,19 @@
 title: Player Hooks
 description: Central, top-level memoized hooks for component-level state management
 ---
-
-import { Step, Steps } from "fumadocs-ui/components/steps"
+import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 ## Installation
 
 <Steps>
 <Step>
-### Add in your existing MediaPlayer component
+```npm
+npx shadcn add @limeplay/player-hooks
+```
+</Step>
+
+<Step>
+### Setup the player hooks in provider
 
 ```tsx lineNumbers title="components/limeplay/media-player.tsx"
 import { PlayerHooks } from "@/components/limeplay/player-hooks" // [!code ++]
@@ -38,35 +43,3 @@ export function MediaPlayer() {
 
 </Step>
 </Steps>
-
-## Understanding
-
-This library uses Shaka Player as the default playback engine. Hooks like [`useShakaPlayer`](/docs/hooks/use-shaka-player) (engine setup) and [`usePlayerStates`](/docs/hooks/use-player) (media state) are singletons. Rendering them via the `<PlayerHooks />` component prevents re-initializing these hooks on every render. While you could co-locate such hooks alongside each molecule/component, centralizing them keeps behavior predictable and avoids redundant work.
-
-You can add as many hooks as you need inside the `<PlayerHooks />` component.
-
-## Components
-
-### PlayerHooks
-
-A memoized component that centralizes all state management hooks. This component should be placed once at the top level of your player, inside `<MediaProvider />`.
-
-#### Basic Usage
-
-```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
-import React from "react"
-
-import { usePlayerStates } from "@/hooks/limeplay/use-player"
-import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
-import { useVolumeStates } from "@/hooks/limeplay/use-volume"
-import { useTimelineStates } from "@/hooks/limeplay/use-timeline"
-
-export const PlayerHooks = React.memo(() => {
-  useShakaPlayer()
-  usePlayerStates()
-  useVolumeStates()
-  useTimelineStates()
-
-  return null
-})
-```

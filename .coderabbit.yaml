@@ -2,11 +2,10 @@ knowledge_base:
   code_guidelines:
     enabled: true
     filePatterns:
-      - ".github/copilot-instructions.md"
+      - "prompts/code-rabbit.md"
 
 reviews:
   enabled: true
-
   paths:
     include:
       - "apps/www/registry/**"

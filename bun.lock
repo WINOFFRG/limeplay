@@ -57,7 +57,9 @@
         "fumadocs-ui": "16.4.0",
         "hast-util-to-jsx-runtime": "^2.3.6",
         "jotai": "^2.12.5",
+        "lodash": "^4.17.21",
         "lodash.clamp": "^4.0.3",
+        "lodash.shuffle": "^4.2.0",
         "lodash.throttle": "^4.1.1",
         "lucide-react": "^0.542.0",
         "motion": "^12.23.24",
@@ -83,6 +85,7 @@
       "devDependencies": {
         "@tailwindcss/postcss": "^4.1.11",
         "@types/lodash.clamp": "^4.0.9",
+        "@types/lodash.shuffle": "^4.2.9",
         "@types/lodash.throttle": "^4.1.9",
         "@types/mdx": "^2.0.13",
         "@types/node": "24.1.0",
@@ -579,6 +582,8 @@
     "@types/lodash": ["@types/lodash@4.17.21", "", {}, "sha512-FOvQ0YPD5NOfPgMzJihoT+Za5pdkDJWcbpuj1DjaKZIr/gxodQjY/uWEFlTNqW2ugXHUiL8lRQgw63dzKHZdeQ=="],
 
     "@types/lodash.clamp": ["@types/lodash.clamp@4.0.9", "", { "dependencies": { "@types/lodash": "*" } }, "sha512-t+hBIPHXyBVYkl0KEAEchOJwBrG8czt3E7r5fdpwMRrn3g+hkRzw6cjzWl+nJg3Z2QqRaQLt+W2n4ikwGr1u2g=="],
+
+    "@types/lodash.shuffle": ["@types/lodash.shuffle@4.2.9", "", { "dependencies": { "@types/lodash": "*" } }, "sha512-4siLZ4/vQH4T7Bm4254sG4n6hh9k7vd/bqfDVoeIwSha4Itu3MuoTxPX2I2Tue2JN94y7Y2I27QzwHZLdMlrBg=="],
 
     "@types/lodash.throttle": ["@types/lodash.throttle@4.1.9", "", { "dependencies": { "@types/lodash": "*" } }, "sha512-PCPVfpfueguWZQB7pJQK890F2scYKoDUL3iM522AptHWn7d5NQmeS/LTEHIcLr5PaTzl3dK2Z0xSUHHTHwaL5g=="],
 
@@ -1342,9 +1347,13 @@
 
     "locate-path": ["locate-path@6.0.0", "", { "dependencies": { "p-locate": "^5.0.0" } }, "sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw=="],
 
+    "lodash": ["lodash@4.17.21", "", {}, "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="],
+
     "lodash.clamp": ["lodash.clamp@4.0.3", "", {}, "sha512-HvzRFWjtcguTW7yd8NJBshuNaCa8aqNFtnswdT7f/cMd/1YKy5Zzoq4W/Oxvnx9l7aeY258uSdDfM793+eLsVg=="],
 
     "lodash.merge": ["lodash.merge@4.6.2", "", {}, "sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ=="],
+
+    "lodash.shuffle": ["lodash.shuffle@4.2.0", "", {}, "sha512-V/rTAABKLFjoecTZjKSv+A1ZomG8hZg8hlgeG6wwQVD9AGv+10zqqSf6mFq2tVA703Zd5R0YhSuSlXA+E/Ei+Q=="],
 
     "lodash.throttle": ["lodash.throttle@4.1.1", "", {}, "sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ=="],
 

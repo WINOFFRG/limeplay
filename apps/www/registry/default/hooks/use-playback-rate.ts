@@ -4,7 +4,7 @@ import type { StateCreator } from "zustand"
 
 import { useEffect } from "react"
 
-import { type PlayerStore } from "@/registry/default/hooks/use-player"
+import { type PlaybackStore } from "@/registry/default/hooks/use-playback"
 import { off, on } from "@/registry/default/lib/utils"
 import {
   useGetStore,
@@ -12,7 +12,9 @@ import {
 } from "@/registry/default/ui/media-provider"
 
 export interface PlaybackRateStore {
+  onRateChange?: (payload: { rate: number }) => void
   playbackRate: number
+
   playbackRates: number[]
 }
 
@@ -26,10 +28,13 @@ export function usePlaybackRateStates() {
     if (!player) return
 
     const rate = player.getPlaybackRate()
+    const normalizedRate = rate === 0 ? 1 : rate
 
     store.setState({
-      playbackRate: rate === 0 ? 1 : rate,
+      playbackRate: normalizedRate,
     })
+
+    store.getState().onRateChange?.({ rate: normalizedRate })
   }
 
   useEffect(() => {
@@ -54,16 +59,23 @@ export function usePlaybackRateStates() {
 }
 
 export const createPlaybackRateStore: StateCreator<
-  PlaybackRateStore & PlayerStore,
+  PlaybackRateStore & PlaybackStore,
   [],
   [],
   PlaybackRateStore
 > = () => ({
+  onRateChange: undefined,
   playbackRate: 1,
+
   playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
 })
 
-export function usePlaybackRate() {
+export interface UsePlaybackRateReturn {
+  setPlaybackRate: (playbackRate: number) => void
+  setTrickplayRate: (playbackRate: number, forced?: boolean) => void
+}
+
+export function usePlaybackRate(): UsePlaybackRateReturn {
   const mediaRef = useMediaStore((state) => state.mediaRef)
   const player = useMediaStore((state) => state.player)
 

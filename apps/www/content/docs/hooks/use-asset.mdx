@@ -1,0 +1,58 @@
+---
+title: use-asset
+description: Higher-order hook combining player and playlist for managing media assets
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+## Installation
+
+```npm
+npx shadcn add @limeplay/use-asset
+```
+
+## Example Usage
+
+```tsx lineNumbers title="components/player/asset-loader.tsx"
+import { useAsset, Asset } from "@/hooks/limeplay/use-asset"
+
+export function AssetLoader() {
+  const { loadAsset, loadPlaylist } = useAsset()
+
+  const handlePlayMovie = () => {
+    const asset: Asset = {
+        id: "movie-1",
+        src: "https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd",
+        title: "Angel One",
+        description: "A demo movie"
+    }
+    loadAsset(asset)
+  }
+
+  return <button onClick={handlePlayMovie}>Play Movie</button>
+}
+```
+
+## Understanding
+
+`use-asset` is an opinionated hook that integrates `use-player` (for Shaka Player), `use-playback` (for media controls), and `use-playlist` (for queue management) into a single logical unit.
+It defines an `Asset` interface and handles the orchestration of loading an asset into the player when the playlist advances.
+
+It automatically handles:
+- **Loading**: Calls Shaka Player's load method when `use-playlist` requests a new item.
+- **Preloading**: Can preload the next item in the playlist.
+- **Auto-Advance**: Moves to the next item when playback ends.
+
+## API Reference
+
+### useAsset()
+
+#### Returns
+
+<AutoTypeTable path="./registry/default/hooks/use-asset.ts" name="UseAssetReturn" />
+
+### Types
+
+#### Asset
+
+<AutoTypeTable path="./registry/default/hooks/use-asset.ts" name="Asset" />

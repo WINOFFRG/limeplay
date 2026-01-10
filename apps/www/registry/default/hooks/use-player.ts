@@ -1,7 +1,9 @@
+"use client"
+
 import type shaka from "shaka-player"
 import type { StateCreator } from "zustand"
 
-import React from "react"
+import React, { useRef } from "react"
 
 import { noop, off, on } from "@/registry/default/lib/utils"
 import {
@@ -9,52 +11,31 @@ import {
   useMediaStore,
 } from "@/registry/default/ui/media-provider"
 
-export type MediaStatus =
-  | "buffering"
-  | "canplay"
-  | "canplaythrough"
-  | "ended"
-  | "error"
-  | "init"
-  | "loading"
-  | "paused"
-  | "playing"
-  | "stopped"
+declare global {
+  interface HTMLMediaElement {
+    player: null | shaka.Player
+  }
+  interface Window {
+    shaka: {
+      Player: typeof shaka.Player
+    }
+  }
+}
 
-export const MediaReadyState = {
-  HAVE_CURRENT_DATA: 2,
-  HAVE_ENOUGH_DATA: 4,
-  HAVE_FUTURE_DATA: 3,
-  HAVE_METADATA: 1,
-  HAVE_NOTHING: 0,
-} as const
-
-export type MediaReadyState =
-  (typeof MediaReadyState)[keyof typeof MediaReadyState]
-
+/**
+ * Playback store state - unopinionated, uses generics
+ */
 export interface PlayerStore {
-  canPlay: boolean
-  canPlayThrough: boolean
-  debug: boolean
-  ended: boolean
-  error: MediaError | null
-  forceIdle: boolean
-  idle: boolean
-  loop: boolean
-  mediaRef: React.RefObject<HTMLMediaElement | null>
-  networkState: number
-  // Media State Store
-  paused: boolean
+  onBufferingChange?: (payload: { isBuffering: boolean }) => void
+  onError?: (payload: { error: Error }) => void
+  onPlayerReady?: (payload: { player: shaka.Player }) => void
+
   player: null | shaka.Player
   playerContainerRef: HTMLDivElement | null
-  readyState: MediaReadyState
-  setDebug: (value: boolean) => void
-  setForceIdle: (value: boolean) => void
-  setIdle: (idle: boolean) => void
-  setMediaRef: (mediaRef: React.RefObject<HTMLMediaElement>) => void
+  preloadManagers: Map<string, shaka.media.PreloadManager>
+
   setPlayer: (player: null | shaka.Player) => void
   setPlayerContainerRef: (instance: HTMLDivElement | null) => void
-  status: MediaStatus
 }
 
 export const createPlayerStore: StateCreator<
@@ -63,287 +44,217 @@ export const createPlayerStore: StateCreator<
   [],
   PlayerStore
 > = (set) => ({
-  canPlay: false,
-  canPlayThrough: false,
-  debug: false,
-  ended: false,
-  error: null,
-  forceIdle: false,
-  idle: false,
-  loop: false,
-  mediaRef: React.createRef<HTMLMediaElement>(),
-  networkState: 0,
-  paused: false,
+  onBufferingChange: undefined,
+  onError: undefined,
+  onPlayerReady: undefined,
+
   player: null,
   playerContainerRef: null,
-  readyState: MediaReadyState.HAVE_NOTHING,
-  setDebug: (value) => set({ debug: value }),
-  setForceIdle: (value) => set({ forceIdle: value }),
-  setIdle: (idle: boolean) => set({ idle }),
-  setMediaRef: (mediaRef: React.RefObject<HTMLMediaElement>) =>
-    set({ mediaRef }),
+  preloadManagers: new Map(),
+
   setPlayer: (player: null | shaka.Player) => set({ player }),
   setPlayerContainerRef: (instance) => set({ playerContainerRef: instance }),
-  status: "init",
 })
 
-export function usePlayer() {
-  const store = useGetStore()
-
-  function play() {
-    const media = store.getState().mediaRef.current
-    if (!media) return
-
-    media.play().catch((error: unknown) => {
-      console.error("Error playing media", error)
-      store.setState({
-        idle: false,
-        status: "error",
-      })
-    })
-
-    store.setState({
-      idle: false,
-    })
-  }
-
-  function pause() {
-    const media = store.getState().mediaRef.current
-    if (!media) return
-
-    media.pause()
-
-    store.setState({
-      idle: false,
-    })
-  }
-
-  function togglePaused() {
-    const media = store.getState().mediaRef.current
-    if (!media) return
-
-    if (media.paused) {
-      play()
-    } else {
-      pause()
-    }
-  }
-
-  function setLoop(loop: boolean) {
-    const media = store.getState().mediaRef.current
-    if (!media) return
-
-    media.loop = loop
-
-    store.setState({
-      idle: false,
-    })
-  }
-
-  function toggleLoop() {
-    const media = store.getState().mediaRef.current
-    if (!media) return
-
-    setLoop(!media.loop)
-  }
-
-  function restart() {
-    const media = store.getState().mediaRef.current
-    if (!media) return
-
-    media.currentTime = 0
-    if (media.paused) {
-      play()
-    }
-
-    store.setState({
-      ended: false,
-      idle: false,
-    })
-  }
-
-  return {
-    pause,
-    play,
-    restart,
-    setLoop,
-    toggleLoop,
-    togglePaused,
-  }
+/**
+ * Options for usePlayer hook
+ */
+export interface UsePlayerOptions<TAsset> {
+  /**
+   * Error handler - required
+   */
+  onError: (error: Error, asset?: TAsset) => void
+  /**
+   * Load implementation - required, user controls player.load/configure
+   */
+  onLoad: (
+    asset: TAsset,
+    player: shaka.Player,
+    media: HTMLMediaElement,
+    preloadManager?: shaka.media.PreloadManager
+  ) => Promise<void>
+  /**
+   * Preload implementation - required if using preload
+   */
+  onPreload?: (
+    asset: TAsset,
+    player: shaka.Player
+  ) => Promise<null | shaka.media.PreloadManager>
 }
 
+export interface UsePlayerReturn<TAsset> {
+  cancelPreload: (assetId: string) => void
+  isPreloaded: (assetId: string) => boolean
+  load: (asset: TAsset) => Promise<boolean>
+  player: null | shaka.Player
+  preload: (asset: TAsset) => Promise<void>
+}
+
+export function usePlayer<TAsset extends { id: string }>(
+  options?: UsePlayerOptions<TAsset>
+): UsePlayerReturn<TAsset> {
+  const store = useGetStore()
+
+  /**
+   * Load an asset
+   */
+  const load = React.useCallback(
+    async (asset: TAsset): Promise<boolean> => {
+      if (!options) return false
+
+      const currentPlayer = store.getState().player
+      const currentMedia = store.getState().mediaRef.current
+
+      if (!currentPlayer || !currentMedia) {
+        console.warn("[usePlayer] Player or media element not initialized")
+        return false
+      }
+
+      try {
+        const preloadManagers = store.getState().preloadManagers
+        const preloadManager = preloadManagers.get(asset.id)
+
+        if (preloadManager) {
+          await options.onLoad(
+            asset,
+            currentPlayer,
+            currentMedia,
+            preloadManager
+          )
+          preloadManagers.delete(asset.id)
+          store.setState({ preloadManagers: new Map(preloadManagers) })
+        } else {
+          await options.onLoad(asset, currentPlayer, currentMedia)
+        }
+
+        return true
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error(String(error))
+        options.onError(err, asset)
+        return false
+      }
+    },
+    [store, options]
+  )
+
+  /**
+   * Preload an asset for faster playback later
+   */
+  const preload = React.useCallback(
+    async (asset: TAsset): Promise<void> => {
+      if (!options || !options.onPreload) return
+
+      const currentPlayer = store.getState().player
+      if (!currentPlayer) return
+
+      try {
+        const manager = await options.onPreload(asset, currentPlayer)
+        if (manager) {
+          const preloadManagers = store.getState().preloadManagers
+          preloadManagers.set(asset.id, manager)
+          store.setState({ preloadManagers: new Map(preloadManagers) })
+        }
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error(String(error))
+        options.onError(err, asset)
+        console.error("[usePlayer] Preload error:", error)
+      }
+    },
+    [store, options]
+  )
+
+  /**
+   * Cancel a pending preload
+   */
+  const cancelPreload = React.useCallback(
+    (assetId: string): void => {
+      const preloadManagers = store.getState().preloadManagers
+      const manager = preloadManagers.get(assetId)
+      if (manager) {
+        manager.destroy()
+        preloadManagers.delete(assetId)
+        store.setState({ preloadManagers: new Map(preloadManagers) })
+      }
+    },
+    [store]
+  )
+
+  /**
+   * Check if an asset is preloaded
+   */
+  const isPreloaded = React.useCallback(
+    (assetId: string): boolean => {
+      return store.getState().preloadManagers.has(assetId)
+    },
+    [store]
+  )
+
+  const player = useMediaStore((s) => s.player)
+
+  return {
+    cancelPreload,
+    isPreloaded,
+    load,
+    player,
+    preload,
+  }
+}
 export function usePlayerStates() {
   const store = useGetStore()
+  const setPlayer = useMediaStore((state) => state.setPlayer)
   const mediaRef = useMediaStore((state) => state.mediaRef)
+  const debug = useMediaStore((state) => state.debug)
   const player = useMediaStore((state) => state.player)
 
-  React.useEffect(() => {
-    if (!mediaRef.current) return noop
+  const playerInstance = useRef<null | shaka.Player>(null)
 
-    const media = mediaRef.current
+  React.useLayoutEffect(() => {
+    const mediaElement = mediaRef.current
 
-    const setInitialState = () => {
-      const isBuffering = player?.isBuffering()
-      const status: MediaStatus = isBuffering
-        ? "buffering"
-        : media.paused
-          ? "paused"
-          : "playing"
+    async function loadPlayer() {
+      const shakaLib = (
+        debug
+          ? await import("shaka-player/dist/shaka-player.compiled.debug")
+          : await import("shaka-player")
+      ).default
 
-      store.setState({
-        canPlay: media.readyState >= MediaReadyState.HAVE_FUTURE_DATA,
-        canPlayThrough: media.readyState >= MediaReadyState.HAVE_ENOUGH_DATA,
-        ended: media.ended,
-        error: media.error,
-        loop: media.loop,
-        networkState: media.networkState,
-        paused: media.paused,
-        readyState: media.readyState as MediaReadyState,
-        status,
-      })
-    }
-
-    // Playback event handlers
-    const pauseHandler = () => {
-      store.setState({
-        paused: true,
-        status: "paused",
-      })
-    }
-
-    const playHandler = () => {
-      store.setState({
-        paused: false,
-        status: "playing",
-      })
-    }
-
-    const playingHandler = () => {
-      store.setState({
-        paused: false,
-        status: "playing",
-      })
-    }
-
-    const endedHandler = () => {
-      // DEV: When looping, ended event should be ignored to prevent UI showing ended state
-      if (media.loop) {
+      if (!mediaElement) {
         return
       }
-      store.setState({
-        ended: true,
-        status: "ended",
-      })
+
+      const localPlayer = new shakaLib.Player() as shaka.Player
+      setPlayer(localPlayer)
+      playerInstance.current = localPlayer
+
+      await localPlayer.attach(mediaElement)
+
+      mediaElement.player = playerInstance.current
+      window.shaka = shakaLib as unknown as Window["shaka"]
+
+      store.getState().onPlayerReady?.({ player: localPlayer })
     }
 
-    // Loading event handlers
-    const loadStartHandler = () => {
-      store.setState({
-        error: null,
-        status: "loading",
-      })
+    if (!playerInstance.current) {
+      void loadPlayer()
     }
-
-    const loadedMetadataHandler = () => {
-      store.setState({
-        ended: false,
-        readyState: media.readyState as MediaReadyState,
-      })
-    }
-
-    const loadedDataHandler = () => {
-      store.setState({
-        canPlay: media.readyState >= MediaReadyState.HAVE_FUTURE_DATA,
-        ended: false,
-        readyState: media.readyState as MediaReadyState,
-      })
-    }
-
-    const canPlayHandler = () => {
-      store.setState({
-        canPlay: true,
-        readyState: media.readyState as MediaReadyState,
-        status: media.paused ? "paused" : "playing",
-      })
-    }
-
-    const canPlayThroughHandler = () => {
-      store.setState({
-        canPlay: true,
-        canPlayThrough: true,
-        readyState: media.readyState as MediaReadyState,
-        status: media.paused ? "paused" : "playing",
-      })
-    }
-
-    const readyStateChangeHandler = () => {
-      const readyState = media.readyState as MediaReadyState
-
-      store.setState({
-        canPlay: readyState >= MediaReadyState.HAVE_FUTURE_DATA,
-        canPlayThrough: readyState >= MediaReadyState.HAVE_ENOUGH_DATA,
-        readyState,
-      })
-    }
-
-    const waitingHandler = () => {
-      store.setState({ status: "buffering" })
-    }
-
-    const stalledHandler = () => {
-      store.setState({ status: "buffering" })
-    }
-
-    const errorHandler = () => {
-      store.setState({
-        error: media.error,
-        status: "error",
-      })
-    }
-
-    const loopChangeHandler = () => {
-      store.setState({
-        loop: media.loop,
-      })
-    }
-
-    on(media, "loadstart", loadStartHandler)
-    on(media, "loadedmetadata", loadedMetadataHandler)
-    on(media, "loadeddata", loadedDataHandler)
-    on(media, "canplay", canPlayHandler)
-    on(media, "canplaythrough", canPlayThroughHandler)
-    on(media, "readystatechange", readyStateChangeHandler)
-    on(media, "play", playHandler)
-    on(media, "playing", playingHandler)
-    on(media, "pause", pauseHandler)
-    on(media, "ended", endedHandler)
-    on(media, "waiting", waitingHandler)
-    on(media, "stalled", stalledHandler)
-    on(media, "error", errorHandler)
-    on(media, "loopchange", loopChangeHandler)
-
-    setInitialState()
 
     return () => {
-      off(media, "loadstart", loadStartHandler)
-      off(media, "loadedmetadata", loadedMetadataHandler)
-      off(media, "loadeddata", loadedDataHandler)
-      off(media, "canplay", canPlayHandler)
-      off(media, "canplaythrough", canPlayThroughHandler)
-      off(media, "readystatechange", readyStateChangeHandler)
-      off(media, "play", playHandler)
-      off(media, "playing", playingHandler)
-      off(media, "pause", pauseHandler)
-      off(media, "ended", endedHandler)
-      off(media, "waiting", waitingHandler)
-      off(media, "stalled", stalledHandler)
-      off(media, "error", errorHandler)
-      off(media, "loopchange", loopChangeHandler)
+      if (playerInstance.current) {
+        playerInstance.current.destroy()
+        setPlayer(null)
+        playerInstance.current = null
+      }
     }
-  }, [store, mediaRef, player])
+  }, [mediaRef, debug])
 
   React.useEffect(() => {
     if (!player) return noop
+
+    const setInitialState = () => {
+      if (player.isBuffering()) {
+        store.setState({ status: "buffering" })
+      }
+    }
 
     const bufferingHandler = () => {
       const isBuffering = player.isBuffering()
@@ -357,18 +268,22 @@ export function usePlayerStates() {
           store.setState({ status })
         }
       }
+
+      store.getState().onBufferingChange?.({ isBuffering })
     }
 
     const loadingHandler = () => {
       store.setState({ status: "loading" })
     }
 
-    player.addEventListener("buffering", bufferingHandler)
-    player.addEventListener("loading", loadingHandler)
+    on(player, "buffering", bufferingHandler)
+    on(player, "loading", loadingHandler)
+
+    setInitialState()
 
     return () => {
-      player.removeEventListener("buffering", bufferingHandler)
-      player.removeEventListener("loading", loadingHandler)
+      off(player, "buffering", bufferingHandler)
+      off(player, "loading", loadingHandler)
     }
   }, [player, mediaRef, store])
 }

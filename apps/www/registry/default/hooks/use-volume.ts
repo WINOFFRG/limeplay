@@ -3,7 +3,7 @@ import type { StateCreator } from "zustand"
 import clamp from "lodash.clamp"
 import React from "react"
 
-import type { PlayerStore } from "@/registry/default/hooks/use-player"
+import type { PlaybackStore } from "@/registry/default/hooks/use-playback"
 
 import { noop, off, on } from "@/registry/default/lib/utils"
 import {
@@ -14,6 +14,9 @@ import {
 export interface VolumeStore {
   hasAudio: boolean
   muted: boolean
+  onMute?: (payload: { muted: boolean }) => void
+
+  onVolumeChange?: (payload: { muted: boolean; volume: number }) => void
   volume: number
 }
 
@@ -28,10 +31,16 @@ export function useVolumeStates() {
     const media = mediaRef.current
 
     const volumeHandler = () => {
+      const volume = media.volume
+      const muted = media.muted
+
       store.setState({
-        muted: media.muted,
-        volume: media.volume,
+        muted,
+        volume,
       })
+
+      store.getState().onVolumeChange?.({ muted, volume })
+      store.getState().onMute?.({ muted })
     }
 
     const audioTracksChangedHandler = () => {
@@ -59,17 +68,27 @@ export function useVolumeStates() {
 const BASE_RESET_VOLUME = 0.05
 
 export const createVolumeStore: StateCreator<
-  PlayerStore & VolumeStore,
+  PlaybackStore & VolumeStore,
   [],
   [],
   VolumeStore
 > = () => ({
   hasAudio: true,
   muted: false,
+  // Initialize event callbacks
+  onMute: undefined,
+
+  onVolumeChange: undefined,
   volume: 1,
 })
 
-export function useVolume() {
+export interface UseVolumeReturn {
+  setMuted: (muted: boolean) => void
+  setVolume: (volume: number, progress?: number, delta?: number) => void
+  toggleMute: () => void
+}
+
+export function useVolume(): UseVolumeReturn {
   const store = useGetStore()
   const mediaRef = useMediaStore((state) => state.mediaRef)
 

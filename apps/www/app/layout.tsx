@@ -12,8 +12,6 @@ import { JsonLd } from "@/components/json-ld"
 import { PRODUCT_DESCRIPTION, PRODUCT_NAME } from "@/lib/constants"
 
 const inter = Inter({
-  display: "swap",
-  preload: true,
   subsets: ["latin"],
   variable: "--font-sans",
 })
@@ -36,9 +34,10 @@ export const metadata: Metadata = {
     "TypeScript",
     "Next.js",
     "React",
-    "Tailwind CSS",
+    "tailwind",
     "media",
     "ui",
+    "shadcn",
   ],
   manifest: `/site.webmanifest`,
   openGraph: {
@@ -78,9 +77,9 @@ export default function Layout({ children }: { children: ReactNode }) {
       </head>
       <body className="antialiased">
         <JsonLd />
+        {children}
         <Analytics />
         <SpeedInsights />
-        {children}
       </body>
     </html>
   )

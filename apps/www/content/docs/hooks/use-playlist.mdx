@@ -1,0 +1,108 @@
+---
+title: use-playlist
+description: Hook for managing playback queue, shuffle, and repeat modes
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+## Installation
+
+<Steps>
+<Step>
+### Install the hook
+```npm
+npx shadcn add @limeplay/use-playlist
+```
+</Step>
+
+<Step>
+### Add to PlayerHooks
+Import the `usePlaylistStates` hook in your existing `PlayerHooks` component.
+
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+import React from "react"
+
+import { usePlaylistStates } from "@/hooks/limeplay/use-playlist" // [!code ++]
+
+export const PlayerHooks = React.memo(() => {
+  usePlaylistStates() // [!code ++]
+
+  return null
+})
+```
+
+</Step>
+
+<Step>
+### Add to Store
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+import { createPlaylistStore, PlaylistStore } from "@/hooks/limeplay/use-playlist"
+
+export type TypeMediaStore = PlaylistStore & {}
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlaylistStore(...etc),
+    ...initProps,
+  }))
+  return mediaStore
+}
+```
+
+</Step>
+</Steps>
+
+## Example Usage
+
+```tsx lineNumbers title="components/player/playlist-controls.tsx"
+import { usePlaylist } from "@/hooks/limeplay/use-playlist"
+
+export function PlaylistControls() {
+  const { next, previous, toggleShuffle, setRepeatMode } = usePlaylist({
+    onLoadItem: async (item) => {
+        // Load the item into the player
+        console.log("Loading", item)
+    }
+  })
+
+  return (
+    <div>
+      <button onClick={previous}>Previous</button>
+      <button onClick={next}>Next</button>
+      <button onClick={toggleShuffle}>Shuffle</button>
+      <button onClick={() => setRepeatMode('all')}>Repeat All</button>
+    </div>
+  )
+}
+```
+
+## Understanding
+
+The `use-playlist` hook provides a robust queue management system. It handles:
+- **Queue Management**: Add, remove, reorder items.
+- **Navigation**: Next, previous, skip to index.
+- **Modes**: Shuffle and Repeat (All, One, Off).
+- **History**: Tracks played items for previous button navigation.
+
+It works in conjunction with `usePlaylistStates` which listens for the `ended` event to automatically advance the queue.
+
+## API Reference
+
+### usePlaylistStates()
+
+Sets up event listeners (like `ended`) to handle automatic playlist advancement.
+
+### usePlaylist(options)
+
+#### Options
+
+<AutoTypeTable path="./registry/default/hooks/use-playlist.ts" name="UsePlaylistOptions" />
+
+#### Returns
+
+<AutoTypeTable path="./registry/default/hooks/use-playlist.ts" name="UsePlaylistReturn" />
+
+### Store State
+
+<AutoTypeTable path="./registry/default/hooks/use-playlist.ts" name="PlaylistStore" />

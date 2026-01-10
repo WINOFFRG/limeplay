@@ -7,21 +7,9 @@ import { Step, Steps } from "fumadocs-ui/components/steps"
 
 ## Installation
 
-<Steps>
-<Step>
-### Install the hook
 ```npm
 npx shadcn add @limeplay/use-seek
 ```
-</Step>
-
-<Step>
-### Ready to Use
-
-The `useSeek` hook only requires the `MediaProvider` context. No store setup or event bridge configuration is needed.
-
-</Step>
-</Steps>
 
 ## Example Usage
 
@@ -64,28 +52,8 @@ Returns control functions for seeking within the media.
 
 #### Returns
 
-| Property | Type                     | Description                                           |
-| -------- | ------------------------ | ----------------------------------------------------- |
-| `seek`   | `(offset: number) => void` | Seeks by the given offset in seconds (positive = forward, negative = backward) |
-
-#### seek Parameters
-
-| Parameter | Type     | Description                                                       |
-| --------- | -------- | ----------------------------------------------------------------- |
-| `offset`  | `number` | Number of seconds to seek. Positive values seek forward, negative values seek backward |
-
-**Example usages:**
-
-```tsx
-const { seek } = useSeek()
-
-// Seek forward 10 seconds
-seek(10)
-
-// Seek backward 30 seconds  
-seek(-30)
-
-// Seek to start (assuming current time > 0)
-seek(-Infinity) // Will clamp to 0
-```
+<AutoTypeTable
+  path="./registry/default/hooks/use-seek.ts"
+  name="UseSeekReturn"
+/>
 

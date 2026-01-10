@@ -1,0 +1,44 @@
+---
+title: Limeplay Logo
+description: The official Limeplay logo component
+---
+
+
+
+<ComponentPreview name="limeplay-logo-demo" />
+
+## Installation
+
+
+```npm
+npx shadcn add @limeplay/limeplay-logo
+```
+
+## Example Usage
+
+```tsx lineNumbers title="components/player/overlay.tsx"
+import { LimeplayLogo } from "@/components/limeplay/limeplay-logo"
+
+export function PlayerOverlay() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center">
+      <LimeplayLogo className="size-32 text-white" />
+    </div>
+  )
+}
+```
+
+## API Reference
+
+### LimeplayLogo
+
+The logo component is an SVG element that accepts all standard SVG attributes.
+
+#### Props
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `className` | `string` | Optional CSS class names for styling. Default sizes are provided but can be overridden. |
+| `...props` | `SVGProps<SVGSVGElement>` | Accepts all standard SVG properties. |
+
+<AutoTypeTable path="./registry/default/ui/limeplay-logo.tsx" name="LimeplayLogoPropsDocs" />

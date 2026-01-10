@@ -4,7 +4,7 @@ import { ClosedCaptioningIcon } from "@phosphor-icons/react"
 import { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
-import { MediaReadyState } from "@/registry/default/hooks/use-player"
+import { MediaReadyState } from "@/registry/default/hooks/use-playback"
 import {
   CaptionsContainer,
   CaptionsControl,
@@ -36,7 +36,6 @@ export function CaptionsStateControlDemo() {
       .then(() => {
         player.selectTextTrack(player.getTextTracks()[0])
         player.setTextTrackVisibility(true)
-        console.log("Text track added")
       })
       .catch((error: unknown) => {
         console.error("Error adding text track:", error)

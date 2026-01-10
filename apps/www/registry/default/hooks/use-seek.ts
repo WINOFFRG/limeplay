@@ -3,7 +3,11 @@ import {
   useMediaStore,
 } from "@/registry/default/ui/media-provider"
 
-export function useSeek() {
+export interface UseSeekReturn {
+  seek: (offset: number) => void
+}
+
+export function useSeek(): UseSeekReturn {
   const store = useGetStore()
   const mediaRef = useMediaStore((state) => state.mediaRef)
 

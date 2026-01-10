@@ -5,13 +5,14 @@ description: Controls the play/pause state of the Media.
 
 import { Step, Steps } from "fumadocs-ui/components/steps"
 
+{/* TODO: Examples will be built later */}
 <ComponentPreview name="playback-state-control-demo" withPlayer />
 
 ## Installation
 
 <Steps>
 <Step>
-### Install the component
+
 ```npm
 npx shadcn add @limeplay/playback-control
 ```
@@ -26,12 +27,12 @@ Import the `useMediaStates` hook in your existing `PlayerHooks` component.
 
 import React from "react"
 
-import { usePlayerStates } from "@/hooks/limeplay/use-player" // [!code ++]
-import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+import { usePlaybackStates } from "@/hooks/limeplay/use-playback" // [!code ++]
+import { usePlayerStates } from "@/hooks/limeplay/use-player"
 
 export const PlayerHooks = React.memo(() => {
-  useShakaPlayer()
-  usePlayerStates() // [!code ++]
+  usePlayerStates()
+  usePlaybackStates() // [!code ++]
 
   return null
 })
@@ -42,15 +43,16 @@ export const PlayerHooks = React.memo(() => {
 ### Add the Store States
 
 ```tsx lineNumbers title="lib/create-media-store.ts"
-import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
 
 // [!code ++]
 
-export type TypeMediaStore = PlayerStore & {} // [!code ++]
+export type TypeMediaStore = PlaybackStore & // [!code ++]
+  {}
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlayerStore(...etc), // [!code ++]
+    ...createPlaybackStore(...etc), // [!code ++]
     ...initProps,
   }))
   return mediaStore
@@ -96,28 +98,4 @@ export function PlaybackControlButton() {
 
 ## Understanding
 
-The `PlaybackControl` component uses the [`usePlayer()`](/docs/hooks/use-player) hook to control playback state. You can use the `status` field from media store to get the current status of the media. List of possible values are:
-
-| Status      | Description                                   |
-| ----------- | --------------------------------------------- |
-| `playing`   | The media is playing                          |
-| `paused`    | The media is paused                           |
-| `ended`     | The media has reached the end                 |
-| `buffering` | The media is buffering                        |
-| `error`     | The media has encountered an error            |
-| `init`      | The media is initializing or has readyState 0 |
-| `stopped`   | The media has been stopped                    |
-
-The `PlaybackControl` component automatically handles all these states and shows appropriate behavior (e.g., "Replay" for ended state).
-
-## Components
-
-### PlaybackControl
-
-The main component for toggling play/pause state. It supports the **Slot pattern** (`asChild` prop) for composition.
-
-#### API Reference
-
-<AutoTypeTable path="./registry/default/ui/playback-control.tsx" name="PlaybackControlPropsDocs" />
-
-
+The `PlaybackControl` component uses the [`usePlayback()`](/docs/hooks/use-playback) hook to control playback state. You can use the `status` field from media store to get the current status of the media.

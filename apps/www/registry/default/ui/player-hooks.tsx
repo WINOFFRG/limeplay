@@ -2,10 +2,10 @@
 
 import React from "react"
 
-import { useShakaPlayer } from "@/registry/default/hooks/use-shaka-player"
+import { usePlayerStates } from "@/registry/default/hooks/use-player"
 
 export const PlayerHooks = React.memo(() => {
-  useShakaPlayer()
+  usePlayerStates()
 
   return null
 })

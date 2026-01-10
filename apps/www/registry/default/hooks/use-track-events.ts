@@ -1,7 +1,7 @@
 import clamp from "lodash.clamp"
 import * as React from "react"
 
-interface UseTrackEventsProps<E extends HTMLElement> {
+export interface UseTrackEventsProps<E extends HTMLElement> {
   /** Progress is 0-1 based on the width of the bar and the pointer event, clamped */
   onPointerDown: (progress: number, event: React.PointerEvent<E>) => void
   /**
@@ -21,10 +21,17 @@ interface UseTrackEventsProps<E extends HTMLElement> {
   orientation?: "horizontal" | "vertical"
 }
 
+export interface UseTrackEventsReturn<E extends HTMLElement> {
+  onPointerDown: (e: React.PointerEvent<E>) => void
+  onPointerMove: (e: React.PointerEvent<E>) => void
+  onPointerOut: (e: React.PointerEvent<E>) => void
+  onPointerUp: (e: React.PointerEvent<E>) => void
+}
+
 /** Events for a track/slider bar */
 export function useTrackEvents<E extends HTMLElement>(
   props: UseTrackEventsProps<E>
-) {
+): UseTrackEventsReturn<E> {
   const { orientation = "horizontal" } = props
 
   const getProgress = React.useCallback(

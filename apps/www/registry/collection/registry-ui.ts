@@ -25,7 +25,7 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "mute-control",
-    registryDependencies: ["media-provider", "use-volume", "use-player"],
+    registryDependencies: ["media-provider", "use-volume", "use-playback"],
     type: "registry:ui",
   },
   {
@@ -161,7 +161,7 @@ export const ui: Registry["items"] = [
       "utils",
       "use-volume",
       "use-track-events",
-      "use-player",
+      "use-playback",
     ],
     type: "registry:ui",
   },
@@ -175,7 +175,7 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "playback-control",
-    registryDependencies: ["media-provider", "use-player"],
+    registryDependencies: ["media-provider", "use-playback"],
     type: "registry:ui",
   },
   {
@@ -212,7 +212,7 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "player-hooks",
-    registryDependencies: ["use-shaka-player"],
+    registryDependencies: ["use-player", "use-playback"],
     type: "registry:ui",
   },
   {
@@ -242,7 +242,7 @@ export const ui: Registry["items"] = [
       "utils",
       "use-timeline",
       "use-track-events",
-      "use-player",
+      "use-playback",
     ],
     type: "registry:ui",
   },
@@ -292,7 +292,7 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "seek-controls",
-    registryDependencies: ["media-provider", "use-seek", "use-player"],
+    registryDependencies: ["media-provider", "use-seek", "use-playback"],
     type: "registry:ui",
   },
   {

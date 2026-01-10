@@ -45,10 +45,6 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/media-element.tsx`,
-        type: "registry:component",
-      },
-      {
         path: `${BASE_SRC_URL}/components/player-hooks.tsx`,
         type: "registry:component",
       },
@@ -63,10 +59,6 @@ export const blocks: Registry["items"] = [
       {
         path: `${BASE_SRC_URL}/components/playlist.tsx`,
         type: "registry:component",
-      },
-      {
-        path: `${BASE_SRC_URL}/lib/playlist.ts`,
-        type: "registry:lib",
       },
       {
         path: `${BASE_SRC_URL}/components/captions-state-control.tsx`,
@@ -111,13 +103,15 @@ export const blocks: Registry["items"] = [
       "create-media-store",
       "fallback-poster",
       "timeline-labels",
-      "use-shaka-player",
       "limeplay-logo",
       "root-container",
       "captions",
       "use-captions",
       "playback-rate",
       "use-playback-rate",
+      "use-playback",
+      "use-playlist",
+      "use-asset",
     ],
     type: "registry:block",
   },
@@ -166,7 +160,7 @@ export const blocks: Registry["items"] = [
       "button",
       "playback-control",
       "use-player",
-      "use-shaka-player",
+      "use-playback",
     ],
     type: "registry:block",
   },

@@ -1,0 +1,139 @@
+---
+title: use-playback
+description: Core hook for managing media playback state and controls
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+## Installation
+
+<Steps>
+<Step>
+### Install the hook
+```npm
+npx shadcn add @limeplay/use-playback
+```
+</Step>
+
+<Step>
+### Add Event & Action Bridge
+Import the `usePlaybackStates` hook in your existing `PlayerHooks` component.
+
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+import React from "react"
+
+import { usePlaybackStates } from "@/hooks/limeplay/use-playback" // [!code ++]
+import { usePlayerStates } from "@/hooks/limeplay/use-player"
+
+export const PlayerHooks = React.memo(() => {
+  usePlayerStates()
+  usePlaybackStates() // [!code ++]
+
+  return null
+})
+```
+
+</Step>
+
+<Step>
+### Add the Store States
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
+
+// [!code ++]
+
+export type TypeMediaStore = PlaybackStore & // [!code ++]
+  {}
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlaybackStore(...etc), // [!code ++]
+    ...initProps,
+  }))
+  return mediaStore
+}
+```
+
+</Step>
+</Steps>
+
+## Example Usage
+
+Use the `usePlayback()` hook to control playback in your components.
+
+```tsx lineNumbers title="components/player/playback-control-button.tsx"
+import { usePlayback } from "@/hooks/limeplay/use-playback"
+
+export function PlaybackControlButton() {
+  const { play, pause, togglePaused, restart } = usePlayback()
+
+  return (
+    <div>
+      <button onClick={play}>Play</button>
+      <button onClick={pause}>Pause</button>
+      <button onClick={togglePaused}>Toggle</button>
+      <button onClick={restart}>Restart</button>
+    </div>
+  )
+}
+```
+
+## Understanding
+
+The `use-playback` hook provides the foundation for all media playback functionality. It implements the **Event & Action Bridge** pattern:
+
+- **Event Bridge**: `usePlaybackStates()` listens to native media events (`play`, `pause`, `ended`, `buffering`, etc.) and synchronizes state to the React store
+- **Action Bridge**: `usePlayback()` provides control functions (`play()`, `pause()`, `togglePaused()`, etc.) that manipulate the native media element
+
+This hook is required for all other hooks and components as it provides the core media state management.
+
+### Media Status States
+
+The hook tracks the following media status values:
+
+| Status      | Description                                   |
+| ----------- | --------------------------------------------- |
+| `init`      | The media is initializing or has readyState 0 |
+| `loading`   | The media is loading                          |
+| `buffering` | The media is buffering                        |
+| `canplay`   | Enough data available to start playback       |
+| `canplaythrough` | Enough data available to play through without buffering |
+| `playing`   | The media is playing                          |
+| `paused`    | The media is paused                           |
+| `ended`     | The media has reached the end                 |
+| `error`     | The media has encountered an error            |
+| `stopped`   | The media has been stopped                    |
+
+## API Reference
+
+### usePlaybackStates()
+
+Sets up event listeners for all media playback events. This hook should be called once in your `PlayerHooks` component. It automatically syncs the following state:
+
+- `paused`, `ended`, `loop` - Playback state
+- `status` - Current media status
+- `readyState` - Media ready state (0-4)
+- `canPlay`, `canPlayThrough` - Playback readiness
+- `error`, `networkState` - Error and network information
+
+### usePlayback()
+
+Returns control functions for managing media playback.
+
+#### Returns
+
+<AutoTypeTable
+  path="./registry/default/hooks/use-playback.ts"
+  name="UsePlaybackReturn"
+/>
+
+### Store State
+
+The playback store provides the following state accessed via `useMediaStore`:
+
+<AutoTypeTable
+  path="./registry/default/hooks/use-playback.ts"
+  name="PlaybackStore"
+/>
+

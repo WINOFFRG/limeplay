@@ -3,7 +3,9 @@
 import type shaka from "shaka-player"
 
 import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react"
-import { useState } from "react"
+import { useEffect } from "react"
+
+import type { Asset } from "@/registry/default/hooks/use-asset"
 
 import {
   DropdownMenu,
@@ -14,17 +16,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/registry/default/blocks/linear-player/ui/button"
+import { useAsset } from "@/registry/default/hooks/use-asset"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-export interface DemoAsset {
-  config?: shaka.extern.PlayerConfiguration
-  description?: string
-  poster: string
-  src: string
-  title: string
-}
-
-export const ASSETS: DemoAsset[] = [
+/**
+ * Demo assets for the linear-player
+ */
+export const ASSETS: Asset[] = [
   {
     config: {
       drm: {
@@ -41,18 +39,21 @@ export const ASSETS: DemoAsset[] = [
     } as shaka.extern.PlayerConfiguration,
     description:
       "A Blender Foundation short film, protected by Widevine encryption",
+    id: "sintel",
     poster: "https://storage.googleapis.com/shaka-asset-icons/sintel.png",
     src: "https://storage.googleapis.com/shaka-demo-assets/sintel-widevine/dash.mpd",
     title: "Blender Foundation - Sintel",
   },
   {
     description: "Media Tailor HLS Stream",
+    id: "sing2",
     poster: "https://storage.googleapis.com/shaka-asset-icons/sing.png",
     src: "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8",
     title: "Sing 2 Trailer",
   },
   {
     description: "A Blender Foundation short film, Media Tailor Live DASH",
+    id: "bbb",
     poster:
       "https://storage.googleapis.com/shaka-asset-icons/big_buck_bunny.png",
     src: "https://d305rncpy6ne2q.cloudfront.net/v1/dash/94063eadf7d8c56e9e2edd84fdf897826a70d0df/SFP-MediaTailor-Live-HLS-DASH/channel/sfp-channel1/dash.mpd",
@@ -60,6 +61,7 @@ export const ASSETS: DemoAsset[] = [
   },
   {
     description: "HLS Video",
+    id: "natgeo",
     poster: "https://demo.theoplayer.com/hubfs/videos/natgeo/poster.jpg",
     src: "https://demo.theoplayer.com/hubfs/videos/natgeo/playlist.m3u8",
     title: "National Geographic - VR equirectangular",
@@ -67,53 +69,32 @@ export const ASSETS: DemoAsset[] = [
 ]
 
 export function Playlist() {
-  const [currentAsset, setCurrentAsset] = useState<DemoAsset | null>(null)
-  const [isOpen, setIsOpen] = useState(false)
+  const currentItem = useMediaStore((state) => state.currentItem)
   const player = useMediaStore((state) => state.player)
-  const setForceIdle = useMediaStore((state) => state.setForceIdle)
-  const mediaRef = useMediaStore((state) => state.mediaRef)
 
-  const handleAssetSelect = async (asset: DemoAsset) => {
-    if (!player) {
-      console.error("Shaka Player not initialized")
-      return
-    }
+  const { getCurrentItem, isPreloaded, loadPlaylist, preloadAsset, skipToId } =
+    useAsset()
 
-    try {
-      if (asset.config) {
-        player.configure(asset.config)
-      }
+  useEffect(() => {
+    if (!player) return
 
-      await player.load(asset.src)
-      setCurrentAsset(asset)
+    loadPlaylist(ASSETS)
+  }, [player])
 
-      if (mediaRef.current?.paused) {
-        await mediaRef.current.play()
-      }
-    } catch (error) {
-      console.error("Error loading asset:", error)
-    }
+  const handleAssetSelect = async (asset: Asset) => {
+    await skipToId(asset.id)
   }
 
-  const handleOpenChange = (open: boolean) => {
-    setIsOpen(open)
-    if (open) {
-      setForceIdle(true)
-    } else {
-      setForceIdle(false)
-    }
-  }
-
-  const handlePointerDown = (e: React.PointerEvent) => {
-    if (isOpen) {
-      e.stopPropagation()
+  const handleAssetHover = async (asset: Asset) => {
+    if (!isPreloaded(asset.id) && getCurrentItem()?.id !== asset.id) {
+      await preloadAsset(asset)
     }
   }
 
   return (
-    <DropdownMenu onOpenChange={handleOpenChange} open={isOpen}>
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button aria-label="Open episodes" size="icon" variant="glass">
+        <Button aria-label="Open Playlist" size="icon" variant="glass">
           <CardsThreeIcon weight="fill" />
         </Button>
       </DropdownMenuTrigger>
@@ -121,20 +102,16 @@ export function Playlist() {
         align="end"
         alignOffset={-12}
         className="dark w-sm border border-border p-2"
-        onPointerDown={handlePointerDown}
         side="top"
         sideOffset={24}
       >
-        <DropdownMenuLabel>
-          Episodes
-          <p className="mt-1 text-xs text-muted-foreground">
-            This is a draft version of Playlist component
-          </p>
-        </DropdownMenuLabel>
+        <DropdownMenuLabel>Playlist</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <div className="space-y-2">
-          {ASSETS.map((asset, index) => {
-            const isCurrentAsset = currentAsset?.src === asset.src
+          {ASSETS.map((asset) => {
+            const isCurrentAsset = currentItem?.id === asset.id
+            const isAssetPreloaded = isPreloaded(asset.id)
+
             return (
               <DropdownMenuItem
                 className={`
@@ -145,7 +122,8 @@ export function Playlist() {
                       : "hover:bg-accent/50"
                   }
                 `}
-                key={index}
+                key={asset.id}
+                onMouseEnter={() => handleAssetHover(asset)}
                 onSelect={() => handleAssetSelect(asset)}
               >
                 <div className="flex w-full items-center gap-3 p-2">
@@ -153,15 +131,16 @@ export function Playlist() {
                     <img
                       alt={asset.title}
                       className="object-cover"
-                      // fill
                       sizes="80px"
                       src={asset.poster}
-                      // priority={index < 2}
                     />
                     {isCurrentAsset && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                         <PlayIcon className="size-6 text-white" weight="fill" />
                       </div>
+                    )}
+                    {isAssetPreloaded && !isCurrentAsset && (
+                      <div className="absolute top-1 right-1 size-2 rounded-full bg-green-500" />
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
