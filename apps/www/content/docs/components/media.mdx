@@ -8,10 +8,39 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 <Steps>
 <Step>
-### Install the component
 ```npm
 npx shadcn add @limeplay/media
 ```
+</Step>
+
+<Step>
+### Setup the provider in the root
+
+```tsx lineNumbers title="components/player/media-player.tsx"
+import { Media } from "@/components/limeplay/media" // [!code ++]
+
+// ... other imports
+
+export function MediaPlayer() {
+  return (
+    <MediaProvider>
+      <PlayerHooks />
+      <Suspense>
+        <Layout.RootContainer height={720} width={1280}>
+          {/* [!code ++] */}
+          <Media
+            as="video"
+            autoPlay={true}
+            className="size-full object-cover"
+            muted
+          />
+        </Layout.RootContainer>
+      </Suspense>
+    </MediaProvider>
+  )
+}
+```
+
 </Step>
 </Steps>
 
@@ -28,19 +57,3 @@ The main component that renders either a `<video>` or `<audio>` element based on
 #### API Reference
 
 <AutoTypeTable path="./registry/default/ui/media.tsx" name="MediaPropsDocs" />
-
-#### Basic Usage
-
-```tsx lineNumbers title="components/player/media-element.tsx"
-import { Media } from "@/components/limeplay/media"
-
-export function MediaElement() {
-  return (
-    <Media
-      as="video"
-      src="https://example.com/video.mp4"
-      className="h-full w-full"
-    />
-  )
-}
-```

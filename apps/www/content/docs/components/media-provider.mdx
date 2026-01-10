@@ -9,7 +9,7 @@ import { Step, Steps } from "fumadocs-ui/components/steps"
 
 <Steps>
 <Step>
-### Install the component
+
 ```npm
 npx shadcn add @limeplay/media-provider
 ```
@@ -30,12 +30,6 @@ export function MediaPlayer() {
       <PlayerHooks />
       <Suspense>
         <Layout.RootContainer height={720} width={1280}>
-          <Layout.PlayerContainer>
-            <MediaElement />
-            <Layout.ControlsContainer>
-              <BottomControls />
-            </Layout.ControlsContainer>
-          </Layout.PlayerContainer>
         </Layout.RootContainer>
       </Suspense>
     </MediaProvider>

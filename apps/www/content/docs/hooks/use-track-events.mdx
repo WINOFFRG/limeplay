@@ -63,22 +63,17 @@ Returns event handlers for pointer interactions on track elements.
 
 #### Parameters
 
-| Property        | Type                                                      | Description                                    |
-| --------------- | --------------------------------------------------------- | ---------------------------------------------- |
-| `orientation`   | `"horizontal" \| "vertical"`                              | Track orientation. Default: `"horizontal"`      |
-| `onPointerDown` | `(progress: number, event: React.PointerEvent) => void`   | Called when pointer is pressed down            |
-| `onPointerMove` | `(progress: number, isPointerDown: boolean, event: React.PointerEvent) => void` | Called on pointer move (fires even when not down) |
-| `onPointerUp`   | `(event: React.PointerEvent) => void`                     | Called when pointer is released                |
-| `onPointerOut`  | `(event: React.PointerEvent) => void`                     | Called when pointer leaves the element         |
+<AutoTypeTable
+  path="./registry/default/hooks/use-track-events.ts"
+  name="UseTrackEventsProps"
+/>
 
 #### Returns
 
 Returns an object with event handlers that can be spread onto a track element:
 
-| Property        | Type                                                      | Description                                    |
-| --------------- | --------------------------------------------------------- | ---------------------------------------------- |
-| `onPointerDown` | `(event: React.PointerEvent) => void`                     | Pointer down handler                           |
-| `onPointerMove` | `(event: React.PointerEvent) => void`                     | Pointer move handler                           |
-| `onPointerUp`   | `(event: React.PointerEvent) => void`                     | Pointer up handler                             |
-| `onPointerOut`  | `(event: React.PointerEvent) => void`                     | Pointer out handler                            |
+<AutoTypeTable
+  path="./registry/default/hooks/use-track-events.ts"
+  name="UseTrackEventsReturn"
+/>
 

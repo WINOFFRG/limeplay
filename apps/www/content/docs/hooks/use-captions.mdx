@@ -24,12 +24,12 @@ import React from "react"
 
 import { useCaptionsStates } from "@/hooks/limeplay/use-captions" // [!code ++]
 
+import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
 import { usePlayerStates } from "@/hooks/limeplay/use-player"
-import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
 
 export const PlayerHooks = React.memo(() => {
-  useShakaPlayer()
   usePlayerStates()
+  usePlaybackStates()
   useCaptionsStates() // [!code ++]
 
   return null
@@ -51,13 +51,19 @@ import {
   createCaptionsStore,
 } from "@/hooks/limeplay/use-captions"
 // [!code ++]
+import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
 import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
 import { createVolumeStore, VolumeStore } from "@/hooks/limeplay/use-volume"
 
-export type TypeMediaStore = PlayerStore & VolumeStore & CaptionsStore & {} // [!code ++]
+export type TypeMediaStore = PlaybackStore &
+  PlayerStore &
+  VolumeStore &
+  CaptionsStore & // [!code ++]
+  {}
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlaybackStore(...etc),
     ...createPlayerStore(...etc),
     ...createVolumeStore(...etc),
     ...createCaptionsStore(...etc), // [!code ++]
@@ -113,18 +119,16 @@ Returns captions control functions for managing text tracks.
 
 #### Returns
 
-| Property                  | Type         | Description                                                                                  |
-| ------------------------- | ------------ | -------------------------------------------------------------------------------------------- |
-| `toggleCaptionVisibility` | `() => void` | Toggles the visibility of captions. Automatically selects a default track if none is active. |
+<AutoTypeTable
+  path="./registry/default/hooks/use-captions.ts"
+  name="UseCaptionsReturn"
+/>
 
 ### Store State
 
 The captions store provides the following state:
 
-| Property                       | Type                                        | Description                                |
-| ------------------------------ | ------------------------------------------- | ------------------------------------------ |
-| `activeTextTrack`              | `shaka.extern.TextTrack \| null`            | Currently active text track                |
-| `textTracks`                   | `shaka.extern.TextTrack[] \| undefined`     | Available text tracks                      |
-| `textTrackVisible`             | `boolean`                                   | Whether captions are currently visible     |
-| `textTrackContainerElement`    | `HTMLDivElement \| null`                    | Container element for text track rendering |
-| `setTextTrackContainerElement` | `(element: HTMLDivElement \| null) => void` | Sets the container element for text tracks |
+<AutoTypeTable
+  path="./registry/default/hooks/use-captions.ts"
+  name="CaptionsStore"
+/>

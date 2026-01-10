@@ -20,7 +20,7 @@ export const lib: Registry["items"] = [
       },
     ],
     name: "create-media-store",
-    registryDependencies: ["use-player"],
+    registryDependencies: ["use-player", "use-playback"],
     type: "registry:lib",
   },
   {
@@ -57,8 +57,8 @@ export const internal: Registry["items"] = [
     ],
     name: "player-hooks-demo",
     registryDependencies: [
+      "use-playback",
       "use-player",
-      "use-shaka-player",
       "use-timeline",
       "use-volume",
       "use-captions",

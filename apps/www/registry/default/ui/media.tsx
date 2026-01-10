@@ -1,3 +1,5 @@
+"use client"
+
 import { composeRefs } from "@radix-ui/react-compose-refs"
 import * as React from "react"
 
@@ -29,7 +31,7 @@ export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
       }
 
       setMediaRef(mediaRef as React.RefObject<HTMLMediaElement>)
-    }, [setMediaRef])
+    }, [])
 
     return (
       <Element

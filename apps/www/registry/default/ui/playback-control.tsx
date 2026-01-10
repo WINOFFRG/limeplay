@@ -4,13 +4,11 @@ import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
-import { MediaReadyState, usePlayer } from "@/registry/default/hooks/use-player"
+import {
+  MediaReadyState,
+  usePlayback,
+} from "@/registry/default/hooks/use-playback"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
-
-export type PlaybackControlPropsDocs = Pick<
-  PlaybackControlProps,
-  "asChild" | "shortcut"
->
 
 interface PlaybackControlProps extends React.ComponentProps<typeof Button> {
   /**
@@ -31,7 +29,7 @@ export const PlaybackControl = React.forwardRef<
 >((props, forwardedRef) => {
   const status = useMediaStore((state) => state.status)
   const readyState = useMediaStore((state) => state.readyState)
-  const { togglePaused } = usePlayer()
+  const { togglePaused } = usePlayback()
 
   const {
     "aria-label": ariaLabelProp,

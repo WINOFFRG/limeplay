@@ -3,27 +3,18 @@ title: Seek Control
 description: Controls for seeking forward or backward in media playback
 ---
 
-import { Step, Steps } from "fumadocs-ui/components/steps"
-
 <ComponentPreview name="seek-control-demo" withPlayer />
 
 ## Installation
 
-<Steps>
-<Step>
-### Install the component
-```npm
-npx shadcn add @limeplay/seek-control
-```
-</Step>
 
-<Step>
+```npm
+npx shadcn add @limeplay/seek-controls
+```
+
 ### Ready to Use
 
 The `SeekControl` component uses the `useSeek` hook internally, which only requires the `MediaProvider` context. No additional store setup is needed as seeking is a direct action on the media element.
-
-</Step>
-</Steps>
 
 ## Example Usage
 
@@ -66,20 +57,4 @@ export function SeekGroupControl() {
 
 ## Understanding
 
-The `SeekControl` component provides seek functionality for the media player. Unlike volume or playback controls, seeking is a purely **action-based** operation:
-
-- **Action Bridge**: Uses [`useSeek()`](/docs/hooks/use-seek) hook to access `seek(offset)` which directly modifies `currentTime` on the native media element
-- **No Event Bridge**: No state synchronization is needed since `currentTime` is already tracked by the timeline hooks
-
-The component automatically handles edge cases like clamping seek positions to valid ranges (0 to duration) and resets the idle state to keep controls visible after seeking.
-
-## Components
-
-### SeekControl
-
-The main component for seeking forward or backward. It supports the **Slot pattern** (`asChild` prop) for composition and includes automatic ARIA labels based on the offset value.
-
-#### API Reference
-
-<AutoTypeTable path="./registry/default/ui/seek-controls.tsx" name="SeekControlPropsDocs" />
-
+The `SeekControl` component provides seek functionality for the media player.
