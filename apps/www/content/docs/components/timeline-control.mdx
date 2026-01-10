@@ -11,7 +11,7 @@ import { Step, Steps } from "fumadocs-ui/components/steps"
 
 <Steps>
 <Step>
-### Install the component
+
 ```npm
 npx shadcn add @limeplay/timeline-control
 ```
@@ -24,11 +24,13 @@ Import the `useTimelineStates` hook in your existing `PlayerHooks` component.
 ```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
 import React from "react"
 
-import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
+import { usePlayerStates } from "@/hooks/limeplay/use-player"
 import { useTimelineStates } from "@/hooks/limeplay/use-timeline" // [!code ++]
 
 export const PlayerHooks = React.memo(() => {
-  useShakaPlayer()
+  usePlayerStates()
+  usePlaybackStates()
   useTimelineStates() // [!code ++]
 
   return null
@@ -41,6 +43,7 @@ export const PlayerHooks = React.memo(() => {
 ### Add the Store States
 
 ```tsx lineNumbers title="lib/create-media-store.ts"
+import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
 import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
 import {
   createTimelineStore,
@@ -49,10 +52,14 @@ import {
 
 // [!code ++]
 
-export type TypeMediaStore = PlayerStore & TimelineStore & {} // [!code ++]
+export type TypeMediaStore = PlaybackStore &
+  PlayerStore &
+  TimelineStore & // [!code ++]
+  {}
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlaybackStore(...etc),
     ...createPlayerStore(...etc),
     ...createTimelineStore(...etc), // [!code ++]
     ...initProps,

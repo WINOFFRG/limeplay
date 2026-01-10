@@ -9,8 +9,8 @@ import React, { useCallback } from "react"
 import { useInterval } from "@/registry/default/hooks/use-interval"
 import {
   MediaReadyState,
-  type PlayerStore,
-} from "@/registry/default/hooks/use-player"
+  type PlaybackStore,
+} from "@/registry/default/hooks/use-playback"
 import { noop, off, on, toFixedNumber } from "@/registry/default/lib/utils"
 import {
   useGetStore,
@@ -25,11 +25,19 @@ export interface TimelineStore {
   isHovering: boolean
   isLive: boolean
   liveLatency: null | number
+  onDurationChange?: (payload: { duration: number }) => void
+
+  onSeek?: (payload: { from: number; to: number }) => void
+  onTimeUpdate?: (payload: {
+    currentTime: number
+    duration: number
+    progress: number
+  }) => void
   progress: number
 }
 
 export const createTimelineStore: StateCreator<
-  PlayerStore & TimelineStore,
+  PlaybackStore,
   [],
   [],
   TimelineStore
@@ -41,8 +49,24 @@ export const createTimelineStore: StateCreator<
   isHovering: false,
   isLive: false,
   liveLatency: null,
+  // Initialize event callbacks
+  onDurationChange: undefined,
+
+  onSeek: undefined,
+  onTimeUpdate: undefined,
   progress: 0,
 })
+
+export interface UseTimelineReturn {
+  getTimeFromEvent: (event: React.PointerEvent) => number
+  processBufferedRanges: (
+    bufferedRanges: shaka.extern.BufferedRange[],
+    variant?: "combined" | "default" | "from-zero"
+  ) => Array<{ startPercent: number; widthPercent: number }>
+  seek: (time: number) => void
+  setHoveringTime: (time: number) => void
+  setIsHovering: (isHovering: boolean) => void
+}
 
 export interface useTimelineStatesProps {
   /**
@@ -52,7 +76,7 @@ export interface useTimelineStatesProps {
   updateDuration?: number
 }
 
-export function useTimeline() {
+export function useTimeline(): UseTimelineReturn {
   const store = useGetStore()
   const mediaRef = useMediaStore((state) => state.mediaRef)
   const duration = useMediaStore((state) => state.duration)
@@ -74,6 +98,7 @@ export function useTimeline() {
       if (!mediaRef.current || !Number.isFinite(duration)) return
 
       const media = mediaRef.current
+      const fromTime = media.currentTime
 
       let actualSeekTime = time
       let storeCurrentTime = time
@@ -93,6 +118,8 @@ export function useTimeline() {
       })
 
       media.currentTime = actualSeekTime
+
+      store.getState().onSeek?.({ from: fromTime, to: actualSeekTime })
     },
     [mediaRef, duration, isLive, player, store]
   )
@@ -238,6 +265,12 @@ export function useTimelineStates({
         duration: player.seekRange().end - player.seekRange().start,
       }),
     })
+
+    store.getState().onTimeUpdate?.({
+      currentTime,
+      duration: store.getState().duration,
+      progress,
+    })
   }
 
   const onDurationChange = React.useCallback(() => {
@@ -250,6 +283,8 @@ export function useTimelineStates({
 
     if (playerDuration && Number.isFinite(playerDuration)) {
       store.setState({ duration: playerDuration })
+
+      store.getState().onDurationChange?.({ duration: playerDuration })
     }
   }, [store, mediaRef, player])
 

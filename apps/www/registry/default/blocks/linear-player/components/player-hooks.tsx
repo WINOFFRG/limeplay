@@ -3,19 +3,21 @@
 import React from "react"
 
 import { useCaptionsStates } from "@/registry/default/hooks/use-captions"
+import { usePlaybackStates } from "@/registry/default/hooks/use-playback"
 import { usePlaybackRateStates } from "@/registry/default/hooks/use-playback-rate"
 import { usePlayerStates } from "@/registry/default/hooks/use-player"
-import { useShakaPlayer } from "@/registry/default/hooks/use-shaka-player"
+import { usePlaylistStates } from "@/registry/default/hooks/use-playlist"
 import { useTimelineStates } from "@/registry/default/hooks/use-timeline"
 import { useVolumeStates } from "@/registry/default/hooks/use-volume"
 
 export const PlayerHooks = React.memo(() => {
-  useShakaPlayer()
   usePlayerStates()
+  usePlaybackStates()
   useTimelineStates()
   useVolumeStates()
   useCaptionsStates()
   usePlaybackRateStates()
+  usePlaylistStates()
 
   return null
 })

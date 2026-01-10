@@ -1,34 +1,28 @@
-import type shaka from "shaka-player"
-
 import React from "react"
+
+import type { Asset } from "@/registry/default/hooks/use-asset"
 
 import { cn } from "@/lib/utils"
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
-import { MediaElement } from "@/registry/default/blocks/linear-player/components/media-element"
 import { PlayerHooks } from "@/registry/default/blocks/linear-player/components/player-hooks"
 import { CaptionsContainer } from "@/registry/default/ui/captions"
 import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
+import { Media } from "@/registry/default/ui/media"
 import { MediaProvider } from "@/registry/default/ui/media-provider"
 import * as Layout from "@/registry/default/ui/player-layout"
 import { RootContainer } from "@/registry/default/ui/root-container"
 
-import { ASSETS } from "../lib/playlist"
-
 export interface LinearMediaPlayerProps {
+  asset?: Asset
   className?: string
-  config?: shaka.extern.PlayerConfiguration
   debug?: boolean
-  src?: string
 }
 
 export const LinearMediaPlayer = React.forwardRef<
   HTMLDivElement,
   LinearMediaPlayerProps
->(({ className, config, debug = false, src }, ref) => {
-  const finalConfig = src && config ? config : ASSETS[0].config
-  const finalSrc = src && src ? src : ASSETS[0].src
-
+>(({ className, debug = false }, ref) => {
   return (
     <MediaProvider debug={debug}>
       <RootContainer
@@ -47,7 +41,12 @@ export const LinearMediaPlayer = React.forwardRef<
           <FallbackPoster className="bg-black">
             <LimeplayLogo />
           </FallbackPoster>
-          <MediaElement config={finalConfig} src={finalSrc} />
+          <Media
+            as="video"
+            autoPlay={false}
+            className="size-full object-cover"
+            muted
+          />
           <PlayerHooks />
           <Layout.ControlsOverlayContainer />
           <Layout.ControlsContainer className="pb-6">

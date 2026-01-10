@@ -4,19 +4,6 @@ const TARGET_BASE_PATH = "hooks/limeplay"
 
 export const hooks: Registry["items"] = [
   {
-    dependencies: ["zustand"],
-    files: [
-      {
-        path: "hooks/use-player.ts",
-        target: `${TARGET_BASE_PATH}/use-player.ts`,
-        type: "registry:hook",
-      },
-    ],
-    name: "use-player",
-    registryDependencies: ["utils", "media-provider", "player-hooks"],
-    type: "registry:hook",
-  },
-  {
     dependencies: ["lodash.clamp", "zustand"],
     devDependencies: ["@types/lodash.clamp"],
     files: [
@@ -29,6 +16,7 @@ export const hooks: Registry["items"] = [
     name: "use-volume",
     registryDependencies: [
       "use-player",
+      "use-playback",
       "utils",
       "media-provider",
       "player-hooks",
@@ -62,6 +50,7 @@ export const hooks: Registry["items"] = [
     name: "use-timeline",
     registryDependencies: [
       "use-player",
+      "use-playback",
       "utils",
       "media-provider",
       "use-interval",
@@ -70,16 +59,39 @@ export const hooks: Registry["items"] = [
     type: "registry:hook",
   },
   {
-    dependencies: ["shaka-player"],
+    dependencies: ["shaka-player", "zustand"],
     files: [
       {
-        path: "hooks/use-shaka-player.ts",
-        target: `${TARGET_BASE_PATH}/use-shaka-player.ts`,
+        path: "hooks/use-player.ts",
+        target: `${TARGET_BASE_PATH}/use-player.ts`,
         type: "registry:hook",
       },
     ],
-    name: "use-shaka-player",
-    registryDependencies: ["media-provider", "player-hooks"],
+    name: "use-player",
+    registryDependencies: [
+      "media-provider",
+      "player-hooks",
+      "use-playback",
+      "utils",
+    ],
+    type: "registry:hook",
+  },
+  {
+    dependencies: ["shaka-player", "zustand"],
+    files: [
+      {
+        path: "hooks/use-asset.ts",
+        target: `${TARGET_BASE_PATH}/use-asset.ts`,
+        type: "registry:hook",
+      },
+    ],
+    name: "use-asset",
+    registryDependencies: [
+      "use-player",
+      "use-playlist",
+      "use-playback",
+      "media-provider",
+    ],
     type: "registry:hook",
   },
   {
@@ -105,6 +117,7 @@ export const hooks: Registry["items"] = [
     name: "use-captions",
     registryDependencies: [
       "use-player",
+      "use-playback",
       "utils",
       "media-provider",
       "player-hooks",
@@ -123,6 +136,7 @@ export const hooks: Registry["items"] = [
     name: "use-playback-rate",
     registryDependencies: [
       "use-player",
+      "use-playback",
       "utils",
       "media-provider",
       "player-hooks",
@@ -139,6 +153,32 @@ export const hooks: Registry["items"] = [
     ],
     name: "use-seek",
     registryDependencies: ["media-provider"],
+    type: "registry:hook",
+  },
+  {
+    dependencies: ["lodash", "zustand"],
+    files: [
+      {
+        path: "hooks/use-playlist.ts",
+        target: `${TARGET_BASE_PATH}/use-playlist.ts`,
+        type: "registry:hook",
+      },
+    ],
+    name: "use-playlist",
+    registryDependencies: ["utils", "media-provider"],
+    type: "registry:hook",
+  },
+  {
+    dependencies: ["zustand"],
+    files: [
+      {
+        path: "hooks/use-playback.ts",
+        target: `${TARGET_BASE_PATH}/use-playback.ts`,
+        type: "registry:hook",
+      },
+    ],
+    name: "use-playback",
+    registryDependencies: ["media-provider", "utils"],
     type: "registry:hook",
   },
 ]

@@ -11,7 +11,7 @@ import { Step, Steps } from "fumadocs-ui/components/steps"
 
 <Steps>
 <Step>
-### Install the component
+
 ```npm
 npx shadcn add @limeplay/volume-control
 ```
@@ -24,11 +24,13 @@ Import the `useVolumeStates` hook in your existing `PlayerHooks` component.
 ```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
 import React from "react"
 
-import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
+import { usePlayerStates } from "@/hooks/limeplay/use-player"
 import { useVolumeStates } from "@/hooks/limeplay/use-volume" // [!code ++]
 
 export const PlayerHooks = React.memo(() => {
-  useShakaPlayer()
+  usePlayerStates()
+  usePlaybackStates()
   useVolumeStates() // [!code ++]
 
   return null
@@ -42,13 +44,18 @@ export const PlayerHooks = React.memo(() => {
 
 ```tsx lineNumbers title="lib/create-media-store.ts"
 // [!code ++]
+import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
 import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
 import { createVolumeStore, VolumeStore } from "@/hooks/limeplay/use-volume"
 
-export type TypeMediaStore = PlayerStore & VolumeStore & {} // [!code ++]
+export type TypeMediaStore = PlaybackStore &
+  PlayerStore &
+  VolumeStore & // [!code ++]
+  {}
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPlaybackStore(...etc),
     ...createPlayerStore(...etc),
     ...createVolumeStore(...etc), // [!code ++]
     ...initProps,
@@ -88,45 +95,3 @@ export function VolumeControlSlider() {
 ```tsx lineNumbers title="components/player/bottom-controls.tsx"
 <VolumeControlSlider />
 ```
-
-## Understanding
-
-The Volume Control is a composable slider built with the **Event & Action Bridge** pattern:
-
-- **Event Bridge**: [`useVolumeStates()`](/docs/hooks/use-volume) listens to `volumechange` events and syncs volume/mute state
-- **Action Bridge**: Components use [`useVolume()`](/docs/hooks/use-volume) to call `setVolume()` which controls the media element
-
-### Accessibility
-
-- **ARIA Slider Pattern**: Proper `aria-valuemin`, `aria-valuemax`, `aria-valuenow` attributes
-- **Keyboard Support**: Arrow keys for volume adjustment
-- **Screen Reader**: Announces volume percentage changes
-- **Visual Feedback**: Clear volume level indication
-
-## Components
-
-The volume slider is composed of multiple parts for maximum flexibility.
-
-### Root
-
-Main container with orientation support (horizontal/vertical).
-
-#### API Reference
-<AutoTypeTable path="./registry/default/ui/volume-control.tsx" name="VolumeRootPropsDocs" />
-
-### Thumb
-
-Draggable handle for volume adjustment.
-
-#### API Reference
-<AutoTypeTable path="./registry/default/ui/volume-control.tsx" name="VolumeThumbPropsDocs" />
-
-### Track
-
-Visual track showing volume range. Extends `SliderPrimitive.Track` props.
-
-### Progress
-
-Filled portion showing current volume. Extends `SliderPrimitive.Indicator` props.
-
-

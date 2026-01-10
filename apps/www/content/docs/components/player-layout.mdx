@@ -8,30 +8,13 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 <Steps>
 <Step>
-### Install the component
 ```npm
 npx shadcn add @limeplay/player-layout
 ```
 </Step>
-</Steps>
 
-## Understanding
-
-Provides composible set of components which helps to setup player container structure. The layout system is built with accessibility and responsive design in mind.
-
-## Components
-
-The Player Layout is composed of multiple components that work together to create a structured media player interface.
-
-### RootContainer
-
-The outermost container that manages aspect ratio, idle state, and focus management.
-
-#### API Reference
-
-<AutoTypeTable path="./registry/default/ui/root-container.tsx" name="RootContainerPropsDocs" />
-
-#### Basic Usage
+<Step>
+### Setup the player layout in provider
 
 ```tsx lineNumbers title="components/player/media-player.tsx"
 import * as Layout from "@/components/limeplay/player-layout"
@@ -49,6 +32,21 @@ export function MediaPlayer() {
   )
 }
 ```
+</Step>
+
+</Steps>
+
+## Understanding
+
+Provides composible set of components which helps to setup player container structure. The layout system is built with accessibility and responsive design in mind.
+
+## Components
+
+The Player Layout is composed of multiple components that work together to create a structured media player interface.
+
+### RootContainer
+
+The outermost container that manages aspect ratio, idle state, and focus management.
 
 ### PlayerContainer
 
@@ -61,6 +59,10 @@ Container for player controls. Uses pointer-events management for proper interac
 ### ControlsBottomContainer
 
 Bottom-aligned container for control buttons and sliders.
+
+### ControlsTopContainer
+
+Top-aligned container for control buttons, typically used for titles or back buttons.
 
 ### ControlsOverlayContainer
 

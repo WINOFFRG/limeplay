@@ -9,7 +9,7 @@ import { Step, Steps } from "fumadocs-ui/components/steps"
 
 <Steps>
 <Step>
-### Install the hook
+
 ```npm
 npx shadcn add @limeplay/use-volume
 ```
@@ -22,11 +22,13 @@ Import the `useVolumeStates` hook in your existing `PlayerHooks` component.
 ```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
 import React from "react"
 
-import { useShakaPlayer } from "@/hooks/limeplay/use-shaka-player"
+import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
+import { usePlayerStates } from "@/hooks/limeplay/use-player"
 import { useVolumeStates } from "@/hooks/limeplay/use-volume" // [!code ++]
 
 export const PlayerHooks = React.memo(() => {
-  useShakaPlayer()
+  usePlayerStates()
+  usePlaybackStates()
   useVolumeStates() // [!code ++]
 
   return null
@@ -39,16 +41,18 @@ export const PlayerHooks = React.memo(() => {
 ### Add the Store States
 
 ```tsx lineNumbers title="lib/create-media-store.ts"
-import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback" // [!code ++]
 import { createVolumeStore, VolumeStore } from "@/hooks/limeplay/use-volume"
 
 // [!code ++]
 
-export type TypeMediaStore = PlayerStore & VolumeStore & {} // [!code ++]
+export type TypeMediaStore = PlaybackStore &
+  VolumeStore & // [!code ++]
+  {}
 
 export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
   const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlayerStore(...etc),
+    ...createPlaybackStore(...etc), // [!code ++]
     ...createVolumeStore(...etc), // [!code ++]
     ...initProps,
   }))
@@ -111,32 +115,18 @@ Returns control functions for managing volume and mute state.
 
 #### Returns
 
-| Property    | Type                        | Description                                    |
-| ----------- | --------------------------- | ---------------------------------------------- |
-| `setVolume` | `(volume: number, progress?: number, delta?: number) => void` | Sets the volume (0-1). Automatically mutes if volume is 0 |
-| `toggleMute` | `() => void`                | Toggles mute state                             |
-| `setMuted`  | `(muted: boolean) => void`  | Sets the mute state                            |
-
-#### setVolume Parameters
-
-| Parameter | Type     | Description                                                                 |
-| --------- | -------- | --------------------------------------------------------------------------- |
-| `volume`  | `number` | Target volume level (0-1)                                                   |
-| `progress` | `number` (optional) | Current playback progress or normalized position used when driving volume from a scrubber |
-| `delta`   | `number` (optional) | Change in volume since last call, useful for animation or smoothing        |
-
-**When to use optional parameters:**
-
-- **`progress`**: Pass when updating volume from a drag handler or scrubber interaction where you need to map a position to volume (e.g., `setVolume(0.5, event.clientX / sliderWidth)`).
-- **`delta`**: Pass when implementing animated volume changes or smoothing transitions (e.g., `setVolume(currentVolume, 0, 0.1)` to increment by 0.1).
+<AutoTypeTable
+  path="./registry/default/hooks/use-volume.ts"
+  name="UseVolumeReturn"
+/>
 
 ### Store State
 
 The volume store provides the following state accessed via `useMediaStore`:
 
-| Property | Type      | Description                                    |
-| -------- | --------- | ---------------------------------------------- |
-| `volume` | `number`  | Current volume level (0-1)                     |
-| `muted`  | `boolean` | Whether the media is muted                      |
-| `hasAudio` | `boolean` | Whether the media has audio tracks available    |
+<AutoTypeTable
+  path="./registry/default/hooks/use-volume.ts"
+  name="VolumeStore"
+/>
+
 
