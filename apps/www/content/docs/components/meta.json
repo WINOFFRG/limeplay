@@ -4,6 +4,7 @@
   "pages": [
     "media-provider",
     "playback-control",
+    "picture-in-picture-control",
     "playback-rate",
     "mute-control",
     "seek-controls",

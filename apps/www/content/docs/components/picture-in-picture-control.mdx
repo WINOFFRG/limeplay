@@ -1,0 +1,118 @@
+---
+title: Picture-in-Picture Control
+description: Toggle Picture-in-Picture mode for video playback
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+<ComponentPreview name="picture-in-picture-control-demo" withPlayer />
+
+## Installation
+
+<Steps>
+<Step>
+
+```npm
+npx shadcn add @limeplay/picture-in-picture-control
+```
+</Step>
+
+<Step>
+### Add Event & Action Bridge
+Import the `usePictureInPictureStates` hook in your existing `PlayerHooks` component.
+
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+"use client"
+
+import React from "react"
+
+import { usePictureInPictureStates } from "@/hooks/limeplay/use-picture-in-picture" // [!code ++]
+import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
+import { usePlayerStates } from "@/hooks/limeplay/use-player"
+
+export const PlayerHooks = React.memo(() => {
+  usePlayerStates()
+  usePlaybackStates()
+  usePictureInPictureStates() // [!code ++]
+
+  return null
+})
+```
+
+</Step>
+<Step>
+### Add the Store States
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+import { createPictureInPictureStore, PictureInPictureStore } from "@/hooks/limeplay/use-picture-in-picture"
+import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
+
+export type TypeMediaStore = PictureInPictureStore & // [!code ++]
+  PlaybackStore &
+  {}
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPictureInPictureStore(...etc), // [!code ++]
+    ...createPlaybackStore(...etc),
+    ...initProps,
+  }))
+  return mediaStore
+}
+```
+
+</Step>
+</Steps>
+
+## Example Usage
+
+1. Design the Picture-in-Picture button with icon states.
+
+```tsx lineNumbers title="components/player/picture-in-picture-button.tsx"
+import { PictureInPictureIcon } from "@phosphor-icons/react"
+
+import { Button } from "@/components/ui/button"
+import { useMediaStore } from "@/components/limeplay/media-provider"
+import { PictureInPictureControl } from "@/components/limeplay/picture-in-picture-control"
+
+export function PictureInPictureButton() {
+  const isPictureInPictureActive = useMediaStore(
+    (state) => state.isPictureInPictureActive
+  )
+
+  return (
+    <PictureInPictureControl asChild shortcut="P">
+      <Button variant="ghost" size="icon">
+        <PictureInPictureIcon
+          weight={isPictureInPictureActive ? "fill" : "regular"}
+          size={18}
+        />
+      </Button>
+    </PictureInPictureControl>
+  )
+}
+```
+
+2. Use the component in your player.
+
+```tsx lineNumbers title="components/player/bottom-controls.tsx"
+<PictureInPictureButton />
+```
+
+## Understanding
+
+The `PictureInPictureControl` component uses the [`usePictureInPicture()`](/docs/hooks/use-picture-in-picture) hook to toggle Picture-in-Picture mode. You can use the `isPictureInPictureActive` field from media store to display the current PiP state.
+
+Picture-in-Picture mode allows the video to float in a small window that stays on top of other windows, enabling users to continue watching while working on other tasks. The component automatically detects browser support and disables itself when PiP is unavailable.
+
+
+<Callout title="Browser Support" type="warning">
+  PiP API is natively not supported in Firefox. [Reference](https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API)
+</Callout>
+
+## API Reference
+
+<AutoTypeTable
+  path="./registry/default/ui/picture-in-picture-control.tsx"
+  name="PictureInPictureControlPropsDocs"
+/>
