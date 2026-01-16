@@ -47,6 +47,17 @@ export const examples: Registry["items"] = [
   {
     files: [
       {
+        path: "examples/picture-in-picture-control-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+    name: "picture-in-picture-control-demo",
+    registryDependencies: ["media-provider", "picture-in-picture-control"],
+    type: "registry:example",
+  },
+  {
+    files: [
+      {
         path: "examples/volume-slider-control-horizontal-demo.tsx",
         type: "registry:example",
       },

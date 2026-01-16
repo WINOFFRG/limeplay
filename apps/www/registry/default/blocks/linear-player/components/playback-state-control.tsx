@@ -21,7 +21,7 @@ export function PlaybackStateControl() {
           <PauseIcon weight="fill" />
         ) : status === "ended" ? (
           <RepeatIcon />
-        ) : status === "buffering" ? (
+        ) : status === "buffering" || status === "loading" ? (
           <CircleNotchIcon className="animate-spin" weight="bold" />
         ) : (
           <PlayIcon weight="fill" />

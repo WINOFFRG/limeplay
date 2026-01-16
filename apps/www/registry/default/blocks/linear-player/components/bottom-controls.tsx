@@ -1,4 +1,5 @@
 import { CaptionsStateControl } from "@/registry/default/blocks/linear-player/components/captions-state-control"
+import { PictureInPictureControl } from "@/registry/default/blocks/linear-player/components/picture-in-picture-control"
 import { PlaybackRateControl } from "@/registry/default/blocks/linear-player/components/playback-rate-control"
 import { PlaybackStateControl } from "@/registry/default/blocks/linear-player/components/playback-state-control"
 import { Playlist } from "@/registry/default/blocks/linear-player/components/playlist"
@@ -14,6 +15,7 @@ export function BottomControls() {
       <TimelineSliderControl />
       <PlaybackRateControl />
       <CaptionsStateControl />
+      <PictureInPictureControl />
       <Playlist />
     </Layout.ControlsBottomContainer>
   )

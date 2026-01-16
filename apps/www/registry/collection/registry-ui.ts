@@ -182,6 +182,23 @@ export const ui: Registry["items"] = [
     dependencies: ["@radix-ui/react-slot"],
     files: [
       {
+        path: "ui/picture-in-picture-control.tsx",
+        target: `${TARGET_BASE_PATH}/picture-in-picture-control.tsx`,
+        type: "registry:ui",
+      },
+    ],
+    name: "picture-in-picture-control",
+    registryDependencies: [
+      "media-provider",
+      "use-picture-in-picture",
+      "use-playback",
+    ],
+    type: "registry:ui",
+  },
+  {
+    dependencies: ["@radix-ui/react-slot"],
+    files: [
+      {
         path: "ui/playback-rate.tsx",
         target: `${TARGET_BASE_PATH}/playback-rate.tsx`,
         type: "registry:ui",
