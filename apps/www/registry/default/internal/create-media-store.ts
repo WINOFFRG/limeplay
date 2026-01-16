@@ -1,6 +1,7 @@
 import { create } from "zustand"
 
 import type { CaptionsStore } from "@/registry/default/hooks/use-captions"
+import type { PictureInPictureStore } from "@/registry/default/hooks/use-picture-in-picture"
 import type { PlaybackStore } from "@/registry/default/hooks/use-playback"
 import type { PlaybackRateStore } from "@/registry/default/hooks/use-playback-rate"
 import type { PlayerStore } from "@/registry/default/hooks/use-player"
@@ -9,6 +10,7 @@ import type { TimelineStore } from "@/registry/default/hooks/use-timeline"
 import type { VolumeStore } from "@/registry/default/hooks/use-volume"
 
 import { createCaptionsStore } from "@/registry/default/hooks/use-captions"
+import { createPictureInPictureStore } from "@/registry/default/hooks/use-picture-in-picture"
 import { createPlaybackStore } from "@/registry/default/hooks/use-playback"
 import { createPlaybackRateStore } from "@/registry/default/hooks/use-playback-rate"
 import { createPlayerStore } from "@/registry/default/hooks/use-player"
@@ -21,6 +23,7 @@ export interface CreateMediaStoreProps {
 }
 
 export type TypeMediaStore = CaptionsStore &
+  PictureInPictureStore &
   PlaybackRateStore &
   PlaybackStore &
   PlayerStore &
@@ -37,6 +40,7 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
     ...createTimelineStore(...etc),
     ...createCaptionsStore(...etc),
     ...createPlaybackRateStore(...etc),
+    ...createPictureInPictureStore(...etc),
     ...initProps,
   }))
   return mediaStore

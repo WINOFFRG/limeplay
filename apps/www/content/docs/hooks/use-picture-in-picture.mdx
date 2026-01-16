@@ -1,0 +1,148 @@
+---
+title: use-picture-in-picture
+description: Hook for managing Picture-in-Picture mode with full browser support
+---
+
+import { Step, Steps } from "fumadocs-ui/components/steps"
+
+## Installation
+
+<Steps>
+<Step>
+### Install the hook
+```npm
+npx shadcn add @limeplay/use-picture-in-picture
+```
+</Step>
+
+<Step>
+### Add Event & Action Bridge
+Import the `usePictureInPictureStates` hook in your existing `PlayerHooks` component.
+
+```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
+import React from "react"
+
+import { usePictureInPictureStates } from "@/hooks/limeplay/use-picture-in-picture" // [!code ++]
+import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
+import { usePlayerStates } from "@/hooks/limeplay/use-player"
+
+export const PlayerHooks = React.memo(() => {
+  usePlayerStates()
+  usePlaybackStates()
+  usePictureInPictureStates() // [!code ++]
+
+  return null
+})
+```
+
+</Step>
+
+<Step>
+### Add the Store States
+
+```tsx lineNumbers title="lib/create-media-store.ts"
+import { createPictureInPictureStore, PictureInPictureStore } from "@/hooks/limeplay/use-picture-in-picture"
+
+export type TypeMediaStore = PictureInPictureStore & // [!code ++]
+  {}
+
+export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
+  const mediaStore = create<TypeMediaStore>()((...etc) => ({
+    ...createPictureInPictureStore(...etc), // [!code ++]
+    ...initProps,
+  }))
+  return mediaStore
+}
+```
+
+</Step>
+</Steps>
+
+## Example Usage
+
+Use the `usePictureInPicture()` hook to control Picture-in-Picture mode programmatically.
+
+```tsx lineNumbers title="components/player/custom-pip-button.tsx"
+import { usePictureInPicture } from "@/hooks/limeplay/use-picture-in-picture"
+import { useMediaStore } from "@/components/limeplay/media-provider"
+
+export function CustomPipButton() {
+  const { togglePictureInPicture, enterPictureInPicture, exitPictureInPicture } = usePictureInPicture()
+  const isPictureInPictureActive = useMediaStore((state) => state.isPictureInPictureActive)
+  const isPictureInPictureSupported = useMediaStore((state) => state.isPictureInPictureSupported)
+
+  if (!isPictureInPictureSupported) {
+    return null // Browser doesn't support PiP
+  }
+
+  return (
+    <div>
+      <button onClick={togglePictureInPicture}>
+        {isPictureInPictureActive ? "Exit PiP" : "Enter PiP"}
+      </button>
+    </div>
+  )
+}
+```
+
+## Understanding
+
+The `use-picture-in-picture` hook enables Picture-in-Picture functionality for video elements. It implements the **Event & Action Bridge** pattern:
+
+- **Event Bridge**: `usePictureInPictureStates()` listens to native PiP events (`enterpictureinpicture`, `leavepictureinpicture`) and synchronizes state to the React store
+- **Action Bridge**: `usePictureInPicture()` provides control functions to enter, exit, or toggle PiP mode
+
+### Browser API Support
+
+The hook automatically handles different browser implementations:
+
+- **Standard API**: Modern browsers (Chrome, Firefox, Edge) use `document.pictureInPictureElement` and `video.requestPictureInPicture()`
+- **Webkit API**: Safari uses `video.webkitSetPresentationMode()` and `video.webkitPresentationMode`
+
+<Callout title="Browser Support" type="warning">
+  Picture-in-Picture only works with `<video>` elements. The hook validates this at runtime.
+</Callout>
+
+## API Reference
+
+### usePictureInPictureStates()
+
+Sets up event listeners for Picture-in-Picture events. This hook should be called once in your `PlayerHooks` component. It automatically syncs the following state:
+
+- `isPictureInPictureActive` - Whether PiP mode is currently active
+- `isPictureInPictureSupported` - Whether the browser supports PiP
+
+### usePictureInPicture()
+
+Returns control functions for managing Picture-in-Picture mode.
+
+#### Returns
+
+<AutoTypeTable
+  path="./registry/default/hooks/use-picture-in-picture.ts"
+  name="UsePictureInPictureReturn"
+/>
+
+### Store State
+
+The Picture-in-Picture store provides the following state accessed via `useMediaStore`:
+
+<AutoTypeTable
+  path="./registry/default/hooks/use-picture-in-picture.ts"
+  name="PictureInPictureStore"
+/>
+
+### Event Callbacks
+
+You can listen to PiP events by setting callbacks in the store:
+
+```tsx
+store.setState({
+  onEnterPictureInPicture: () => {
+    console.log("Entered Picture-in-Picture mode")
+  },
+  onLeavePictureInPicture: () => {
+    console.log("Exited Picture-in-Picture mode")
+  },
+})
+```

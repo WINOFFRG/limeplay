@@ -3,6 +3,7 @@
 import React from "react"
 
 import { useCaptionsStates } from "@/registry/default/hooks/use-captions"
+import { usePictureInPictureStates } from "@/registry/default/hooks/use-picture-in-picture"
 import { usePlaybackStates } from "@/registry/default/hooks/use-playback"
 import { usePlaybackRateStates } from "@/registry/default/hooks/use-playback-rate"
 import { usePlayerStates } from "@/registry/default/hooks/use-player"
@@ -18,6 +19,7 @@ export const PlayerHooks = React.memo(() => {
   useCaptionsStates()
   usePlaybackRateStates()
   usePlaylistStates()
+  usePictureInPictureStates()
 
   return null
 })
