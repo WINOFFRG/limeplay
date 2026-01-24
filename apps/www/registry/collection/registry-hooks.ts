@@ -181,4 +181,22 @@ export const hooks: Registry["items"] = [
     registryDependencies: ["media-provider", "utils"],
     type: "registry:hook",
   },
+  {
+    dependencies: ["zustand"],
+    files: [
+      {
+        path: "hooks/use-picture-in-picture.ts",
+        target: `${TARGET_BASE_PATH}/use-picture-in-picture.ts`,
+        type: "registry:hook",
+      },
+    ],
+    name: "use-picture-in-picture",
+    registryDependencies: [
+      "use-playback",
+      "utils",
+      "media-provider",
+      "player-hooks",
+    ],
+    type: "registry:hook",
+  },
 ]

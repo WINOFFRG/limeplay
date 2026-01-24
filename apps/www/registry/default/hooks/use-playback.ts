@@ -244,6 +244,10 @@ export function usePlaybackStates() {
         status: "playing",
       })
 
+      if (prevStatus === "buffering") {
+        store.getState().onBuffering?.({ isBuffering: false })
+      }
+
       store.getState().onStatusChange?.({ prevStatus, status: "playing" })
     }
 
