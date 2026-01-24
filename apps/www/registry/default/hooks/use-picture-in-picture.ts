@@ -21,12 +21,6 @@ interface ExtendedHTMLVideoElement extends HTMLVideoElement {
   webkitSupportsPresentationMode?: (mode: string) => boolean
 }
 
-interface PictureInPictureWindow extends EventTarget {
-  readonly height: number
-  onresize: ((this: PictureInPictureWindow, ev: Event) => void) | null
-  readonly width: number
-}
-
 export const createPictureInPictureStore: StateCreator<
   PictureInPictureStore,
   [],
@@ -68,12 +62,12 @@ export function usePictureInPicture(): UsePictureInPictureReturn {
     const media = store.getState().mediaRef
       .current as ExtendedHTMLVideoElement | null
 
-    if (!media || !document.pictureInPictureElement) return
+    if (!media) return
 
     try {
       if (isWebkitPictureInPictureSupported(media)) {
         media.webkitSetPresentationMode!("inline")
-      } else {
+      } else if (document.pictureInPictureElement) {
         await document.exitPictureInPicture()
       }
     } catch (error) {
@@ -124,23 +118,33 @@ export function usePictureInPictureStates() {
       store.getState().onLeavePictureInPicture?.()
     }
 
+    const webkitPresentationModeHandler = () => {
+      const isActive = media.webkitPresentationMode === "picture-in-picture"
+      if (isActive) {
+        enterPictureInPictureHandler()
+      } else {
+        leavePictureInPictureHandler()
+      }
+    }
+
     on(media, "enterpictureinpicture", enterPictureInPictureHandler)
     on(media, "leavepictureinpicture", leavePictureInPictureHandler)
 
     if (isWebkitPictureInPictureSupported(media)) {
-      on(media, "webkitpresentationmodechanged", () => {
-        const isActive = media.webkitPresentationMode === "picture-in-picture"
-        if (isActive) {
-          enterPictureInPictureHandler()
-        } else {
-          leavePictureInPictureHandler()
-        }
-      })
+      on(media, "webkitpresentationmodechanged", webkitPresentationModeHandler)
     }
 
     return () => {
       off(media, "enterpictureinpicture", enterPictureInPictureHandler)
       off(media, "leavepictureinpicture", leavePictureInPictureHandler)
+
+      if (isWebkitPictureInPictureSupported(media)) {
+        off(
+          media,
+          "webkitpresentationmodechanged",
+          webkitPresentationModeHandler
+        )
+      }
     }
   }, [store, mediaRef])
 }
