@@ -6,8 +6,7 @@ import React from "react"
 import { cn } from "@/lib/utils"
 import { useMediaStore } from "@/registry/default/ui/media-provider"
 
-export interface RootContainerProps
-  extends React.ComponentPropsWithoutRef<"div"> {
+export interface RootContainerProps extends React.ComponentPropsWithoutRef<"div"> {
   /**
    * Height in pixels for aspect ratio calculation
    */
