@@ -100,13 +100,20 @@ export function usePictureInPictureStates() {
     const media = mediaRef.current as ExtendedHTMLVideoElement | null
     if (!media || media.nodeName.toLowerCase() !== "video") return noop
 
-    const isPictureInPictureSupported =
-      document.pictureInPictureEnabled ||
-      isWebkitPictureInPictureSupported(media)
+    const updatePictureInPictureSupport = () => {
+      const browserSupports =
+        document.pictureInPictureEnabled ||
+        isWebkitPictureInPictureSupported(media)
 
-    store.setState({
-      isPictureInPictureSupported,
-    })
+      const isPictureInPictureSupported =
+        browserSupports && hasVideoTrack(media)
+
+      store.setState({
+        isPictureInPictureSupported,
+      })
+    }
+
+    updatePictureInPictureSupport()
 
     const enterPictureInPictureHandler = () => {
       store.setState({ isPictureInPictureActive: true })
@@ -129,6 +136,8 @@ export function usePictureInPictureStates() {
 
     on(media, "enterpictureinpicture", enterPictureInPictureHandler)
     on(media, "leavepictureinpicture", leavePictureInPictureHandler)
+    on(media, "loadedmetadata", updatePictureInPictureSupport)
+    on(media, "emptied", updatePictureInPictureSupport)
 
     if (isWebkitPictureInPictureSupported(media)) {
       on(media, "webkitpresentationmodechanged", webkitPresentationModeHandler)
@@ -137,6 +146,8 @@ export function usePictureInPictureStates() {
     return () => {
       off(media, "enterpictureinpicture", enterPictureInPictureHandler)
       off(media, "leavepictureinpicture", leavePictureInPictureHandler)
+      off(media, "loadedmetadata", updatePictureInPictureSupport)
+      off(media, "emptied", updatePictureInPictureSupport)
 
       if (isWebkitPictureInPictureSupported(media)) {
         off(
@@ -147,6 +158,10 @@ export function usePictureInPictureStates() {
       }
     }
   }, [store, mediaRef])
+}
+
+function hasVideoTrack(media: HTMLVideoElement): boolean {
+  return media.videoWidth > 0 && media.videoHeight > 0
 }
 
 function isWebkitPictureInPictureSupported(
