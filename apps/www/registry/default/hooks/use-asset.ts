@@ -88,7 +88,7 @@ export function useAsset(): UseAssetReturn {
         await shakaPlayer.load(asset.src)
       }
 
-      if (player && mediaRef.current) {
+      if (player && mediaRef.current && mediaRef.current.autoplay) {
         await play()
       }
     },
