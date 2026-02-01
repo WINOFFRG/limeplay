@@ -44,14 +44,11 @@ export function VideoBackground() {
           alt="shadow page background"
           className={`
             size-full object-cover opacity-25 mix-blend-multiply
-            sm:scale-120 sm:object-fill
+            sm:translate-x-[-5%] sm:translate-y-[-3%] sm:translate-3d sm:scale-120 sm:object-fill
           `}
           priority
           quality={75}
           src={ShadowOverlay28}
-          style={{
-            transform: "translate3d(-5%, -3%, 0)",
-          }}
         />
       </motion.div>
     </motion.div>

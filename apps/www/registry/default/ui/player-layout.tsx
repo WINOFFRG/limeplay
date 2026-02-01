@@ -29,8 +29,7 @@ export const PlayerContainer = React.forwardRef<
 
 PlayerContainer.displayName = "PlayerContainer"
 
-export interface ControlsContainerProps
-  extends ComponentPropsWithoutRef<"div"> {
+export interface ControlsContainerProps extends ComponentPropsWithoutRef<"div"> {
   className?: string
 }
 
@@ -55,8 +54,7 @@ export const ControlsContainer = React.forwardRef<
 
 ControlsContainer.displayName = "ControlsContainer"
 
-export interface ControlsBottomContainerProps
-  extends ComponentPropsWithoutRef<"div"> {
+export interface ControlsBottomContainerProps extends ComponentPropsWithoutRef<"div"> {
   className?: string
 }
 
@@ -101,8 +99,7 @@ export const ControlsBottomContainer = React.forwardRef<
 
 ControlsBottomContainer.displayName = "ControlsBottomContainer"
 
-export interface ControlsTopContainerProps
-  extends ComponentPropsWithoutRef<"div"> {
+export interface ControlsTopContainerProps extends ComponentPropsWithoutRef<"div"> {
   className?: string
 }
 
