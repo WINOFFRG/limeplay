@@ -84,7 +84,7 @@ export function ImmersiveScrollPlayer({
           style={{ backgroundColor }}
         />
         <motion.div
-          className="relative z-10 aspect-video origin-center overflow-hidden will-change-transform"
+          className="relative z-10 aspect-auto origin-center overflow-hidden will-change-transform"
           style={{ borderRadius, width }}
           variants={{
             hidden: { opacity: 0, scale: 0.98, y: 10 },

@@ -8,11 +8,13 @@ import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export interface RootContainerProps extends React.ComponentPropsWithoutRef<"div"> {
   /**
-   * Height in pixels for aspect ratio calculation
+   * Height in pixels for aspect ratio calculation.
+   * Used only if aspectRatio prop is not provided.
    */
   height?: number
   /**
-   * Width in pixels for aspect ratio calculation
+   * Width in pixels for aspect ratio calculation.
+   * Used only if aspectRatio prop is not provided.
    */
   width?: number
 }
@@ -26,7 +28,7 @@ export const RootContainer = React.forwardRef<
   HTMLDivElement,
   RootContainerProps
 >((props, forwardedRef) => {
-  const { children, className, height, width, ...etc } = props
+  const { children, className, height = 1080, width = 1920, ...etc } = props
   const idle = useMediaStore((state) => state.idle)
   const forceIdle = useMediaStore((state) => state.forceIdle)
   const setIdle = useMediaStore((state) => state.setIdle)
@@ -51,7 +53,8 @@ export const RootContainer = React.forwardRef<
         `
           group/root aspect-(--aspect-ratio)
           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50
-        `
+        `,
+        className
       )}
       data-idle={debug || forceIdle ? "false" : idle}
       data-layout-type="root-container"
@@ -81,13 +84,6 @@ export const RootContainer = React.forwardRef<
           setIdle(false)
         }
       }}
-      // Show controls like tabbing over
-      // onKeyDown={}
-      // onPointerMove show controls again
-      // onPointerUp IDK yet, but probably
-      // onPointerLeave hide controls now, maybe with timeout?
-      // onFocus show controls and set focus true so that keyboard shortcuts are triggered
-      // onBlur hide controls and set focus to false
       onPointerUp={() => {
         if (!forceIdle) {
           setIdle(false)

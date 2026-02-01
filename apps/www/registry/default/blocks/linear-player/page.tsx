@@ -3,7 +3,7 @@ import { LinearMediaPlayer } from "@/registry/default/blocks/linear-player/compo
 export default function Page() {
   return (
     <section className="flex h-dvh w-dvw bg-black">
-      <LinearMediaPlayer />
+      <LinearMediaPlayer as="audio" />
     </section>
   )
 }
