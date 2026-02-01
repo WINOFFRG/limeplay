@@ -1,20 +1,21 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+language: "en-US"
+
+reviews:
+  path_filters:
+    - "apps/www/registry/**"
+    - "apps/www/content/docs/**"
+    - "!**/node_modules/**"
+    - "!**/out/**"
+    - "!**/.next/**"
+
 knowledge_base:
   code_guidelines:
     enabled: true
-    filePatterns:
+    file_patterns:
       - "prompts/code-rabbit.md"
 
-reviews:
-  enabled: true
-  paths:
-    include:
-      - "apps/www/registry/**"
-      - "apps/www/content/docs/**"
-    exclude:
-      - "**/node_modules/**"
-      - "**/out/**"
-      - "**/.next/**"
-
-  tools:
-    eslint:
-      enabled: true
+tools:
+  eslint:
+    enabled: true
