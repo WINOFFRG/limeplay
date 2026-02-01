@@ -29,9 +29,9 @@ export function PlayerContainer() {
       <LinearMediaPlayer
         className={cn(
           `
-            dark mx-auto w-[calc(100%-2rem)] overflow-hidden rounded-sm
-            sm:mx-2 sm:w-full
-            md:mx-0 md:rounded-none
+            dark mx-auto mt-6 overflow-hidden
+            sm:mx-2 sm:my-0 sm:w-full
+            md:mx-0
           `,
           isMobilePortrait &&
             `
@@ -40,6 +40,10 @@ export function PlayerContainer() {
             `
         )}
         debug={debug}
+        mediaProps={{
+          autoPlay: false,
+          muted: true,
+        }}
         ref={playerRef}
       />
     </>

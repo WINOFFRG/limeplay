@@ -8,44 +8,58 @@ import { PlayerHooks } from "@/registry/default/blocks/linear-player/components/
 import { CaptionsContainer } from "@/registry/default/ui/captions"
 import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
-import { Media } from "@/registry/default/ui/media"
+import { Media, type MediaProps } from "@/registry/default/ui/media"
 import { MediaProvider } from "@/registry/default/ui/media-provider"
 import * as Layout from "@/registry/default/ui/player-layout"
 import { RootContainer } from "@/registry/default/ui/root-container"
 
-export interface LinearMediaPlayerProps {
+export interface LinearMediaPlayerProps<
+  T extends MediaType = "audio" | "video",
+> {
+  /**
+   * The type of media element to render
+   * @default "video"
+   */
+  as?: T
   asset?: Asset
   className?: string
   debug?: boolean
+  /**
+   * Props to pass to the underlying media element (video/audio)
+   */
+  mediaProps?: MediaPropsForType<T>
+  /**
+   * Ref to the underlying media element
+   */
+  mediaRef?: React.Ref<MediaElementType<T>>
 }
+
+type MediaElementType<T extends MediaType> = T extends "audio"
+  ? HTMLAudioElement
+  : HTMLVideoElement
+
+type MediaPropsForType<T extends MediaType> = T extends "audio"
+  ? Omit<React.AudioHTMLAttributes<HTMLAudioElement>, "as" | "className">
+  : Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "as" | "className">
+
+type MediaType = MediaProps["as"]
 
 export const LinearMediaPlayer = React.forwardRef<
   HTMLDivElement,
   LinearMediaPlayerProps
->(({ className, debug = false }, ref) => {
+>(({ as = "video", className, debug = false, mediaProps, mediaRef }, ref) => {
   return (
     <MediaProvider debug={debug}>
-      <RootContainer
-        className={cn(
-          `
-            m-auto w-full
-            md:min-w-80
-          `,
-          className
-        )}
-        height={720}
-        ref={ref}
-        width={1280}
-      >
+      <RootContainer className={cn("m-auto w-full", className)} ref={ref}>
         <Layout.PlayerContainer>
           <FallbackPoster className="bg-black">
             <LimeplayLogo />
           </FallbackPoster>
           <Media
-            as="video"
-            autoPlay={false}
+            {...(mediaProps as React.ComponentPropsWithoutRef<typeof Media>)}
+            as={as}
             className="size-full object-cover"
-            muted
+            ref={mediaRef as React.Ref<HTMLMediaElement>}
           />
           <PlayerHooks />
           <Layout.ControlsOverlayContainer />

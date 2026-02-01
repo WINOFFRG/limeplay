@@ -35,10 +35,10 @@ export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
 
     return (
       <Element
-        aria-busy={status === "buffering"}
+        aria-busy={status === "buffering" || status === "loading"}
         controls={false}
-        ref={composeRefs(forwardedRef, mediaRef)}
         {...etc}
+        ref={composeRefs(forwardedRef, mediaRef)}
       />
     )
   }
