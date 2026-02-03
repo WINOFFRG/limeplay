@@ -104,7 +104,7 @@ export function useAsset(): UseAssetReturn {
     onError: (item: PlaylistItem<Asset>, error: Error) => {
       console.error("[useAsset] Playlist error:", item.id, error)
 
-      playlist.next()
+      // playlist.next()
     },
     onLoadItem: async (item: PlaylistItem<Asset>) => {
       const asset = item.properties

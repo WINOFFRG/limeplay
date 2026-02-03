@@ -76,14 +76,17 @@ export const Root = React.forwardRef<
   return (
     <SliderPrimitive.Root
       aria-label="Timeline Slider"
-      className={cn(
-        `
-          relative h-1 rounded-full transition-[height] duration-150 ease-out-quad
-          data-[orientation=horizontal]:h-(--lp-timeline-track-height)
-          active:data-[orientation=horizontal]:h-(--lp-timeline-track-height-active)
-        `,
-        className
-      )}
+      // DEV: Opinidated animations and border without variable
+      // TODO: Uncomment and migrate to unopininated before PR
+      // className={cn(
+      //   `
+      //     relative h-1 rounded-full transition-[height] duration-150 ease-out-quad
+      //     data-[orientation=horizontal]:h-(--lp-timeline-track-height)
+      //     active:data-[orientation=horizontal]:h-(--lp-timeline-track-height-active)
+      //   `,
+      //   className
+      // )}
+      className={cn(`relative block h-1`, className)}
       orientation={orientation}
       ref={internalRef}
       value={[currentValue]}
@@ -130,10 +133,7 @@ export const Progress = React.forwardRef<
 
   return (
     <SliderPrimitive.Indicator
-      className={cn(
-        "h-full w-(--lp-played-width)! rounded-s-full bg-primary",
-        className
-      )}
+      className={cn("h-full w-(--lp-played-width)! bg-primary", className)}
       ref={ref}
       style={
         {
