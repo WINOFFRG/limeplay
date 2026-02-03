@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 
 import { exec } from "child_process"
-import { promises as fs } from "fs"
+import { promises as fs, statSync } from "fs"
 import path from "path"
 import { rimraf } from "rimraf"
 import { type Registry, registryItemSchema } from "shadcn/schema"
@@ -255,8 +255,46 @@ async function main() {
     // Free items: No 'pro' category
     const freeItems = registryItems.filter((item) => !isProItem(item))
 
-    // Pro items: Have 'pro' category
-    const proItems = registryItems.filter((item) => isProItem(item))
+    const proItems = registryItems.filter((item) => {
+      if (!isProItem(item)) return false
+
+      const firstFile = item.files?.[0]
+      if (!firstFile) return false
+
+      const filePath =
+        typeof firstFile === "string" ? firstFile : firstFile.path
+      const pathParts = filePath.split("/")
+
+      // For blocks: blocks/<name>/...
+      // For ui: ui/<name>.tsx
+      let itemDir: string
+      if (pathParts[0] === "blocks" && pathParts.length > 1) {
+        itemDir = path.join(
+          process.cwd(),
+          "registry/pro",
+          pathParts[0],
+          pathParts[1]
+        )
+      } else {
+        itemDir = path.join(process.cwd(), "registry/pro", pathParts[0])
+      }
+
+      try {
+        const stat = statSync(itemDir)
+        if (!stat.isDirectory()) {
+          logger.debug(
+            `⏭️ Skipping "${item.name}" - source directory not found: ${itemDir}`
+          )
+          return false
+        }
+        return true
+      } catch {
+        logger.debug(
+          `⏭️ Skipping "${item.name}" - source directory not found: ${itemDir}`
+        )
+        return false
+      }
+    })
 
     // Check if we have pro items defined but missing submodule
     if (proItems.length > 0 && !hasProRegistry) {
