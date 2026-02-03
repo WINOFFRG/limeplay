@@ -1,24 +1,24 @@
 "use client"
 
-import dynamic from "next/dynamic"
+import { Suspense } from "react"
 
-const YouTubeMusicPlayer = dynamic(
-  () =>
-    import("@/registry/pro/blocks/youtube-music/components/media-player")
-      .then((mod) => mod.YouTubeMusicPlayer)
-      .catch(() => {
-        return () => null
-      }),
-  {
-    loading: () => null,
-    ssr: false,
-  }
-)
+import { Index } from "@/registry/__index__"
 
 export function ProYouTubeMusicPlayer() {
+  const proRegistry = Index["pro"]
+  const youtubeMusicEntry = proRegistry?.["youtube-music"]
+
+  if (!youtubeMusicEntry?.component) {
+    return null
+  }
+
+  const Component = youtubeMusicEntry.component
+
   return (
-    <div className="dark">
-      <YouTubeMusicPlayer />
-    </div>
+    <Suspense fallback={null}>
+      <div className="dark">
+        <Component />
+      </div>
+    </Suspense>
   )
 }
