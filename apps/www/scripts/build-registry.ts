@@ -424,16 +424,17 @@ function processRegistryItems(items: Registry["items"]): Registry["items"] {
 
 /**
  * Check if the pro registry has actual components.
- * Returns true only if pro/ui directory exists and has .tsx/.ts files.
  */
 async function proRegistryExists(): Promise<boolean> {
   try {
-    const proUiPath = path.join(process.cwd(), "registry/pro/ui")
-    const stat = await fs.stat(proUiPath)
+    const proPath = path.join(process.cwd(), "registry/pro")
+    const stat = await fs.stat(proPath)
     if (!stat.isDirectory()) return false
 
-    const files = await fs.readdir(proUiPath)
-    return files.some((f) => f.endsWith(".tsx") || f.endsWith(".ts"))
+    const files = await fs.readdir(proPath, { recursive: true })
+    return files.some(
+      (f) => typeof f === "string" && (f.endsWith(".tsx") || f.endsWith(".ts"))
+    )
   } catch {
     return false
   }

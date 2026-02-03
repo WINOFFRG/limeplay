@@ -166,4 +166,100 @@ export const blocks: Registry["items"] = [
     ],
     type: "registry:block",
   },
+  {
+    author: "Rohan Gupta (@winoffrg)",
+    categories: ["pro"],
+    dependencies: [
+      "@phosphor-icons/react",
+      "@radix-ui/react-slot",
+      "zustand",
+      "shaka-player",
+    ],
+    description: "YouTube Music style audio player with playlist support",
+    files: [
+      {
+        path: "blocks/youtube-music/lib/create-media-store.ts",
+        type: "registry:lib",
+      },
+      {
+        path: "blocks/youtube-music/components/media-player.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "blocks/youtube-music/components/controls.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "blocks/youtube-music/components/playback-controls.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "blocks/youtube-music/components/action-controls.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "blocks/youtube-music/components/playback-mode-controls.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "blocks/youtube-music/components/volume-group-control.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "blocks/youtube-music/components/fixed-timeline-control.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "blocks/youtube-music/components/track-info.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "blocks/youtube-music/components/playlist.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "blocks/youtube-music/components/player-hooks.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "blocks/youtube-music/components/icons.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "blocks/youtube-music/ui/button.tsx",
+        type: "registry:ui",
+      },
+      {
+        path: "blocks/youtube-music/youtube-music.module.css",
+        target: "components/youtube-music/youtube-music.module.css",
+        type: "registry:style",
+      },
+    ],
+    meta: {
+      iframeHeight: "100px",
+    },
+    name: "youtube-music",
+    registryDependencies: [
+      "media-provider",
+      "media",
+      "timeline-control",
+      "timeline-labels",
+      "mute-control",
+      "volume-control",
+      "playback-control",
+      "dropdown-menu",
+      "toggle-group",
+      "use-player",
+      "use-playback",
+      "use-volume",
+      "use-timeline",
+      "use-captions",
+      "use-playlist",
+      "use-asset",
+      "utils",
+      "create-media-store",
+    ],
+    title: "YouTube Music Audio Player",
+    type: "registry:block",
+  },
 ]
