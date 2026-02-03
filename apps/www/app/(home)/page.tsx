@@ -5,6 +5,7 @@ import { FeatureGrid } from "@/components/features"
 import { Hero } from "@/components/hero"
 import { ImmersiveScrollPlayer } from "@/components/immersive-scroll-player"
 import { PlayerContainer } from "@/components/player-container"
+import { ProYouTubeMusicPlayer } from "@/components/pro-youtube-music-player"
 import { ScrollIndicator } from "@/components/scroll-indicator"
 
 export default function Home() {
@@ -56,6 +57,7 @@ export default function Home() {
           `}
         />
       </div>
+      <ProYouTubeMusicPlayer />
     </>
   )
 }

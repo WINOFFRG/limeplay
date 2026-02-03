@@ -25,7 +25,7 @@ export function TimelineSliderControl() {
       <div className="group/timeline relative w-full grow">
         <TimelineSlider.Root className="group focus-area cursor-crosshair -focus-area-x-2 -focus-area-y-14">
           <TimelineSlider.Track className="overflow-hidden">
-            <TimelineSlider.Progress />
+            <TimelineSlider.Progress className="rounded-s-full" />
             <TimelineSlider.Buffered variant="combined" />
           </TimelineSlider.Track>
           <TimelineSlider.Thumb
