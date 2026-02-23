@@ -69,10 +69,9 @@ export const ASSETS: Asset[] = [
 ]
 
 export function Playlist() {
-  const currentItem = useMediaStore((state) => state.currentItem)
   const player = useMediaStore((state) => state.player)
 
-  const { getCurrentItem, isPreloaded, loadPlaylist, preloadAsset, skipToId } =
+  const { currentItem, isPreloaded, loadPlaylist, preloadAsset, skipToId } =
     useAsset()
 
   useEffect(() => {
@@ -86,7 +85,7 @@ export function Playlist() {
   }
 
   const handleAssetHover = async (asset: Asset) => {
-    if (!isPreloaded(asset.id) && getCurrentItem()?.id !== asset.id) {
+    if (!isPreloaded(asset.id) && currentItem?.id !== asset.id) {
       await preloadAsset(asset)
     }
   }

@@ -5,8 +5,8 @@ import { FeatureGrid } from "@/components/features"
 import { Hero } from "@/components/hero"
 import { ImmersiveScrollPlayer } from "@/components/immersive-scroll-player"
 import { PlayerContainer } from "@/components/player-container"
-import { ProYouTubeMusicPlayer } from "@/components/pro-youtube-music-player"
 import { ScrollIndicator } from "@/components/scroll-indicator"
+import { YouTubeMusicPlayer } from "@/registry/pro/blocks/youtube-music/components/media-player"
 
 export default function Home() {
   return (
@@ -25,7 +25,24 @@ export default function Home() {
         </Suspense>
       </ImmersiveScrollPlayer>
       <ScrollIndicator />
-      {/* <div
+      <FeatureTrailSection />
+      <div
+        className={`
+          mx-auto w-full border-t border-border px-4
+          sm:px-page
+        `}
+      >
+        <div
+          className={`
+            z-1 mx-auto h-6 w-full max-w-5xl border-x border-border
+            bg-[repeating-linear-gradient(-45deg,var(--color-border),var(--color-border)_1px,transparent_1px,transparent_6px)] ring-border
+            sm:h-10
+            md:h-16
+          `}
+        />
+      </div>
+      <YouTubeMusicPlayer />
+      <div
         className={`
           mx-auto w-full
           sm:px-page
@@ -33,14 +50,13 @@ export default function Home() {
       >
         <div
           className={`
-            z-1 mx-auto h-6 w-full max-w-5xl border-x border-b border-border bg-linear-to-r
+            z-1 mx-auto h-6 w-full max-w-5xl border-x border-t border-border
             bg-[repeating-linear-gradient(-45deg,var(--color-border),var(--color-border)_1px,transparent_1px,transparent_6px)] ring-border
             sm:h-10
             md:h-16
           `}
         />
-      </div> */}
-      <FeatureTrailSection />
+      </div>
       <FeatureGrid />
       <div
         className={`
@@ -57,7 +73,6 @@ export default function Home() {
           `}
         />
       </div>
-      <ProYouTubeMusicPlayer />
     </>
   )
 }

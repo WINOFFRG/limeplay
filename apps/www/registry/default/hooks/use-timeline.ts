@@ -300,6 +300,20 @@ export function useTimelineStates({
     store.setState({ buffered: bufferedInfo.total })
   }, [store, player])
 
+  // NOTE: We need to reset states as soon as the media reloads. This is needed
+  // in cause of queue.next however UX breaks when we are refetching
+  // the source for same media, either how load call resets the current time so this works
+  const onLoading = React.useCallback(() => {
+    store.setState({
+      buffered: [],
+      currentTime: 0,
+      duration: 0,
+      isLive: false,
+      liveLatency: null,
+      progress: 0,
+    })
+  }, [store])
+
   useInterval(onTimeUpdate, updateDuration)
 
   React.useEffect(() => {
@@ -316,11 +330,13 @@ export function useTimelineStates({
     on(media, ["durationchange", "loading"], onDurationChange)
     on(media, "progress", onBuffer)
     on(player, ["trackschanged", "loading"], onBuffer)
+    on(player, "loading", onLoading)
 
     return () => {
       off(media, ["durationchange", "loading"], onDurationChange)
       off(media, "progress", onBuffer)
       off(player, ["trackschanged", "loading"], onBuffer)
+      off(player, "loading", onLoading)
     }
   }, [mediaRef, player, canPlay])
 }

@@ -6,6 +6,7 @@ import type { ReactNode } from "react"
 import { UserJotProvider } from "@userjot/next"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Agentation } from "agentation"
 import { Inter } from "next/font/google"
 
 import { JsonLd } from "@/components/json-ld"
@@ -80,6 +81,9 @@ export default function Layout({ children }: { children: ReactNode }) {
         {children}
         <Analytics />
         <SpeedInsights />
+        {process.env.NODE_ENV === "development" && (
+          <Agentation endpoint="http://localhost:4747" />
+        )}
       </body>
     </html>
   )
