@@ -96,7 +96,7 @@ export const createPlaybackStore: StateCreator<
 
 export interface UsePlaybackReturn {
   pause: () => void
-  play: () => void
+  play: () => Promise<void>
   restart: () => void
   setLoop: (loop: boolean) => void
   toggleLoop: () => void
@@ -106,21 +106,24 @@ export interface UsePlaybackReturn {
 export function usePlayback(): UsePlaybackReturn {
   const store = useGetStore()
 
-  function play() {
+  async function play() {
     const media = store.getState().mediaRef.current
     if (!media) return
 
-    media.play().catch((error: unknown) => {
+    store.setState({
+      idle: false,
+    })
+
+    try {
+      await media.play()
+    } catch (error: unknown) {
       console.error("Error playing media", error)
       store.setState({
         idle: false,
         status: "error",
       })
-    })
-
-    store.setState({
-      idle: false,
-    })
+      throw error
+    }
   }
 
   function pause() {
