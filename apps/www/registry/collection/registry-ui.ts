@@ -312,17 +312,4 @@ export const ui: Registry["items"] = [
     registryDependencies: ["media-provider", "use-seek", "use-playback"],
     type: "registry:ui",
   },
-  {
-    categories: ["pro"],
-    files: [
-      {
-        path: "ui/pip-control.tsx",
-        target: "components/limeplay/pro/pip-control.tsx",
-        type: "registry:ui",
-      },
-    ],
-    name: "pip-control",
-    registryDependencies: ["media-provider"],
-    type: "registry:ui",
-  },
 ]
