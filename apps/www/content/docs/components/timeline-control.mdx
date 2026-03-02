@@ -76,32 +76,29 @@ export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
 1. Compose the timeline slider and handle states
 
 ```tsx lineNumbers title="components/player/timeline-control.tsx"
-import { useMediaStore } from "@/components/limeplay/media-provider"
 import * as TimelineSlider from "@/components/limeplay/timeline-control"
 import { Duration, HoverTime } from "@/components/limeplay/timeline-labels"
 
 export function TimelineSliderControl() {
   return (
     <div className="relative w-full grow">
-      <TimelineSlider.Root className="focus-area -focus-area-x-2 -focus-area-y-14">
-        <TimelineSlider.Track className="overflow-hidden">
+      <TimelineSlider.Root className="h-1 rounded-full focus-area -focus-area-x-2 -focus-area-y-14">
+        <TimelineSlider.Track className="overflow-hidden rounded-full">
           <TimelineSlider.Progress />
           <TimelineSlider.Buffered variant="combined" />
         </TimelineSlider.Track>
-        {/* Thumb to Seek */}
+        {/* Seek Cursor */}
         <TimelineSlider.Thumb
           showWithHover
-          className={"absolute h-8 w-px rounded-full bg-lp-accent/60"}
+          className="absolute h-8 w-px rounded-full bg-primary/60"
         />
-        {/* Custom Thumb */}
+        {/* Hover Time Label */}
         <TimelineSlider.Thumb
           showWithHover
-          className={
-            "top-auto! bottom-[calc(100%+16px)] flex h-auto w-fit bg-transparent text-xs font-medium"
-          }
+          className="top-auto! bottom-[calc(100%+16px)] flex h-auto w-fit bg-transparent text-xs font-medium"
         >
           <HoverTime />
-          <Duration className="text-lp-accent/60" />
+          <Duration className="text-primary/60" />
         </TimelineSlider.Thumb>
       </TimelineSlider.Root>
     </div>
@@ -142,14 +139,14 @@ Timeline is built with multiple composable parts.
 
 ### Root
 
-Main slider container with built-in click/drag seek handling.
+Main slider container with built-in click/drag seek handling. Provides structural layout and CSS variable-driven height via `--lp-timeline-track-height`. Visual styles (border-radius, transitions, animations) should be applied by consumers.
 
 #### API Reference
 <AutoTypeTable path="./registry/default/ui/timeline-control.tsx" name="TimelineRootPropsDocs" />
 
 ### Thumb
 
-Draggable handle and/or hover preview.
+Positioned indicator. Base provides only positioning via CSS variable `--lp-timeline-thumb-position`. All visual styles (size, shape, color) must be provided by consumers.
 
 #### API Reference
 <AutoTypeTable path="./registry/default/ui/timeline-control.tsx" name="TimelineThumbPropsDocs" />
@@ -163,7 +160,7 @@ Shows buffered ranges. Supports 3 variants: `default`, `combined`, `from-zero`.
 
 ### Track
 
-Visual track representing full duration. Extends `SliderPrimitive.Track` props.
+Visual track representing full duration. Base provides structural layout and `bg-foreground/20` background. Visual styles like `rounded-full` should be applied by consumers. Extends `SliderPrimitive.Track` props.
 
 ### Progress
 
