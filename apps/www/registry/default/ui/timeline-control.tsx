@@ -78,9 +78,8 @@ export const Root = React.forwardRef<
       aria-label="Timeline Slider"
       className={cn(
         `
-          relative h-1 rounded-full transition-[height] duration-150 ease-out-quad
+          relative block
           data-[orientation=horizontal]:h-(--lp-timeline-track-height)
-          active:data-[orientation=horizontal]:h-(--lp-timeline-track-height-active)
         `,
         className
       )}
@@ -106,7 +105,7 @@ export const Track = React.forwardRef<
     <SliderPrimitive.Track
       className={cn(
         `
-          relative flex h-full grow flex-row rounded-full bg-foreground/20
+          relative flex h-full grow flex-row bg-foreground/20
           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50
         `,
         className
@@ -130,10 +129,7 @@ export const Progress = React.forwardRef<
 
   return (
     <SliderPrimitive.Indicator
-      className={cn(
-        "h-full w-(--lp-played-width)! rounded-s-full bg-primary",
-        className
-      )}
+      className={cn("h-full w-(--lp-played-width)! bg-primary", className)}
       ref={ref}
       style={
         {
@@ -244,7 +240,7 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
       <SliderPrimitive.Thumb
         className={cn(
           `
-            left-(--lp-timeline-thumb-position)! size-4 rounded-full bg-primary
+            left-(--lp-timeline-thumb-position)! bg-primary
             data-disabled:bg-primary/85
           `,
           className
