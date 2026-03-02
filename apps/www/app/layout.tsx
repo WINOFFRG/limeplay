@@ -81,9 +81,9 @@ export default function Layout({ children }: { children: ReactNode }) {
         {children}
         <Analytics />
         <SpeedInsights />
-        {process.env.NODE_ENV === "development" && (
+        {/* {process.env.NODE_ENV === "development" && (
           <Agentation endpoint="http://localhost:4747" />
-        )}
+        )} */}
       </body>
     </html>
   )

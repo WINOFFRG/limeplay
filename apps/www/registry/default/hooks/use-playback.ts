@@ -100,7 +100,7 @@ export interface UsePlaybackReturn {
   restart: () => void
   setLoop: (loop: boolean) => void
   toggleLoop: () => void
-  togglePaused: () => void
+  togglePaused: () => Promise<void>
 }
 
 export function usePlayback(): UsePlaybackReturn {
@@ -137,12 +137,12 @@ export function usePlayback(): UsePlaybackReturn {
     })
   }
 
-  function togglePaused() {
+  async function togglePaused() {
     const media = store.getState().mediaRef.current
     if (!media) return
 
     if (media.paused) {
-      play()
+      await play().catch(noop)
     } else {
       pause()
     }

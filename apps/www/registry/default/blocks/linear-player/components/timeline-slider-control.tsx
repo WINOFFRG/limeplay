@@ -23,8 +23,13 @@ export function TimelineSliderControl() {
     <div className="my-auto flex grow items-center gap-3 select-none">
       {!isLive && <Elapsed className="text-xs font-medium" />}
       <div className="group/timeline relative w-full grow">
-        <TimelineSlider.Root className="group focus-area cursor-crosshair -focus-area-x-2 -focus-area-y-14">
-          <TimelineSlider.Track className="overflow-hidden">
+        <TimelineSlider.Root
+          className={`
+            group focus-area h-1 cursor-crosshair rounded-full transition-[height] duration-150 ease-out-quad -focus-area-x-2 -focus-area-y-14
+            active:data-[orientation=horizontal]:h-(--lp-timeline-track-height-active)
+          `}
+        >
+          <TimelineSlider.Track className="overflow-hidden rounded-full">
             <TimelineSlider.Progress className="rounded-s-full" />
             <TimelineSlider.Buffered variant="combined" />
           </TimelineSlider.Track>
