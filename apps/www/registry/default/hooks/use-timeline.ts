@@ -223,7 +223,7 @@ export function useTimelineStates({
 
   const isLive = player?.isLive() ?? false
 
-  const onTimeUpdate = () => {
+  const onTimeUpdate = React.useCallback(() => {
     if (!mediaRef.current || !player) return
 
     if (readyState < MediaReadyState.HAVE_METADATA) return
@@ -271,7 +271,7 @@ export function useTimelineStates({
       duration: store.getState().duration,
       progress,
     })
-  }
+  }, [mediaRef, player, readyState, isLive, store])
 
   const onDurationChange = React.useCallback(() => {
     if (!mediaRef.current || !player) return
@@ -301,7 +301,7 @@ export function useTimelineStates({
   }, [store, player])
 
   // NOTE: We need to reset states as soon as the media reloads. This is needed
-  // in cause of queue.next however UX breaks when we are refetching
+  // in case of queue.next however UX breaks when we are refetching
   // the source for same media, either how load call resets the current time so this works
   const onLoading = React.useCallback(() => {
     store.setState({

@@ -30,7 +30,17 @@ export interface Asset {
 
 export interface UseAssetOptions<TAsset extends Asset> {
   autoplayFirst?: boolean
+  /**
+   * Options strictly for the player hook.
+   * Note: Providing `onLoad`, `onPreload`, or `onError` here will override
+   * the default asset-playing and error-throwing behaviors.
+   */
   playerOptions?: Partial<UsePlayerOptions<TAsset>>
+  /**
+   * Options strictly for the playlist hook.
+   * Note: Providing `onLoadItem` or `onError` here will override
+   * the default asset-loading and error-skipping behaviors.
+   */
   playlistOptions?: Partial<UsePlaylistOptions<TAsset>>
 }
 
@@ -133,11 +143,19 @@ export function useAsset<TAsset extends Asset = Asset>(
         // Safe to call next without depending on the returned object from usePlaylist directly
         // because we return the full playlist object below. Wait, we can't call playlist.next() yet
         // since `playlist` isn't fully constructed. But this is a callback, so it will be constructed.
-        playlist.next()
+        // playlist.next().catch(console.error)
       }
     },
     onLoadItem: async (item: PlaylistItem<TAsset>) => {
       const asset = item.properties
+
+      if (mediaRef.current) {
+        mediaRef.current.pause()
+      }
+
+      if (player) {
+        await player.unload()
+      }
 
       await playback.load(asset)
     },
@@ -146,7 +164,7 @@ export function useAsset<TAsset extends Asset = Asset>(
 
   const onItemEnded = () => {
     if (playlist.hasNext) {
-      playlist.next()
+      playlist.next().catch(console.error)
     }
   }
 
