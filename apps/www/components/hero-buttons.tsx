@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useCopyToClipboard } from "react-use"
 
 const command = "npx shadcn add @limeplay/linear-player"
+const MotionLink = motion(Link)
 
 export default function HeroButtons() {
   const [isCopied, copyToClipboard] = useCopyToClipboard()
@@ -77,12 +78,13 @@ export default function HeroButtons() {
           </span>
         </div>
       </motion.div>
-      <motion.div
+      <MotionLink
         className={`
           hidden h-12 w-fit cursor-pointer items-center justify-center rounded-xl bg-primary text-sm font-medium text-primary-foreground focus-ring
           hover:bg-primary/90
           md:flex
         `}
+        href="/docs/quick-start"
         initial={{ padding: "0px 20px" }}
         transition={{
           bounce: 0.6,
@@ -92,10 +94,8 @@ export default function HeroButtons() {
         whileHover={{ padding: "0px 32px" }}
         whileTap={{ padding: "0px 20px" }}
       >
-        <Link href="/docs/quick-start" tabIndex={-1}>
-          Quick Start
-        </Link>
-      </motion.div>
+        Quick Start
+      </MotionLink>
     </div>
   )
 }
