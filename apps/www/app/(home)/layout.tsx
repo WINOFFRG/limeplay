@@ -19,7 +19,8 @@ export default function RootLayout({
       )} */}
       <main
         className={
-          "w-dvw overscroll-contain bg-linear-to-br from-slate-50 to-neutral-200"
+          // eslint-disable-next-line better-tailwindcss/no-unregistered-classes
+          "light w-dvw overscroll-contain bg-linear-to-br from-slate-50 to-neutral-200"
         }
       >
         <VideoBackground />
