@@ -140,7 +140,7 @@ function BouncingCircle({ icon: Icon, index, time }: BouncingCircleProps) {
       <div
         className={`
           relative flex aspect-square h-[70px] w-[70px] items-center justify-center rounded-full border border-zinc-900/10 bg-gray-50 text-[26px]
-          font-light will-change-transform backface-hidden
+          font-light text-foreground will-change-transform backface-hidden
           lg:h-[98px] lg:w-[98px] lg:text-[36px]
         `}
       >
