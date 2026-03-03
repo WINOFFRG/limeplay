@@ -153,9 +153,12 @@ export function useAsset<TAsset extends Asset = Asset>(
         mediaRef.current.pause()
       }
 
-      if (player) {
-        await player.unload()
-      }
+      // This was needed when next item is clicked we must unload the previous item
+      // but this also gets called on initial item load, so we must move this to
+      // separate callback
+      // if (player) {
+      //   await player.unload()
+      // }
 
       await playback.load(asset)
     },
