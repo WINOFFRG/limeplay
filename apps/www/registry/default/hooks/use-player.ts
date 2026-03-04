@@ -90,6 +90,18 @@ export interface UsePlayerReturn<TAsset> {
   preload: (asset: TAsset) => Promise<void>
 }
 
+export const RECOMMENDED_PLAYER_BUFFERING_THROTTLE_MS = 250
+
+export interface UsePlayerStatesOptions {
+  /**
+   * Delay buffering UI/status updates to reduce flicker during seek bursts.
+   * - `true`: use RECOMMENDED_PLAYER_BUFFERING_THROTTLE_MS
+   * - `number`: use custom delay in ms
+   * - `undefined`/`false`: no throttle
+   */
+  throttleBuffering?: boolean | number
+}
+
 export function usePlayer<TAsset extends { id: string }>(
   options?: UsePlayerOptions<TAsset>
 ): UsePlayerReturn<TAsset> {
@@ -111,16 +123,13 @@ export function usePlayer<TAsset extends { id: string }>(
       }
 
       try {
+        await currentPlayer.unload()
+
         const preloadManagers = store.getState().preloadManagers
         const preloadManager = preloadManagers.get(asset.id)
 
         if (preloadManager) {
-          await options.onLoad(
-            asset,
-            currentPlayer,
-            currentMedia,
-            preloadManager
-          )
+          await options.onLoad(asset, currentPlayer, currentMedia, preloadManager)
           preloadManagers.delete(asset.id)
           store.setState({ preloadManagers: new Map(preloadManagers) })
         } else {
@@ -199,12 +208,15 @@ export function usePlayer<TAsset extends { id: string }>(
     preload,
   }
 }
-export function usePlayerStates() {
+export function usePlayerStates(options?: UsePlayerStatesOptions) {
   const store = useGetStore()
   const setPlayer = useMediaStore((state) => state.setPlayer)
   const mediaRef = useMediaStore((state) => state.mediaRef)
   const debug = useMediaStore((state) => state.debug)
   const player = useMediaStore((state) => state.player)
+  const bufferingThrottleMs = resolveBufferingThrottleMs(
+    options?.throttleBuffering
+  )
 
   const playerInstance = useRef<null | shaka.Player>(null)
 
@@ -259,6 +271,14 @@ export function usePlayerStates() {
 
   React.useEffect(() => {
     if (!player) return noop
+    let bufferingTimeout: null | ReturnType<typeof setTimeout> = null
+
+    const clearBufferingTimeout = () => {
+      if (bufferingTimeout) {
+        clearTimeout(bufferingTimeout)
+        bufferingTimeout = null
+      }
+    }
 
     const setInitialState = () => {
       if (player.isBuffering()) {
@@ -270,8 +290,19 @@ export function usePlayerStates() {
       const isBuffering = player.isBuffering()
 
       if (isBuffering) {
-        store.setState({ status: "buffering" })
+        if (bufferingThrottleMs === undefined) {
+          store.setState({ status: "buffering" })
+        } else {
+          clearBufferingTimeout()
+          bufferingTimeout = setTimeout(() => {
+            if (player.isBuffering() && store.getState().status !== "error") {
+              store.setState({ status: "buffering" })
+            }
+            bufferingTimeout = null
+          }, bufferingThrottleMs)
+        }
       } else {
+        clearBufferingTimeout()
         const media = mediaRef.current
         if (media) {
           const status = media.paused ? "paused" : "playing"
@@ -294,6 +325,25 @@ export function usePlayerStates() {
     return () => {
       off(player, "buffering", bufferingHandler)
       off(player, "loading", loadingHandler)
+      clearBufferingTimeout()
     }
-  }, [player, mediaRef, store])
+  }, [player, mediaRef, store, bufferingThrottleMs])
+}
+
+function resolveBufferingThrottleMs(
+  value?: boolean | number
+): number | undefined {
+  if (value === undefined || value === false) {
+    return undefined
+  }
+
+  if (value === true) {
+    return RECOMMENDED_PLAYER_BUFFERING_THROTTLE_MS
+  }
+
+  if (Number.isFinite(value) && value > 0) {
+    return value
+  }
+
+  return undefined
 }
