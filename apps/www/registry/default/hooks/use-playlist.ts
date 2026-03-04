@@ -74,6 +74,14 @@ function generateSessionId(): string {
   return `lp_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
 }
 
+function getRepeatModes(queueLength: number): RepeatMode[] {
+  if (queueLength <= 1) {
+    return ["off", "one"]
+  }
+
+  return ["off", "all", "one"]
+}
+
 function normalizeItems<T>(inputs: PlaylistItemInput<T>[]): PlaylistItem<T>[] {
   return inputs.map((input) => ({
     error: null,
@@ -81,6 +89,17 @@ function normalizeItems<T>(inputs: PlaylistItemInput<T>[]): PlaylistItem<T>[] {
     properties: input.properties ?? ({} as T),
     status: "idle" as const,
   }))
+}
+
+function normalizeRepeatMode(
+  mode: RepeatMode,
+  queueLength: number
+): RepeatMode {
+  if (queueLength <= 1 && mode === "all") {
+    return "one"
+  }
+
+  return mode
 }
 
 export const createPlaylistStore: StateCreator<
@@ -108,7 +127,7 @@ export const createPlaylistStore: StateCreator<
  */
 export interface UsePlaylistOptions<T> {
   onError?: (item: PlaylistItem<T>, error: Error) => void
-  onLoadItem: (item: PlaylistItem<T>) => Promise<void>
+  onLoadItem?: (item: PlaylistItem<T>) => Promise<void>
 }
 
 export interface UsePlaylistReturn<T> {
@@ -124,6 +143,7 @@ export interface UsePlaylistReturn<T> {
   newSession: () => string
   next: () => Promise<boolean>
   nextItem: null | PlaylistItem<T>
+  orderedItems: PlaylistItem<T>[]
   playNext: (items: PlaylistItemInput<T>[]) => void
   prepend: (items: PlaylistItemInput<T>[]) => void
   previous: () => Promise<boolean>
@@ -203,7 +223,6 @@ export function usePlaylist<T>(
 
   const getNextIndex = React.useCallback((): number => {
     if (queue.length === 0) return -1
-    if (repeatMode === "one") return currentIndex
 
     if (shuffleEnabled && shuffleOrder.length > 0) {
       const currentPos = shuffleOrder.indexOf(currentIndex)
@@ -541,17 +560,27 @@ export function usePlaylist<T>(
 
   const setRepeatMode = React.useCallback(
     (mode: RepeatMode): void => {
-      store.setState({ repeatMode: mode })
+      const queueLength = store.getState().queue.length
+      const nextMode = normalizeRepeatMode(mode, queueLength)
+      store.setState({ repeatMode: nextMode })
     },
     [store]
   )
 
   const cycleRepeatMode = React.useCallback((): void => {
-    const { repeatMode } = store.getState()
-    const modes: RepeatMode[] = ["off", "all", "one"]
-    const nextMode = modes[(modes.indexOf(repeatMode) + 1) % modes.length]
+    const { queue, repeatMode } = store.getState()
+    const modes = getRepeatModes(queue.length)
+    const currentMode = normalizeRepeatMode(repeatMode, queue.length)
+    const currentIndex = modes.indexOf(currentMode)
+    const nextMode = modes[(currentIndex + 1) % modes.length]
     store.setState({ repeatMode: nextMode })
   }, [store])
+
+  React.useEffect(() => {
+    if (queue.length <= 1 && repeatMode === "all") {
+      store.setState({ repeatMode: "one" })
+    }
+  }, [queue.length, repeatMode, store])
 
   /**
    * Get the next item without navigating
@@ -574,6 +603,18 @@ export function usePlaylist<T>(
     }
     return null
   }, [getPreviousIndex, queue])
+
+  const orderedItems = React.useMemo((): PlaylistItem<T>[] => {
+    const typedQueue = queue as unknown as PlaylistItem<T>[]
+
+    if (!shuffleEnabled || shuffleOrder.length === 0) {
+      return typedQueue
+    }
+
+    return shuffleOrder
+      .map((index) => typedQueue[index])
+      .filter((item): item is PlaylistItem<T> => item !== undefined)
+  }, [queue, shuffleEnabled, shuffleOrder])
 
   /**
    * Get item by id
@@ -617,8 +658,8 @@ export function usePlaylist<T>(
     if (repeatMode === "all" && queue.length > 0) {
       return true
     }
-    return getPreviousIndex() !== -1 && getPreviousIndex() !== currentIndex
-  }, [repeatMode, queue.length, getPreviousIndex, currentIndex])
+    return getPreviousIndex() !== -1
+  }, [repeatMode, queue.length, getPreviousIndex])
 
   return {
     append,
@@ -633,6 +674,7 @@ export function usePlaylist<T>(
     newSession,
     next,
     nextItem,
+    orderedItems,
     playNext,
     prepend,
     previous,
@@ -651,20 +693,21 @@ export function usePlaylist<T>(
 export function usePlaylistStates() {
   const store = useGetStore()
   const mediaRef = useMediaStore((state) => state.mediaRef)
+  const repeatMode = useMediaStore((state) => state.repeatMode)
+
+  React.useEffect(() => {
+    if (!mediaRef.current) return
+
+    mediaRef.current.loop = repeatMode === "one"
+  }, [mediaRef, repeatMode])
 
   React.useEffect(() => {
     if (!mediaRef.current) return noop
 
     const media = mediaRef.current
 
-    if (media.loop) {
-      console.warn(
-        "[use-playlist] Media is in loop mode, some features may not work as expected"
-      )
-    }
-
     const endedHandler = () => {
-      const { currentIndex, currentItem, queue, repeatMode } = store.getState()
+      const { currentIndex, currentItem, queue } = store.getState()
 
       if (currentItem && currentIndex >= 0 && currentIndex < queue.length) {
         const updatedQueue = [...queue]
@@ -674,16 +717,6 @@ export function usePlaylistStates() {
           status: "played",
         }
         store.setState({ queue: updatedQueue })
-      }
-
-      if (repeatMode === "one") {
-        if (!media.loop) {
-          media.loop = true
-        }
-      } else {
-        if (media.loop) {
-          media.loop = false
-        }
       }
     }
 
