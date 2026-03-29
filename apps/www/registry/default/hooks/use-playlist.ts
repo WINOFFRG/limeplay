@@ -8,17 +8,29 @@ import reject from "lodash/reject"
 import shuffle from "lodash/shuffle"
 import React from "react"
 
-import { noop, off, on } from "@/registry/default/lib/utils"
 import {
   useGetStore,
   useMediaStore,
 } from "@/registry/default/ui/media-provider"
 
+/**
+ * Event payload when the playlist cursor changes.
+ */
+export interface PlaylistChangeEvent<T = Record<string, unknown>> {
+  currentIndex: number
+  currentItem: null | PlaylistItem<T>
+  previousIndex: number
+  previousItem: null | PlaylistItem<T>
+  reason: "load" | "next" | "previous" | "remove" | "skip"
+}
+
+/**
+ * A playlist item is just an ID + user-defined properties.
+ * No status, no error — those are playback concerns.
+ */
 export interface PlaylistItem<T = Record<string, unknown>> {
-  error?: Error | null
   id: string
   properties: T
-  status: PlaylistItemStatus
 }
 
 export interface PlaylistItemInput<T = Record<string, unknown>> {
@@ -26,25 +38,11 @@ export interface PlaylistItemInput<T = Record<string, unknown>> {
   properties?: T
 }
 
-export type PlaylistItemStatus =
-  | "error"
-  | "idle"
-  | "loading"
-  | "played"
-  | "playing"
-  | "ready"
-  | "skipped"
-
 export interface PlaylistStore {
   currentIndex: number
   currentItem: null | PlaylistItem
   history: PlaylistItem[]
-  onItemError?: (payload: { error: Error; item: PlaylistItem }) => void
-  onItemLoad?: (payload: { index: number; item: PlaylistItem }) => void
-  onPlaylistChange?: (payload: {
-    currentIndex: number
-    currentItem: null | PlaylistItem
-  }) => void
+  onPlaylistChange?: (event: PlaylistChangeEvent) => void
   queue: PlaylistItem[]
   repeatMode: RepeatMode
 
@@ -84,10 +82,8 @@ function getRepeatModes(queueLength: number): RepeatMode[] {
 
 function normalizeItems<T>(inputs: PlaylistItemInput<T>[]): PlaylistItem<T>[] {
   return inputs.map((input) => ({
-    error: null,
     id: input.id,
     properties: input.properties ?? ({} as T),
-    status: "idle" as const,
   }))
 }
 
@@ -111,8 +107,6 @@ export const createPlaylistStore: StateCreator<
   currentIndex: -1,
   currentItem: null,
   history: [],
-  onItemError: undefined,
-  onItemLoad: undefined,
   onPlaylistChange: undefined,
   queue: [],
   repeatMode: "off",
@@ -122,17 +116,10 @@ export const createPlaylistStore: StateCreator<
   shuffleOrder: [],
 })
 
-/**
- * Options for usePlaylist hook
- */
-export interface UsePlaylistOptions<T> {
-  onError?: (item: PlaylistItem<T>, error: Error) => void
-  onLoadItem?: (item: PlaylistItem<T>) => Promise<void>
-}
-
 export interface UsePlaylistReturn<T> {
   append: (items: PlaylistItemInput<T>[]) => void
   clear: () => void
+  currentIndex: number
   currentItem: null | PlaylistItem<T>
   cycleRepeatMode: () => void
   getItem: (id: string) => null | PlaylistItem<T>
@@ -141,84 +128,54 @@ export interface UsePlaylistReturn<T> {
   insert: (items: PlaylistItemInput<T>[], atIndex: number) => void
   load: (items: PlaylistItemInput<T>[], startIndex?: number) => void
   newSession: () => string
-  next: () => Promise<boolean>
+  next: () => boolean
   nextItem: null | PlaylistItem<T>
   orderedItems: PlaylistItem<T>[]
   playNext: (items: PlaylistItemInput<T>[]) => void
   prepend: (items: PlaylistItemInput<T>[]) => void
-  previous: () => Promise<boolean>
+  previous: () => boolean
   previousItem: null | PlaylistItem<T>
   remove: (id: string) => void
   removeAt: (index: number) => void
   reorder: (fromIndex: number, toIndex: number) => void
   setRepeatMode: (mode: RepeatMode) => void
   setShuffle: (enabled: boolean) => void
-  skipTo: (index: number) => Promise<void>
-  skipToId: (id: string) => Promise<void>
+  skipTo: (index: number) => boolean
+  skipToId: (id: string) => boolean
   toggleShuffle: () => void
 }
 
 /**
- * usePlaylist - Queue management with user-provided load callbacks
+ * usePlaylist — Pure queue management, zero media awareness.
+ * Navigation methods are synchronous — they move the cursor and fire onPlaylistChange.
+ * The composition layer (use-asset) reacts to cursor changes and orchestrates loading.
  */
-export function usePlaylist<T>(
-  options?: UsePlaylistOptions<T>
-): UsePlaylistReturn<T> {
+export function usePlaylist<T>(): UsePlaylistReturn<T> {
   const store = useGetStore()
-  const mediaRef = useMediaStore((s) => s.mediaRef)
   const currentIndex = useMediaStore((s) => s.currentIndex)
   const history = useMediaStore((s) => s.history)
   const queue = useMediaStore((s) => s.queue)
   const repeatMode = useMediaStore((s) => s.repeatMode)
   const shuffleEnabled = useMediaStore((s) => s.shuffle)
   const shuffleOrder = useMediaStore((s) => s.shuffleOrder)
-  const { onError, onLoadItem } = options ?? {}
 
-  const updateItemStatus = React.useCallback(
-    (itemId: string, status: PlaylistItemStatus, error?: Error) => {
-      const { queue } = store.getState()
-      const idx = queue.findIndex((q: PlaylistItem) => q.id === itemId)
-      if (idx !== -1) {
-        const updated = [...queue]
-        updated[idx] = { ...updated[idx], error: error ?? null, status }
-        store.setState({ queue: updated })
-      }
+  const emitChange = React.useCallback(
+    (
+      nextIndex: number,
+      nextItem: null | PlaylistItem,
+      previousIndex: number,
+      previousItem: null | PlaylistItem,
+      reason: PlaylistChangeEvent["reason"]
+    ) => {
+      store.getState().onPlaylistChange?.({
+        currentIndex: nextIndex,
+        currentItem: nextItem,
+        previousIndex,
+        previousItem,
+        reason,
+      })
     },
     [store]
-  )
-
-  const loadItem = React.useCallback(
-    async (item: PlaylistItem<T>): Promise<boolean> => {
-      updateItemStatus(item.id, "loading")
-
-      try {
-        if (onLoadItem) {
-          await onLoadItem(item)
-        }
-
-        updateItemStatus(item.id, "playing")
-
-        const currentIndex = store
-          .getState()
-          .queue.findIndex((q) => q.id === item.id)
-        store
-          .getState()
-          .onItemLoad?.({ index: currentIndex, item: item as PlaylistItem })
-
-        return true
-      } catch (error) {
-        const err = error instanceof Error ? error : new Error(String(error))
-        updateItemStatus(item.id, "error", err)
-
-        store
-          .getState()
-          .onItemError?.({ error: err, item: item as PlaylistItem })
-
-        onError?.(item, err)
-        return false
-      }
-    },
-    [onLoadItem, onError, updateItemStatus, store]
   )
 
   const getNextIndex = React.useCallback((): number => {
@@ -243,10 +200,6 @@ export function usePlaylist<T>(
   const getPreviousIndex = React.useCallback((): number => {
     if (queue.length === 0) return -1
 
-    if (mediaRef.current && mediaRef.current.currentTime > 3) {
-      return currentIndex
-    }
-
     if (history.length > 0) {
       const lastItem = history[history.length - 1]
       const idx = queue.findIndex((q: PlaylistItem) => q.id === lastItem.id)
@@ -260,76 +213,86 @@ export function usePlaylist<T>(
     }
 
     return currentIndex > 0 ? currentIndex - 1 : currentIndex
-  }, [currentIndex, history, queue, shuffleEnabled, shuffleOrder, mediaRef])
+  }, [currentIndex, history, queue, shuffleEnabled, shuffleOrder])
 
-  const next = React.useCallback(async (): Promise<boolean> => {
-    const { currentItem, history, queue } = store.getState()
+  const next = React.useCallback((): boolean => {
+    const {
+      currentIndex: prevIndex,
+      currentItem: prevItem,
+      history,
+      queue,
+    } = store.getState()
     const nextIndex = getNextIndex()
     if (nextIndex === -1 || nextIndex >= queue.length) return false
 
-    if (currentItem) {
-      store.setState({ history: [...history, currentItem] })
+    if (prevItem) {
+      store.setState({ history: [...history, prevItem] })
     }
 
-    const nextItem = queue[nextIndex] as PlaylistItem<T>
+    const nextItem = queue[nextIndex] as PlaylistItem
     store.setState({
       currentIndex: nextIndex,
-      currentItem: nextItem as PlaylistItem,
+      currentItem: nextItem,
     })
 
-    store.getState().onPlaylistChange?.({
-      currentIndex: nextIndex,
-      currentItem: nextItem as PlaylistItem,
-    })
+    emitChange(nextIndex, nextItem, prevIndex, prevItem, "next")
+    return true
+  }, [store, getNextIndex, emitChange])
 
-    return loadItem(nextItem)
-  }, [store, getNextIndex, loadItem])
+  const previous = React.useCallback((): boolean => {
+    const {
+      currentIndex: prevIndex,
+      currentItem: prevItem,
+      history,
+      queue,
+    } = store.getState()
+    const prevItemIndex = getPreviousIndex()
+    if (prevItemIndex === -1 || prevItemIndex >= queue.length) return false
 
-  const previous = React.useCallback(async (): Promise<boolean> => {
-    const { currentIndex, history, queue } = store.getState()
-    const prevIndex = getPreviousIndex()
-    if (prevIndex === -1 || prevIndex >= queue.length) return false
-
-    const prevItem = queue[prevIndex] as PlaylistItem<T>
-
-    if (prevIndex === currentIndex && mediaRef.current) {
-      mediaRef.current.currentTime = 0
-      return true
-    }
+    const targetItem = queue[prevItemIndex] as PlaylistItem
 
     if (history.length > 0) {
       store.setState({ history: history.slice(0, -1) })
     }
 
     store.setState({
-      currentIndex: prevIndex,
-      currentItem: prevItem as PlaylistItem,
+      currentIndex: prevItemIndex,
+      currentItem: targetItem,
     })
-    return loadItem(prevItem)
-  }, [store, getPreviousIndex, loadItem, mediaRef])
+
+    emitChange(prevItemIndex, targetItem, prevIndex, prevItem, "previous")
+    return true
+  }, [store, getPreviousIndex, emitChange])
 
   const skipTo = React.useCallback(
-    async (index: number): Promise<void> => {
-      const { currentItem, history, queue } = store.getState()
-      if (index < 0 || index >= queue.length) return
+    (index: number): boolean => {
+      const {
+        currentIndex: prevIndex,
+        currentItem: prevItem,
+        history,
+        queue,
+      } = store.getState()
+      if (index < 0 || index >= queue.length) return false
 
-      if (currentItem) {
-        updateItemStatus(currentItem.id, "skipped")
-        store.setState({ history: [...history, currentItem] })
+      if (prevItem) {
+        store.setState({ history: [...history, prevItem] })
       }
 
-      const item = queue[index] as PlaylistItem<T>
-      store.setState({ currentIndex: index, currentItem: item as PlaylistItem })
-      await loadItem(item)
+      const item = queue[index] as PlaylistItem
+      store.setState({ currentIndex: index, currentItem: item })
+
+      emitChange(index, item, prevIndex, prevItem, "skip")
+      return true
     },
-    [store, loadItem, updateItemStatus]
+    [store, emitChange]
   )
 
   const skipToId = React.useCallback(
-    async (id: string): Promise<void> => {
+    (id: string): boolean => {
       const { queue } = store.getState()
       const index = queue.findIndex((item: PlaylistItem) => item.id === id)
-      if (index !== -1) await skipTo(index)
+      if (index === -1) return false
+      return skipTo(index)
     },
     [store, skipTo]
   )
@@ -352,15 +315,16 @@ export function usePlaylist<T>(
       })
 
       if (normalized.length > 0 && startIndex < normalized.length) {
-        const startItem = normalized[startIndex] as PlaylistItem<T>
+        const startItem = normalized[startIndex] as PlaylistItem
         store.setState({
           currentIndex: startIndex,
-          currentItem: startItem as PlaylistItem,
+          currentItem: startItem,
         })
-        void loadItem(startItem)
+
+        emitChange(startIndex, startItem, -1, null, "load")
       }
     },
-    [store, loadItem]
+    [store, emitChange]
   )
 
   const append = React.useCallback(
@@ -475,6 +439,21 @@ export function usePlaylist<T>(
       } else if (removeIndex === currentIndex) {
         newCurrentIndex = Math.min(currentIndex, newQueue.length - 1)
         newCurrentItem = newQueue[newCurrentIndex] ?? null
+
+        store.setState({
+          currentIndex: newCurrentIndex,
+          currentItem: newCurrentItem,
+          queue: newQueue,
+        })
+
+        emitChange(
+          newCurrentIndex,
+          newCurrentItem,
+          currentIndex,
+          currentItem,
+          "remove"
+        )
+        return
       }
 
       store.setState({
@@ -483,7 +462,7 @@ export function usePlaylist<T>(
         queue: newQueue,
       })
     },
-    [store]
+    [store, emitChange]
   )
 
   const removeAt = React.useCallback(
@@ -571,8 +550,8 @@ export function usePlaylist<T>(
     const { queue, repeatMode } = store.getState()
     const modes = getRepeatModes(queue.length)
     const currentMode = normalizeRepeatMode(repeatMode, queue.length)
-    const currentIndex = modes.indexOf(currentMode)
-    const nextMode = modes[(currentIndex + 1) % modes.length]
+    const modeIndex = modes.indexOf(currentMode)
+    const nextMode = modes[(modeIndex + 1) % modes.length]
     store.setState({ repeatMode: nextMode })
   }, [store])
 
@@ -611,9 +590,7 @@ export function usePlaylist<T>(
       return typedQueue
     }
 
-    return shuffleOrder
-      .map((index) => typedQueue[index])
-      .filter((item): item is PlaylistItem<T> => item !== undefined)
+    return shuffleOrder.map((index) => typedQueue[index])
   }, [queue, shuffleEnabled, shuffleOrder])
 
   /**
@@ -664,6 +641,7 @@ export function usePlaylist<T>(
   return {
     append,
     clear,
+    currentIndex,
     currentItem,
     cycleRepeatMode,
     getItem,
@@ -691,7 +669,6 @@ export function usePlaylist<T>(
 }
 
 export function usePlaylistStates() {
-  const store = useGetStore()
   const mediaRef = useMediaStore((state) => state.mediaRef)
   const repeatMode = useMediaStore((state) => state.repeatMode)
 
@@ -700,27 +677,4 @@ export function usePlaylistStates() {
 
     mediaRef.current.loop = repeatMode === "one"
   }, [mediaRef, repeatMode])
-
-  React.useEffect(() => {
-    if (!mediaRef.current) return noop
-
-    const media = mediaRef.current
-
-    const endedHandler = () => {
-      const { currentIndex, currentItem, queue } = store.getState()
-
-      if (currentItem && currentIndex >= 0 && currentIndex < queue.length) {
-        const updatedQueue = [...queue]
-
-        updatedQueue[currentIndex] = {
-          ...updatedQueue[currentIndex],
-          status: "played",
-        }
-        store.setState({ queue: updatedQueue })
-      }
-    }
-
-    on(media, "ended", endedHandler)
-    return () => off(media, "ended", endedHandler)
-  }, [mediaRef, store])
 }
