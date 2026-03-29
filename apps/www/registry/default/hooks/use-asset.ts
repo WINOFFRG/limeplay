@@ -2,17 +2,17 @@
 
 import type shaka from "shaka-player"
 
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef } from "react"
 
 import type { UsePlayerOptions } from "@/registry/default/hooks/use-player"
-import type {
-  PlaylistItem,
-  PlaylistItemInput,
-} from "@/registry/default/hooks/use-playlist"
-import type { UsePlaylistOptions } from "@/registry/default/hooks/use-playlist"
+import type { PlaylistChangeEvent } from "@/registry/default/hooks/use-playlist"
+import type { UsePlaylistReturn } from "@/registry/default/hooks/use-playlist"
 
 import { usePlayback } from "@/registry/default/hooks/use-playback"
-import { usePlayer } from "@/registry/default/hooks/use-player"
+import {
+  isLoadInterrupted,
+  usePlayer,
+} from "@/registry/default/hooks/use-player"
 import { usePlaylist } from "@/registry/default/hooks/use-playlist"
 import {
   useGetStore,
@@ -28,54 +28,101 @@ export interface Asset {
   title?: string
 }
 
+export interface UseAssetLoadContext<TAsset extends Asset> {
+  asset: TAsset
+  defaultLoad: (
+    source?: null | shaka.media.PreloadManager | string,
+    startTime?: number
+  ) => Promise<void>
+  media: HTMLMediaElement
+  player: shaka.Player
+  preloadManager?: shaka.media.PreloadManager
+  signal: AbortSignal
+  startTime?: number
+}
+
+export interface UseAssetLoader<TAsset extends Asset> {
+  load?: (context: UseAssetLoadContext<TAsset>) => Promise<void>
+  preload?: (
+    context: UseAssetPreloadContext<TAsset>
+  ) => Promise<null | shaka.media.PreloadManager>
+}
+
 export interface UseAssetOptions<TAsset extends Asset> {
   autoplayFirst?: boolean
   /**
-   * Options strictly for the player hook.
-   * Note: Providing `onLoad`, `onPreload`, or `onError` here will override
-   * the default asset-playing and error-throwing behaviors.
+   * Custom load/preload strategy.
+   * Use this to extend load/preload behavior (e.g. fetch signed URLs, retries)
+   * while keeping default autoplay and queue orchestration from use-asset.
+   */
+  loader?: UseAssetLoader<TAsset>
+
+  /**
+   * Max auto-retries before giving up on an asset.
+   * @default 0
+   */
+  maxRetries?: number
+
+  /**
+   * Called when the playlist cursor changes (before loading).
+   */
+  onAssetChange?: (event: PlaylistChangeEvent<TAsset>) => void
+
+  /**
+   * Called after an asset is successfully loaded.
+   */
+  onAssetLoaded?: (asset: TAsset) => void
+
+  /**
+   * Called when a playlist item fails to load.
+   * Return "skip" to auto-advance, "retry" to retry, or "stop" to halt.
+   * @default "skip" if hasNext, otherwise "stop"
+   */
+  onLoadError?: (
+    asset: TAsset,
+    error: Error,
+    context: { hasNext: boolean; retryCount: number }
+  ) => "retry" | "skip" | "stop"
+
+  /**
+   * Called when a Shaka playback error occurs mid-stream.
+   * Return an action object to determine recovery behavior.
+   */
+  onPlaybackError?: (
+    asset: TAsset,
+    error: Error,
+    context: { currentTime: number }
+  ) => Promise<
+    | { action: "reload"; asset?: TAsset; startTime?: number }
+    | { action: "skip" }
+    | { action: "stop" }
+  >
+
+  /**
+   * Legacy escape hatch for raw use-player options.
+   * Prefer `loader` for custom loading logic to keep opinionated defaults intact.
+   * Providing `onLoad`/`onPreload` here replaces the default load/preload steps.
    */
   playerOptions?: Partial<UsePlayerOptions<TAsset>>
-  /**
-   * Options strictly for the playlist hook.
-   * Note: Providing `onLoadItem` or `onError` here will override
-   * the default asset-loading and error-skipping behaviors.
-   */
-  playlistOptions?: Partial<UsePlaylistOptions<TAsset>>
 }
 
-export interface UseAssetReturn<TAsset extends Asset> {
-  append: (items: PlaylistItemInput<TAsset>[]) => void
-  appendAssets: (assets: TAsset[]) => void
+export interface UseAssetPreloadContext<TAsset extends Asset> {
+  asset: TAsset
+  defaultPreload: (
+    source?: string
+  ) => Promise<null | shaka.media.PreloadManager>
+  player: shaka.Player
+}
+
+export interface UseAssetReturn<
+  TAsset extends Asset,
+> extends UsePlaylistReturn<TAsset> {
   cancelPreload: (assetId: string) => void
-  clear: () => void
-  currentItem: null | PlaylistItem<TAsset>
-  cycleRepeatMode: () => void
-  getItem: (id: string) => null | PlaylistItem<TAsset>
-  hasNext: boolean
-  hasPrevious: boolean
-  insert: (items: PlaylistItemInput<TAsset>[], atIndex: number) => void
   isPreloaded: (assetId: string) => boolean
-  load: (items: PlaylistItemInput<TAsset>[], startIndex?: number) => void
-  loadAsset: (asset: TAsset) => Promise<boolean>
+  loadAsset: (asset: TAsset, startTime?: number) => Promise<boolean>
   loadPlaylist: (assets: TAsset[], startIndex?: number) => void
-  newSession: () => string
-  next: () => Promise<boolean>
-  nextItem: null | PlaylistItem<TAsset>
-  playNext: (items: PlaylistItemInput<TAsset>[]) => void
   preloadAsset: (asset: TAsset) => Promise<void>
   preloadNext: () => Promise<void>
-  prepend: (items: PlaylistItemInput<TAsset>[]) => void
-  previous: () => Promise<boolean>
-  previousItem: null | PlaylistItem<TAsset>
-  remove: (id: string) => void
-  removeAt: (index: number) => void
-  reorder: (fromIndex: number, toIndex: number) => void
-  setRepeatMode: (mode: "all" | "off" | "one") => void
-  setShuffle: (enabled: boolean) => void
-  skipTo: (index: number) => Promise<void>
-  skipToId: (id: string) => Promise<void>
-  toggleShuffle: () => void
 }
 
 export function useAsset<TAsset extends Asset = Asset>(
@@ -87,30 +134,77 @@ export function useAsset<TAsset extends Asset = Asset>(
 
   const { play } = usePlayback()
   const isFirstLoadRef = useRef(true)
+  const retryCountRef = useRef(0)
+  const loadGenerationRef = useRef(0)
+  const loadAbortControllerRef = useRef<AbortController | null>(null)
+  const {
+    onError: onPlayerError,
+    onLoad,
+    onPreload,
+    ...playerOptions
+  } = options?.playerOptions ?? {}
 
   const playback = usePlayer<TAsset>({
     onError: (error: Error, asset?: TAsset) => {
       console.error("[useAsset] Playback error:", error, asset?.id)
+      onPlayerError?.(error, asset)
       throw error
     },
     onLoad: async (
       asset: TAsset,
       shakaPlayer: shaka.Player,
-      _media: HTMLMediaElement,
-      preloadManager?: shaka.media.PreloadManager
+      media: HTMLMediaElement,
+      preloadManager?: shaka.media.PreloadManager,
+      startTime?: number
     ) => {
-      if (asset.config) {
-        shakaPlayer.resetConfiguration()
-        shakaPlayer.configure(asset.config)
+      const defaultLoad = async (
+        source?: null | shaka.media.PreloadManager | string,
+        customStartTime?: number
+      ) => {
+        if (asset.config) {
+          shakaPlayer.resetConfiguration()
+          shakaPlayer.configure(asset.config)
+        }
+
+        const resolvedSource =
+          source === undefined ? (preloadManager ?? asset.src) : source
+
+        const finalStartTime = customStartTime ?? startTime
+        const timeToLoad = finalStartTime ?? undefined
+
+        if (resolvedSource) {
+          await shakaPlayer.load(resolvedSource, timeToLoad)
+        } else {
+          await shakaPlayer.load(asset.src, timeToLoad)
+        }
       }
 
-      if (preloadManager) {
-        await shakaPlayer.load(preloadManager)
+      if (options?.loader?.load) {
+        const signal = loadAbortControllerRef.current?.signal
+        if (!signal) {
+          throw new Error("[useAsset] No AbortSignal available for loader")
+        }
+        await options.loader.load({
+          asset,
+          defaultLoad,
+          media,
+          player: shakaPlayer,
+          preloadManager,
+          signal,
+          startTime,
+        })
+      } else if (onLoad) {
+        await onLoad(asset, shakaPlayer, media, preloadManager, startTime)
       } else {
-        await shakaPlayer.load(asset.src)
+        await defaultLoad()
       }
 
-      if (player && mediaRef.current && mediaRef.current.autoplay) {
+      if (
+        player &&
+        mediaRef.current &&
+        mediaRef.current.autoplay &&
+        media.paused
+      ) {
         if (isFirstLoadRef.current) {
           if (options?.autoplayFirst) {
             await play()
@@ -126,106 +220,241 @@ export function useAsset<TAsset extends Asset = Asset>(
       asset: TAsset,
       shakaPlayer: shaka.Player
     ): Promise<null | shaka.media.PreloadManager> => {
-      return shakaPlayer.preload(asset.src, undefined, undefined, asset.config)
+      const defaultPreload = async (
+        source?: string
+      ): Promise<null | shaka.media.PreloadManager> => {
+        const resolvedSource = source ?? asset.src
+        return shakaPlayer.preload(
+          resolvedSource,
+          undefined,
+          undefined,
+          asset.config
+        )
+      }
+
+      if (options?.loader?.preload) {
+        return options.loader.preload({
+          asset,
+          defaultPreload,
+          player: shakaPlayer,
+        })
+      }
+
+      if (onPreload) {
+        return onPreload(asset, shakaPlayer)
+      }
+
+      return defaultPreload()
     },
-    ...options?.playerOptions,
+    ...playerOptions,
   })
 
-  const playlist = usePlaylist<TAsset>({
-    onError: (item: PlaylistItem<TAsset>, error: Error) => {
-      console.error("[useAsset] Playlist error:", item.id, error)
+  const playlist = usePlaylist<TAsset>()
 
-      const state = store.getState()
-      if (
-        state.repeatMode === "all" ||
-        (state.currentIndex >= 0 && state.currentIndex < state.queue.length - 1)
-      ) {
-        // Safe to call next without depending on the returned object from usePlaylist directly
-        // because we return the full playlist object below. Wait, we can't call playlist.next() yet
-        // since `playlist` isn't fully constructed. But this is a callback, so it will be constructed.
-        // playlist.next().catch(console.error)
-      }
-    },
-    onLoadItem: async (item: PlaylistItem<TAsset>) => {
-      const asset = item.properties
+  /**
+   * Load an asset into the player, handling error recovery.
+   */
+  const loadAssetIntoPlayer = useCallback(
+    async (asset: TAsset, startTime?: number): Promise<boolean> => {
+      const generation = ++loadGenerationRef.current
+
+      // Abort any previous in-flight load
+      loadAbortControllerRef.current?.abort()
+      const abortController = new AbortController()
+      loadAbortControllerRef.current = abortController
 
       if (mediaRef.current) {
         mediaRef.current.pause()
       }
 
-      // This was needed when next item is clicked we must unload the previous item
-      // but this also gets called on initial item load, so we must move this to
-      // separate callback
-      // if (player) {
-      //   await player.unload()
-      // }
+      try {
+        const isLoaded = await playback.load(asset, startTime)
 
-      await playback.load(asset)
+        console.log("[useAsset] Asset loaded:", {
+          generation,
+          loadGenerationRef,
+        })
+
+        if (loadGenerationRef.current !== generation) {
+          return false
+        }
+
+        if (!isLoaded) {
+          throw new Error(`[useAsset] Failed to load asset: ${asset.id}`)
+        }
+
+        retryCountRef.current = 0
+        options?.onAssetLoaded?.(asset)
+        return true
+      } catch (error) {
+        if (
+          loadGenerationRef.current !== generation ||
+          isLoadInterrupted(error) ||
+          (error instanceof DOMException && error.name === "AbortError")
+        ) {
+          return false
+        }
+
+        const err = error instanceof Error ? error : new Error(String(error))
+        const maxRetries = options?.maxRetries ?? 0
+        const hasNext = playlist.hasNext
+
+        if (options?.onLoadError) {
+          const decision = options.onLoadError(asset, err, {
+            hasNext,
+            retryCount: retryCountRef.current,
+          })
+
+          if (decision === "retry" && retryCountRef.current < maxRetries) {
+            retryCountRef.current += 1
+            return loadAssetIntoPlayer(asset, startTime)
+          }
+
+          if (decision === "skip" && hasNext) {
+            retryCountRef.current = 0
+            playlist.next()
+            return false
+          }
+
+          retryCountRef.current = 0
+          return false
+        }
+
+        if (hasNext) {
+          retryCountRef.current = 0
+          playlist.next()
+        }
+        return false
+      }
     },
-    ...options?.playlistOptions,
-  })
+    [playback.load, mediaRef, options, playlist.hasNext, playlist.next]
+  )
 
-  const onItemEnded = () => {
+  /**
+   * React to playlist cursor changes — load the new asset.
+   */
+  useEffect(() => {
+    store.setState({
+      onPlaylistChange: (event: PlaylistChangeEvent) => {
+        const item = event.currentItem
+        if (!item) return
+
+        const asset = item.properties as TAsset
+        options?.onAssetChange?.(event as PlaylistChangeEvent<TAsset>)
+
+        void loadAssetIntoPlayer(asset)
+      },
+    })
+  }, [loadAssetIntoPlayer, store, options?.onAssetChange])
+
+  /**
+   * Handle mid-playback errors
+   */
+  const handlePlaybackError = useCallback(
+    async (error: Error) => {
+      const currentAsset = playlist.currentItem?.properties as
+        | TAsset
+        | undefined
+      if (!currentAsset) return
+
+      const media = mediaRef.current
+      const currentTime = media ? media.currentTime : 0
+
+      if (options?.onPlaybackError) {
+        try {
+          const decision = await options.onPlaybackError(currentAsset, error, {
+            currentTime,
+          })
+
+          if (decision.action === "reload") {
+            const assetToLoad = decision.asset ?? currentAsset
+            const startTime = decision.startTime ?? currentTime
+            void loadAssetIntoPlayer(assetToLoad, startTime)
+          } else if (decision.action === "skip") {
+            if (playlist.hasNext) {
+              playlist.next()
+            }
+          }
+        } catch (callbackErr) {
+          console.error(
+            "[useAsset] onPlaybackError callback failed:",
+            callbackErr
+          )
+        }
+      }
+    },
+    [options, playlist, mediaRef, loadAssetIntoPlayer]
+  )
+
+  useEffect(() => {
+    store.setState({
+      onPlaybackError: (error: Error) => {
+        void handlePlaybackError(error)
+      },
+    })
+  }, [handlePlaybackError, store])
+
+  /**
+   * Auto-advance to next item when current one ends.
+   */
+  const onItemEnded = useCallback(() => {
     if (playlist.hasNext) {
-      playlist.next().catch(console.error)
+      playlist.next()
     }
-  }
+  }, [playlist.hasNext, playlist.next])
 
   useEffect(() => {
     store.setState({
       onEnded: onItemEnded,
     })
-  }, [onItemEnded])
+  }, [onItemEnded, store])
 
   /**
    * Load a playlist of assets
    */
-  const loadPlaylist = (assets: TAsset[], startIndex = 0) => {
-    isFirstLoadRef.current = true
-    const items = assets.map((asset) => ({
-      id: asset.id,
-      properties: asset,
-    }))
+  const loadPlaylist = useCallback(
+    (assets: TAsset[], startIndex = 0) => {
+      isFirstLoadRef.current = true
+      const items = assets.map((asset) => ({
+        id: asset.id,
+        properties: asset,
+      }))
 
-    playlist.load(items, startIndex)
-  }
-
-  /**
-   * Append assets to the queue
-   */
-  const appendAssets = (assets: TAsset[]) => {
-    const items = assets.map((asset) => ({
-      id: asset.id,
-      properties: asset,
-    }))
-    playlist.append(items)
-  }
+      playlist.load(items, startIndex)
+    },
+    [playlist.load]
+  )
 
   /**
    * Load a single asset directly (bypasses playlist)
    */
-  const loadAsset = async (asset: TAsset) => {
-    isFirstLoadRef.current = true
-    return playback.load(asset)
-  }
+  const loadAsset = useCallback(
+    async (asset: TAsset, startTime?: number) => {
+      isFirstLoadRef.current = true
+      return playback.load(asset, startTime)
+    },
+    [playback.load]
+  )
 
   /**
    * Preload the next asset in the queue
    */
-  const preloadNext = async () => {
+  const preloadNext = useCallback(async () => {
     const nextItem = playlist.nextItem
     if (nextItem) {
       await playback.preload(nextItem.properties)
     }
-  }
+  }, [playlist.nextItem, playback.preload])
 
-  const preloadAsset = async (asset: TAsset) => {
-    return playback.preload(asset)
-  }
+  const preloadAsset = useCallback(
+    async (asset: TAsset) => {
+      return playback.preload(asset)
+    },
+    [playback.preload]
+  )
 
   return {
     ...playlist,
-    appendAssets,
     cancelPreload: playback.cancelPreload,
     isPreloaded: playback.isPreloaded,
     loadAsset,

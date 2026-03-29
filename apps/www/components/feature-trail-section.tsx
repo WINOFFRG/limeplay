@@ -1,6 +1,7 @@
 "use client"
 
 import type { Icon } from "@phosphor-icons/react"
+import type { ReactNode } from "react"
 
 import {
   ArrowsInIcon,
@@ -62,7 +63,7 @@ interface BouncingCircleProps {
   time: MotionValue<number>
 }
 
-export function FeatureTrailSection() {
+export function FeatureTrailSection({ children }: { children: ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const time = useTime()
 
@@ -80,7 +81,7 @@ export function FeatureTrailSection() {
   return (
     <section
       className={`
-        relative z-10 overflow-x-clip py-24
+        relative z-10 overflow-x-clip py-22
         md:py-32
         lg:py-40
       `}
@@ -102,24 +103,7 @@ export function FeatureTrailSection() {
           />
         ))}
       </motion.ul>
-      <div
-        className={`
-          mx-auto mt-16 max-w-5xl px-page
-          md:mt-24
-        `}
-      >
-        <div className="text-center">
-          <h2
-            className={`
-              text-3xl font-medium tracking-tight text-foreground
-              md:text-4xl
-              lg:text-5xl
-            `}
-          >
-            Packed with Batteries
-          </h2>
-        </div>
-      </div>
+      {children}
     </section>
   )
 }

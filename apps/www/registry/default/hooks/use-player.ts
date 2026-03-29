@@ -1,9 +1,9 @@
 "use client"
 
-import type shaka from "shaka-player"
 import type { StateCreator } from "zustand"
 
 import React, { useRef } from "react"
+import shaka from "shaka-player"
 
 import { noop, off, on } from "@/registry/default/lib/utils"
 import {
@@ -28,6 +28,7 @@ declare global {
 export interface PlayerStore {
   onBufferingChange?: (payload: { isBuffering: boolean }) => void
   onError?: (payload: { error: Error }) => void
+  onPlaybackError?: (error: Error) => void
   onPlayerReady?: (payload: { player: shaka.Player }) => void
 
   player: null | shaka.Player
@@ -46,6 +47,7 @@ export const createPlayerStore: StateCreator<
 > = (set) => ({
   onBufferingChange: undefined,
   onError: undefined,
+  onPlaybackError: undefined,
   onPlayerReady: undefined,
 
   player: null,
@@ -71,7 +73,8 @@ export interface UsePlayerOptions<TAsset> {
     asset: TAsset,
     player: shaka.Player,
     media: HTMLMediaElement,
-    preloadManager?: shaka.media.PreloadManager
+    preloadManager?: shaka.media.PreloadManager,
+    startTime?: number
   ) => Promise<void>
   /**
    * Preload implementation - required if using preload
@@ -85,7 +88,7 @@ export interface UsePlayerOptions<TAsset> {
 export interface UsePlayerReturn<TAsset> {
   cancelPreload: (assetId: string) => void
   isPreloaded: (assetId: string) => boolean
-  load: (asset: TAsset) => Promise<boolean>
+  load: (asset: TAsset, startTime?: number) => Promise<boolean>
   player: null | shaka.Player
   preload: (asset: TAsset) => Promise<void>
 }
@@ -102,6 +105,23 @@ export interface UsePlayerStatesOptions {
   throttleBuffering?: boolean | number
 }
 
+/**
+ * Detect whether an error is Shaka's LOAD_INTERRUPTED.
+ * This is expected during rapid skip — not a real error.
+ */
+export function isLoadInterrupted(error: unknown): boolean {
+  if (
+    error &&
+    typeof error === "object" &&
+    "code" in error &&
+    (error as { code: number }).code === shaka.util.Error.Code.LOAD_INTERRUPTED
+  ) {
+    return true
+  }
+
+  return false
+}
+
 export function usePlayer<TAsset extends { id: string }>(
   options?: UsePlayerOptions<TAsset>
 ): UsePlayerReturn<TAsset> {
@@ -111,7 +131,7 @@ export function usePlayer<TAsset extends { id: string }>(
    * Load an asset
    */
   const load = React.useCallback(
-    async (asset: TAsset): Promise<boolean> => {
+    async (asset: TAsset, startTime?: number): Promise<boolean> => {
       if (!options) return false
 
       const currentPlayer = store.getState().player
@@ -123,21 +143,35 @@ export function usePlayer<TAsset extends { id: string }>(
       }
 
       try {
-        await currentPlayer.unload()
-
         const preloadManagers = store.getState().preloadManagers
         const preloadManager = preloadManagers.get(asset.id)
 
         if (preloadManager) {
-          await options.onLoad(asset, currentPlayer, currentMedia, preloadManager)
+          await options.onLoad(
+            asset,
+            currentPlayer,
+            currentMedia,
+            preloadManager,
+            startTime
+          )
           preloadManagers.delete(asset.id)
           store.setState({ preloadManagers: new Map(preloadManagers) })
         } else {
-          await options.onLoad(asset, currentPlayer, currentMedia)
+          await options.onLoad(
+            asset,
+            currentPlayer,
+            currentMedia,
+            undefined,
+            startTime
+          )
         }
 
         return true
       } catch (error) {
+        if (isLoadInterrupted(error)) {
+          return false
+        }
+
         const err = error instanceof Error ? error : new Error(String(error))
         options.onError(err, asset)
         return false
@@ -208,6 +242,7 @@ export function usePlayer<TAsset extends { id: string }>(
     preload,
   }
 }
+
 export function usePlayerStates(options?: UsePlayerStatesOptions) {
   const store = useGetStore()
   const setPlayer = useMediaStore((state) => state.setPlayer)
@@ -320,11 +355,22 @@ export function usePlayerStates(options?: UsePlayerStatesOptions) {
     on(player, "buffering", bufferingHandler)
     on(player, "loading", loadingHandler)
 
+    const errorHandler = (event: Event) => {
+      const detail = (event as CustomEvent).detail
+      if (detail && !isLoadInterrupted(detail)) {
+        store.setState({ status: "error" })
+        store.getState().onPlaybackError?.(detail)
+      }
+    }
+
+    player.addEventListener("error", errorHandler)
+
     setInitialState()
 
     return () => {
       off(player, "buffering", bufferingHandler)
       off(player, "loading", loadingHandler)
+      player.removeEventListener("error", errorHandler)
       clearBufferingTimeout()
     }
   }, [player, mediaRef, store, bufferingThrottleMs])
