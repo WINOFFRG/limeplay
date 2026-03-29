@@ -395,7 +395,12 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
 
   const insert = React.useCallback(
     (items: PlaylistItemInput<T>[], atIndex: number): void => {
-      const { currentIndex, queue } = store.getState()
+      const {
+        currentIndex,
+        queue,
+        shuffle: isShuffleEnabled,
+        shuffleOrder,
+      } = store.getState()
       const normalized = normalizeItems(items)
       const idx = clamp(atIndex, 0, queue.length)
       const newQueue = [
@@ -406,9 +411,29 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
       const newCurrentIndex =
         currentIndex >= idx ? currentIndex + normalized.length : currentIndex
 
+      let newShuffleOrder = shuffleOrder
+      if (isShuffleEnabled) {
+        // Shift existing indices >= idx up by the number of inserted items
+        newShuffleOrder = shuffleOrder.map((i: number) =>
+          i >= idx ? i + normalized.length : i
+        )
+        // Add new shuffled indices for the inserted items
+        const newIndices = Array.from(
+          { length: normalized.length },
+          (_, i) => idx + i
+        )
+        const currentPos = newShuffleOrder.indexOf(newCurrentIndex)
+        newShuffleOrder = [
+          ...newShuffleOrder.slice(0, currentPos + 1),
+          ...shuffle(newIndices),
+          ...newShuffleOrder.slice(currentPos + 1),
+        ]
+      }
+
       store.setState({
         currentIndex: newCurrentIndex,
         queue: newQueue as PlaylistItem[],
+        shuffleOrder: newShuffleOrder,
       })
     },
     [store]
@@ -424,7 +449,13 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
 
   const remove = React.useCallback(
     (id: string): void => {
-      const { currentIndex, currentItem, queue } = store.getState()
+      const {
+        currentIndex,
+        currentItem,
+        queue,
+        shuffle: isShuffleEnabled,
+        shuffleOrder,
+      } = store.getState()
       const removeIndex = queue.findIndex(
         (item: PlaylistItem) => item.id === id
       )
@@ -433,6 +464,14 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
       const newQueue = reject(queue, { id }) as PlaylistItem[]
       let newCurrentIndex = currentIndex
       let newCurrentItem = currentItem
+
+      // Rebase shuffleOrder: remove the deleted index and shift those above it
+      let newShuffleOrder = shuffleOrder
+      if (isShuffleEnabled) {
+        newShuffleOrder = shuffleOrder
+          .filter((i: number) => i !== removeIndex)
+          .map((i: number) => (i > removeIndex ? i - 1 : i))
+      }
 
       if (removeIndex < currentIndex) {
         newCurrentIndex = currentIndex - 1
@@ -444,6 +483,7 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
           currentIndex: newCurrentIndex,
           currentItem: newCurrentItem,
           queue: newQueue,
+          shuffleOrder: newShuffleOrder,
         })
 
         emitChange(
@@ -460,6 +500,7 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
         currentIndex: newCurrentIndex,
         currentItem: newCurrentItem,
         queue: newQueue,
+        shuffleOrder: newShuffleOrder,
       })
     },
     [store, emitChange]
@@ -477,7 +518,12 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
 
   const reorder = React.useCallback(
     (fromIndex: number, toIndex: number): void => {
-      const { currentIndex, queue } = store.getState()
+      const {
+        currentIndex,
+        queue,
+        shuffle: isShuffleEnabled,
+        shuffleOrder,
+      } = store.getState()
       if (
         fromIndex < 0 ||
         fromIndex >= queue.length ||
@@ -499,7 +545,27 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
         newCurrentIndex = currentIndex + 1
       }
 
-      store.setState({ currentIndex: newCurrentIndex, queue: newQueue })
+      // Remap shuffleOrder to reflect the splice-based reorder
+      let newShuffleOrder = shuffleOrder
+      if (isShuffleEnabled) {
+        newShuffleOrder = shuffleOrder.map((i: number) => {
+          if (i === fromIndex) return toIndex
+          if (fromIndex < toIndex) {
+            // Item moved forward: indices in (fromIndex, toIndex] shift down by 1
+            if (i > fromIndex && i <= toIndex) return i - 1
+          } else {
+            // Item moved backward: indices in [toIndex, fromIndex) shift up by 1
+            if (i >= toIndex && i < fromIndex) return i + 1
+          }
+          return i
+        })
+      }
+
+      store.setState({
+        currentIndex: newCurrentIndex,
+        queue: newQueue,
+        shuffleOrder: newShuffleOrder,
+      })
     },
     [store]
   )
