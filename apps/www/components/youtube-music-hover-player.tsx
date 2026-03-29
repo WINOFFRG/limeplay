@@ -30,7 +30,7 @@ export function YouTubeMusicHoverPlayer() {
           open: { opacity: 1, scale: 1, y: 0 },
         }}
       >
-        <div className="flex h-15 w-fit flex-row items-center gap-4 rounded-t-2xl bg-black px-8">
+        <div className="flex h-15 w-fit flex-row items-center gap-4 rounded-t-3xl bg-black px-4">
           <div className="flex w-full items-center justify-center gap-1">
             <svg
               height="36px"
@@ -54,7 +54,7 @@ export function YouTubeMusicHoverPlayer() {
           <div className="my-auto h-8 w-0.5 rounded-md bg-muted-foreground"></div>
           <Button asChild size="xs">
             <Link className="text-sm font-semibold tracking-tight" href="#">
-              Install Now
+              Coming Soon
               <SquareArrowOutUpRightIcon className="ml-1" />
             </Link>
           </Button>
