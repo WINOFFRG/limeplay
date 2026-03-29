@@ -19,7 +19,6 @@ const config = {
     "typescript",
     "oxc-transform",
     "twoslash",
-    "shiki",
   ],
 }
 
