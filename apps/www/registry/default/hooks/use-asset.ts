@@ -161,8 +161,8 @@ export function useAsset<TAsset extends Asset = Asset>(
         source?: null | shaka.media.PreloadManager | string,
         customStartTime?: number
       ) => {
+        shakaPlayer.resetConfiguration()
         if (asset.config) {
-          shakaPlayer.resetConfiguration()
           shakaPlayer.configure(asset.config)
         }
 
@@ -280,7 +280,9 @@ export function useAsset<TAsset extends Asset = Asset>(
         }
 
         if (!isLoaded) {
-          throw new Error(`[useAsset] Failed to load asset: ${asset.id}`)
+          // playback.load() returns false when the player/media isn't ready yet
+          // (not a broken asset). Don't escalate to onLoadError / playlist.next().
+          return false
         }
 
         retryCountRef.current = 0
@@ -345,6 +347,10 @@ export function useAsset<TAsset extends Asset = Asset>(
         void loadAssetIntoPlayer(asset)
       },
     })
+
+    return () => {
+      store.setState({ onPlaylistChange: undefined })
+    }
   }, [loadAssetIntoPlayer, store, options?.onAssetChange])
 
   /**
@@ -392,6 +398,10 @@ export function useAsset<TAsset extends Asset = Asset>(
         void handlePlaybackError(error)
       },
     })
+
+    return () => {
+      store.setState({ onPlaybackError: undefined })
+    }
   }, [handlePlaybackError, store])
 
   /**
@@ -407,6 +417,10 @@ export function useAsset<TAsset extends Asset = Asset>(
     store.setState({
       onEnded: onItemEnded,
     })
+
+    return () => {
+      store.setState({ onEnded: undefined })
+    }
   }, [onItemEnded, store])
 
   /**
