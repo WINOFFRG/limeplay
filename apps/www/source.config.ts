@@ -15,7 +15,6 @@ export const docs = defineDocs({
 })
 
 const blockFrontmatterSchema = z.object({
-  _openapi: z.record(z.unknown()).optional(),
   component: z.string(),
   description: z.string().optional(),
   full: z.boolean().optional(),

@@ -81,11 +81,8 @@ export default async function BlockPage(props: BlockPageProps) {
                 lg:block
               `}
             >
-              <ResizablePanelGroup
-                className="h-screen w-full"
-                direction="horizontal"
-              >
-                <ResizablePanel defaultSize={35} minSize={32}>
+              <ResizablePanelGroup>
+                <ResizablePanel defaultSize="35%">
                   <BlockInfoPane
                     content={content}
                     description={page.data.description}
@@ -94,7 +91,7 @@ export default async function BlockPage(props: BlockPageProps) {
                   />
                 </ResizablePanel>
                 <ResizableHandle className="z-20" withHandle />
-                <ResizablePanel defaultSize={65} minSize={32}>
+                <ResizablePanel defaultSize="65%">
                   <BlockPreviewPane>
                     <PreviewComponent />
                   </BlockPreviewPane>

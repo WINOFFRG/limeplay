@@ -5,6 +5,11 @@
       "source": "/docs",
       "destination": "/docs/quick-start",
       "permanent": true
+    },
+    {
+      "source": "/r/pro/:path*",
+      "destination": "/403",
+      "permanent": false
     }
   ],
   "rewrites": [
