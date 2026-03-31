@@ -56,7 +56,7 @@
     "radix-ui": "^1.4.3",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
-    "react-resizable-panels": "^4",
+    "react-resizable-panels": "4.8.0",
     "react-use": "^17.6.0",
     "remark": "^15.0.1",
     "remark-code-import": "^1.2.0",
