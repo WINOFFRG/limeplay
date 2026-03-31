@@ -1,5 +1,4 @@
-import { type Registry, registryItemSchema } from "shadcn/schema"
-import { z } from "zod"
+import { type Registry, registrySchema } from "shadcn/schema"
 
 import { blocks } from "@/registry/collection/registry-blocks"
 import { examples } from "@/registry/collection/registry-examples"
@@ -7,9 +6,9 @@ import { hooks } from "@/registry/collection/registry-hooks"
 import { internal, lib } from "@/registry/collection/registry-lib"
 import { ui } from "@/registry/collection/registry-ui"
 
-export const registry: Registry = {
+const result = registrySchema.safeParse({
   homepage: "https://limeplay.winoffrg.dev",
-  items: z.array(registryItemSchema).parse([
+  items: [
     {
       cssVars: {},
       dependencies: ["class-variance-authority", "lucide-react"],
@@ -25,6 +24,14 @@ export const registry: Registry = {
     ...hooks,
     ...internal,
     ...examples,
-  ]),
+  ],
   name: "limeplay/ui",
+})
+
+if (!result.success) {
+  console.error("❌ Registry validation failed:")
+  console.error(JSON.stringify(result.error.format(), null, 2))
+  throw new Error("Invalid registry schema")
 }
+
+export const registry: Registry = result.data

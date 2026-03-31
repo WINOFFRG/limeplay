@@ -1,5 +1,4 @@
-import type { registryItemFileSchema } from "shadcn/schema"
-import type { z } from "zod"
+import type { RegistryItem } from "shadcn/schema"
 
 import { promises as fs } from "fs"
 import { tmpdir } from "os"
@@ -139,7 +138,7 @@ async function createTempSourceFile(filename: string) {
   return path.join(dir, filename)
 }
 
-function fixFilePaths(files: z.infer<typeof registryItemSchema>["files"]) {
+function fixFilePaths(files: NonNullable<RegistryItem["files"]>) {
   if (!files) {
     return []
   }
@@ -157,7 +156,9 @@ function fixFilePaths(files: z.infer<typeof registryItemSchema>["files"]) {
   })
 }
 
-async function getFileContent(file: z.infer<typeof registryItemFileSchema>) {
+async function getFileContent(
+  file: NonNullable<RegistryItem["files"]>[number]
+) {
   const raw = await fs.readFile(file.path, "utf-8")
 
   const project = new Project({
@@ -189,7 +190,7 @@ async function getFileContent(file: z.infer<typeof registryItemFileSchema>) {
   return code
 }
 
-function getFileTarget(file: z.infer<typeof registryItemFileSchema>) {
+function getFileTarget(file: NonNullable<RegistryItem["files"]>[number]) {
   let target = file.target
 
   if (!target || target === "") {
