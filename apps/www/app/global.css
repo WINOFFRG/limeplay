@@ -1,8 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "./docs/docs.css";
+
 @import "./shadcn.css";
 @import "./limeplay.css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
   --page-padding-inline: 1rem;

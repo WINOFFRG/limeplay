@@ -1,5 +1,3 @@
-@import "tailwindcss";
-
 :root {
   --lp-timeline-track-height: 4px;
   --lp-timeline-track-height-active: 7px;

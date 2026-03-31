@@ -2,6 +2,7 @@ import { defineConfig, defineDocs } from "fumadocs-mdx/config"
 import rehypeSlug from "rehype-slug"
 import { codeImport } from "remark-code-import"
 import remarkGfm from "remark-gfm"
+import { z } from "zod"
 
 export const docs = defineDocs({
   dir: "content/docs",
@@ -10,6 +11,29 @@ export const docs = defineDocs({
       extractLinkReferences: true,
       includeProcessedMarkdown: true,
     },
+  },
+})
+
+const blockFrontmatterSchema = z.object({
+  _openapi: z.record(z.unknown()).optional(),
+  component: z.string(),
+  description: z.string().optional(),
+  full: z.boolean().optional(),
+  icon: z.string().optional(),
+  preview: z.string(),
+  registry: z.enum(["default", "pro"]).default("default"),
+  status: z.enum(["free", "pro"]).default("free"),
+  title: z.string(),
+})
+
+export const blocks = defineDocs({
+  dir: "content/docs/blocks",
+  docs: {
+    postprocess: {
+      extractLinkReferences: true,
+      includeProcessedMarkdown: true,
+    },
+    schema: blockFrontmatterSchema,
   },
 })
 

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 
-import "@/app/docs/docs.css"
+import "./docs.css"
 import { DocsLayout } from "fumadocs-ui/layouts/docs"
 import { RootProvider } from "fumadocs-ui/provider/next"
 

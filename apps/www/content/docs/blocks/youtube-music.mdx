@@ -1,0 +1,50 @@
+---
+title: Youtube Music
+description: A pro registry block that recreates the compact YouTube Music playback rail with playlist, timeline, and transport controls.
+component: youtube-music
+icon: youtube-music
+preview: youtube-music
+registry: pro
+status: pro
+---
+
+```npm
+npx shadcn add @limeplay/pro/youtube-music
+```
+
+## Interaction Type
+
+- Try hovering transport actions and playback mode controls.
+- Open the playlist panel to inspect the queue-driven layout.
+- Drag or click the fixed timeline to scrub the active track.
+- Use the volume control group to test mute and level state.
+
+## How to Use
+
+```tsx
+import { YouTubeMusicPlayer } from "@/components/youtube-music/media-player"
+
+export function DemoYouTubeMusic() {
+  return (
+    <div className="w-full">
+      <YouTubeMusicPlayer />
+    </div>
+  )
+}
+```
+
+The exported surface is intentionally small. `YouTubeMusicPlayer` mounts its own `MediaProvider`, media element, player hooks, fixed timeline, and controls so the block can be dropped into a product shell without extra wrapper code.
+
+## Architecture
+
+The block is composed around three dense layers:
+
+1. A `MediaProvider` container that owns playback, timeline, volume, and playlist state.
+
+## Props
+
+| Prop | Description |
+| --- | --- |
+| `YouTubeMusicPlayer` | Public entry component for the block. It does not require props in the current registry version. |
+| `MediaProvider` | Mounted internally so playback state is isolated to this player instance. |
+| `PlayerControls` | Internal composition layer for playback, track info, actions, playlist, and mode controls. |
