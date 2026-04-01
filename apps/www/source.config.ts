@@ -18,7 +18,6 @@ const blockFrontmatterSchema = z.object({
   component: z.string(),
   description: z.string().optional(),
   full: z.boolean().optional(),
-  icon: z.string().optional(),
   preview: z.string(),
   registry: z.enum(["default", "pro"]).default("default"),
   status: z.enum(["free", "pro"]).default("free"),

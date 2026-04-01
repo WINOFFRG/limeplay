@@ -1,8 +1,7 @@
 ---
-title: Youtube Music
+title: Audio Player
 description: A pro registry block that recreates the compact YouTube Music playback rail with playlist, timeline, and transport controls.
 component: youtube-music
-icon: youtube-music
 preview: youtube-music
 registry: pro
 status: pro
@@ -32,19 +31,3 @@ export function DemoYouTubeMusic() {
   )
 }
 ```
-
-The exported surface is intentionally small. `YouTubeMusicPlayer` mounts its own `MediaProvider`, media element, player hooks, fixed timeline, and controls so the block can be dropped into a product shell without extra wrapper code.
-
-## Architecture
-
-The block is composed around three dense layers:
-
-1. A `MediaProvider` container that owns playback, timeline, volume, and playlist state.
-
-## Props
-
-| Prop | Description |
-| --- | --- |
-| `YouTubeMusicPlayer` | Public entry component for the block. It does not require props in the current registry version. |
-| `MediaProvider` | Mounted internally so playback state is isolated to this player instance. |
-| `PlayerControls` | Internal composition layer for playback, track info, actions, playlist, and mode controls. |

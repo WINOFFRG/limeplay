@@ -55,17 +55,9 @@ export function BlockInfoPane({
         </div>
       </header>
       <DocsPage>
-        <DocsTitle>{title}</DocsTitle>
-        <DocsDescription className="text-base">{description}</DocsDescription>
-        <DocsBody>
-          <section className="mt-12">
-            <div className="pb-20">
-              <article className={`max-w-none text-foreground`}>
-                {content}
-              </article>
-            </div>
-          </section>
-        </DocsBody>
+        <DocsTitle className="text-4xl">{title}</DocsTitle>
+        <DocsDescription>{description}</DocsDescription>
+        <DocsBody className="mb-10">{content}</DocsBody>
       </DocsPage>
     </div>
   )

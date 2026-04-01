@@ -1,8 +1,7 @@
 ---
-title: Linear Player
-description: A modern seamless flat media player inspired by Linear's clean interface design, with full video playback, timeline, volume, captions, and playlist controls.
+title: Video Player
+description: A modern seamless flat media player with clean interface design.
 component: linear-player
-icon: linear-player
 preview: linear-player
 registry: default
 status: free
@@ -34,46 +33,6 @@ export function DemoLinearPlayer() {
 }
 ```
 
-The exported surface is intentionally small. `LinearMediaPlayer` mounts its own `MediaProvider`, media element, player hooks, timeline, and controls so the block can be dropped into a product shell without extra wrapper code.
-
-## Architecture
-
-The block is composed around a layered overlay design:
-
-1. A `MediaProvider` container that owns playback, timeline, volume, captions, and playlist state.
-2. A timeline slider control with time labels for precise scrubbing.
-3. A bottom controls bar with playback, volume group, captions, playback rate, and picture-in-picture controls.
-
-This produces a clean, flat player surface that stays out of the way until interaction, matching the minimal aesthetic of modern product interfaces.
-
-## Props
-
-| Prop | Description |
-| --- | --- |
-| `LinearMediaPlayer` | Public entry component for the block. Accepts an `as` prop to specify the media element type (`"video"` or `"audio"`). |
-| `MediaProvider` | Mounted internally so playback state is isolated to this player instance. |
-| `BottomControls` | Internal composition layer for playback, volume, captions, rate, and picture-in-picture controls. |
-
 ## Attribution
 
-Inspired by the clean, flat player treatment used by Linear, then adapted into a registry-ready block with Limeplay primitives and a queue-aware internal architecture.
-
-## Source Code
-
-Use the top-right **Source Code** action to inspect the implementation. This showcase page is intentionally designed as a live documentation shell, while the actual source stays in the default registry collection.
-
-## Keep in Mind
-
-Most showcase blocks here are recreations or reinterpretations of strong interaction patterns from production products. The goal is not one-to-one cloning, but understanding the behavior, rebuilding the structure cleanly, and packaging it into a reusable registry block.
-
-Because this player ships as a full-viewport video surface, it works best when given the entire available space. Treat it as a primary content area, not a compact embedded widget.
-
-## Contact
-
-If you find a bug, broken dependency path, or missing attribution note, reach out through the project channels and include the block name so the issue can be traced quickly.
-
-## License & Usage
-
-- Free blocks can be adapted in personal and commercial work with attribution where required.
-- Pro blocks do not require attribution once you have the appropriate access tier.
-- You can modify structure, styling, and behavior after pulling the registry code into your own app.
+[Linear](https://linear.app/quality)
