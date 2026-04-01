@@ -4,9 +4,8 @@ import { SquareArrowOutUpRightIcon } from "lucide-react"
 import { motion } from "motion/react"
 import Link from "next/link"
 
+import { Button } from "@/components/ui/button"
 import { YouTubeMusicPlayer } from "@/registry/pro/blocks/youtube-music/components/media-player"
-
-import { Button } from "./ui/button"
 
 export function YouTubeMusicHoverPlayer() {
   return (

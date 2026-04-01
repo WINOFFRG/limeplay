@@ -49,17 +49,6 @@ export function Header() {
             <NavTabs tabs={navLinks} />
           </div>
           <div className="flex flex-1 items-center justify-end gap-2 px-0">
-            <Button
-              className={`
-                hidden h-7 gap-1.5 rounded-md bg-background px-2.5 text-sm font-medium text-foreground/90 ring ring-border
-                hover:bg-background hover:text-foreground
-                md:flex
-              `}
-              disabled
-              size="sm"
-            >
-              Coming Soon
-            </Button>
             <Sheet>
               <SheetTrigger asChild>
                 <Button
@@ -91,18 +80,6 @@ export function Header() {
                       {link.label}
                     </Link>
                   ))}
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button
-                      className={`
-                        h-9 gap-1.5 rounded-md bg-background px-2.5 text-sm font-medium text-foreground/90 ring ring-border
-                        hover:bg-background hover:text-foreground
-                      `}
-                      disabled
-                      size="sm"
-                    >
-                      Coming Soon
-                    </Button>
-                  </div>
                 </div>
               </SheetContent>
             </Sheet>
