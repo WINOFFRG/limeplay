@@ -1,5 +1,4 @@
-import type { registryItemFileSchema } from "shadcn/schema"
-import type { z } from "zod"
+import type { RegistryItem } from "shadcn/schema"
 
 import { highlight } from "fumadocs-core/highlight"
 import * as React from "react"
@@ -46,7 +45,7 @@ const getCachedFileTree = React.cache(
 )
 
 const getCachedHighlightedFiles = React.cache(
-  async (files: z.infer<typeof registryItemFileSchema>[]) => {
+  async (files: NonNullable<RegistryItem["files"]>) => {
     return await Promise.all(
       files.map(async (file) => ({
         ...file,

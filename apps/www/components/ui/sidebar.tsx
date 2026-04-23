@@ -1,10 +1,8 @@
 "use client"
 
-import type { VariantProps } from "class-variance-authority"
-
-import { Slot } from "@radix-ui/react-slot"
-import { cva } from "class-variance-authority"
+import { cva, type VariantProps } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
+import { Slot } from "radix-ui"
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
@@ -34,7 +32,7 @@ const SIDEBAR_WIDTH_MOBILE = "18rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
-interface SidebarContextProps {
+type SidebarContextProps = {
   isMobile: boolean
   open: boolean
   openMobile: boolean
@@ -50,11 +48,13 @@ function Sidebar({
   children,
   className,
   collapsible = "offcanvas",
+  reserveSpace = true,
   side = "left",
   variant = "sidebar",
   ...props
 }: React.ComponentProps<"div"> & {
   collapsible?: "icon" | "none" | "offcanvas"
+  reserveSpace?: boolean
   side?: "left" | "right"
   variant?: "floating" | "inset" | "sidebar"
 }) {
@@ -121,6 +121,7 @@ function Sidebar({
           "relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear",
           "group-data-[collapsible=offcanvas]:w-0",
           "group-data-[side=right]:rotate-180",
+          !reserveSpace && "hidden w-0",
           variant === "floating" || variant === "inset"
             ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]"
             : "group-data-[collapsible=icon]:w-(--sidebar-width-icon)"
@@ -218,7 +219,7 @@ function SidebarGroupAction({
   className,
   ...props
 }: React.ComponentProps<"button"> & { asChild?: boolean }) {
-  const Comp = asChild ? Slot : "button"
+  const Comp = asChild ? Slot.Root : "button"
 
   return (
     <Comp
@@ -264,7 +265,7 @@ function SidebarGroupLabel({
   className,
   ...props
 }: React.ComponentProps<"div"> & { asChild?: boolean }) {
-  const Comp = asChild ? Slot : "div"
+  const Comp = asChild ? Slot.Root : "div"
 
   return (
     <Comp
@@ -386,11 +387,7 @@ function SidebarProvider({
 
   // Helper to toggle the sidebar.
   const toggleSidebar = React.useCallback(() => {
-    if (isMobile) {
-      setOpenMobile((open) => !open)
-    } else {
-      setOpen((open) => !open)
-    }
+    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open)
   }, [isMobile, setOpen, setOpenMobile])
 
   // Adds a keyboard shortcut to toggle the sidebar.
@@ -406,9 +403,7 @@ function SidebarProvider({
     }
 
     window.addEventListener("keydown", handleKeyDown)
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown)
-    }
+    return () => window.removeEventListener("keydown", handleKeyDown)
   }, [toggleSidebar])
 
   // We add a state so that we can do data-state="expanded" or "collapsed".
@@ -596,7 +591,7 @@ function SidebarMenuAction({
   asChild?: boolean
   showOnHover?: boolean
 }) {
-  const Comp = asChild ? Slot : "button"
+  const Comp = asChild ? Slot.Root : "button"
 
   return (
     <Comp
@@ -677,7 +672,7 @@ function SidebarMenuButton({
     isActive?: boolean
     tooltip?: React.ComponentProps<typeof TooltipContent> | string
   }) {
-  const Comp = asChild ? Slot : "button"
+  const Comp = asChild ? Slot.Root : "button"
   const { isMobile, state } = useSidebar()
 
   const button = (
@@ -778,7 +773,7 @@ function SidebarMenuSubButton({
   isActive?: boolean
   size?: "md" | "sm"
 }) {
-  const Comp = asChild ? Slot : "a"
+  const Comp = asChild ? Slot.Root : "a"
 
   return (
     <Comp
