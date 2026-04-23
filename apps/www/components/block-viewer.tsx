@@ -1,8 +1,7 @@
 "use client"
 
-import type { ImperativePanelHandle } from "react-resizable-panels"
-import type { registryItemFileSchema, registryItemSchema } from "shadcn/schema"
-import type { z } from "zod"
+import type { PanelImperativeHandle } from "react-resizable-panels"
+import type { RegistryItem } from "shadcn/schema"
 
 import {
   Check,
@@ -59,13 +58,13 @@ import { cn } from "@/lib/utils"
 interface BlockViewerContext {
   activeFile: null | string
   highlightedFiles:
-    | (z.infer<typeof registryItemFileSchema> & {
+    | (NonNullable<RegistryItem["files"]>[number] & {
         highlightedContent: any
       })[]
     | null
   iframeKey?: number
-  item: z.infer<typeof registryItemSchema>
-  resizablePanelRef: null | React.RefObject<ImperativePanelHandle | null>
+  item: RegistryItem
+  resizablePanelRef: null | React.RefObject<null | PanelImperativeHandle>
   setActiveFile: (file: string) => void
   setIframeKey?: React.Dispatch<React.SetStateAction<number>>
   setView: (view: "code" | "preview") => void
@@ -147,7 +146,7 @@ function BlockViewerCode() {
         md:h-(--height)
       `}
     >
-      <ResizablePanelGroup className="w-full" direction="horizontal">
+      <ResizablePanelGroup className="w-full">
         <ResizablePanel defaultSize={25} maxSize={40} minSize={15}>
           <BlockViewerFileTree />
         </ResizablePanel>
@@ -260,7 +259,7 @@ function BlockViewerProvider({
   const [activeFile, setActiveFile] = React.useState<
     BlockViewerContext["activeFile"]
   >(highlightedFiles?.[0].target ?? null)
-  const resizablePanelRef = React.useRef<ImperativePanelHandle>(null)
+  const resizablePanelRef = React.useRef<PanelImperativeHandle>(null)
   const [iframeKey, setIframeKey] = React.useState(0)
 
   return (
@@ -455,7 +454,6 @@ function BlockViewerView() {
             relative z-10
             after:absolute after:inset-0 after:right-3 after:z-0 after:rounded-xl after:bg-background/50
           `}
-          direction="horizontal"
         >
           <ResizablePanel
             className={`
@@ -464,7 +462,7 @@ function BlockViewerView() {
             `}
             defaultSize={100}
             minSize={30}
-            ref={resizablePanelRef as React.Ref<ImperativePanelHandle>}
+            panelRef={resizablePanelRef as React.Ref<PanelImperativeHandle>}
           >
             <BlockViewerIframe />
           </ResizablePanel>

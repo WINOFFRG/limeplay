@@ -1,0 +1,33 @@
+---
+title: Audio Player
+description: A pro registry block that recreates the compact YouTube Music playback rail with playlist, timeline, and transport controls.
+component: youtube-music
+preview: youtube-music
+registry: pro
+status: pro
+---
+
+```npm
+npx shadcn add @limeplay/pro/youtube-music
+```
+
+## Interaction Type
+
+- Try hovering transport actions and playback mode controls.
+- Open the playlist panel to inspect the queue-driven layout.
+- Drag or click the fixed timeline to scrub the active track.
+- Use the volume control group to test mute and level state.
+
+## How to Use
+
+```tsx
+import { YouTubeMusicPlayer } from "@/components/youtube-music/media-player"
+
+export function DemoYouTubeMusic() {
+  return (
+    <div className="w-full">
+      <YouTubeMusicPlayer />
+    </div>
+  )
+}
+```

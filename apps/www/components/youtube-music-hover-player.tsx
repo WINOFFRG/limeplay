@@ -4,9 +4,8 @@ import { SquareArrowOutUpRightIcon } from "lucide-react"
 import { motion } from "motion/react"
 import Link from "next/link"
 
+import { Button } from "@/components/ui/button"
 import { YouTubeMusicPlayer } from "@/registry/pro/blocks/youtube-music/components/media-player"
-
-import { Button } from "./ui/button"
 
 export function YouTubeMusicHoverPlayer() {
   return (
@@ -30,7 +29,7 @@ export function YouTubeMusicHoverPlayer() {
           open: { opacity: 1, scale: 1, y: 0 },
         }}
       >
-        <div className="flex h-15 w-fit flex-row items-center gap-4 rounded-t-3xl bg-black px-4">
+        <div className="flex h-14 w-fit flex-row items-center gap-3 rounded-t-4xl bg-black px-4">
           <div className="flex w-full items-center justify-center gap-1">
             <svg
               height="36px"
@@ -53,8 +52,11 @@ export function YouTubeMusicHoverPlayer() {
           </div>
           <div className="my-auto h-8 w-0.5 rounded-md bg-muted-foreground"></div>
           <Button asChild size="xs">
-            <Link className="text-sm font-semibold tracking-tight" href="#">
-              Coming Soon
+            <Link
+              className="text-sm font-semibold tracking-tight"
+              href="/blocks/youtube-music"
+            >
+              Install Now
               <SquareArrowOutUpRightIcon className="ml-1" />
             </Link>
           </Button>

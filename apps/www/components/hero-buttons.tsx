@@ -84,7 +84,7 @@ export default function HeroButtons() {
           hover:bg-primary/90
           md:flex
         `}
-        href="/docs/quick-start"
+        href="/blocks/linear-player"
         initial={{ padding: "0px 20px" }}
         transition={{
           bounce: 0.6,

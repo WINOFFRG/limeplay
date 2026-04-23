@@ -1,0 +1,38 @@
+---
+title: Video Player
+description: A modern seamless flat media player with clean interface design.
+component: linear-player
+preview: linear-player
+registry: default
+status: free
+---
+
+```npm
+npx shadcn add @limeplay/linear-player
+```
+
+## Interaction Type
+
+- Hover over the player to reveal the transport controls overlay.
+- Drag or click the timeline slider to scrub through the video.
+- Use the volume group control to adjust level or toggle mute.
+- Toggle captions, playback rate, and picture-in-picture from the bottom controls.
+- Open the playlist panel to browse and switch between queued items.
+
+## How to Use
+
+```tsx
+import { LinearMediaPlayer } from "@/components/linear-player/media-player"
+
+export function DemoLinearPlayer() {
+  return (
+    <section className="flex h-dvh w-dvw bg-black">
+      <LinearMediaPlayer as="video" />
+    </section>
+  )
+}
+```
+
+## Attribution
+
+[Linear](https://linear.app/quality)
