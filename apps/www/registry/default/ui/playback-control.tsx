@@ -6,9 +6,8 @@ import * as React from "react"
 import { Button } from "@/components/ui/button"
 import {
   MediaReadyState,
-  usePlayback,
+  usePlaybackStore,
 } from "@/registry/default/hooks/use-playback"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 interface PlaybackControlProps extends React.ComponentProps<typeof Button> {
   /**
@@ -27,9 +26,9 @@ export const PlaybackControl = React.forwardRef<
   HTMLButtonElement,
   PlaybackControlProps
 >((props, forwardedRef) => {
-  const status = useMediaStore((state) => state.status)
-  const readyState = useMediaStore((state) => state.readyState)
-  const { togglePaused } = usePlayback()
+  const status = usePlaybackStore((state) => state.status)
+  const readyState = usePlaybackStore((state) => state.readyState)
+  const togglePaused = usePlaybackStore((state) => state.togglePaused)
 
   const {
     "aria-label": ariaLabelProp,

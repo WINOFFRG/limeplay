@@ -4,7 +4,9 @@ import { composeRefs } from "@radix-ui/react-compose-refs"
 import React from "react"
 
 import { cn } from "@/lib/utils"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
+import { useMediaStore } from "@/registry/default/hooks/use-media"
+import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
+import { usePlayerStore } from "@/registry/default/hooks/use-player"
 
 export interface RootContainerProps extends React.ComponentPropsWithoutRef<"div"> {
   /**
@@ -32,11 +34,11 @@ export const RootContainer = React.forwardRef<
   const idle = useMediaStore((state) => state.idle)
   const forceIdle = useMediaStore((state) => state.forceIdle)
   const setIdle = useMediaStore((state) => state.setIdle)
-  const status = useMediaStore((state) => state.status)
+  const status = usePlaybackStore((state) => state.status)
   const debug = useMediaStore((state) => state.debug)
 
-  const setPlayerContainerRef = useMediaStore(
-    (state) => state.setPlayerContainerRef
+  const setPlayerContainerRef = usePlayerStore(
+    (state) => state.setContainerRef
   )
   const aspectRatio = React.useMemo(
     () => calculateAspectRatio(width, height),

@@ -1,18 +1,33 @@
-import type { StateCreator } from "zustand"
-
 import React from "react"
 
-import { noop, off, on } from "@/registry/default/lib/utils"
-import {
-  useGetStore,
-  useMediaStore,
+import type {
+  MediaEventSlice,
+  MediaFeature,
 } from "@/registry/default/ui/media-provider"
 
-export interface PictureInPictureStore {
-  isPictureInPictureActive: boolean
-  isPictureInPictureSupported: boolean
-  onEnterPictureInPicture?: () => void
-  onLeavePictureInPicture?: () => void
+import { useMediaStore } from "@/registry/default/hooks/use-media"
+import { noop, off, on } from "@/registry/default/lib/utils"
+import {
+  useMediaEvents,
+  useMediaFeatureApi,
+  useMediaFeatureStore,
+} from "@/registry/default/ui/media-provider"
+
+export const PICTURE_IN_PICTURE_FEATURE_KEY = "pictureInPicture"
+
+export interface PictureInPictureEvents {
+  enterpictureinpicture: void
+  leavepictureinpicture: void
+}
+
+export interface PictureInPictureStore extends MediaEventSlice<PictureInPictureEvents> {
+  [PICTURE_IN_PICTURE_FEATURE_KEY]: {
+    active: boolean
+    enter: () => Promise<void>
+    exit: () => Promise<void>
+    supported: boolean
+    toggle: () => Promise<void>
+  }
 }
 
 interface ExtendedHTMLVideoElement extends HTMLVideoElement {
@@ -21,83 +36,87 @@ interface ExtendedHTMLVideoElement extends HTMLVideoElement {
   webkitSupportsPresentationMode?: (mode: string) => boolean
 }
 
-export const createPictureInPictureStore: StateCreator<
-  PictureInPictureStore,
-  [],
-  [],
-  PictureInPictureStore
-> = () => ({
-  isPictureInPictureActive: false,
-  isPictureInPictureSupported: false,
-  onEnterPictureInPicture: undefined,
-  onLeavePictureInPicture: undefined,
-})
-
-export interface UsePictureInPictureReturn {
-  enterPictureInPicture: () => Promise<void>
-  exitPictureInPicture: () => Promise<void>
-  togglePictureInPicture: () => Promise<void>
-}
-
-export function usePictureInPicture(): UsePictureInPictureReturn {
-  const store = useGetStore()
-
-  async function enterPictureInPicture() {
-    const media = store.getState().mediaRef
-      .current as ExtendedHTMLVideoElement | null
-    if (!media || media.nodeName.toLowerCase() !== "video") return
-
-    try {
-      if (isWebkitPictureInPictureSupported(media)) {
-        media.webkitSetPresentationMode!("picture-in-picture")
-      } else {
-        await media.requestPictureInPicture()
-      }
-    } catch (error) {
-      console.error("Failed to enter Picture-in-Picture mode:", error)
-    }
-  }
-
-  async function exitPictureInPicture() {
-    const media = store.getState().mediaRef
-      .current as ExtendedHTMLVideoElement | null
-
-    if (!media) return
-
-    try {
-      if (isWebkitPictureInPictureSupported(media)) {
-        media.webkitSetPresentationMode!("inline")
-      } else if (document.pictureInPictureElement) {
-        await document.exitPictureInPicture()
-      }
-    } catch (error) {
-      console.error("Failed to exit Picture-in-Picture mode:", error)
-    }
-  }
-
-  async function togglePictureInPicture() {
-    const isPictureInPictureActive = store.getState().isPictureInPictureActive
-
-    if (isPictureInPictureActive) {
-      await exitPictureInPicture()
-    } else {
-      await enterPictureInPicture()
-    }
-  }
-
+export function pictureInPictureFeature(): MediaFeature<PictureInPictureStore> {
   return {
-    enterPictureInPicture,
-    exitPictureInPicture,
-    togglePictureInPicture,
+    createSlice: (_set, get) => ({
+      [PICTURE_IN_PICTURE_FEATURE_KEY]: {
+        active: false,
+        enter: async () => {
+          const media = get().media.mediaElement as ExtendedHTMLVideoElement | null
+          if (!media || media.nodeName.toLowerCase() !== "video") return
+
+          try {
+            if (isWebkitPictureInPictureSupported(media)) {
+              media.webkitSetPresentationMode!("picture-in-picture")
+            } else {
+              await media.requestPictureInPicture()
+            }
+          } catch (error) {
+            console.error("Failed to enter Picture-in-Picture mode:", error)
+          }
+        },
+        exit: async () => {
+          const media = get().media.mediaElement as ExtendedHTMLVideoElement | null
+          if (!media) return
+
+          try {
+            if (isWebkitPictureInPictureSupported(media)) {
+              media.webkitSetPresentationMode!("inline")
+            } else if (document.pictureInPictureElement) {
+              await document.exitPictureInPicture()
+            }
+          } catch (error) {
+            console.error("Failed to exit Picture-in-Picture mode:", error)
+          }
+        },
+        supported: false,
+        toggle: async () => {
+          const pip = get().pictureInPicture
+          if (pip.active) {
+            await pip.exit()
+          } else {
+            await pip.enter()
+          }
+        },
+      },
+    }),
+    key: PICTURE_IN_PICTURE_FEATURE_KEY,
+    Setup: PictureInPictureSetup,
   }
 }
 
-export function usePictureInPictureStates() {
-  const store = useGetStore()
-  const mediaRef = useMediaStore((state) => state.mediaRef)
+export function usePictureInPictureStore<TSelected>(
+  selector: (state: PictureInPictureStore["pictureInPicture"]) => TSelected
+): TSelected {
+  return useMediaFeatureStore<PictureInPictureStore, TSelected>(
+    PICTURE_IN_PICTURE_FEATURE_KEY,
+    (state) => selector(state.pictureInPicture)
+  )
+}
+
+function hasVideoTrack(media: HTMLVideoElement): boolean {
+  return media.videoWidth > 0 && media.videoHeight > 0
+}
+
+function isWebkitPictureInPictureSupported(
+  media: ExtendedHTMLVideoElement
+): boolean {
+  return (
+    typeof media.webkitSupportsPresentationMode === "function" &&
+    media.webkitSupportsPresentationMode("picture-in-picture") &&
+    typeof media.webkitSetPresentationMode === "function"
+  )
+}
+
+function PictureInPictureSetup() {
+  const store = useMediaFeatureApi<PictureInPictureStore>(
+    PICTURE_IN_PICTURE_FEATURE_KEY
+  )
+  const events = useMediaEvents<PictureInPictureEvents>()
+  const mediaElement = useMediaStore((state) => state.mediaElement)
 
   React.useEffect(() => {
-    const media = mediaRef.current as ExtendedHTMLVideoElement | null
+    const media = mediaElement as ExtendedHTMLVideoElement | null
     if (!media || media.nodeName.toLowerCase() !== "video") return noop
 
     const updatePictureInPictureSupport = () => {
@@ -105,24 +124,25 @@ export function usePictureInPictureStates() {
         document.pictureInPictureEnabled ||
         isWebkitPictureInPictureSupported(media)
 
-      const isPictureInPictureSupported =
-        browserSupports && hasVideoTrack(media)
-
-      store.setState({
-        isPictureInPictureSupported,
+      store.setState(({ pictureInPicture }) => {
+        pictureInPicture.supported = browserSupports && hasVideoTrack(media)
       })
     }
 
     updatePictureInPictureSupport()
 
     const enterPictureInPictureHandler = () => {
-      store.setState({ isPictureInPictureActive: true })
-      store.getState().onEnterPictureInPicture?.()
+      store.setState(({ pictureInPicture }) => {
+        pictureInPicture.active = true
+      })
+      events.emit("enterpictureinpicture")
     }
 
     const leavePictureInPictureHandler = () => {
-      store.setState({ isPictureInPictureActive: false })
-      store.getState().onLeavePictureInPicture?.()
+      store.setState(({ pictureInPicture }) => {
+        pictureInPicture.active = false
+      })
+      events.emit("leavepictureinpicture")
     }
 
     const webkitPresentationModeHandler = () => {
@@ -157,19 +177,7 @@ export function usePictureInPictureStates() {
         )
       }
     }
-  }, [store, mediaRef])
-}
+  }, [mediaElement, store])
 
-function hasVideoTrack(media: HTMLVideoElement): boolean {
-  return media.videoWidth > 0 && media.videoHeight > 0
-}
-
-function isWebkitPictureInPictureSupported(
-  media: ExtendedHTMLVideoElement
-): boolean {
-  return (
-    typeof media.webkitSupportsPresentationMode === "function" &&
-    media.webkitSupportsPresentationMode("picture-in-picture") &&
-    typeof media.webkitSetPresentationMode === "function"
-  )
+  return null
 }

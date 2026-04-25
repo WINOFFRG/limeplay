@@ -3,12 +3,12 @@
 import { PictureInPictureIcon } from "@phosphor-icons/react"
 
 import { Button } from "@/registry/default/blocks/linear-player/ui/button"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
+import { usePictureInPictureStore } from "@/registry/default/hooks/use-picture-in-picture"
 import { PictureInPictureControl } from "@/registry/default/ui/picture-in-picture-control"
 
 export default function PictureInPictureControlDemo() {
-  const isPictureInPictureActive = useMediaStore(
-    (state) => state.isPictureInPictureActive
+  const isPictureInPictureActive = usePictureInPictureStore(
+    (state) => state.active
   )
 
   return (

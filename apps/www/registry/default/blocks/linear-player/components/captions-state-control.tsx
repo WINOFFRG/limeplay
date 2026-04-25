@@ -3,11 +3,11 @@
 import { ClosedCaptioningIcon } from "@phosphor-icons/react"
 
 import { Button } from "@/components/ui/button"
+import { useCaptionsStore } from "@/registry/default/hooks/use-captions"
 import { CaptionsControl } from "@/registry/default/ui/captions"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export function CaptionsStateControl() {
-  const textTrackVisible = useMediaStore((state) => state.textTrackVisible)
+  const textTrackVisible = useCaptionsStore((state) => state.visible)
 
   return (
     <CaptionsControl asChild>

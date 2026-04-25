@@ -73,7 +73,7 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "media-provider",
-    registryDependencies: ["create-media-store"],
+    registryDependencies: [],
     type: "registry:ui",
   },
   {
