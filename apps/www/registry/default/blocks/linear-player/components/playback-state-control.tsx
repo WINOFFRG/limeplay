@@ -8,11 +8,11 @@ import {
 } from "@phosphor-icons/react"
 
 import { Button } from "@/registry/default/blocks/linear-player/ui/button"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
+import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
 import { PlaybackControl } from "@/registry/default/ui/playback-control"
 
 export function PlaybackStateControl() {
-  const status = useMediaStore((state) => state.status)
+  const status = usePlaybackStore((state) => state.status)
 
   return (
     <PlaybackControl asChild>

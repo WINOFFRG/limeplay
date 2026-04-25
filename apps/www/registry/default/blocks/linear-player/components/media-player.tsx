@@ -3,13 +3,12 @@ import React from "react"
 import type { Asset } from "@/registry/default/hooks/use-asset"
 
 import { cn } from "@/lib/utils"
+import { MediaProvider } from "@/registry/default/blocks/linear-player/lib/media"
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
-import { PlayerHooks } from "@/registry/default/blocks/linear-player/components/player-hooks"
 import { CaptionsContainer } from "@/registry/default/ui/captions"
 import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 import { Media, type MediaProps } from "@/registry/default/ui/media"
-import { MediaProvider } from "@/registry/default/ui/media-provider"
 import * as Layout from "@/registry/default/ui/player-layout"
 import { RootContainer } from "@/registry/default/ui/root-container"
 
@@ -61,7 +60,6 @@ export const LinearMediaPlayer = React.forwardRef<
             className="size-full object-cover"
             ref={mediaRef as React.Ref<HTMLMediaElement>}
           />
-          <PlayerHooks />
           <Layout.ControlsOverlayContainer />
           <Layout.ControlsContainer className="pb-6">
             <CaptionsContainer />

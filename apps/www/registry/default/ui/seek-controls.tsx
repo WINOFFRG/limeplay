@@ -4,9 +4,11 @@ import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
-import { MediaReadyState } from "@/registry/default/hooks/use-playback"
+import {
+  MediaReadyState,
+  usePlaybackStore,
+} from "@/registry/default/hooks/use-playback"
 import { useSeek } from "@/registry/default/hooks/use-seek"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export interface SeekControlProps extends React.ComponentProps<typeof Button> {
   asChild?: boolean
@@ -23,7 +25,7 @@ export const SeekControl = React.forwardRef<
   HTMLButtonElement,
   SeekControlProps
 >((props, forwardedRef) => {
-  const readyState = useMediaStore((state) => state.readyState)
+  const readyState = usePlaybackStore((state) => state.readyState)
   const { seek } = useSeek()
 
   const {

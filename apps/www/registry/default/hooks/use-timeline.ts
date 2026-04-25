@@ -1,292 +1,271 @@
 "use client"
 
 import type shaka from "shaka-player"
-import type { StateCreator } from "zustand"
 
 import clamp from "lodash.clamp"
-import React, { useCallback } from "react"
+import React from "react"
 
-import { useInterval } from "@/registry/default/hooks/use-interval"
-import {
-  MediaReadyState,
-  type PlaybackStore,
-} from "@/registry/default/hooks/use-playback"
-import { noop, off, on, toFixedNumber } from "@/registry/default/lib/utils"
-import {
-  useGetStore,
-  useMediaStore,
+import type {
+  MediaEventSlice,
+  MediaFeature,
+  MediaStore,
 } from "@/registry/default/ui/media-provider"
 
-export interface TimelineStore {
-  buffered: shaka.extern.BufferedRange[]
-  currentTime: number
-  duration: number
-  hoveringTime: number
-  isHovering: boolean
-  isLive: boolean
-  liveLatency: null | number
-  onDurationChange?: (payload: { duration: number }) => void
+import { useInterval } from "@/registry/default/hooks/use-interval"
+import { useMediaStore } from "@/registry/default/hooks/use-media"
+import {
+  MediaReadyState,
+  usePlaybackStore,
+} from "@/registry/default/hooks/use-playback"
+import {
+  type PlayerStore,
+  usePlayerStore,
+} from "@/registry/default/hooks/use-player"
+import { noop, off, on, toFixedNumber } from "@/registry/default/lib/utils"
+import {
+  useMediaEvents,
+  useMediaFeatureApi,
+  useMediaFeatureStore,
+} from "@/registry/default/ui/media-provider"
 
-  onSeek?: (payload: { from: number; to: number }) => void
-  onTimeUpdate?: (payload: {
+export const TIMELINE_FEATURE_KEY = "timeline"
+
+export interface TimelineEvents {
+  durationchange: { duration: number }
+  seek: { from: number; to: number }
+  timeupdate: { currentTime: number; duration: number; progress: number }
+}
+
+export interface TimelineStore extends MediaEventSlice<TimelineEvents> {
+  "timeline": {
+    buffered: shaka.extern.BufferedRange[]
     currentTime: number
     duration: number
-    progress: number
-  }) => void
-  progress: number
-}
-
-export const createTimelineStore: StateCreator<
-  PlaybackStore,
-  [],
-  [],
-  TimelineStore
-> = () => ({
-  buffered: [],
-  currentTime: 0,
-  duration: 0,
-  hoveringTime: 0,
-  isHovering: false,
-  isLive: false,
-  liveLatency: null,
-  // Initialize event callbacks
-  onDurationChange: undefined,
-
-  onSeek: undefined,
-  onTimeUpdate: undefined,
-  progress: 0,
-})
-
-export interface UseTimelineReturn {
-  getTimeFromEvent: (event: React.PointerEvent) => number
-  processBufferedRanges: (
-    bufferedRanges: shaka.extern.BufferedRange[],
-    variant?: "combined" | "default" | "from-zero"
-  ) => Array<{ startPercent: number; widthPercent: number }>
-  seek: (time: number) => void
-  setHoveringTime: (time: number) => void
-  setIsHovering: (isHovering: boolean) => void
-}
-
-export interface useTimelineStatesProps {
-  /**
-   * Interval in milliseconds to update the states
-   * @default 500
-   */
-  updateDuration?: number
-}
-
-export function useTimeline(): UseTimelineReturn {
-  const store = useGetStore()
-  const mediaRef = useMediaStore((state) => state.mediaRef)
-  const duration = useMediaStore((state) => state.duration)
-  const isLive = useMediaStore((state) => state.isLive)
-  const player = useMediaStore((state) => state.player)
-
-  const getTimeFromEvent = useCallback(
-    (event: React.PointerEvent) => {
-      const rect = event.currentTarget.getBoundingClientRect()
-      const percentage = (event.clientX - rect.left) / rect.width
-      const clampedPercentage = Math.max(0, Math.min(1, percentage))
-      return duration ? clampedPercentage * duration : 0
-    },
-    [duration]
-  )
-
-  const seek = useCallback(
-    (time: number) => {
-      if (!mediaRef.current || !Number.isFinite(duration)) return
-
-      const media = mediaRef.current
-      const fromTime = media.currentTime
-
-      let actualSeekTime = time
-      let storeCurrentTime = time
-
-      if (isLive && player) {
-        const seekRange = player.seekRange()
-        actualSeekTime = clamp(time, seekRange.start, seekRange.end)
-        storeCurrentTime = actualSeekTime - seekRange.start
-      } else {
-        actualSeekTime = clamp(time, 0, duration)
-        storeCurrentTime = actualSeekTime
-      }
-
-      store.setState({
-        currentTime: storeCurrentTime,
-        progress: storeCurrentTime / duration,
-      })
-
-      media.currentTime = actualSeekTime
-
-      store.getState().onSeek?.({ from: fromTime, to: actualSeekTime })
-    },
-    [mediaRef, duration, isLive, player, store]
-  )
-
-  const setHoveringTime = useCallback(
-    (time: number) => {
-      if (!Number.isFinite(store.getState().duration)) return
-
-      store.setState({
-        hoveringTime: time,
-      })
-    },
-    [store]
-  )
-
-  function setIsHovering(isHovering: boolean) {
-    store.setState({ isHovering })
-  }
-
-  const processBufferedRanges = useCallback(
-    (
+    hoveringTime: number
+    isHovering: boolean
+    isLive: boolean
+    liveLatency: null | number
+    processBufferedRanges: (
       bufferedRanges: shaka.extern.BufferedRange[],
-      variant: "combined" | "default" | "from-zero" = "default"
-    ): Array<{ startPercent: number; widthPercent: number }> => {
-      if (!bufferedRanges.length || !duration) {
-        return []
-      }
-
-      let normalizedBuffered: shaka.extern.BufferedRange[] = []
-
-      if (variant === "combined") {
-        const combinedBuffered = bufferedRanges.reduce(
-          (acc, range) => {
-            acc.start = Math.min(acc.start, range.start)
-            acc.end = Math.max(acc.end, range.end)
-            return acc
-          },
-          { end: 0, start: Infinity }
-        )
-
-        if (combinedBuffered.start !== Infinity) {
-          normalizedBuffered = [
-            {
-              end: combinedBuffered.end,
-              start: combinedBuffered.start,
-            },
-          ]
-        }
-      } else if (variant === "from-zero") {
-        normalizedBuffered = bufferedRanges.map((range) => ({
-          end: range.end,
-          start: 0,
-        }))
-      } else {
-        normalizedBuffered = bufferedRanges
-      }
-
-      if (!normalizedBuffered.length) {
-        return []
-      }
-
-      return normalizedBuffered.map((range) => {
-        let startPercent: number
-        let widthPercent: number
-
-        if (isLive && player) {
-          const seekRange = player.seekRange()
-          const relativeStart = Math.max(0, range.start - seekRange.start)
-          const relativeEnd = Math.max(0, range.end - seekRange.start)
-
-          startPercent = (relativeStart / duration) * 100
-          widthPercent = ((relativeEnd - relativeStart) / duration) * 100
-        } else {
-          startPercent = (range.start / duration) * 100
-          widthPercent = ((range.end - range.start) / duration) * 100
-        }
-
-        return { startPercent, widthPercent }
-      })
-    },
-    [duration, isLive, player]
-  )
-
-  return {
-    getTimeFromEvent,
-    processBufferedRanges,
-    seek,
-    setHoveringTime,
-    setIsHovering,
+      variant?: "combined" | "default" | "from-zero"
+    ) => Array<{ startPercent: number; widthPercent: number }>
+    progress: number
+    seek: (time: number) => void
+    setHoveringTime: (time: number) => void
+    setIsHovering: (isHovering: boolean) => void
   }
 }
 
-export function useTimelineStates({
-  updateDuration = 500,
-}: useTimelineStatesProps = {}) {
-  const store = useGetStore()
-  const player = useMediaStore((s) => s.player)
-  const mediaRef = useMediaStore((state) => state.mediaRef)
-  const canPlay = useMediaStore((state) => state.canPlay)
-  const readyState = useMediaStore((state) => state.readyState)
+export function timelineFeature(): MediaFeature<
+  TimelineStore,
+  MediaStore & PlayerStore & TimelineStore
+> {
+  return {
+    createSlice: (set, get, _store, events) => ({
+      [TIMELINE_FEATURE_KEY]: {
+        buffered: [],
+        currentTime: 0,
+        duration: 0,
+        hoveringTime: 0,
+        isHovering: false,
+        isLive: false,
+        liveLatency: null,
+        processBufferedRanges: (bufferedRanges, variant = "default") => {
+          const timeline = get().timeline
+          const player = get().player.instance
+          const duration = timeline.duration
+
+          if (!bufferedRanges.length || !duration) {
+            return []
+          }
+
+          let normalizedBuffered: shaka.extern.BufferedRange[] = []
+
+          if (variant === "combined") {
+            const combinedBuffered = bufferedRanges.reduce(
+              (acc, range) => {
+                acc.start = Math.min(acc.start, range.start)
+                acc.end = Math.max(acc.end, range.end)
+                return acc
+              },
+              { end: 0, start: Infinity }
+            )
+
+            if (combinedBuffered.start !== Infinity) {
+              normalizedBuffered = [
+                {
+                  end: combinedBuffered.end,
+                  start: combinedBuffered.start,
+                },
+              ]
+            }
+          } else if (variant === "from-zero") {
+            normalizedBuffered = bufferedRanges.map((range) => ({
+              end: range.end,
+              start: 0,
+            }))
+          } else {
+            normalizedBuffered = bufferedRanges
+          }
+
+          return normalizedBuffered.map((range) => {
+            let startPercent: number
+            let widthPercent: number
+
+            if (timeline.isLive && player) {
+              const seekRange = player.seekRange()
+              const relativeStart = Math.max(0, range.start - seekRange.start)
+              const relativeEnd = Math.max(0, range.end - seekRange.start)
+
+              startPercent = (relativeStart / duration) * 100
+              widthPercent = ((relativeEnd - relativeStart) / duration) * 100
+            } else {
+              startPercent = (range.start / duration) * 100
+              widthPercent = ((range.end - range.start) / duration) * 100
+            }
+
+            return { startPercent, widthPercent }
+          })
+        },
+        progress: 0,
+        seek: (time) => {
+          const media = get().media.mediaElement
+          const timeline = get().timeline
+          const player = get().player.instance
+          if (!media || !Number.isFinite(timeline.duration)) return
+
+          const fromTime = media.currentTime
+
+          let actualSeekTime = time
+          let storeCurrentTime = time
+
+          if (timeline.isLive && player) {
+            const seekRange = player.seekRange()
+            actualSeekTime = clamp(time, seekRange.start, seekRange.end)
+            storeCurrentTime = actualSeekTime - seekRange.start
+          } else {
+            actualSeekTime = clamp(time, 0, timeline.duration)
+            storeCurrentTime = actualSeekTime
+          }
+
+          set(({ timeline }) => {
+            timeline.currentTime = storeCurrentTime
+            timeline.progress = storeCurrentTime / timeline.duration
+          })
+
+          media.currentTime = actualSeekTime
+          events.emit("seek", {
+            from: fromTime,
+            to: actualSeekTime,
+          })
+        },
+        setHoveringTime: (time) => {
+          const timeline = get().timeline
+          if (!Number.isFinite(timeline.duration)) return
+
+          set(({ timeline }) => {
+            timeline.hoveringTime = time
+          })
+        },
+        setIsHovering: (isHovering) => {
+          set(({ timeline }) => {
+            timeline.isHovering = isHovering
+          })
+        },
+      },
+    }),
+    key: TIMELINE_FEATURE_KEY,
+    Setup: TimelineSetup,
+  }
+}
+
+export function useTimelineStore<TSelected>(
+  selector: (state: TimelineStore["timeline"]) => TSelected
+): TSelected {
+  return useMediaFeatureStore<TimelineStore, TSelected>(
+    TIMELINE_FEATURE_KEY,
+    (state) => selector(state.timeline)
+  )
+}
+
+function TimelineSetup() {
+  const UPDATE_DURATION = 500
+
+  const store = useMediaFeatureApi<TimelineStore>(TIMELINE_FEATURE_KEY)
+  const events = useMediaEvents<TimelineEvents>()
+  const player = usePlayerStore((state) => state.instance)
+  const mediaElement = useMediaStore((state) => state.mediaElement)
+  const canPlay = usePlaybackStore((state) => state.canPlay)
+  const readyState = usePlaybackStore((state) => state.readyState)
 
   const isLive = player?.isLive() ?? false
 
   const onTimeUpdate = React.useCallback(() => {
-    if (!mediaRef.current || !player) return
+    if (!mediaElement || !player) return
 
     if (readyState < MediaReadyState.HAVE_METADATA) return
 
-    let currentTime = mediaRef.current.currentTime
+    let currentTime = mediaElement.currentTime
     let liveLatency = isLive ? 0 : null
     let progress = 0
+
+    const timeline = store.getState().timeline
 
     if (isLive) {
       const seekRange = player.seekRange()
       liveLatency =
-        mediaRef.current.currentTime === 0
+        mediaElement.currentTime === 0
           ? 0
-          : seekRange.end - mediaRef.current.currentTime
+        : seekRange.end - mediaElement.currentTime
 
       liveLatency = toFixedNumber(clamp(liveLatency, 0, seekRange.end), 4)
 
       progress =
         1 -
-        (seekRange.end - mediaRef.current.currentTime) /
+      (seekRange.end - mediaElement.currentTime) /
           (seekRange.end - seekRange.start)
 
       progress = toFixedNumber(clamp(progress, 0, 1), 4)
     } else {
-      currentTime = clamp(
-        mediaRef.current.currentTime,
-        0,
-        store.getState().duration
-      )
-      progress = toFixedNumber(currentTime / store.getState().duration, 4)
+      currentTime = clamp(mediaElement.currentTime, 0, timeline.duration)
+      progress = toFixedNumber(currentTime / timeline.duration, 4)
     }
 
-    store.setState({
-      currentTime,
-      isLive: isLive,
-      liveLatency,
-      progress,
-      ...(isLive && {
-        duration: player.seekRange().end - player.seekRange().start,
-      }),
+    store.setState(({ timeline }) => {
+      timeline.currentTime = currentTime
+      timeline.isLive = isLive
+      timeline.liveLatency = liveLatency
+      timeline.progress = progress
+
+      if (isLive) {
+        timeline.duration =
+          player.seekRange().end - player.seekRange().start
+      }
     })
 
-    store.getState().onTimeUpdate?.({
+    events.emit("timeupdate", {
       currentTime,
-      duration: store.getState().duration,
+      duration: store.getState().timeline.duration,
       progress,
     })
-  }, [mediaRef, player, readyState, isLive, store])
+  }, [events, isLive, mediaElement, player, readyState, store])
 
   const onDurationChange = React.useCallback(() => {
-    if (!mediaRef.current || !player) return
+    if (!mediaElement || !player) return
 
     const seekRange = player.seekRange()
     const playerDuration = player.isLive()
       ? seekRange.end - seekRange.start
-      : mediaRef.current.duration
+      : mediaElement.duration
 
     if (playerDuration && Number.isFinite(playerDuration)) {
-      store.setState({ duration: playerDuration })
+      store.setState(({ timeline }) => {
+        timeline.duration = playerDuration
+      })
 
-      store.getState().onDurationChange?.({ duration: playerDuration })
+      events.emit("durationchange", { duration: playerDuration })
     }
-  }, [store, mediaRef, player])
+  }, [events, mediaElement, player, store])
 
   const onBuffer = React.useCallback(() => {
     if (!player) return
@@ -297,29 +276,28 @@ export function useTimelineStates({
       return
     }
 
-    store.setState({ buffered: bufferedInfo.total })
-  }, [store, player])
+    store.setState(({ timeline }) => {
+      timeline.buffered = bufferedInfo.total
+    })
+  }, [player, store])
 
-  // NOTE: We need to reset states as soon as the media reloads. This is needed
-  // in case of queue.next however UX breaks when we are refetching
-  // the source for same media, either how load call resets the current time so this works
   const onLoading = React.useCallback(() => {
-    store.setState({
-      buffered: [],
-      currentTime: 0,
-      duration: 0,
-      isLive: false,
-      liveLatency: null,
-      progress: 0,
+    store.setState(({ timeline }) => {
+      timeline.buffered = []
+      timeline.currentTime = 0
+      timeline.duration = 0
+      timeline.isLive = false
+      timeline.liveLatency = null
+      timeline.progress = 0
     })
   }, [store])
 
-  useInterval(onTimeUpdate, updateDuration)
+  useInterval(onTimeUpdate, UPDATE_DURATION)
 
   React.useEffect(() => {
-    if (!mediaRef.current || !player) return noop
+    if (!mediaElement || !player) return noop
 
-    const media = mediaRef.current
+    const media = mediaElement
 
     if (canPlay) {
       onTimeUpdate()
@@ -338,5 +316,15 @@ export function useTimelineStates({
       off(player, ["trackschanged", "loading"], onBuffer)
       off(player, "loading", onLoading)
     }
-  }, [mediaRef, player, canPlay])
+  }, [
+    canPlay,
+    mediaElement,
+    onBuffer,
+    onDurationChange,
+    onLoading,
+    onTimeUpdate,
+    player,
+  ])
+
+  return null
 }

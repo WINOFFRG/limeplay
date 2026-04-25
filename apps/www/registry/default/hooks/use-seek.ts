@@ -1,37 +1,26 @@
-import {
-  useGetStore,
-  useMediaStore,
-} from "@/registry/default/ui/media-provider"
+import { useMediaStore } from "@/registry/default/hooks/use-media"
+import { useMediaApi } from "@/registry/default/ui/media-provider"
 
-/**
- * Return type for the useSeek hook.
- * Provides functionality to seek forward or backward in media playback.
- */
-export interface UseSeekReturn {
-  /**
-   * Seeks to a relative position in the media timeline.
-   * @param offset - Number of seconds to seek (positive for forward, negative for backward)
-   */
-  seek: (offset: number) => void
-}
-
-export function useSeek(): UseSeekReturn {
-  const store = useGetStore()
-  const mediaRef = useMediaStore((state) => state.mediaRef)
+export function useSeek() {
+    const store = useMediaApi()
+    const mediaElement = useMediaStore((state) => state.mediaElement)
 
   function seek(offset: number) {
-    if (!mediaRef.current) {
+      if (!mediaElement) {
       return
     }
 
-    const media = mediaRef.current
+      const media = mediaElement
     const newTime = media.currentTime + offset
 
     media.currentTime = Math.max(0, Math.min(newTime, media.duration || 0))
 
-    store.setState({
-      idle: false,
-    })
+      store.setState((state) => ({
+          media: {
+              ...state.media,
+              idle: false,
+        },
+    }))
   }
 
   return {

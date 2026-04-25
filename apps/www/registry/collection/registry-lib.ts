@@ -11,19 +11,7 @@ export const lib: Registry["items"] = [
     name: "utils",
     type: "registry:lib",
   },
-  {
-    dependencies: ["zustand"],
-    files: [
-      {
-        path: "lib/create-media-store.ts",
-        type: "registry:lib",
-      },
-    ],
-    name: "create-media-store",
-    registryDependencies: ["use-player", "use-playback"],
-    type: "registry:lib",
-  },
-  {
+    {
     dependencies: ["date-fns"],
     files: [
       {

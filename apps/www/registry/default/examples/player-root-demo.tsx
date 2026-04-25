@@ -10,7 +10,7 @@ import { Media } from "@/registry/default/ui/media"
 import {
   MediaProvider,
   useMediaStore,
-} from "@/registry/default/ui/media-provider"
+} from "@/registry/default/internal/media"
 import * as Layout from "@/registry/default/ui/player-layout"
 import { RootContainer } from "@/registry/default/ui/root-container"
 
@@ -58,7 +58,7 @@ export function PlayerLayoutDemo({
 }
 
 function MediaElement() {
-  const player = useMediaStore((state) => state.player)
+  const player = useMediaStore((state) => state.player.instance)
 
   useEffect(() => {
     const streamUrl =

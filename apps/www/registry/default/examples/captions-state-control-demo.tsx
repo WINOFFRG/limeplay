@@ -4,21 +4,25 @@ import { ClosedCaptioningIcon } from "@phosphor-icons/react"
 import { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
-import { MediaReadyState } from "@/registry/default/hooks/use-playback"
+import { useCaptionsStore } from "@/registry/default/hooks/use-captions"
+import {
+  MediaReadyState,
+  usePlaybackStore,
+} from "@/registry/default/hooks/use-playback"
+import { usePlayerStore } from "@/registry/default/hooks/use-player"
 import {
   CaptionsContainer,
   CaptionsControl,
 } from "@/registry/default/ui/captions"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export function CaptionsHybridDemo() {
   return <CaptionsContainer className="mb-16" />
 }
 
 export function CaptionsStateControlDemo() {
-  const textTrackVisible = useMediaStore((state) => state.textTrackVisible)
-  const player = useMediaStore((state) => state.player)
-  const readyState = useMediaStore((state) => state.readyState)
+  const textTrackVisible = useCaptionsStore((state) => state.visible)
+  const player = usePlayerStore((state) => state.instance)
+  const readyState = usePlaybackStore((state) => state.readyState)
 
   // DEV: Adding text tracks externally as demo asset doesn't have built-in text tracks
   useEffect(() => {

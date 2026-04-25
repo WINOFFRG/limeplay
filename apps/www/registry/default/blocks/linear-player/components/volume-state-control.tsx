@@ -7,12 +7,12 @@ import {
 } from "@phosphor-icons/react"
 
 import { Button } from "@/registry/default/blocks/linear-player/ui/button"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
+import { useVolumeStore } from "@/registry/default/hooks/use-volume"
 import { MuteControl } from "@/registry/default/ui/mute-control"
 
 export function VolumeStateControl() {
-  const muted = useMediaStore((state) => state.muted)
-  const volume = useMediaStore((state) => state.volume)
+  const muted = useVolumeStore((state) => state.muted)
+  const volume = useVolumeStore((state) => state.level)
 
   return (
     <MuteControl asChild>

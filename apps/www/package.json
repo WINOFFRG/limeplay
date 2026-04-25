@@ -45,6 +45,7 @@
     "fumadocs-typescript": "^5.2.0",
     "fumadocs-ui": "16.7.7",
     "hast-util-to-jsx-runtime": "^2.3.6",
+    "immer": "^11.1.4",
     "jotai": "^2.12.5",
     "lodash": "^4.17.21",
     "lodash.clamp": "^4.0.3",
