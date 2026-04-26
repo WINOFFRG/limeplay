@@ -36,22 +36,5 @@ export const internal: Registry["items"] = [
     name: "custom-demo-controls",
     type: "registry:ui",
   },
-  {
-    files: [
-      {
-        path: "internal/player-hooks-demo.tsx",
-        type: "registry:ui",
-      },
-    ],
-    name: "player-hooks-demo",
-    registryDependencies: [
-      "use-playback",
-      "use-player",
-      "use-timeline",
-      "use-volume",
-      "use-captions",
-      "use-playback-rate",
-    ],
-    type: "registry:ui",
-  },
+
 ]

@@ -45,10 +45,6 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/player-hooks.tsx`,
-        type: "registry:component",
-      },
-      {
         path: `${BASE_SRC_URL}/ui/button.tsx`,
         type: "registry:ui",
       },
@@ -91,7 +87,6 @@ export const blocks: Registry["items"] = [
       "media",
       "media-provider",
       "mute-control",
-      "player-hooks",
       "playback-control",
       "picture-in-picture-control",
       "timeline-control",
@@ -132,10 +127,6 @@ export const blocks: Registry["items"] = [
       },
       {
         path: `blocks/basic-player/components/playback-state-control.tsx`,
-        type: "registry:component",
-      },
-      {
-        path: `blocks/basic-player/components/player-hooks.tsx`,
         type: "registry:component",
       },
       {
@@ -214,10 +205,6 @@ export const blocks: Registry["items"] = [
       },
       {
         path: "blocks/youtube-music/components/playlist.tsx",
-        type: "registry:component",
-      },
-      {
-        path: "blocks/youtube-music/components/player-hooks.tsx",
         type: "registry:component",
       },
       {
