@@ -1,69 +1,66 @@
 ---
 title: Player Layout
-description: Provides composible set of components which helps to setup player container
+description: Composable structural containers for player UI.
 ---
-import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 ## Installation
 
-<Steps>
-<Step>
 ```npm
 npx shadcn add @limeplay/player-layout
 ```
-</Step>
 
-<Step>
-### Setup the player layout in provider
+<Callout>
+Requires [`mediaFeature`](/docs/concepts) registered in your [`createMediaKit`](/docs/components/media-provider).
+</Callout>
 
-```tsx lineNumbers title="components/player/media-player.tsx"
+## Usage
+
+Import as a namespace and compose the layout:
+
+```tsx title="components/media-player.tsx"
 import * as Layout from "@/components/limeplay/player-layout"
+import { RootContainer } from "@/components/limeplay/root-container"
+import { Media } from "@/components/limeplay/media"
 
 export function MediaPlayer() {
   return (
     <MediaProvider>
-      <PlayerHooks />
-      <Layout.RootContainer height={720} width={1280}>
+      <RootContainer>
         <Layout.PlayerContainer>
-          <MediaElement />
+          <Media as="video" className="size-full object-cover" />
+          <Layout.ControlsOverlayContainer />
+          <Layout.ControlsContainer>
+            {/* Your controls */}
+          </Layout.ControlsContainer>
         </Layout.PlayerContainer>
-      </Layout.RootContainer>
+      </RootContainer>
     </MediaProvider>
   )
 }
 ```
-</Step>
-
-</Steps>
-
-## Understanding
-
-Provides composible set of components which helps to setup player container structure. The layout system is built with accessibility and responsive design in mind.
 
 ## Components
 
-The Player Layout is composed of multiple components that work together to create a structured media player interface.
-
 ### RootContainer
 
-The outermost container that manages aspect ratio, idle state, and focus management.
+Outermost wrapper. Manages idle state detection and focus management for accessibility.
 
 ### PlayerContainer
 
-Container for the actual media element. Maintains aspect ratio and handles overflow.
+Container for the media element. Maintains aspect ratio and handles overflow.
 
 ### ControlsContainer
 
-Container for player controls. Uses pointer-events management for proper interaction.
+Structural container for player controls. Manages pointer-events for proper interaction layering.
 
 ### ControlsBottomContainer
 
-Bottom-aligned container for control buttons and sliders.
+Bottom-aligned area for control buttons and sliders.
 
 ### ControlsTopContainer
 
-Top-aligned container for control buttons, typically used for titles or back buttons.
+Top-aligned area, typically used for titles or back navigation.
 
 ### ControlsOverlayContainer
 
-Overlay gradient that provides visual separation for controls.
+Gradient overlay that provides visual separation between media and controls.

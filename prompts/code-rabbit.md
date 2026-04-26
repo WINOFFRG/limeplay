@@ -44,7 +44,6 @@ Ensure docs include:
 
 If a component relies on a hook:
 
-* Hook must be added to `PlayerHooks`
 * Store slice must be composed
 * Media store must be updated
 

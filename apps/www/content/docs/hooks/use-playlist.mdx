@@ -1,104 +1,86 @@
 ---
 title: use-playlist
-description: Hook for managing playback queue, shuffle, and repeat modes
+description: Feature for managing playback queue, navigation, shuffle, and repeat modes.
 ---
-
-import { Step, Steps } from "fumadocs-ui/components/steps"
 
 ## Installation
 
-<Steps>
-<Step>
-### Install the hook
 ```npm
 npx shadcn add @limeplay/use-playlist
 ```
-</Step>
 
-<Step>
-### Add to PlayerHooks
-Import the `usePlaylistStates` hook in your existing `PlayerHooks` component.
+Register the feature:
 
-```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
-import React from "react"
+```tsx title="lib/media.ts"
+import { playlistFeature } from "@/hooks/limeplay/use-playlist"
 
-import { usePlaylistStates } from "@/hooks/limeplay/use-playlist" // [!code ++]
-
-export const PlayerHooks = React.memo(() => {
-  usePlaylistStates() // [!code ++]
-
-  return null
+createMediaKit({
+  features: [..., playlistFeature()] as const,
 })
 ```
 
-</Step>
+## Store
 
-<Step>
-### Add to Store
+Access via `usePlaylistStore(selector)`:
 
-```tsx lineNumbers title="lib/create-media-store.ts"
-import { createPlaylistStore, PlaylistStore } from "@/hooks/limeplay/use-playlist"
+```tsx
+import { usePlaylistStore } from "@/hooks/limeplay/use-playlist"
 
-export type TypeMediaStore = PlaylistStore & {}
-
-export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
-  const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlaylistStore(...etc),
-    ...initProps,
-  }))
-  return mediaStore
-}
+const queue = usePlaylistStore(s => s.queue)
+const currentItem = usePlaylistStore(s => s.currentItem)
+const repeatMode = usePlaylistStore(s => s.repeatMode)
 ```
 
-</Step>
-</Steps>
+### State
 
-## Example Usage
+| Field | Type | Description |
+|---|---|---|
+| `queue` | `PlaylistItem[]` | Current playlist items |
+| `currentItem` | `PlaylistItem \| null` | Currently playing item |
+| `currentIndex` | `number` | Index of current item |
+| `repeatMode` | `"off" \| "one" \| "all"` | Repeat mode |
+| `shuffle` | `boolean` | Shuffle enabled |
+| `shuffleOrder` | `number[]` | Randomized indices |
+| `history` | `PlaylistItem[]` | Playback history |
+| `sessionId` | `string` | Current session identifier |
 
-```tsx lineNumbers title="components/player/playlist-controls.tsx"
+### Actions
+
+| Method | Description |
+|---|---|
+| `load(items, startIndex?)` | Load a playlist |
+| `next()` | Advance to next item |
+| `previous()` | Go to previous item (from history) |
+| `skipTo(index)` | Jump to specific index |
+| `skipToId(id)` | Jump to item by ID |
+| `append(items)` | Add items to end |
+| `prepend(items)` | Add items to start |
+| `insert(items, atIndex)` | Insert at position |
+| `playNext(items)` | Insert after current |
+| `remove(id)` | Remove by ID |
+| `removeAt(index)` | Remove by index |
+| `reorder(from, to)` | Move item position |
+| `clear()` | Clear the playlist |
+| `setRepeatMode(mode)` | Set repeat mode |
+| `cycleRepeatMode()` | Cycle through off → one → all |
+| `setShuffle(enabled)` | Enable/disable shuffle |
+| `toggleShuffle()` | Toggle shuffle |
+| `newSession()` | Generate new session ID |
+
+## usePlaylist Hook
+
+Higher-level hook with derived state:
+
+```tsx
 import { usePlaylist } from "@/hooks/limeplay/use-playlist"
 
-export function PlaylistControls() {
-  const { next, previous, toggleShuffle, setRepeatMode } = usePlaylist({
-    onLoadItem: async (item) => {
-        // Load the item into the player
-        console.log("Loading", item)
-    }
-  })
-
-  return (
-    <div>
-      <button onClick={previous}>Previous</button>
-      <button onClick={next}>Next</button>
-      <button onClick={toggleShuffle}>Shuffle</button>
-      <button onClick={() => setRepeatMode('all')}>Repeat All</button>
-    </div>
-  )
-}
+const { next, previous, hasNext, hasPrevious, orderedItems } = usePlaylist()
 ```
 
-## Understanding
+## Events
 
-The `use-playlist` hook provides a robust queue management system. It handles:
-- **Queue Management**: Add, remove, reorder items.
-- **Navigation**: Next, previous, skip to index.
-- **Modes**: Shuffle and Repeat (All, One, Off).
-- **History**: Tracks played items for previous button navigation.
+| Event | Payload | When |
+|---|---|---|
+| `playlistchange` | `PlaylistChangeEvent` | Current item changes |
 
-It works in conjunction with `usePlaylistStates` which listens for the `ended` event to automatically advance the queue.
-
-## API Reference
-
-### usePlaylistStates()
-
-Sets up event listeners (like `ended`) to handle automatic playlist advancement.
-
-### usePlaylist(options)
-
-#### Returns
-
-<AutoTypeTable path="./registry/default/hooks/use-playlist.ts" name="UsePlaylistReturn" />
-
-### Store State
-
-<AutoTypeTable path="./registry/default/hooks/use-playlist.ts" name="PlaylistStore" />
+`PlaylistChangeEvent` includes `currentIndex`, `currentItem`, `previousIndex`, `previousItem`, and `reason` (`"load"`, `"next"`, `"previous"`, `"skip"`, `"remove"`).

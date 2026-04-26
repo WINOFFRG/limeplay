@@ -1,17 +1,18 @@
 {
   "title": "Hooks",
-  "description": "All hooks used in Player UI",
+"description": "Player state and utility hooks",
   "pages": [
     "use-asset",
-    "use-playlist",
     "use-player",
     "use-playback",
-    "use-picture-in-picture",
     "use-volume",
     "use-timeline",
+    "use-playlist",
     "use-playback-rate",
+    "use-picture-in-picture",
     "use-captions",
     "use-seek",
+    "use-idle",
     "use-interval",
     "use-track-events"
   ],

@@ -1,79 +1,23 @@
 ---
 title: Mute Control
-description: Controls the volume mute toggle state
+description: Toggle button for muting/unmuting media audio.
 ---
-
-import { Step, Steps } from "fumadocs-ui/components/steps"
 
 <ComponentPreview name="volume-state-control-demo" withPlayer />
 
 ## Installation
 
-<Steps>
-<Step>
-
 ```npm
 npx shadcn add @limeplay/mute-control
 ```
-</Step>
 
-<Step>
-### Add Event & Action Bridge
-Import the `useVolumeStates` hook in your existing `PlayerHooks` component.
+<Callout>
+Requires [`volumeFeature`](/docs/hooks/use-volume) registered in your [`createMediaKit`](/docs/components/media-provider).
+</Callout>
 
-```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
-import React from "react"
+## Usage
 
-import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
-import { usePlayerStates } from "@/hooks/limeplay/use-player"
-import { useVolumeStates } from "@/hooks/limeplay/use-volume" // [!code ++]
-
-export const PlayerHooks = React.memo(() => {
-  usePlayerStates()
-  usePlaybackStates()
-  useVolumeStates() // [!code ++]
-
-  return null
-})
-```
-
-</Step>
-
-<Step>
-### Add the Store States
-
-```tsx lineNumbers title="lib/create-media-store.ts"
-// [!code ++]
-import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
-import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
-import { createVolumeStore, VolumeStore } from "@/hooks/limeplay/use-volume"
-
-export type TypeMediaStore = PlaybackStore &
-  PlayerStore &
-  VolumeStore & // [!code ++]
-  {}
-
-export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
-  const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlaybackStore(...etc),
-    ...createPlayerStore(...etc),
-    ...createVolumeStore(...etc), // [!code ++]
-    ...initProps,
-  }))
-  return mediaStore
-}
-```
-
-</Step>
-</Steps>
-
-## Example Usage
-
-1. Design the mute button with icons and states.
-
-```tsx lineNumbers title="components/player/mute-control-button.tsx"
-"use client"
-
+```tsx title="components/player/mute-button.tsx"
 import {
   SpeakerHighIcon,
   SpeakerLowIcon,
@@ -81,19 +25,19 @@ import {
 } from "@phosphor-icons/react"
 
 import { Button } from "@/components/ui/button"
-import { useMediaStore } from "@/components/limeplay/media-provider"
+import { useVolumeStore } from "@/hooks/limeplay/use-volume"
 import { MuteControl } from "@/components/limeplay/mute-control"
 
-export function MuteControlButton() {
-  const muted = useMediaStore((state) => state.muted)
-  const volume = useMediaStore((state) => state.volume)
+export function MuteButton() {
+  const muted = useVolumeStore(s => s.muted)
+  const level = useVolumeStore(s => s.level)
 
   return (
     <MuteControl asChild>
       <Button variant="ghost" size="icon">
-        {muted || volume === 0 ? (
+        {muted || level === 0 ? (
           <SpeakerXIcon size={18} weight="fill" />
-        ) : volume < 0.5 ? (
+        ) : level < 0.5 ? (
           <SpeakerLowIcon size={18} weight="fill" />
         ) : (
           <SpeakerHighIcon size={18} weight="fill" />
@@ -104,8 +48,4 @@ export function MuteControlButton() {
 }
 ```
 
-2. Use the component in your player.
-
-```tsx lineNumbers title="components/player/bottom-controls.tsx"
-<MuteControlButton />
-```
+The `MuteControl` component calls `toggleMute()` on click. Supports `asChild` for custom button rendering.

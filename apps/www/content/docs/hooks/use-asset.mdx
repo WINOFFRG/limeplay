@@ -1,9 +1,7 @@
 ---
 title: use-asset
-description: Higher-order hook combining player and playlist for managing media assets
+description: Higher-order feature combining player and playlist for managing media assets.
 ---
-
-import { Step, Steps } from "fumadocs-ui/components/steps"
 
 ## Installation
 
@@ -11,48 +9,78 @@ import { Step, Steps } from "fumadocs-ui/components/steps"
 npx shadcn add @limeplay/use-asset
 ```
 
-## Example Usage
+Register the feature (requires `playerFeature` and `playlistFeature`):
 
-```tsx lineNumbers title="components/player/asset-loader.tsx"
-import { useAsset, Asset } from "@/hooks/limeplay/use-asset"
+```tsx title="lib/media.ts"
+import { assetFeature } from "@/hooks/limeplay/use-asset"
 
-export function AssetLoader() {
-  const { loadAsset, loadPlaylist } = useAsset()
-
-  const handlePlayMovie = () => {
-    const asset: Asset = {
-        id: "movie-1",
-        src: "https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd",
-        title: "Angel One",
-        description: "A demo movie"
-    }
-    loadAsset(asset)
-  }
-
-  return <button onClick={handlePlayMovie}>Play Movie</button>
-}
+createMediaKit({
+  features: [
+    ...,
+    playerFeature(),
+    playlistFeature(),
+    playbackFeature(),
+    assetFeature(),
+  ] as const,
+})
 ```
 
-## Understanding
+## useAsset Hook
 
-`use-asset` is an opinionated hook that integrates `use-player` (for Shaka Player), `use-playback` (for media controls), and `use-playlist` (for queue management) into a single logical unit.
-It defines an `Asset` interface and handles the orchestration of loading an asset into the player when the playlist advances.
+```tsx
+import { useAsset, type Asset } from "@/hooks/limeplay/use-asset"
 
-It automatically handles:
-- **Loading**: Calls Shaka Player's load method when `use-playlist` requests a new item.
-- **Preloading**: Can preload the next item in the playlist.
-- **Auto-Advance**: Moves to the next item when playback ends.
+const {
+  loadAsset,
+  loadPlaylist,
+  next,
+  previous,
+  hasNext,
+  currentItem,
+} = useAsset({
+  onAssetLoaded: (asset) => console.log("Loaded:", asset.title),
+  onLoadError: (asset, error, ctx) => {
+    console.error("Failed:", asset.title, error)
+    return "skip" // or "retry" or "stop"
+  },
+})
 
-## API Reference
+// Load a single asset
+loadAsset({
+  id: "movie-1",
+  src: "https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd",
+  title: "Angel One",
+})
 
-### useAsset()
+// Load a playlist
+loadPlaylist([asset1, asset2, asset3])
+```
 
-#### Returns
+### Asset Interface
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `id` | `string` | Yes | Unique identifier |
+| `src` | `string` | Yes | Media source URL |
+| `title` | `string` | No | Display title |
+| `description` | `string` | No | Description |
+| `poster` | `string` | No | Poster image URL |
+| `config` | `shaka.extern.PlayerConfiguration` | No | Per-asset Shaka config |
+
+### Options
+
+| Option | Type | Description |
+|---|---|---|
+| `autoplayFirst` | `boolean` | Auto-play first loaded item |
+| `maxRetries` | `number` | Max retry attempts on error |
+| `onAssetChange` | `(event) => void` | Called when playlist item changes |
+| `onAssetLoaded` | `(asset) => void` | Called after asset loads |
+| `onLoadError` | `(asset, error, ctx) => "retry" \| "skip" \| "stop"` | Error handler |
+| `onPlaybackError` | `(asset, error, ctx) => Promise<{...}>` | Playback error handler |
+| `loader` | `(asset, player, media) => Promise<void>` | Custom load function |
+
+### Returns
 
 <AutoTypeTable path="./registry/default/hooks/use-asset.ts" name="UseAssetReturn" />
 
-### Types
-
-#### Asset
-
-<AutoTypeTable path="./registry/default/hooks/use-asset.ts" name="Asset" />
+`useAsset` orchestrates `usePlayer` and `usePlaylist` — it automatically loads assets when the playlist advances, handles preloading, auto-advances on playback end, and provides error recovery.

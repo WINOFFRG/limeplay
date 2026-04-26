@@ -1,143 +1,58 @@
 ---
 title: use-playback-rate
-description: Hook for managing playback speed and trickplay
+description: Feature for controlling playback speed.
 ---
-
-import { Step, Steps } from "fumadocs-ui/components/steps"
 
 ## Installation
 
-<Steps>
-<Step>
-### Install the hook
 ```npm
 npx shadcn add @limeplay/use-playback-rate
 ```
-</Step>
 
-<Step>
-### Add Event & Action Bridge
-Import the `usePlaybackRateStates` hook in your existing `PlayerHooks` component.
+Register the feature:
 
-```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
-"use client"
+```tsx title="lib/media.ts"
+import { playbackRateFeature } from "@/hooks/limeplay/use-playback-rate"
 
-import React from "react"
-
-import { usePlaybackRateStates } from "@/hooks/limeplay/use-playback-rate" // [!code ++]
-import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
-import { usePlayerStates } from "@/hooks/limeplay/use-player"
-
-export const PlayerHooks = React.memo(() => {
-  usePlayerStates()
-  usePlaybackStates()
-  usePlaybackRateStates() // [!code ++]
-
-  return null
+createMediaKit({
+  features: [..., playbackRateFeature()] as const,
 })
 ```
 
-</Step>
-<Step>
-### Add the Store States
+## Store
 
-```tsx lineNumbers title="lib/create-media-store.ts"
-import {
-  createPlaybackRateStore,
-  PlaybackRateStore,
-} from "@/hooks/limeplay/use-playback-rate"
-import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
-import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+Access via `usePlaybackRateStore(selector)`:
 
-// [!code ++]
+```tsx
+import { usePlaybackRateStore } from "@/hooks/limeplay/use-playback-rate"
 
-export type TypeMediaStore = PlaybackStore &
-  PlayerStore &
-  PlaybackRateStore & // [!code ++]
-  {}
-
-export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
-  const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlaybackStore(...etc),
-    ...createPlayerStore(...etc),
-    ...createPlaybackRateStore(...etc), // [!code ++]
-    ...initProps,
-  }))
-  return mediaStore
-}
+const rate = usePlaybackRateStore(s => s.value)
+const rates = usePlaybackRateStore(s => s.rates)
+const setRate = usePlaybackRateStore(s => s.setPlaybackRate)
 ```
 
-</Step>
-</Steps>
+### State
 
-## Example Usage
+| Field | Type | Description |
+|---|---|---|
+| `value` | `number` | Current playback rate |
+| `rates` | `number[]` | Available rate options |
 
-Use the `usePlaybackRate()` hook to control playback speed.
+### Actions
 
-```tsx lineNumbers title="components/player/playback-rate-control.tsx"
-import { usePlaybackRate } from "@/hooks/limeplay/use-playback-rate"
-import { useMediaStore } from "@/components/limeplay/media-provider"
+| Method | Description |
+|---|---|
+| `setPlaybackRate(rate)` | Set playback speed |
+| `setTrickplayRate(rate, forced?)` | Set trickplay rate (Shaka-specific) |
 
-export function PlaybackRateControl() {
-  const playbackRate = useMediaStore((state) => state.playbackRate)
-  const playbackRates = useMediaStore((state) => state.playbackRates)
-  const { setPlaybackRate, setTrickplayRate } = usePlaybackRate()
-
-  return (
-    <select
-      value={playbackRate}
-      onChange={(e) => setPlaybackRate(Number(e.target.value))}
-    >
-      {playbackRates.map((rate) => (
-        <option key={rate} value={rate}>
-          {rate}x
-        </option>
-      ))}
-    </select>
-  )
-}
-```
-
-## Understanding
-
-The `use-playback-rate` hook provides playback speed control following the **Event & Action Bridge** pattern:
-
-- **Event Bridge**: `usePlaybackRateStates()` listens to `ratechange` events from both the media element and Shaka Player, syncing the current playback rate to the React store
-- **Action Bridge**: `usePlaybackRate()` provides `setPlaybackRate()` for standard playback speed and `setTrickplayRate()` for Shaka Player's trickplay feature
-
-### Playback Rates
-
-Default available rates: `[0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]`
-
-These can be customized in your media store configuration.
+Default rates: `[0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]`
 
 ### Trickplay
 
-Shaka Player's trickplay feature allows fast-forward and rewind at custom speeds, which is useful for seeking through content quickly.
+Shaka Player supports trickplay — specialized streams optimized for fast-forward/rewind. `setTrickplayRate` uses this API when available.
 
-## API Reference
+## Events
 
-### usePlaybackRateStates()
-
-Sets up event listeners for playback rate changes. This hook should be called once in your `PlayerHooks` component.
-
-### usePlaybackRate()
-
-Returns control functions for managing playback rate.
-
-#### Returns
-
-<AutoTypeTable
-  path="./registry/default/hooks/use-playback-rate.ts"
-  name="UsePlaybackRateReturn"
-/>
-
-### Store State
-
-The playback rate store provides the following state accessed via `useMediaStore`:
-
-<AutoTypeTable
-  path="./registry/default/hooks/use-playback-rate.ts"
-  name="PlaybackRateStore"
-/>
-
+| Event | Payload | When |
+|---|---|---|
+| `ratechange` | `{ rate }` | Playback speed changes |

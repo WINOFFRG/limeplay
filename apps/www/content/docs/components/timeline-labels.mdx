@@ -1,113 +1,46 @@
 ---
 title: Timeline Labels
-description: Timeline Labels provide semantic time display components for media players. These components automatically format time based on duration and provide proper accessibility attributes.
+description: Semantic time display components for elapsed, remaining, duration, and hover time.
 ---
-
-import { Step, Steps } from "fumadocs-ui/components/steps"
 
 <ComponentPreview name="timeline-labels-demo" withPlayer />
 
 ## Installation
 
-<Steps>
-<Step>
-
 ```npm
 npx shadcn add @limeplay/timeline-labels
 ```
-</Step>
 
-<Step>
-### Add Event & Action Bridge
-Import the `useTimelineStates` hook in your existing `PlayerHooks` component.
+<Callout>
+Requires [`timelineFeature`](/docs/hooks/use-timeline) registered in your [`createMediaKit`](/docs/components/media-provider).
+</Callout>
 
-```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
-import React from "react"
+## Usage
 
-import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
-import { usePlayerStates } from "@/hooks/limeplay/use-player"
-import { useTimelineStates } from "@/hooks/limeplay/use-timeline" // [!code ++]
-
-export const PlayerHooks = React.memo(() => {
-  usePlayerStates()
-  usePlaybackStates()
-  useTimelineStates() // [!code ++]
-
-  return null
-})
-```
-
-</Step>
-
-<Step>
-### Add the Store States
-
-```tsx lineNumbers title="lib/create-media-store.ts"
-import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
-import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
-import {
-  createTimelineStore,
-  TimelineStore,
-} from "@/hooks/limeplay/use-timeline"
-
-// [!code ++]
-
-export type TypeMediaStore = PlaybackStore &
-  PlayerStore &
-  TimelineStore & // [!code ++]
-  {}
-
-export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
-  const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlaybackStore(...etc),
-    ...createPlayerStore(...etc),
-    ...createTimelineStore(...etc), // [!code ++]
-    ...initProps,
-  }))
-  return mediaStore
-}
-```
-
-</Step>
-</Steps>
-
-## Example Usage
-
-1. Compose the labels
-
-```tsx lineNumbers title="components/player/timeline-control.tsx"
+```tsx title="components/player/time-display.tsx"
 "use client"
 
 import { useState } from "react"
-
 import { Button } from "@/components/ui/button"
-import { useMediaStore } from "@/components/limeplay/media-provider"
+import { useTimelineStore } from "@/hooks/limeplay/use-timeline"
 import {
   Duration,
   Elapsed,
-  HoverTime,
-  LiveLatency,
   Remaining,
 } from "@/components/limeplay/timeline-labels"
 
-export function TimelineSliderControl() {
+export function TimeDisplay() {
   const [showRemaining, setShowRemaining] = useState(false)
-  const isLive = useMediaStore((state) => state.isLive)
+  const isLive = useTimelineStore(s => s.isLive)
 
   return (
-    <div className="my-auto flex grow items-center gap-3 select-none">
+    <div className="flex items-center gap-3 select-none">
       {!isLive && <Elapsed className="text-xs font-medium" />}
       {!isLive && (
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => {
-            setShowRemaining(!showRemaining)
-          }}
-          aria-label={
-            showRemaining ? "Show total duration" : "Show remaining time"
-          }
-          aria-pressed={showRemaining}
+          onClick={() => setShowRemaining(!showRemaining)}
         >
           {showRemaining ? (
             <Remaining className="text-xs font-medium" />
@@ -121,6 +54,14 @@ export function TimelineSliderControl() {
 }
 ```
 
-## Understanding
+## Components
 
-Timeline Labels components use the [`useTimeline()`](/docs/hooks/use-timeline) hook to access timeline state from the media store.
+| Component | Description |
+|---|---|
+| `Elapsed` | Current playback time |
+| `Duration` | Total media duration |
+| `Remaining` | Time remaining (shows with `-` prefix) |
+| `HoverTime` | Time at the current hover position on the timeline |
+| `LiveLatency` | Latency behind live edge (for live streams) |
+
+All components accept `className` for styling and automatically format time based on duration (e.g. `1:23` vs `1:23:45`).

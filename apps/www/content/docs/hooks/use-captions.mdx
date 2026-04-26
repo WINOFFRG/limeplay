@@ -1,134 +1,50 @@
 ---
 title: use-captions
-description: Hook for managing captions and text tracks in the media player
+description: Feature for managing captions and text tracks via Shaka Player.
 ---
-
-import { Step, Steps } from "fumadocs-ui/components/steps"
 
 ## Installation
 
-<Steps>
-<Step>
-### Install the hook
 ```npm
 npx shadcn add @limeplay/use-captions
 ```
-</Step>
 
-<Step>
-### Add Event & Action Bridge
-Import the `useCaptionsStates` hook in your existing `PlayerHooks` component.
+Register the feature:
 
-```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
-import React from "react"
+```tsx title="lib/media.ts"
+import { captionsFeature } from "@/hooks/limeplay/use-captions"
 
-import { useCaptionsStates } from "@/hooks/limeplay/use-captions" // [!code ++]
-
-import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
-import { usePlayerStates } from "@/hooks/limeplay/use-player"
-
-export const PlayerHooks = React.memo(() => {
-  usePlayerStates()
-  usePlaybackStates()
-  useCaptionsStates() // [!code ++]
-
-  return null
+createMediaKit({
+  features: [..., captionsFeature()] as const,
 })
 ```
 
-</Step>
+## Store
 
-<Step>
-### Add the Store States
+Access via `useCaptionsStore(selector)`:
 
-Add the captions store to your media store configuration.
+```tsx
+import { useCaptionsStore } from "@/hooks/limeplay/use-captions"
 
-```tsx lineNumbers title="lib/create-media-store.ts"
-import { create } from "zustand"
-
-import {
-  CaptionsStore,
-  createCaptionsStore,
-} from "@/hooks/limeplay/use-captions"
-// [!code ++]
-import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
-import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
-import { createVolumeStore, VolumeStore } from "@/hooks/limeplay/use-volume"
-
-export type TypeMediaStore = PlaybackStore &
-  PlayerStore &
-  VolumeStore &
-  CaptionsStore & // [!code ++]
-  {}
-
-export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
-  const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlaybackStore(...etc),
-    ...createPlayerStore(...etc),
-    ...createVolumeStore(...etc),
-    ...createCaptionsStore(...etc), // [!code ++]
-    ...initProps,
-  }))
-  return mediaStore
-}
+const visible = useCaptionsStore(s => s.visible)
+const tracks = useCaptionsStore(s => s.tracks)
+const activeTrack = useCaptionsStore(s => s.activeTrack)
 ```
 
-</Step>
-</Steps>
+### State
 
-## Example Usage
+| Field | Type | Description |
+|---|---|---|
+| `visible` | `boolean` | Whether captions are visible |
+| `activeTrack` | `shaka.extern.TextTrack \| null` | Currently active text track |
+| `tracks` | `shaka.extern.TextTrack[]` | Available text tracks |
+| `containerElement` | `HTMLDivElement \| null` | Captions render container |
 
-Use the `useCaptions()` hook to control captions in your components.
+### Actions
 
-```tsx lineNumbers title="components/player/captions-control-button.tsx"
-import { useCaptions } from "@/hooks/limeplay/use-captions"
-import { useMediaStore } from "@/components/limeplay/media-provider"
+| Method | Description |
+|---|---|
+| `toggleVisibility()` | Toggle caption visibility |
+| `setContainerElement(el)` | Set the captions container DOM element |
 
-export function CaptionsControlButton() {
-  const textTrackVisible = useMediaStore((state) => state.textTrackVisible)
-  const { toggleCaptionVisibility } = useCaptions()
-
-  return (
-    <button onClick={toggleCaptionVisibility}>
-      {textTrackVisible ? "Hide" : "Show"} Captions
-    </button>
-  )
-}
-```
-
-## Understanding
-
-The `use-captions` hook provides comprehensive text track management for Shaka Player. It automatically:
-
-- Detects available text tracks when media loads
-- Manages text track visibility state
-- Provides automatic track selection based on device language
-- Handles container element setup for proper text rendering
-
-The hook integrates seamlessly with Shaka Player's text track system and provides a clean API for caption controls in your player interface.
-
-## API Reference
-
-### useCaptionsStates()
-
-Sets up event listeners for text track changes and visibility updates. This hook should be called once in your `PlayerHooks` component.
-
-### useCaptions()
-
-Returns captions control functions for managing text tracks.
-
-#### Returns
-
-<AutoTypeTable
-  path="./registry/default/hooks/use-captions.ts"
-  name="UseCaptionsReturn"
-/>
-
-### Store State
-
-The captions store provides the following state:
-
-<AutoTypeTable
-  path="./registry/default/hooks/use-captions.ts"
-  name="CaptionsStore"
-/>
+The feature auto-detects text tracks from the Shaka Player instance and selects a default based on the device language.

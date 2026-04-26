@@ -1,81 +1,23 @@
 ---
 title: Timeline Control
-description: Slider control to control the media timeline. Composed with timeline state control
+description: Composable seek slider for media playback position.
 ---
-
-import { Step, Steps } from "fumadocs-ui/components/steps"
 
 <ComponentPreview name="timeline-control-demo" withPlayer />
 
 ## Installation
 
-<Steps>
-<Step>
-
 ```npm
 npx shadcn add @limeplay/timeline-control
 ```
-</Step>
 
-<Step>
-### Add Event & Action Bridge
-Import the `useTimelineStates` hook in your existing `PlayerHooks` component.
+<Callout>
+Requires [`timelineFeature`](/docs/hooks/use-timeline) registered in your [`createMediaKit`](/docs/components/media-provider).
+</Callout>
 
-```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
-import React from "react"
+## Usage
 
-import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
-import { usePlayerStates } from "@/hooks/limeplay/use-player"
-import { useTimelineStates } from "@/hooks/limeplay/use-timeline" // [!code ++]
-
-export const PlayerHooks = React.memo(() => {
-  usePlayerStates()
-  usePlaybackStates()
-  useTimelineStates() // [!code ++]
-
-  return null
-})
-```
-
-</Step>
-
-<Step>
-### Add the Store States
-
-```tsx lineNumbers title="lib/create-media-store.ts"
-import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
-import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
-import {
-  createTimelineStore,
-  TimelineStore,
-} from "@/hooks/limeplay/use-timeline"
-
-// [!code ++]
-
-export type TypeMediaStore = PlaybackStore &
-  PlayerStore &
-  TimelineStore & // [!code ++]
-  {}
-
-export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
-  const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlaybackStore(...etc),
-    ...createPlayerStore(...etc),
-    ...createTimelineStore(...etc), // [!code ++]
-    ...initProps,
-  }))
-  return mediaStore
-}
-```
-
-</Step>
-</Steps>
-
-## Example Usage
-
-1. Compose the timeline slider and handle states
-
-```tsx lineNumbers title="components/player/timeline-control.tsx"
+```tsx title="components/player/timeline-slider.tsx"
 import * as TimelineSlider from "@/components/limeplay/timeline-control"
 import { Duration, HoverTime } from "@/components/limeplay/timeline-labels"
 
@@ -87,12 +29,10 @@ export function TimelineSliderControl() {
           <TimelineSlider.Progress />
           <TimelineSlider.Buffered variant="combined" />
         </TimelineSlider.Track>
-        {/* Seek Cursor */}
         <TimelineSlider.Thumb
           showWithHover
           className="absolute h-8 w-px rounded-full bg-primary/60"
         />
-        {/* Hover Time Label */}
         <TimelineSlider.Thumb
           showWithHover
           className="top-auto! bottom-[calc(100%+16px)] flex h-auto w-fit bg-transparent text-xs font-medium"
@@ -106,64 +46,41 @@ export function TimelineSliderControl() {
 }
 ```
 
-2. Use the component in your player.
-
-```tsx lineNumbers title="components/player/bottom-controls.tsx"
-<TimelineSliderControl />
-```
-
-## Understanding
-
-The Timeline Control implements a highly composable seek slider following the **Event & Action Bridge** pattern:
-
-- **Event Bridge**: [`useTimelineStates()`](/docs/hooks/use-timeline) updates `currentTime`, `duration`, `progress`, and `buffered` ranges via polling (default 500ms)
-- **Action Bridge**: Components use [`useTimeline()`](/docs/hooks/use-timeline) to call `seek()` which updates `media.currentTime`
-
 ### Live Stream Support
 
-Timeline automatically handles live streams:
-- Uses Shaka Player's `seekRange()` for proper DVR seeking
-- Displays live latency
-- Adjusts progress calculation for sliding window
+Timeline automatically handles live streams — it uses Shaka Player's `seekRange()` for DVR seeking, displays live latency, and adjusts progress calculation for the sliding window.
 
 ### Accessibility
 
-- **ARIA Slider**: `aria-label="Timeline Slider"`
-- **Keyboard Navigation**: Focus and arrow key support
-- **Screen Reader**: Announces time changes
-- **Visual Focus**: Clear focus indicators
+- ARIA slider with `aria-label="Timeline Slider"`
+- Keyboard navigation (arrow keys)
+- Screen reader announces time changes
+- Visual focus indicators
 
 ## Components
 
-Timeline is built with multiple composable parts.
-
 ### Root
 
-Main slider container with built-in click/drag seek handling. Provides structural layout and CSS variable-driven height via `--lp-timeline-track-height`. Visual styles (border-radius, transitions, animations) should be applied by consumers.
+Main slider container with click/drag seek handling. Height is controlled via `--lp-timeline-track-height` CSS variable.
 
-#### API Reference
 <AutoTypeTable path="./registry/default/ui/timeline-control.tsx" name="TimelineRootPropsDocs" />
 
 ### Thumb
 
-Positioned indicator. Base provides only positioning via CSS variable `--lp-timeline-thumb-position`. All visual styles (size, shape, color) must be provided by consumers.
+Positioned indicator via `--lp-timeline-thumb-position` CSS variable. All visual styles must be provided by the consumer.
 
-#### API Reference
 <AutoTypeTable path="./registry/default/ui/timeline-control.tsx" name="TimelineThumbPropsDocs" />
 
 ### Buffered
 
-Shows buffered ranges. Supports 3 variants: `default`, `combined`, `from-zero`.
+Displays buffered ranges. Supports 3 variants: `default`, `combined`, `from-zero`.
 
-#### API Reference
 <AutoTypeTable path="./registry/default/ui/timeline-control.tsx" name="TimelineBufferedPropsDocs" />
 
 ### Track
 
-Visual track representing full duration. Base provides structural layout and `bg-foreground/20` background. Visual styles like `rounded-full` should be applied by consumers. Extends `SliderPrimitive.Track` props.
+Visual track representing full duration. Provides structural layout with `bg-foreground/20` background.
 
 ### Progress
 
-Filled indicator showing playback progress.
-
-
+Filled indicator showing current playback progress.
