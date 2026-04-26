@@ -221,18 +221,6 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
   },
   {
-    files: [
-      {
-        path: "ui/player-hooks.tsx",
-        target: `${TARGET_BASE_PATH}/player-hooks.tsx`,
-        type: "registry:ui",
-      },
-    ],
-    name: "player-hooks",
-    registryDependencies: ["use-player", "use-playback"],
-    type: "registry:ui",
-  },
-  {
     cssVars: {
       dark: {
         "lp-timeline-buffered-color": "oklch(0.985 0 0 / 0.4)",
