@@ -1,3 +1,5 @@
+"use client"
+
 import { assetFeature } from "@/registry/default/hooks/use-asset"
 import { captionsFeature } from "@/registry/default/hooks/use-captions"
 import { mediaFeature } from "@/registry/default/hooks/use-media"

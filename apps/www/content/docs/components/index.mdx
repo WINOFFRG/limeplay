@@ -1,4 +1,34 @@
 ---
-title: UI Components
-description: All ui components available in Limeplay.
+title: Components
+description: Composable UI components for building media player interfaces.
 ---
+
+Pre-built, accessible components that connect to Limeplay's feature stores. Each component is copied into your project — modify styles, behavior, and markup freely.
+
+## Structure
+
+| Component | Purpose | Required Feature |
+|---|---|---|
+| [Media Provider](/docs/components/media-provider) | Creates the store and event emitter | — |
+| [Media](/docs/components/media) | Renders `<video>` or `<audio>` element | `mediaFeature` |
+| [Player Layout](/docs/components/player-layout) | Structural containers for the player | `mediaFeature` |
+| [Playback Control](/docs/components/playback-control) | Play/pause toggle | `playbackFeature` |
+| [Volume Control](/docs/components/volume-control) | Volume slider | `volumeFeature` |
+| [Mute Control](/docs/components/mute-control) | Mute toggle | `volumeFeature` |
+| [Timeline Control](/docs/components/timeline-control) | Seek slider | `timelineFeature` |
+| [Timeline Labels](/docs/components/timeline-labels) | Time display (elapsed, duration, remaining) | `timelineFeature` |
+| [Seek Controls](/docs/components/seek-controls) | Skip forward/backward buttons | `timelineFeature` |
+| [Playback Rate](/docs/components/playback-rate) | Speed selector | `playbackRateFeature` |
+| [Picture-in-Picture](/docs/components/picture-in-picture-control) | PiP toggle | `pictureInPictureFeature` |
+| [Captions](/docs/components/captions) | Text track container and toggle | `captionsFeature` |
+| [Fallback Poster](/docs/components/fallback-poster) | Poster image for loading/PiP | `mediaFeature` |
+
+## Installation
+
+Install any component via the shadcn CLI:
+
+```npm
+npx shadcn add @limeplay/playback-control
+```
+
+Each component requires its corresponding [feature](/docs/concepts#available-features) to be registered in [`createMediaKit`](/docs/components/media-provider).

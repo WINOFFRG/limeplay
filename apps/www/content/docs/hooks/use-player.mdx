@@ -1,118 +1,83 @@
 ---
 title: use-player
-description: Hook for initializing and managing Shaka Player instance, loading assets, and preloading
+description: Feature for Shaka Player initialization, asset loading, and preloading.
 ---
-
-import { Step, Steps } from "fumadocs-ui/components/steps"
 
 ## Installation
 
-<Steps>
-<Step>
-### Install the hook
 ```npm
 npx shadcn add @limeplay/use-player
 ```
-</Step>
 
-<Step>
-### Add to PlayerHooks
-Import the `usePlayerStates` hook in your existing `PlayerHooks` component.
+Register the feature:
 
-```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
-import React from "react"
+```tsx title="lib/media.ts"
+import { playerFeature } from "@/hooks/limeplay/use-player"
 
-import { usePlayerStates } from "@/hooks/limeplay/use-player" // [!code ++]
-
-export const PlayerHooks = React.memo(() => {
-  usePlayerStates() // [!code ++]
-
-  return null
+createMediaKit({
+  features: [..., playerFeature()] as const,
 })
 ```
 
-</Step>
+## Store
 
-<Step>
-### Add the Store States
+Access via `usePlayerStore(selector)`:
 
-```tsx lineNumbers title="lib/create-media-store.ts"
-import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
+```tsx
+import { usePlayerStore } from "@/hooks/limeplay/use-player"
 
-// [!code ++]
-
-export type TypeMediaStore = PlayerStore & // [!code ++]
-  {}
-
-export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
-  const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlayerStore(...etc), // [!code ++]
-    ...initProps,
-  }))
-  return mediaStore
-}
+const player = usePlayerStore(s => s.instance)
+const containerRef = usePlayerStore(s => s.containerRef)
 ```
 
-</Step>
-</Steps>
+### State
 
-## Example Usage
+| Field | Type | Description |
+|---|---|---|
+| `instance` | `shaka.Player \| null` | Shaka Player instance |
+| `containerRef` | `HTMLDivElement \| null` | Player container element |
+| `preloadManagers` | `Map<string, PreloadManager>` | Active preload managers |
 
-The `usePlayer` hook provides methods to load and preload assets.
+## usePlayer Hook
 
-```tsx lineNumbers title="components/player/load-button.tsx"
+The `usePlayer` hook provides methods to load and preload assets:
+
+```tsx
 import { usePlayer } from "@/hooks/limeplay/use-player"
 
-export function LoadButton() {
-  const { load, preload } = usePlayer({
-    onError: (error, asset) => console.error("Error loading asset", asset, error),
-    onLoad: async (asset, player, media) => {
-        // Custom load logic if needed, or just:
-        await player.load(asset.src)
-    }
-  })
-
-  const handleLoad = () => {
-    load({ id: "1", src: "https://..." })
-  }
-
-  return <button onClick={handleLoad}>Load Asset</button>
-}
+const { load, preload, player } = usePlayer({
+  onLoad: async (asset, player, media) => {
+    await player.load(asset.src)
+  },
+  onError: (error, asset) => {
+    console.error("Load failed:", error)
+  },
+})
 ```
 
-## Understanding
-
-The `use-player` hook (formerly `use-shaka-player`) handles the Shaka Player instance and asset loading lifecycle.
-
-- **Initialization**: `usePlayerStates` automatically loads the Shaka Player library and attaches it to the media element.
-- **Loading**: `usePlayer` provides a `load` function that uses a custom `onLoad` callback to handle asset loading.
-- **Preloading**: Supports preloading assets for instant playback.
-- **Events**: Synced with Zustand store (`onPlayerReady`, `onBufferingChange`, `onError`).
-
-### Debug Mode
-
-When `debug` is enabled in the store, the hook loads the debug build of Shaka Player.
-
-## API Reference
-
-### usePlayerStates()
-
-Initializes Shaka Player and attaches it to the media element. Also syncs player events like buffering to the store.
-
-### usePlayer(options)
-
-Returns methods to interact with the player.
-
-#### Options
+### Options
 
 <AutoTypeTable path="./registry/default/hooks/use-player.ts" name="UsePlayerOptions" />
 
-#### Returns
+### Returns
 
-<AutoTypeTable path="./registry/default/hooks/use-player.ts" name="UsePlayerReturn" />
+| Method | Description |
+|---|---|
+| `load(asset, startTime?)` | Load an asset into Shaka Player |
+| `preload(asset)` | Preload an asset for instant playback |
+| `cancelPreload(assetId)` | Cancel a pending preload |
+| `isPreloaded(assetId)` | Check if an asset is preloaded |
+| `player` | Current Shaka Player instance |
 
-### Store State
+## Events
 
-The player instance and events are stored in the media store:
+| Event | Payload | When |
+|---|---|---|
+| `playerready` | `{ player }` | Shaka Player initialized |
+| `playererror` | `{ error }` | Player-level error |
+| `playbackerror` | `Error` | Playback error |
+| `bufferingchange` | `{ isBuffering }` | Buffering state changes |
 
-<AutoTypeTable path="./registry/default/hooks/use-player.ts" name="PlayerStore" />
+### Debug Mode
+
+When `debug: true` is passed to `mediaFeature({ debug: true })`, the debug build of Shaka Player is loaded for development diagnostics.

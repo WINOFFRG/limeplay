@@ -3,8 +3,8 @@ import React from "react"
 import type { Asset } from "@/registry/default/hooks/use-asset"
 
 import { cn } from "@/lib/utils"
-import { MediaProvider } from "@/registry/default/blocks/linear-player/lib/media"
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
+import { MediaProvider } from "@/registry/default/blocks/linear-player/lib/media"
 import { CaptionsContainer } from "@/registry/default/ui/captions"
 import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
@@ -46,9 +46,9 @@ type MediaType = MediaProps["as"]
 export const LinearMediaPlayer = React.forwardRef<
   HTMLDivElement,
   LinearMediaPlayerProps
->(({ as = "video", className, debug = false, mediaProps, mediaRef }, ref) => {
+>(({ as = "video", className, mediaProps, mediaRef }, ref) => {
   return (
-    <MediaProvider debug={debug}>
+    <MediaProvider>
       <RootContainer className={cn("m-auto w-full", className)} ref={ref}>
         <Layout.PlayerContainer>
           <FallbackPoster className="bg-black">

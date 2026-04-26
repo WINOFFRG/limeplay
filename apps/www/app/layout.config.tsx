@@ -5,6 +5,7 @@ import {
   QuestionIcon,
   SparkleIcon,
 } from "@phosphor-icons/react/dist/ssr"
+import { RssIcon } from "lucide-react"
 import Image from "next/image"
 
 import { Icons } from "@/components/icons"
@@ -39,17 +40,22 @@ export const baseOptions: BaseLayoutProps = {
     },
     {
       icon: <QuestionIcon />,
-      text: "What is Limeplay?",
+      text: "Introduction",
       type: "main",
-      url: "/docs/what-is-limeplay",
+      url: "/docs/introduction",
     },
     {
       icon: <BlueprintIcon />,
-      text: "Architecture",
+      text: "Concepts",
       type: "main",
-      url: "/docs/architecture",
+      url: "/docs/concepts",
     },
-
+    {
+      icon: <RssIcon />,
+      text: "Events",
+      type: "main",
+      url: "/docs/events",
+    },
     ...COMMON_LINKS,
   ],
   nav: {

@@ -1,64 +1,36 @@
 ---
 title: use-idle
-description: Hook for detecting user inactivity/idle state
+description: Utility hook for detecting user inactivity.
 ---
 
-
-
 ## Installation
-
 
 ```npm
 npx shadcn add @limeplay/use-idle
 ```
 
-## Example Usage
+## Usage
 
-```tsx lineNumbers title="components/player/controls.tsx"
+```tsx
 import { useIdle } from "@/hooks/limeplay/use-idle"
 
-export function PlayerControls() {
-  // Hide controls after 3 seconds of inactivity
+function PlayerControls() {
   const isIdle = useIdle({ timeout: 3000 })
 
   return (
-    <div
-      className={`transition-opacity duration-300 ${
-        isIdle ? "opacity-0" : "opacity-100"
-      }`}
-    >
-      {/* Controls content */}
+    <div className={isIdle ? "opacity-0" : "opacity-100"}>
+      {/* Controls fade out when user is idle */}
     </div>
   )
 }
 ```
 
-## Understanding
+### Options
 
-The `use-idle` hook detects user inactivity based on a set of events (mouse move, key press, touch, etc.). It is useful for auto-hiding player controls or other UI elements when the user is not interacting with the page.
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `timeout` | `number` | `3000` | Milliseconds of inactivity before idle |
+| `initialState` | `boolean` | `false` | Initial idle state |
+| `events` | `string[]` | `["mousemove", "keydown", ...]` | Events that reset the idle timer |
 
-It automatically handles:
-- Throttling of events for performance
-- Visibility change detection (when switching tabs)
-- Cleanup of event listeners
-
-## API Reference
-
-### useIdle
-
-```ts
-const isIdle = useIdle(options)
-```
-
-#### Parameters
-
-<AutoTypeTable
-  path="./registry/default/hooks/use-idle.ts"
-  name="UseIdleOptions"
-/>
-
-#### Returns
-
-| Type | Description |
-| --- | --- |
-| `boolean` | Returns `true` if the user is idle, `false` otherwise. |
+Returns `true` when the user has been inactive for longer than `timeout`.

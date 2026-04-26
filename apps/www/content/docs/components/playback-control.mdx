@@ -1,80 +1,31 @@
 ---
 title: Playback Control
-description: Controls the play/pause state of the Media.
+description: Play/pause toggle button for media playback.
 ---
 
-import { Step, Steps } from "fumadocs-ui/components/steps"
-
-{/* TODO: Examples will be built later */}
 <ComponentPreview name="playback-state-control-demo" withPlayer />
 
 ## Installation
 
-<Steps>
-<Step>
-
 ```npm
 npx shadcn add @limeplay/playback-control
 ```
-</Step>
 
-<Step>
-### Add Event & Action Bridge
-Import the `useMediaStates` hook in your existing `PlayerHooks` component.
+<Callout>
+Requires [`playbackFeature`](/docs/hooks/use-playback) registered in your [`createMediaKit`](/docs/components/media-provider).
+</Callout>
 
-```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
-"use client"
+## Usage
 
-import React from "react"
-
-import { usePlaybackStates } from "@/hooks/limeplay/use-playback" // [!code ++]
-import { usePlayerStates } from "@/hooks/limeplay/use-player"
-
-export const PlayerHooks = React.memo(() => {
-  usePlayerStates()
-  usePlaybackStates() // [!code ++]
-
-  return null
-})
-```
-
-</Step>
-<Step>
-### Add the Store States
-
-```tsx lineNumbers title="lib/create-media-store.ts"
-import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
-
-// [!code ++]
-
-export type TypeMediaStore = PlaybackStore & // [!code ++]
-  {}
-
-export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
-  const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlaybackStore(...etc), // [!code ++]
-    ...initProps,
-  }))
-  return mediaStore
-}
-```
-
-</Step>
-</Steps>
-
-## Example Usage
-
-1. Design the playback button with icons and states.
-
-```tsx lineNumbers title="components/player/playback-control-button.tsx"
+```tsx title="components/player/playback-button.tsx"
 import { PauseIcon, PlayIcon } from "@phosphor-icons/react"
 
 import { Button } from "@/components/ui/button"
-import { useMediaStore } from "@/components/limeplay/media-provider"
+import { usePlaybackStore } from "@/hooks/limeplay/use-playback"
 import { PlaybackControl } from "@/components/limeplay/playback-control"
 
-export function PlaybackControlButton() {
-  const status = useMediaStore((state) => state.status)
+export function PlaybackButton() {
+  const status = usePlaybackStore(s => s.status)
 
   return (
     <PlaybackControl asChild>
@@ -90,12 +41,6 @@ export function PlaybackControlButton() {
 }
 ```
 
-2. Use the component in your player.
+The `PlaybackControl` component calls `togglePaused()` on click. Use the `status` field from the playback store to render the appropriate icon.
 
-```tsx lineNumbers title="components/player/bottom-controls.tsx"
-<PlaybackControlButton />
-```
-
-## Understanding
-
-The `PlaybackControl` component uses the [`usePlayback()`](/docs/hooks/use-playback) hook to control playback state. You can use the `status` field from media store to get the current status of the media.
+Supports `asChild` for custom button rendering via Radix Slot.

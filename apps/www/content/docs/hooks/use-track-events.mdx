@@ -1,6 +1,6 @@
 ---
 title: use-track-events
-description: Utility hook for handling pointer events on slider tracks
+description: Utility hook for handling pointer events on slider tracks.
 ---
 
 ## Installation
@@ -9,71 +9,42 @@ description: Utility hook for handling pointer events on slider tracks
 npx shadcn add @limeplay/use-track-events
 ```
 
-## Example Usage
+## Usage
 
-Use `useTrackEvents` to handle pointer interactions on slider components.
+Used internally by [`timeline-control`](/docs/components/timeline-control) and [`volume-control`](/docs/components/volume-control). Can be used to build custom sliders:
 
-```tsx lineNumbers title="components/player/custom-slider.tsx"
+```tsx
 import { useTrackEvents } from "@/hooks/limeplay/use-track-events"
 
-export function CustomSlider() {
-  const trackEvents = useTrackEvents({
+function CustomSlider() {
+  const { trackRef, thumbRef } = useTrackEvents({
     orientation: "horizontal",
-    onPointerDown: (progress, event) => {
-      console.log("Pointer down at:", progress)
+    onPointerDown: (progress) => {
+      console.log("Clicked at:", progress) // 0-1
     },
-    onPointerMove: (progress, isPointerDown, event) => {
-      if (isPointerDown) {
+    onPointerMove: (progress, isDown) => {
+      if (isDown) {
         console.log("Dragging at:", progress)
-      } else {
-        console.log("Hovering at:", progress)
       }
-    },
-    onPointerUp: (event) => {
-      console.log("Pointer up")
     },
   })
 
   return (
-    <div
-      {...trackEvents}
-      className="h-2 w-full bg-gray-200 rounded"
-    />
+    <div ref={trackRef} className="relative h-2 w-full bg-gray-200">
+      <div ref={thumbRef} className="absolute h-4 w-4 rounded-full bg-blue-500" />
+    </div>
   )
 }
 ```
 
-## Understanding
+### Options
 
-The `use-track-events` hook provides a standardized way to handle pointer events on slider/track components. It:
+| Option | Type | Description |
+|---|---|---|
+| `orientation` | `"horizontal" \| "vertical"` | Slider direction |
+| `onPointerDown` | `(progress, event) => void` | Click/touch start |
+| `onPointerMove` | `(progress, isDown, event) => void` | Move/drag |
+| `onPointerUp` | `(event) => void` | Release |
+| `onPointerOut` | `(event) => void` | Pointer leaves |
 
-- Calculates progress (0-1) based on pointer position and orientation
-- Handles pointer capture for smooth dragging
-- Supports both horizontal and vertical orientations
-- Provides separate handlers for down, move, up, and out events
-- Automatically clamps progress values between 0 and 1
-
-This hook is used internally by `timeline-control` and `volume-control` components for their slider interactions.
-
-## API Reference
-
-### useTrackEvents(props)
-
-Returns event handlers for pointer interactions on track elements.
-
-#### Parameters
-
-<AutoTypeTable
-  path="./registry/default/hooks/use-track-events.ts"
-  name="UseTrackEventsProps"
-/>
-
-#### Returns
-
-Returns an object with event handlers that can be spread onto a track element:
-
-<AutoTypeTable
-  path="./registry/default/hooks/use-track-events.ts"
-  name="UseTrackEventsReturn"
-/>
-
+`progress` is a normalized value (0–1) based on pointer position within the track element.

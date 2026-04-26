@@ -1,79 +1,23 @@
 ---
-title: Playback Rate Control
-description: Controls the playback speed of the Media.
+title: Playback Rate
+description: Dropdown selector for controlling playback speed.
 ---
-
-import { Step, Steps } from "fumadocs-ui/components/steps"
 
 <ComponentPreview name="playback-rate-demo" withPlayer />
 
 ## Installation
 
-<Steps>
-<Step>
-
 ```npm
 npx shadcn add @limeplay/playback-rate
 ```
-</Step>
 
-<Step>
-### Add Event & Action Bridge
-Import the `usePlaybackRateStates` hook in your existing `PlayerHooks` component.
+<Callout>
+Requires [`playbackRateFeature`](/docs/hooks/use-playback-rate) registered in your [`createMediaKit`](/docs/components/media-provider).
+</Callout>
 
-```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
-"use client"
+## Usage
 
-import React from "react"
-
-import { usePlaybackRateStates } from "@/hooks/limeplay/use-playback-rate" // [!code ++]
-import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
-import { usePlayerStates } from "@/hooks/limeplay/use-player"
-
-export const PlayerHooks = React.memo(() => {
-  usePlayerStates()
-  usePlaybackStates()
-  usePlaybackRateStates() // [!code ++]
-
-  return null
-})
-```
-
-</Step>
-<Step>
-### Add the Store States
-
-```tsx lineNumbers title="lib/create-media-store.ts"
-import {
-  createPlaybackRateStore,
-  PlaybackRateStore,
-} from "@/hooks/limeplay/use-playback-rate"
-import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
-import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
-
-export type TypeMediaStore = PlaybackStore &
-  PlayerStore &
-  PlaybackRateStore & // [!code ++]
-  {}
-
-  const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlaybackStore(...etc),
-    ...createPlayerStore(...etc),
-    ...createPlaybackRateStore(...etc), // [!code ++]
-    ...initProps,
-  }))
-  return mediaStore
-}
-```
-
-</Step>
-</Steps>
-
-## Example Usage
-
-1. Design the playback rate selector with dropdown and states.
-
-```tsx lineNumbers title="components/player/playback-rate-control.tsx"
+```tsx title="components/player/playback-rate-control.tsx"
 import { Button } from "@/components/ui/button"
 import * as Select from "@/components/ui/select"
 import * as PlaybackRate from "@/components/limeplay/playback-rate"
@@ -84,7 +28,7 @@ export function PlaybackRateControl() {
       <Button variant="ghost" size="icon" asChild>
         <PlaybackRate.SelectTrigger
           size="sm"
-          className="border-none bg-transparent px-8 shadow-none hover:bg-foreground/10 dark:bg-transparent dark:shadow-none"
+          className="border-none bg-transparent px-8 shadow-none hover:bg-foreground/10"
         />
       </Button>
       <Select.SelectContent className="min-w-24" align="start">
@@ -95,35 +39,20 @@ export function PlaybackRateControl() {
 }
 ```
 
-2. Use the component in your player.
-
-```tsx lineNumbers title="components/player/bottom-controls.tsx"
-<PlaybackRateControl />
-```
-
-## Understanding
-
-The Playback Rate Control uses the [`usePlaybackRate()`](/docs/hooks/use-playback-rate) hook to manage playback speed. You can use the `playbackRate` and `playbackRates` fields from media store to get the current playback rate and available rates.
-
 ## Components
-
-The Playback Rate components are built on top of the Select primitive.
 
 ### SelectRoot
 
-Main container that manages playback rate state. Extends `Select` component props from `@/components/ui/select`.
+Manages playback rate state. Extends `Select` component props.
 
 ### SelectTrigger
 
-Button that displays current playback rate (e.g., "1x", "1.5x"). Extends `SelectTrigger` component props from `@/components/ui/select`.
+Displays the current rate (e.g. "1x", "1.5x"). Extends `SelectTrigger` props.
 
 ### SelectGroup
 
-Renders the list of available playback rates. Accepts a `suffix` prop (default: "x").
+Renders the list of available rates. Auto-populated from the playback rate store.
 
-#### Props
-
-| Prop   | Type     | Default | Description                    |
-|--------|----------|---------|--------------------------------|
-| suffix | `string` | `"x"`   | Suffix to append to rate value |
-
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `suffix` | `string` | `"x"` | Suffix appended to each rate value |
