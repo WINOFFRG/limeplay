@@ -197,6 +197,7 @@ function TimelineSetup() {
   const mediaElement = useMediaStore((state) => state.mediaElement)
   const canPlay = usePlaybackStore((state) => state.canPlay)
   const readyState = usePlaybackStore((state) => state.readyState)
+  const status = usePlaybackStore((state) => state.status)
 
   const isLive = player?.isLive() ?? false
 
@@ -292,7 +293,8 @@ function TimelineSetup() {
     })
   }, [store])
 
-  useInterval(onTimeUpdate, UPDATE_DURATION)
+  const isActive = status === "playing" || status === "buffering"
+  useInterval(onTimeUpdate, isActive ? UPDATE_DURATION : null)
 
   React.useEffect(() => {
     if (!mediaElement || !player) return noop

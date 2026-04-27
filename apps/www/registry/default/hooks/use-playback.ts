@@ -99,10 +99,8 @@ export function playbackFeature(): MediaFeature<PlaybackStore> {
             await media.play()
           } catch (error: unknown) {
             console.error("Error playing media", error)
-            set(({ playback }) => {
+            set(({ media: mediaState, playback }) => {
               playback.status = "error"
-            })
-            set(({ media: mediaState }) => {
               mediaState.idle = false
             })
             throw error

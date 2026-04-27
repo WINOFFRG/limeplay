@@ -56,17 +56,26 @@ export function volumeFeature(): MediaFeature<VolumeStore> {
           if (!media) return
 
           media.muted = muted
-          media.volume = muted ? BASE_RESET_VOLUME : media.volume
+          if (!muted) {
+            media.volume = media.volume === 0 ? BASE_RESET_VOLUME : media.volume
+          }
 
           set(({ media: mediaState }) => {
             mediaState.idle = false
           })
         },
-        setVolume: (volume, progress = 0, delta = 0) => {
+        setVolume: (volume, progress?, delta?) => {
           const media = get().media.mediaElement
           if (!media) return
 
-          const value = typeof delta === "number" ? volume + delta : progress
+          let value: number
+          if (typeof delta === "number") {
+            value = volume + delta
+          } else if (typeof progress === "number") {
+            value = progress
+          } else {
+            value = volume
+          }
 
           if (Number.isNaN(value)) {
             return
@@ -108,13 +117,13 @@ function VolumeSetup() {
   const mediaElement = useMediaStore((state) => state.mediaElement)
   const playerInstance = usePlayerStore((state) => state.instance)
 
-  const getHasAudio = () => {
+  const getHasAudio = React.useCallback(() => {
     if (!playerInstance) {
       return true
     }
 
     return playerInstance.getAudioTracks().length > 0
-  }
+  }, [playerInstance])
 
   React.useEffect(() => {
     if (!mediaElement) return noop

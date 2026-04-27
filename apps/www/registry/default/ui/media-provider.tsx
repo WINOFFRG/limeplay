@@ -195,10 +195,14 @@ class MediaEventEmitter<TEvents extends AnyEvents>
 
     listeners.add(listener as AnyEventListener)
 
+    let removed = false
     return () => {
+      if (removed) return
+      removed = true
+
       listeners.delete(listener as AnyEventListener)
 
-      if (listeners.size === 0) {
+      if (listeners.size === 0 && this.listeners.get(name) === listeners) {
         this.listeners.delete(name)
       }
     }

@@ -165,6 +165,8 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
 
           if (playlist.queue.length === 0) return -1
 
+          if (playlist.repeatMode === "one") return playlist.currentIndex
+
           if (playlist.shuffle && playlist.shuffleOrder.length > 0) {
             const currentPos = playlist.shuffleOrder.indexOf(playlist.currentIndex)
             const nextPos = currentPos + 1
@@ -172,7 +174,7 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
               return playlist.shuffleOrder[nextPos]
             }
             if (playlist.repeatMode === "all") {
-              return createShuffleOrder(playlist.queue.length)[0]
+              return playlist.shuffleOrder[0]
             }
             return -1
           }
@@ -186,6 +188,8 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
           const playlist = get().playlist as PlaylistStore["playlist"]
 
           if (playlist.queue.length === 0) return -1
+
+          if (playlist.repeatMode === "one") return playlist.currentIndex
 
           if (playlist.history.length > 0) {
             const lastItem = playlist.history[playlist.history.length - 1]
@@ -284,6 +288,18 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
           const playlist = get().playlist as PlaylistStore["playlist"]
           const nextIndex = playlist.getNextIndex()
           if (nextIndex === -1 || nextIndex >= playlist.queue.length) return false
+
+          // When shuffle+repeatMode=all and we're at the end of the current order,
+          // generate and persist a new shuffle order for the next cycle
+          if (playlist.shuffle && playlist.shuffleOrder.length > 0 && playlist.repeatMode === "all") {
+            const currentPos = playlist.shuffleOrder.indexOf(playlist.currentIndex)
+            if (currentPos === playlist.shuffleOrder.length - 1) {
+              const newShuffleOrder = createShuffleOrder(playlist.queue.length)
+              set(({ playlist: p }) => {
+                p.shuffleOrder = newShuffleOrder
+              })
+            }
+          }
 
           if (playlist.currentItem) {
             set(({ playlist: p }) => {
@@ -567,7 +583,7 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
       return queue[nextIndex] as PlaylistItem<T>
     }
     return null
-  }, [queue, state])
+  }, [queue, currentIndex, shuffle, shuffleOrder, repeatMode])
 
   const previousItem = React.useMemo((): null | PlaylistItem<T> => {
     const prevIndex = state.getPreviousIndex()
@@ -575,7 +591,7 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
       return queue[prevIndex] as PlaylistItem<T>
     }
     return null
-  }, [queue, state])
+  }, [queue, currentIndex, shuffle, shuffleOrder, repeatMode])
 
   const orderedItems = React.useMemo((): PlaylistItem<T>[] => {
     const typedQueue = queue as unknown as PlaylistItem<T>[]
@@ -587,19 +603,13 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
     return shuffleOrder.map((index) => typedQueue[index])
   }, [queue, shuffle, shuffleOrder])
 
-  const hasNext = React.useMemo(() => {
-    if (repeatMode === "all" && queue.length > 0) {
-      return true
-    }
-    return state.getNextIndex() !== -1
-  }, [queue.length, repeatMode, state])
+  const hasNext =
+    (repeatMode === "all" && queue.length > 0) ||
+    state.getNextIndex() !== -1
 
-  const hasPrevious = React.useMemo(() => {
-    if (repeatMode === "all" && queue.length > 0) {
-      return true
-    }
-    return state.getPreviousIndex() !== -1
-  }, [queue.length, repeatMode, state])
+  const hasPrevious =
+    (repeatMode === "all" && queue.length > 0) ||
+    state.getPreviousIndex() !== -1
 
   const previous = React.useCallback(() => {
     const prevIndex = state.getPreviousIndex()
@@ -627,7 +637,7 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
       "previous"
     )
     return true
-  }, [api, events, queue, state])
+  }, [api, events, queue])
 
   return {
     append: state.append,

@@ -143,7 +143,7 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "media",
-    registryDependencies: ["media-provider"],
+    registryDependencies: ["media-provider", "use-media", "use-playback"],
     type: "registry:ui",
   },
   {
@@ -217,7 +217,7 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "timeline-labels",
-    registryDependencies: ["media-provider", "utils", "time"],
+    registryDependencies: ["media-provider", "use-timeline", "utils", "time"],
     type: "registry:ui",
   },
   {
@@ -271,7 +271,7 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "root-container",
-    registryDependencies: ["media-provider"],
+    registryDependencies: ["media-provider", "use-media", "use-playback"],
     type: "registry:ui",
   },
   {

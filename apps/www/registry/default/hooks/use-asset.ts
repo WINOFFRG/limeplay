@@ -24,11 +24,9 @@ import type {
   MediaStore,
 } from "@/registry/default/ui/media-provider"
 
-import { useMediaStore } from "@/registry/default/hooks/use-media"
 import { isLoadInterrupted } from "@/registry/default/hooks/use-player"
 import {
   usePlaylist,
-  usePlaylistStore,
 } from "@/registry/default/hooks/use-playlist"
 import {
   useMediaEvents,
@@ -274,23 +272,23 @@ export function assetFeature(): MediaFeature<
             const err = error instanceof Error ? error : new Error(String(error))
             const playlist = get().playlist
             const maxRetries = options?.maxRetries ?? 0
-            const nextRetryCount = get().asset.retryCount
+            const currentRetryCount = get().asset.retryCount
             const hasNext = playlist.getNextIndex() !== -1
 
             if (options?.onLoadError) {
               const decision = options.onLoadError(asset, err, {
                 hasNext,
-                retryCount: nextRetryCount,
+                retryCount: currentRetryCount,
               })
 
-              if (decision === "retry" && nextRetryCount < maxRetries) {
+              if (decision === "retry" && currentRetryCount < maxRetries) {
                 set(({ asset }) => {
-                  asset.retryCount = nextRetryCount + 1
+                  asset.retryCount = currentRetryCount + 1
                 })
                 return get().asset.loadAsset(asset, startTime)
               }
 
-              if (decision === "skip" && hasNext) {
+              if ((decision === "skip" || (decision === "retry" && currentRetryCount >= maxRetries)) && hasNext) {
                 set(({ asset }) => {
                   asset.retryCount = 0
                 })
@@ -476,15 +474,15 @@ export function useAssetStore<TSelected>(
 function AssetSetup() {
   const api = useMediaFeatureApi<AssetSetupStore>(ASSET_FEATURE_KEY)
   const events = useMediaEvents<PlaybackEvents & PlayerEvents & PlaylistEvents>()
-  const mediaElement = useMediaStore((state) => state.mediaElement)
-  const currentItem = usePlaylistStore((state) => state.currentItem)
-  const repeatMode = usePlaylistStore((state) => state.repeatMode)
-  const queue = usePlaylistStore((state) => state.queue)
-  const getNextIndex = usePlaylistStore((state) => state.getNextIndex)
-  const hasNext =
-    repeatMode === "all" && queue.length > 0 ? true : getNextIndex() !== -1
-
   useEffect(() => {
+    const getHasNext = () => {
+      const { getNextIndex, queue, repeatMode } =
+        api.getState().playlist
+      return repeatMode === "all" && queue.length > 0
+        ? true
+        : getNextIndex() !== -1
+    }
+
     const offPlaylistChange = events.on("playlistchange", (event) => {
       const item = event.currentItem
       if (!item) return
@@ -497,17 +495,19 @@ function AssetSetup() {
         .loadAsset(item.properties as unknown as Asset)
     })
 
-    const offPlaybackError = events.on("playbackerror", (error) => {
+    const offPlaybackError = events.on("playbackerror", (payload) => {
       void (async () => {
+        const { currentItem } = api.getState().playlist
         const options = api.getState().asset
           .installedOptions as undefined | UseAssetOptions<Asset>
         if (!currentItem || !options?.onPlaybackError) return
 
+        const mediaElement = api.getState().media.mediaElement
         try {
           const currentTime = mediaElement ? mediaElement.currentTime : 0
           const decision = await options.onPlaybackError(
             currentItem.properties as unknown as Asset,
-            error,
+            payload.error,
             { currentTime }
           )
 
@@ -517,7 +517,7 @@ function AssetSetup() {
             const startTime = decision.startTime ?? currentTime
             void api.getState().asset
               .loadAsset(assetToLoad, startTime)
-          } else if (decision.action === "skip" && hasNext) {
+          } else if (decision.action === "skip" && getHasNext()) {
             api.getState().playlist.next()
           }
         } catch (callbackErr) {
@@ -527,7 +527,7 @@ function AssetSetup() {
     })
 
     const offEnded = events.on("ended", () => {
-      if (hasNext) {
+      if (getHasNext()) {
         api.getState().playlist.next()
       }
     })
@@ -537,7 +537,7 @@ function AssetSetup() {
       offPlaybackError()
       offEnded()
     }
-  }, [api, currentItem, events, hasNext, mediaElement])
+  }, [api, events])
 
   return null
 }
