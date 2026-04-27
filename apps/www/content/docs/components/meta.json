@@ -1,21 +1,20 @@
 {
   "title": "Components",
-  "description": "All components used in Player UI",
+  "description": "Player UI components",
   "pages": [
     "media-provider",
+    "media",
+    "player-layout",
     "playback-control",
-    "picture-in-picture-control",
-    "playback-rate",
-    "mute-control",
-    "seek-controls",
     "volume-control",
+    "mute-control",
     "timeline-control",
     "timeline-labels",
-    "media",
-    "player-hooks",
-    "fallback-poster",
-    "player-layout",
-    "captions"
+    "seek-controls",
+    "playback-rate",
+    "picture-in-picture-control",
+    "captions",
+    "fallback-poster"
   ],
   "defaultOpen": true
 }

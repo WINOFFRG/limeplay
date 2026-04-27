@@ -21,10 +21,10 @@ export function generateStaticParams() {
 
 export async function GET(
   _req: NextRequest,
-  { params }: RouteContext<"/llms.mdx/[...slug]">
+  { params }: { params: Promise<{ slug: string[] }> }
 ) {
   const slug = (await params).slug
-  const pageSlug = slug.map((segment, index) => 
+  const pageSlug = slug.map((segment: string, index: number) => 
     index === slug.length - 1 && segment.endsWith('.mdx') 
       ? segment.slice(0, -4) 
       : segment

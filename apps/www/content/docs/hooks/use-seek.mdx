@@ -1,9 +1,7 @@
 ---
 title: use-seek
-description: Hook for seeking forward or backward in media playback
+description: Utility hook for seeking forward or backward by a fixed offset.
 ---
-
-import { Step, Steps } from "fumadocs-ui/components/steps"
 
 ## Installation
 
@@ -11,49 +9,29 @@ import { Step, Steps } from "fumadocs-ui/components/steps"
 npx shadcn add @limeplay/use-seek
 ```
 
-## Example Usage
+<Callout>
+Requires [`timelineFeature`](/docs/hooks/use-timeline) registered in your [`createMediaKit`](/docs/components/media-provider).
+</Callout>
 
-Use the `useSeek()` hook to control seeking in your components.
+## Usage
 
-```tsx lineNumbers title="components/player/seek-buttons.tsx"
+```tsx
 import { useSeek } from "@/hooks/limeplay/use-seek"
 
-export function SeekButtons() {
+function SeekButtons() {
   const { seek } = useSeek()
 
   return (
     <div>
       <button onClick={() => seek(-10)}>Back 10s</button>
-      <button onClick={() => seek(10)}>Forward 10s</button>
       <button onClick={() => seek(-30)}>Back 30s</button>
+      <button onClick={() => seek(10)}>Forward 10s</button>
       <button onClick={() => seek(30)}>Forward 30s</button>
     </div>
   )
 }
 ```
 
-## Understanding
+`seek(offset)` adds the offset (in seconds) to the current time. Negative values seek backward. The value is clamped to `[0, duration]`.
 
-The `use-seek` hook provides direct seeking functionality following a simplified **Action Bridge** pattern:
-
-- **Action Only**: `seek(offset)` directly modifies `currentTime` on the native media element
-- **No Event Bridge**: Unlike volume or playback hooks, seeking doesn't require state synchronization since timeline state is tracked separately by [`useTimelineStates()`](/docs/hooks/use-timeline)
-
-The hook automatically:
-- Clamps seek positions to valid ranges (0 to media duration)
-- Resets the `idle` state to keep player controls visible after seeking
-- Handles edge cases like undefined duration gracefully
-
-## API Reference
-
-### useSeek()
-
-Returns control functions for seeking within the media.
-
-#### Returns
-
-<AutoTypeTable
-  path="./registry/default/hooks/use-seek.ts"
-  name="UseSeekReturn"
-/>
-
+This is an action-only hook — it doesn't track state. Timeline state is managed separately by [`timelineFeature`](/docs/hooks/use-timeline).

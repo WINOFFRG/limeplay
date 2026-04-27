@@ -19,20 +19,18 @@ export function generateStaticParams(): {
 
 export async function GET(
   _req: Request,
-  { params }: RouteContext<"/og/docs/[...slug]">
+  { params }: { params: Promise<{ slug: string[] }> }
 ) {
   const { slug } = await params
   const page = source.getPage(slug.slice(0, -1))
   if (!page) notFound()
 
   return new ImageResponse(
-    (
-      <MetadataImage
-        description={page.data.description}
-        site="Limeplay"
-        title={page.data.title}
-      />
-    ),
+    <MetadataImage
+      description={page.data.description}
+      site="Limeplay"
+      title={page.data.title}
+    />,
     await getImageResponseOptions()
   )
 }

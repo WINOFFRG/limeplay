@@ -1,150 +1,170 @@
-import type { StateCreator } from "zustand"
-
 import clamp from "lodash.clamp"
 import React from "react"
 
-import type { PlaybackStore } from "@/registry/default/hooks/use-playback"
-
-import { noop, off, on } from "@/registry/default/lib/utils"
-import {
-  useGetStore,
-  useMediaStore,
+import type {
+  MediaEventSlice,
+  MediaFeature,
 } from "@/registry/default/ui/media-provider"
 
-export interface VolumeStore {
-  hasAudio: boolean
-  muted: boolean
-  onMute?: (payload: { muted: boolean }) => void
+import { useMediaStore } from "@/registry/default/hooks/use-media"
+import { usePlayerStore } from "@/registry/default/hooks/use-player"
+import { noop, off, on } from "@/registry/default/lib/utils"
+import {
+  useMediaEvents,
+  useMediaFeatureApi,
+  useMediaFeatureStore,
+} from "@/registry/default/ui/media-provider"
 
-  onVolumeChange?: (payload: { muted: boolean; volume: number }) => void
-  volume: number
+export const VOLUME_FEATURE_KEY = "volume"
+
+export interface VolumeEvents {
+  mute: { muted: boolean }
+  volumechange: { muted: boolean; volume: number }
 }
 
-export function useVolumeStates() {
-  const store = useGetStore()
-  const mediaRef = useMediaStore((state) => state.mediaRef)
-  const player = useMediaStore((state) => state.player)
-
-  React.useEffect(() => {
-    if (!mediaRef.current) return noop
-
-    const media = mediaRef.current
-
-    const volumeHandler = () => {
-      const volume = media.volume
-      const muted = media.muted
-
-      store.setState({
-        muted,
-        volume,
-      })
-
-      store.getState().onVolumeChange?.({ muted, volume })
-      store.getState().onMute?.({ muted })
-    }
-
-    const audioTracksChangedHandler = () => {
-      if (player) {
-        const hasAudioTracks = player.getAudioTracks().length > 0
-
-        store.setState({
-          hasAudio: hasAudioTracks,
-        })
-      }
-    }
-
-    on(media, "volumechange", volumeHandler)
-    on(media, "audiotrackschanged", audioTracksChangedHandler)
-
-    volumeHandler()
-
-    return () => {
-      off(media, "volumechange", volumeHandler)
-      off(media, "audiotrackschanged", audioTracksChangedHandler)
-    }
-  }, [store, mediaRef, player])
+export interface VolumeStore extends MediaEventSlice<VolumeEvents> {
+  [VOLUME_FEATURE_KEY]: {
+    hasAudio: boolean
+    level: number
+    muted: boolean
+    setMuted: (muted: boolean) => void
+    setVolume: (volume: number, progress?: number, delta?: number) => void
+    toggleMute: () => void
+  }
 }
 
 const BASE_RESET_VOLUME = 0.05
 
-export const createVolumeStore: StateCreator<
-  PlaybackStore & VolumeStore,
-  [],
-  [],
-  VolumeStore
-> = () => ({
-  hasAudio: true,
-  muted: false,
-  // Initialize event callbacks
-  onMute: undefined,
-
-  onVolumeChange: undefined,
-  volume: 1,
-})
-
-export interface UseVolumeReturn {
-  setMuted: (muted: boolean) => void
-  setVolume: (volume: number, progress?: number, delta?: number) => void
-  toggleMute: () => void
+export function useVolumeStore<TSelected>(
+  selector: (state: VolumeStore["volume"]) => TSelected
+): TSelected {
+  return useMediaFeatureStore<VolumeStore, TSelected>(
+    VOLUME_FEATURE_KEY,
+    (state) => selector(state.volume)
+  )
 }
 
-export function useVolume(): UseVolumeReturn {
-  const store = useGetStore()
-  const mediaRef = useMediaStore((state) => state.mediaRef)
-
-  function setVolume(volume: number, progress = 0, delta = 0) {
-    if (!mediaRef.current) return
-
-    const value = typeof delta === "number" ? volume + delta : progress
-
-    if (Number.isNaN(value)) {
-      return
-    }
-
-    const clampedVolume = clamp(value, 0, 1)
-    const muted = clampedVolume === 0
-
-    const media = mediaRef.current
-    media.volume = clampedVolume
-    media.muted = muted
-
-    store.setState({
-      idle: false,
-    })
-  }
-
-  function toggleMute() {
-    if (!mediaRef.current) return
-
-    const media = mediaRef.current
-    media.muted = !media.muted
-    // DEV: Volume 0 and muted are equivalent, to prevent collision in UI
-    // set to some small value to prevent stuck toggling state of UI.
-    if (!media.muted) {
-      media.volume = media.volume === 0 ? BASE_RESET_VOLUME : media.volume
-    }
-
-    store.setState({
-      idle: false,
-    })
-  }
-
-  function setMuted(muted: boolean) {
-    if (!mediaRef.current) return
-
-    const media = mediaRef.current
-
-    media.muted = muted
-    media.volume = muted ? BASE_RESET_VOLUME : media.volume
-
-    store.setState({
-      idle: false,
-    })
-  }
-
+export function volumeFeature(): MediaFeature<VolumeStore> {
   return {
-    setMuted,
-    setVolume,
-    toggleMute,
+    createSlice: (set, get) => ({
+      [VOLUME_FEATURE_KEY]: {
+        hasAudio: true,
+        level: 1,
+        muted: false,
+        setMuted: (muted) => {
+          const media = get().media.mediaElement
+          if (!media) return
+
+          media.muted = muted
+          if (!muted) {
+            media.volume = media.volume === 0 ? BASE_RESET_VOLUME : media.volume
+          }
+
+          set(({ media: mediaState }) => {
+            mediaState.idle = false
+          })
+        },
+        setVolume: (volume, progress, delta) => {
+          const media = get().media.mediaElement
+          if (!media) return
+
+          let value: number
+          if (typeof delta === "number") {
+            value = volume + delta
+          } else if (typeof progress === "number") {
+            value = progress
+          } else {
+            value = volume
+          }
+
+          if (Number.isNaN(value)) {
+            return
+          }
+
+          const clampedVolume = clamp(value, 0, 1)
+          const muted = clampedVolume === 0
+
+          media.volume = clampedVolume
+          media.muted = muted
+
+          set(({ media: mediaState }) => {
+            mediaState.idle = false
+          })
+        },
+        toggleMute: () => {
+          const media = get().media.mediaElement
+          if (!media) return
+
+          media.muted = !media.muted
+          if (!media.muted) {
+            media.volume = media.volume === 0 ? BASE_RESET_VOLUME : media.volume
+          }
+
+          set(({ media: mediaState }) => {
+            mediaState.idle = false
+          })
+        },
+      },
+    }),
+    key: VOLUME_FEATURE_KEY,
+    Setup: VolumeSetup,
   }
+}
+
+function VolumeSetup() {
+  const store = useMediaFeatureApi<VolumeStore>(VOLUME_FEATURE_KEY)
+  const events = useMediaEvents<VolumeEvents>()
+  const mediaElement = useMediaStore((state) => state.mediaElement)
+  const playerInstance = usePlayerStore((state) => state.instance)
+
+  const getHasAudio = React.useCallback(() => {
+    if (!playerInstance) {
+      return true
+    }
+
+    return playerInstance.getAudioTracks().length > 0
+  }, [playerInstance])
+
+  React.useEffect(() => {
+    if (!mediaElement) return noop
+
+    const media = mediaElement
+
+    const volumeHandler = () => {
+      const level = media.volume
+      const muted = media.muted
+
+      store.setState(({ volume }) => {
+        volume.level = level
+        volume.muted = muted
+      })
+
+      events.emit("volumechange", { muted, volume: level })
+      events.emit("mute", { muted })
+    }
+
+    const audioTracksChangedHandler = () => {
+      store.setState(({ volume }) => {
+        volume.hasAudio = getHasAudio()
+      })
+    }
+
+    on(media, "volumechange", volumeHandler)
+
+    volumeHandler()
+
+    if (playerInstance) {
+      on(playerInstance, "trackschanged", audioTracksChangedHandler)
+      audioTracksChangedHandler()
+    }
+
+    return () => {
+      off(media, "volumechange", volumeHandler)
+      if (playerInstance) {
+        off(playerInstance, "trackschanged", audioTracksChangedHandler)
+      }
+    }
+  }, [events, mediaElement, getHasAudio, store])
+
+  return null
 }

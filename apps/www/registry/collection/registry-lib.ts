@@ -12,18 +12,6 @@ export const lib: Registry["items"] = [
     type: "registry:lib",
   },
   {
-    dependencies: ["zustand"],
-    files: [
-      {
-        path: "lib/create-media-store.ts",
-        type: "registry:lib",
-      },
-    ],
-    name: "create-media-store",
-    registryDependencies: ["use-player", "use-playback"],
-    type: "registry:lib",
-  },
-  {
     dependencies: ["date-fns"],
     files: [
       {
@@ -51,19 +39,24 @@ export const internal: Registry["items"] = [
   {
     files: [
       {
-        path: "internal/player-hooks-demo.tsx",
-        type: "registry:ui",
+        path: "internal/media.ts",
+        type: "registry:lib",
       },
     ],
-    name: "player-hooks-demo",
+    name: "internal-media",
     registryDependencies: [
+      "media-provider",
+      "use-asset",
+      "use-captions",
+      "use-media",
+      "use-picture-in-picture",
       "use-playback",
+      "use-playback-rate",
       "use-player",
+      "use-playlist",
       "use-timeline",
       "use-volume",
-      "use-captions",
-      "use-playback-rate",
     ],
-    type: "registry:ui",
+    type: "registry:lib",
   },
 ]

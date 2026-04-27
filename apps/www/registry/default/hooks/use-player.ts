@@ -1,14 +1,20 @@
 "use client"
 
-import type { StateCreator } from "zustand"
-
 import React, { useRef } from "react"
 import shaka from "shaka-player"
 
+import type { PlaybackStore } from "@/registry/default/hooks/use-playback"
+import type {
+  MediaEventSlice,
+  MediaFeature,
+} from "@/registry/default/ui/media-provider"
+
+import { useMediaStore } from "@/registry/default/hooks/use-media"
 import { noop, off, on } from "@/registry/default/lib/utils"
 import {
-  useGetStore,
-  useMediaStore,
+  useMediaEvents,
+  useMediaFeatureApi,
+  useMediaFeatureStore,
 } from "@/registry/default/ui/media-provider"
 
 declare global {
@@ -22,53 +28,27 @@ declare global {
   }
 }
 
-/**
- * Playback store state - unopinionated, uses generics
- */
-export interface PlayerStore {
-  onBufferingChange?: (payload: { isBuffering: boolean }) => void
-  onError?: (payload: { error: Error }) => void
-  onPlaybackError?: (error: Error) => void
-  onPlayerReady?: (payload: { player: shaka.Player }) => void
+export const PLAYER_FEATURE_KEY = "player"
 
-  player: null | shaka.Player
-  playerContainerRef: HTMLDivElement | null
-  preloadManagers: Map<string, shaka.media.PreloadManager>
-
-  setPlayer: (player: null | shaka.Player) => void
-  setPlayerContainerRef: (instance: HTMLDivElement | null) => void
+export interface PlayerEvents {
+  bufferingchange: { isBuffering: boolean }
+  playbackerror: { error: Error }
+  playererror: { error: Error }
+  playerready: { player: shaka.Player }
 }
 
-export const createPlayerStore: StateCreator<
-  PlayerStore,
-  [],
-  [],
-  PlayerStore
-> = (set) => ({
-  onBufferingChange: undefined,
-  onError: undefined,
-  onPlaybackError: undefined,
-  onPlayerReady: undefined,
+export interface PlayerStore extends MediaEventSlice<PlayerEvents> {
+  [PLAYER_FEATURE_KEY]: {
+    containerRef: HTMLDivElement | null
+    instance: null | shaka.Player
+    preloadManagers: Map<string, shaka.media.PreloadManager>
+    setContainerRef: (instance: HTMLDivElement | null) => void
+    setInstance: (player: null | shaka.Player) => void
+  }
+}
 
-  player: null,
-  playerContainerRef: null,
-  preloadManagers: new Map(),
-
-  setPlayer: (player: null | shaka.Player) => set({ player }),
-  setPlayerContainerRef: (instance) => set({ playerContainerRef: instance }),
-})
-
-/**
- * Options for usePlayer hook
- */
 export interface UsePlayerOptions<TAsset> {
-  /**
-   * Error handler - required
-   */
   onError: (error: Error, asset?: TAsset) => void
-  /**
-   * Load implementation - required, user controls player.load/configure
-   */
   onLoad: (
     asset: TAsset,
     player: shaka.Player,
@@ -76,39 +56,14 @@ export interface UsePlayerOptions<TAsset> {
     preloadManager?: shaka.media.PreloadManager,
     startTime?: number
   ) => Promise<void>
-  /**
-   * Preload implementation - required if using preload
-   */
   onPreload?: (
     asset: TAsset,
     player: shaka.Player
   ) => Promise<null | shaka.media.PreloadManager>
 }
 
-export interface UsePlayerReturn<TAsset> {
-  cancelPreload: (assetId: string) => void
-  isPreloaded: (assetId: string) => boolean
-  load: (asset: TAsset, startTime?: number) => Promise<boolean>
-  player: null | shaka.Player
-  preload: (asset: TAsset) => Promise<void>
-}
-
 export const RECOMMENDED_PLAYER_BUFFERING_THROTTLE_MS = 250
 
-export interface UsePlayerStatesOptions {
-  /**
-   * Delay buffering UI/status updates to reduce flicker during seek bursts.
-   * - `true`: use RECOMMENDED_PLAYER_BUFFERING_THROTTLE_MS
-   * - `number`: use custom delay in ms
-   * - `undefined`/`false`: no throttle
-   */
-  throttleBuffering?: boolean | number
-}
-
-/**
- * Detect whether an error is Shaka's LOAD_INTERRUPTED.
- * This is expected during rapid skip — not a real error.
- */
 export function isLoadInterrupted(error: unknown): boolean {
   if (
     error &&
@@ -122,20 +77,50 @@ export function isLoadInterrupted(error: unknown): boolean {
   return false
 }
 
+export function playerFeature(): MediaFeature<PlayerStore> {
+  return {
+    createSlice: (_set, _get, _store) => ({
+      [PLAYER_FEATURE_KEY]: {
+        containerRef: null,
+        instance: null,
+        preloadManagers: new Map(),
+        setContainerRef: (instance) => {
+          _set(({ player }) => {
+            player.containerRef = instance
+          })
+        },
+        setInstance: (instance) => {
+          _set(({ player }) => {
+            player.instance = instance
+          })
+        },
+      },
+    }),
+    key: PLAYER_FEATURE_KEY,
+    Setup: PlayerSetup,
+  }
+}
+
+/**
+ * Low-level player hook for manual load/preload control.
+ * Prefer `useAsset` for most use cases — it handles retry logic,
+ * playlist integration, abort/generation tracking, and preload lifecycle.
+ * Using both `usePlayer.load` and `useAsset.loadAsset` on the same
+ * content will cause split state in `preloadManagers` and retry counters.
+ */
 export function usePlayer<TAsset extends { id: string }>(
   options?: UsePlayerOptions<TAsset>
-): UsePlayerReturn<TAsset> {
-  const store = useGetStore()
+) {
+  const store = useMediaFeatureApi<PlayerStore>(PLAYER_FEATURE_KEY)
+  const player = usePlayerStore((state) => state.instance)
+  const mediaElement = useMediaStore((state) => state.mediaElement)
 
-  /**
-   * Load an asset
-   */
   const load = React.useCallback(
     async (asset: TAsset, startTime?: number): Promise<boolean> => {
       if (!options) return false
 
-      const currentPlayer = store.getState().player
-      const currentMedia = store.getState().mediaRef.current
+      const currentPlayer = store.getState().player.instance
+      const currentMedia = store.getState().media.mediaElement
 
       if (!currentPlayer || !currentMedia) {
         console.warn("[usePlayer] Player or media element not initialized")
@@ -143,7 +128,7 @@ export function usePlayer<TAsset extends { id: string }>(
       }
 
       try {
-        const preloadManagers = store.getState().preloadManagers
+        const preloadManagers = store.getState().player.preloadManagers
         const preloadManager = preloadManagers.get(asset.id)
 
         if (preloadManager) {
@@ -155,7 +140,9 @@ export function usePlayer<TAsset extends { id: string }>(
             startTime
           )
           preloadManagers.delete(asset.id)
-          store.setState({ preloadManagers: new Map(preloadManagers) })
+          store.setState(({ player }) => {
+            player.preloadManagers = new Map(preloadManagers)
+          })
         } else {
           await options.onLoad(
             asset,
@@ -177,25 +164,24 @@ export function usePlayer<TAsset extends { id: string }>(
         return false
       }
     },
-    [store, options]
+    [mediaElement, options, store]
   )
 
-  /**
-   * Preload an asset for faster playback later
-   */
   const preload = React.useCallback(
     async (asset: TAsset): Promise<void> => {
-      if (!options || !options.onPreload) return
+      if (!options?.onPreload) return
 
-      const currentPlayer = store.getState().player
+      const currentPlayer = store.getState().player.instance
       if (!currentPlayer) return
 
       try {
         const manager = await options.onPreload(asset, currentPlayer)
         if (manager) {
-          const preloadManagers = store.getState().preloadManagers
+          const preloadManagers = store.getState().player.preloadManagers
           preloadManagers.set(asset.id, manager)
-          store.setState({ preloadManagers: new Map(preloadManagers) })
+          store.setState(({ player }) => {
+            player.preloadManagers = new Map(preloadManagers)
+          })
         }
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error))
@@ -203,36 +189,30 @@ export function usePlayer<TAsset extends { id: string }>(
         console.error("[usePlayer] Preload error:", error)
       }
     },
-    [store, options]
+    [options, store]
   )
 
-  /**
-   * Cancel a pending preload
-   */
   const cancelPreload = React.useCallback(
     (assetId: string): void => {
-      const preloadManagers = store.getState().preloadManagers
+      const preloadManagers = store.getState().player.preloadManagers
       const manager = preloadManagers.get(assetId)
       if (manager) {
         manager.destroy()
         preloadManagers.delete(assetId)
-        store.setState({ preloadManagers: new Map(preloadManagers) })
+        store.setState(({ player }) => {
+          player.preloadManagers = new Map(preloadManagers)
+        })
       }
     },
     [store]
   )
 
-  /**
-   * Check if an asset is preloaded
-   */
   const isPreloaded = React.useCallback(
     (assetId: string): boolean => {
-      return store.getState().preloadManagers.has(assetId)
+      return store.getState().player.preloadManagers.has(assetId)
     },
     [store]
   )
-
-  const player = useMediaStore((s) => s.player)
 
   return {
     cancelPreload,
@@ -243,20 +223,29 @@ export function usePlayer<TAsset extends { id: string }>(
   }
 }
 
-export function usePlayerStates(options?: UsePlayerStatesOptions) {
-  const store = useGetStore()
-  const setPlayer = useMediaStore((state) => state.setPlayer)
-  const mediaRef = useMediaStore((state) => state.mediaRef)
-  const debug = useMediaStore((state) => state.debug)
-  const player = useMediaStore((state) => state.player)
-  const bufferingThrottleMs = resolveBufferingThrottleMs(
-    options?.throttleBuffering
+export function usePlayerStore<TSelected>(
+  selector: (state: PlayerStore["player"]) => TSelected
+): TSelected {
+  return useMediaFeatureStore<PlayerStore, TSelected>(
+    PLAYER_FEATURE_KEY,
+    (state) => selector(state.player)
   )
+}
+
+function PlayerSetup() {
+  const store = useMediaFeatureApi<PlaybackStore & PlayerStore>(
+    PLAYER_FEATURE_KEY
+  )
+  const events = useMediaEvents<PlayerEvents>()
+  const setPlayer = usePlayerStore((state) => state.setInstance)
+  const mediaElement = useMediaStore((state) => state.mediaElement)
+  const debug = useMediaStore((state) => state.debug)
+  const player = usePlayerStore((state) => state.instance)
 
   const playerInstance = useRef<null | shaka.Player>(null)
 
   React.useLayoutEffect(() => {
-    const mediaElement = mediaRef.current
+    let aborted = false
 
     async function loadPlayer() {
       const shakaLib = (
@@ -265,29 +254,42 @@ export function usePlayerStates(options?: UsePlayerStatesOptions) {
           : await import("shaka-player")
       ).default
 
-      if (!mediaElement) {
+      if (!mediaElement || aborted) {
         return
       }
 
       const localPlayer = new shakaLib.Player() as shaka.Player
-      setPlayer(localPlayer)
-      playerInstance.current = localPlayer
 
       try {
         await localPlayer.attach(mediaElement)
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- mutated by cleanup closure during await
+        if (aborted) {
+          void localPlayer.destroy().catch(noop)
+          return
+        }
+
+        setPlayer(localPlayer)
+        playerInstance.current = localPlayer
+
         mediaElement.player = playerInstance.current
         window.shaka = shakaLib as unknown as Window["shaka"]
 
-        store.getState().onPlayerReady?.({ player: localPlayer })
+        events.emit("playerready", { player: localPlayer })
       } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- mutated by cleanup closure during await
+        if (aborted) {
+          void localPlayer.destroy().catch(noop)
+          return
+        }
+
         const err = error instanceof Error ? error : new Error(String(error))
         console.error(
           "[usePlayer] Failed to attach player to media element:",
           err
         )
 
-        store.getState().onError?.({ error: err })
+        events.emit("playererror", { error: err })
       }
     }
 
@@ -296,13 +298,14 @@ export function usePlayerStates(options?: UsePlayerStatesOptions) {
     }
 
     return () => {
+      aborted = true
       if (playerInstance.current) {
-        playerInstance.current.destroy()
+        void playerInstance.current.destroy().catch(noop)
         setPlayer(null)
         playerInstance.current = null
       }
     }
-  }, [mediaRef, debug])
+  }, [debug, mediaElement, setPlayer, events])
 
   React.useEffect(() => {
     if (!player) return noop
@@ -317,7 +320,9 @@ export function usePlayerStates(options?: UsePlayerStatesOptions) {
 
     const setInitialState = () => {
       if (player.isBuffering()) {
-        store.setState({ status: "buffering" })
+        store.setState(({ playback }) => {
+          playback.status = "buffering"
+        })
       }
     }
 
@@ -325,31 +330,26 @@ export function usePlayerStates(options?: UsePlayerStatesOptions) {
       const isBuffering = player.isBuffering()
 
       if (isBuffering) {
-        if (bufferingThrottleMs === undefined) {
-          store.setState({ status: "buffering" })
-        } else {
-          clearBufferingTimeout()
-          bufferingTimeout = setTimeout(() => {
-            if (player.isBuffering() && store.getState().status !== "error") {
-              store.setState({ status: "buffering" })
-            }
-            bufferingTimeout = null
-          }, bufferingThrottleMs)
-        }
+        store.setState(({ playback }) => {
+          playback.status = "buffering"
+        })
       } else {
         clearBufferingTimeout()
-        const media = mediaRef.current
+        const media = store.getState().media.mediaElement
         if (media) {
-          const status = media.paused ? "paused" : "playing"
-          store.setState({ status })
+          store.setState(({ playback }) => {
+            playback.status = media.paused ? "paused" : "playing"
+          })
         }
       }
 
-      store.getState().onBufferingChange?.({ isBuffering })
+      events.emit("bufferingchange", { isBuffering })
     }
 
     const loadingHandler = () => {
-      store.setState({ status: "loading" })
+      store.setState(({ playback }) => {
+        playback.status = "loading"
+      })
     }
 
     on(player, "buffering", bufferingHandler)
@@ -358,8 +358,14 @@ export function usePlayerStates(options?: UsePlayerStatesOptions) {
     const errorHandler = (event: Event) => {
       const detail = (event as CustomEvent).detail
       if (detail && !isLoadInterrupted(detail)) {
-        store.setState({ status: "error" })
-        store.getState().onPlaybackError?.(detail)
+        store.setState(({ playback }) => {
+          playback.status = "error"
+        })
+        const err =
+          detail instanceof Error
+            ? detail
+            : new Error(String(detail?.message ?? detail))
+        events.emit("playbackerror", { error: err })
       }
     }
 
@@ -373,23 +379,7 @@ export function usePlayerStates(options?: UsePlayerStatesOptions) {
       player.removeEventListener("error", errorHandler)
       clearBufferingTimeout()
     }
-  }, [player, mediaRef, store, bufferingThrottleMs])
-}
+  }, [mediaElement, player, store])
 
-function resolveBufferingThrottleMs(
-  value?: boolean | number
-): number | undefined {
-  if (value === undefined || value === false) {
-    return undefined
-  }
-
-  if (value === true) {
-    return RECOMMENDED_PLAYER_BUFFERING_THROTTLE_MS
-  }
-
-  if (Number.isFinite(value) && value > 0) {
-    return value
-  }
-
-  return undefined
+  return null
 }

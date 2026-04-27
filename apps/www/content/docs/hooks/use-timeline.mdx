@@ -1,152 +1,84 @@
 ---
 title: use-timeline
-description: Hook for managing timeline state, seeking, and buffered ranges
+description: Feature for managing playback position, seeking, and buffered ranges.
 ---
-
-import { Step, Steps } from "fumadocs-ui/components/steps"
 
 ## Installation
 
-<Steps>
-<Step>
-### Install the hook
 ```npm
 npx shadcn add @limeplay/use-timeline
 ```
-</Step>
 
-<Step>
-### Add Event & Action Bridge
-Import the `useTimelineStates` hook in your existing `PlayerHooks` component.
+Register the feature:
 
-```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
-import React from "react"
+```tsx title="lib/media.ts"
+"use client"
 
-import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
-import { usePlayerStates } from "@/hooks/limeplay/use-player"
-import { useTimelineStates } from "@/hooks/limeplay/use-timeline" // [!code ++]
+import { timelineFeature } from "@/hooks/limeplay/use-timeline"
 
-export const PlayerHooks = React.memo(() => {
-  usePlayerStates()
-  usePlaybackStates()
-  useTimelineStates() // [!code ++]
-
-  return null
+createMediaKit({
+  features: [..., timelineFeature()] as const,
 })
 ```
 
-</Step>
+## Store
 
-<Step>
-### Add the Store States
+Access via `useTimelineStore(selector)`:
 
-```tsx lineNumbers title="lib/create-media-store.ts"
-import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
-import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
-import {
-  createTimelineStore,
-  TimelineStore,
-} from "@/hooks/limeplay/use-timeline"
+```tsx
+import { useTimelineStore } from "@/hooks/limeplay/use-timeline"
 
-// [!code ++]
-
-export type TypeMediaStore = PlaybackStore &
-  PlayerStore &
-  TimelineStore & // [!code ++]
-  {}
-
-export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
-  const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlaybackStore(...etc),
-    ...createPlayerStore(...etc),
-    ...createTimelineStore(...etc), // [!code ++]
-    ...initProps,
-  }))
-  return mediaStore
-}
+const currentTime = useTimelineStore(s => s.currentTime)
+const duration = useTimelineStore(s => s.duration)
+const progress = useTimelineStore(s => s.progress)
+const seek = useTimelineStore(s => s.seek)
 ```
 
-</Step>
-</Steps>
+### State
 
-## Example Usage
+| Field | Type | Description |
+|---|---|---|
+| `currentTime` | `number` | Current playback time (seconds) |
+| `duration` | `number` | Total duration (seconds) |
+| `progress` | `number` | Playback progress (0–1) |
+| `hoveringTime` | `number` | Time at hover position (seconds) |
+| `isHovering` | `boolean` | Whether user is hovering the timeline |
+| `isLive` | `boolean` | Whether stream is live |
+| `liveLatency` | `number \| null` | Seconds behind live edge |
+| `buffered` | `BufferedRange[]` | Array of buffered time ranges |
 
-Use the `useTimeline()` hook to implement seeking functionality.
+### Actions
 
-```tsx lineNumbers title="components/player/timeline-slider.tsx"
-import { useTimeline } from "@/hooks/limeplay/use-timeline"
-import { useMediaStore } from "@/components/limeplay/media-provider"
+| Method | Description |
+|---|---|
+| `seek(time)` | Seek to specific time |
+| `setHoveringTime(time)` | Set the hover preview time |
+| `setIsHovering(isHovering)` | Set hover state |
+| `processBufferedRanges(ranges, variant?)` | Process ranges for UI rendering |
 
-export function TimelineSlider() {
-  const duration = useMediaStore((state) => state.duration)
-  const currentTime = useMediaStore((state) => state.currentTime)
-  const { seek, getTimeFromEvent } = useTimeline()
+### Buffered Range Variants
 
-  return (
-    <div
-      onPointerDown={(e) => {
-        const time = getTimeFromEvent(e)
-        seek(time)
-      }}
-    >
-      <div style={{ width: `${(currentTime / duration) * 100}%` }} />
-    </div>
-  )
-}
-```
+`processBufferedRanges` supports three display modes:
 
-## Understanding
-
-The `use-timeline` hook provides comprehensive timeline management following the **Event & Action Bridge** pattern:
-
-- **Event Bridge**: `useTimelineStates()` polls media state (default 500ms) and listens to `durationchange`, `progress`, and Shaka Player events to update `currentTime`, `duration`, `progress`, and `buffered` ranges
-- **Action Bridge**: `useTimeline()` provides `seek()`, `setHoveringTime()`, and `getTimeFromEvent()` functions for timeline interactions
+- `"default"` — Raw buffered ranges as-is
+- `"combined"` — Merged into a single range
+- `"from-zero"` — Extends first range start to zero
 
 ### Live Stream Support
 
-The hook automatically handles live streams:
-- Uses Shaka Player's `seekRange()` for proper DVR seeking
-- Calculates live latency
-- Adjusts progress calculation for sliding window streams
-- Provides `isLive` and `liveLatency` state
+For live streams, the timeline uses Shaka Player's `seekRange()` for proper DVR seeking. Progress is calculated relative to the seek window, and `liveLatency` tracks how far behind the live edge.
 
-### Buffered Ranges
+## Events
 
-The hook provides `processBufferedRanges()` function that supports three variants:
-- `default` - Shows all buffered ranges as-is
-- `combined` - Combines all ranges into a single range
-- `from-zero` - Shows ranges starting from 0
+| Event | Payload | When |
+|---|---|---|
+| `timeupdate` | `{ currentTime, duration, progress }` | Position updates (polled) |
+| `durationchange` | `{ duration }` | Duration changes |
+| `seek` | `{ from, to }` | User seeks |
 
 ## API Reference
-
-### useTimelineStates
-
-Sets up polling and event listeners for timeline state updates.
-
-#### Parameters
-
-<AutoTypeTable
-  path="./registry/default/hooks/use-timeline.ts"
-  name="useTimelineStatesProps"
-/>
-
-### useTimeline()
-
-Returns control functions for timeline interactions.
-
-#### Returns
-
-<AutoTypeTable
-  path="./registry/default/hooks/use-timeline.ts"
-  name="UseTimelineReturn"
-/>
-
-### Store State
-
-The timeline store provides the following state accessed via `useMediaStore`:
 
 <AutoTypeTable
   path="./registry/default/hooks/use-timeline.ts"
   name="TimelineStore"
 />
-

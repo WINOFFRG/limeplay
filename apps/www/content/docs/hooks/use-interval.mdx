@@ -1,6 +1,6 @@
 ---
 title: use-interval
-description: Utility hook for creating intervals that work with React's lifecycle
+description: Utility hook for creating intervals with auto-cleanup.
 ---
 
 ## Installation
@@ -9,69 +9,29 @@ description: Utility hook for creating intervals that work with React's lifecycl
 npx shadcn add @limeplay/use-interval
 ```
 
-## Example Usage
+## Usage
 
-Use `useInterval` to create intervals that automatically clean up when the component unmounts.
-
-```tsx lineNumbers title="components/player/custom-polling.tsx"
+```tsx
 import { useInterval } from "@/hooks/limeplay/use-interval"
 
-export function CustomPolling() {
+function PollingComponent() {
   useInterval(() => {
-    // This runs every 1000ms
     console.log("Polling...")
   }, 1000)
-
-  return <div>Polling component</div>
 }
 ```
 
-To clear the interval, pass `null` as the delay:
+### Conditional Interval
 
-```tsx lineNumbers title="components/player/conditional-interval.tsx"
-import { useState } from "react"
-import { useInterval } from "@/hooks/limeplay/use-interval"
+Pass `null` as the delay to pause the interval:
 
-export function ConditionalInterval() {
-  const [isActive, setIsActive] = useState(true)
+```tsx
+const [active, setActive] = useState(true)
 
-  useInterval(() => {
-    console.log("Running...")
-  }, isActive ? 1000 : null) // Interval clears when isActive is false
-
-  return (
-    <button onClick={() => setIsActive(!isActive)}>
-      {isActive ? "Stop" : "Start"}
-    </button>
-  )
-}
+useInterval(
+  () => { console.log("tick") },
+  active ? 500 : null
+)
 ```
 
-## Understanding
-
-The `use-interval` hook is a utility hook that wraps `setInterval` with proper React lifecycle management. It:
-
-- Automatically cleans up intervals when the component unmounts
-- Updates the callback reference when it changes
-- Supports clearing the interval by passing `null` as the delay
-- Works in both client and server environments (uses `useLayoutEffect` on client, `useEffect` on server)
-
-This hook is used internally by `use-timeline` for polling timeline state updates.
-
-## API Reference
-
-### useInterval(callback, delay)
-
-Creates an interval that invokes a callback function at a specified delay.
-
-#### Parameters
-
-| Property  | Type                    | Description                                    |
-| --------- | ----------------------- | ---------------------------------------------- |
-| `callback` | `() => void`           | The function to be invoked at each interval   |
-| `delay`   | `number \| null`       | The time in milliseconds between invocations. Use `null` to clear the interval |
-
-#### Returns
-
-This hook does not return a value. The interval is automatically managed and cleaned up.
-
+The interval is automatically cleaned up on unmount. The callback ref is stable — updated callbacks are picked up without restarting the interval.

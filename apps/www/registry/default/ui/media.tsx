@@ -1,9 +1,10 @@
 "use client"
 
-import { composeRefs } from "@radix-ui/react-compose-refs"
+import { useComposedRefs } from "@radix-ui/react-compose-refs"
 import * as React from "react"
 
-import { useMediaStore } from "@/registry/default/ui/media-provider"
+import { useMediaStore } from "@/registry/default/hooks/use-media"
+import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
 
 export type MediaProps =
   | (React.AudioHTMLAttributes<HTMLAudioElement> & { as: "audio" })
@@ -21,24 +22,16 @@ export type MediaPropsDocs = Pick<MediaProps, "as">
 export const Media = React.forwardRef<HTMLMediaElement, MediaProps>(
   (props, forwardedRef) => {
     const { as: Element = "video", ...etc } = props
-    const mediaRef = React.useRef<HTMLMediaElement>(null)
-    const setMediaRef = useMediaStore((state) => state.setMediaRef)
-    const status = useMediaStore((state) => state.status)
-
-    React.useLayoutEffect(() => {
-      if (!mediaRef.current) {
-        return
-      }
-
-      setMediaRef(mediaRef as React.RefObject<HTMLMediaElement>)
-    }, [])
+    const setMediaElement = useMediaStore((state) => state.setMediaElement)
+    const status = usePlaybackStore((state) => state.status)
+    const composedRef = useComposedRefs(forwardedRef, setMediaElement)
 
     return (
       <Element
         aria-busy={status === "buffering" || status === "loading"}
         controls={false}
         {...etc}
-        ref={composeRefs(forwardedRef, mediaRef)}
+        ref={composedRef}
       />
     )
   }

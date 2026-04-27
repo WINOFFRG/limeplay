@@ -4,9 +4,11 @@ import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
-import { usePictureInPicture } from "@/registry/default/hooks/use-picture-in-picture"
-import { MediaReadyState } from "@/registry/default/hooks/use-playback"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
+import { usePictureInPictureStore } from "@/registry/default/hooks/use-picture-in-picture"
+import {
+  MediaReadyState,
+  usePlaybackStore,
+} from "@/registry/default/hooks/use-playback"
 
 export interface PictureInPictureControlProps extends React.ComponentProps<
   typeof Button
@@ -32,14 +34,14 @@ export const PictureInPictureControl = React.forwardRef<
   HTMLButtonElement,
   PictureInPictureControlProps
 >((props, forwardedRef) => {
-  const readyState = useMediaStore((state) => state.readyState)
-  const isPictureInPictureActive = useMediaStore(
-    (state) => state.isPictureInPictureActive
+  const readyState = usePlaybackStore((state) => state.readyState)
+  const isPictureInPictureActive = usePictureInPictureStore(
+    (state) => state.active
   )
-  const isPictureInPictureSupported = useMediaStore(
-    (state) => state.isPictureInPictureSupported
+  const isPictureInPictureSupported = usePictureInPictureStore(
+    (state) => state.supported
   )
-  const { togglePictureInPicture } = usePictureInPicture()
+  const toggle = usePictureInPictureStore((state) => state.toggle)
 
   const {
     "aria-label": ariaLabelProp,
@@ -56,7 +58,7 @@ export const PictureInPictureControl = React.forwardRef<
   const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     onClick?.(event)
     if (!event.defaultPrevented) {
-      await togglePictureInPicture()
+      await toggle()
     }
   }
 

@@ -2,16 +2,15 @@
 
 import { useEffect } from "react"
 
+import { useMediaStore } from "@/registry/default/hooks/use-media"
+import { usePlayerStore } from "@/registry/default/hooks/use-player"
 import { Media } from "@/registry/default/ui/media"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export function MediaElement({ src }: { src: string }) {
-  const player = useMediaStore((state) => state.player)
-  const mediaRef = useMediaStore((state) => state.mediaRef)
+  const player = usePlayerStore((state) => state.instance)
+  const mediaElement = useMediaStore((state) => state.mediaElement)
 
   useEffect(() => {
-    const mediaElement = mediaRef.current
-
     if (player && mediaElement) {
       if (src) {
         try {
@@ -37,7 +36,7 @@ export function MediaElement({ src }: { src: string }) {
           console.error("[limeplay] error loading media:", error)
         })
     }
-  }, [player, mediaRef, src])
+  }, [player, mediaElement, src])
 
   return (
     <Media

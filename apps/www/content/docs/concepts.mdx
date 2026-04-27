@@ -1,0 +1,126 @@
+---
+title: Concepts
+index: true
+---
+
+The key ideas behind Limeplay's architecture.
+
+## Features
+
+Every capability — playback, volume, timeline, captions — is a **feature**. A feature is a self-contained unit that provides:
+
+- **Store slice** — A namespaced piece of state (e.g. `volume.level`, `playback.paused`)
+- **Setup component** — An internal component that attaches DOM event listeners and syncs state (auto-mounted by `MediaProvider`)
+- **Events** — Typed events emitted when state changes (e.g. `volumechange`, `seek`)
+
+You compose features with `createMediaKit`:
+
+```tsx title="lib/media.ts"
+"use client"
+
+import { createMediaKit } from "@/components/limeplay/media-provider"
+import { mediaFeature } from "@/hooks/limeplay/use-media"
+import { playbackFeature } from "@/hooks/limeplay/use-playback"
+import { volumeFeature } from "@/hooks/limeplay/use-volume"
+
+export const media = createMediaKit({
+  features: [
+    mediaFeature(),
+    playbackFeature(),
+    volumeFeature(),
+  ] as const,
+})
+```
+
+This returns a `MediaProvider` component and typed hooks. Each feature's Setup component is auto-mounted inside `MediaProvider` — no manual wiring required.
+
+### Available Features
+
+| Feature | Key | Factory | Events |
+|---|---|---|---|
+| [Media](/docs/concepts) | `media` | `mediaFeature()` | — |
+| [Player](/docs/hooks/use-player) | `player` | `playerFeature()` | `playerready`, `playererror`, `playbackerror`, `bufferingchange` |
+| [Playback](/docs/hooks/use-playback) | `playback` | `playbackFeature()` | `play`, `pause`, `ended`, `buffering`, `statuschange` |
+| [Volume](/docs/hooks/use-volume) | `volume` | `volumeFeature()` | `volumechange`, `mute` |
+| [Timeline](/docs/hooks/use-timeline) | `timeline` | `timelineFeature()` | `timeupdate`, `durationchange`, `seek` |
+| [Playlist](/docs/hooks/use-playlist) | `playlist` | `playlistFeature()` | `playlistchange` |
+| [Playback Rate](/docs/hooks/use-playback-rate) | `playbackRate` | `playbackRateFeature()` | `ratechange` |
+| [Picture-in-Picture](/docs/hooks/use-picture-in-picture) | `pictureInPicture` | `pictureInPictureFeature()` | `enterpictureinpicture`, `leavepictureinpicture` |
+| [Captions](/docs/hooks/use-captions) | `captions` | `captionsFeature()` | — |
+| [Asset](/docs/hooks/use-asset) | `asset` | `assetFeature()` | — |
+
+## Store
+
+State is managed by [Zustand](https://zustand.docs.pmnd.rs/) with [Immer](https://immerjs.github.io/immer/) middleware. Each `MediaProvider` creates an isolated store instance via React Context, so multiple players on the same page maintain independent state.
+
+### Reading State
+
+Use the typed selector hooks to subscribe to specific fields:
+
+```tsx
+// Per-feature convenience hook
+const level = useVolumeStore(s => s.level)
+const paused = usePlaybackStore(s => s.paused)
+
+// Or the unified hook from createMediaKit
+const level = media.useMediaStore(s => s.volume.level)
+```
+
+Components only re-render when the selected value changes.
+
+### Mutating State
+
+For imperative mutations (effects, callbacks), use the store API:
+
+```tsx
+const api = media.useMediaApi()
+
+// Read without subscribing
+api.getState().volume.level
+
+// Mutate with Immer draft
+api.setState(({ volume }) => {
+  volume.level = 0.5
+})
+```
+
+## Event & Action Bridge
+
+Limeplay separates concerns into two bridges:
+
+### Event Bridge
+
+Each feature's Setup component attaches native DOM event listeners to the `<video>` / `<audio>` element and syncs changes into the Zustand store. For example, the playback feature listens to native `play`, `pause`, `ended`, `waiting` events and updates `playback.paused`, `playback.status`, etc.
+
+This is automatic — registering a feature in `createMediaKit` handles everything.
+
+### Action Bridge
+
+UI components call store methods that directly manipulate the native media element. For example, `playback.togglePaused()` calls `mediaElement.play()` or `mediaElement.pause()`. The native element fires events, the Event Bridge captures them, and the store updates — completing the cycle.
+
+For high-frequency operations like seeking, both native and React states are updated simultaneously to prevent visual jank.
+
+```
+┌─────────────┐    action     ┌─────────────┐    native event    ┌─────────────┐
+│  UI Component│ ──────────▶ │ Media Element │ ──────────────▶  │ Store (Zustand)│
+│  (React)     │ ◀────────── │ (DOM)         │                   │              │
+└─────────────┘   re-render  └─────────────┘                   └──────────────┘
+```
+
+## Component Hierarchy
+
+```
+MediaProvider            ← Isolated store + event emitter + feature Setup components
+  └─ RootContainer       ← Accessible wrapper, manages control visibility
+      └─ PlayerContainer ← Media element container with aspect ratio
+          ├─ Media       ← Native <video> or <audio> element
+          ├─ ControlsContainer ← Layout for controls (top, middle, bottom)
+          │   ├─ PlaybackControl, VolumeControl, TimelineControl, etc.
+          │   └─ ...
+          └─ FallbackPoster ← Poster image for PiP / loading states
+```
+
+## Core Dependencies
+
+- **[Shaka Player](https://github.com/shaka-project/shaka-player)** — Streaming engine for HLS, DASH, and DRM. Peer dependency you control directly.
+- **[Zustand](https://zustand.docs.pmnd.rs/)** — Lightweight state management (1.2kb) with Immer middleware for immutable updates.

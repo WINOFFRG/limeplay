@@ -1,57 +1,71 @@
-name: Linters
+name: CI
 
 on:
   push:
-    branches: [dev]
+    branches: [main]
   pull_request:
-    branches: [dev]
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  code-quality:
-    name: Lint and Prettier
+  lint-format:
+    name: Lint & Format
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.2.19
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v45
+      - name: Lint
+        run: bun run lint
+
+      - name: Check formatting
+        run: bun run format:check
+
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
         with:
-          files: |
-            **/*.{js,jsx,ts,tsx}
-          files_yaml: |
-            prettier:
-              - '**/*.js'
-              - '**/*.jsx'
-              - '**/*.ts'
-              - '**/*.tsx'
-              - '**/*.json'
-              - '**/*.css'
-              - '**/*.md'
-              - '**/*.mdx'
+          token: ${{ secrets.WINOFFRG_PAT }}
+          submodules: recursive
 
-      - name: Run ESLint
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          echo "Running ESLint on changed files:"
-          echo "${{ steps.changed-files.outputs.all_changed_files }}"
-          bunx eslint ${{ steps.changed-files.outputs.all_changed_files }}
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.19
 
-      - name: Run Prettier check
-        if: steps.changed-files.outputs.prettier_any_changed == 'true'
-        run: |
-          echo "Running Prettier check on changed files:"
-          echo "${{ steps.changed-files.outputs.prettier_all_changed_files }}"
-          bunx prettier --check ${{ steps.changed-files.outputs.prettier_all_changed_files }}
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Type check
+        run: cd apps/www && bunx tsc --noEmit
+
+  registry:
+    name: Registry Build & Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.19
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build registry
+        run: cd apps/www && bun run registry:build
+
+      - name: Validate registries
+        run: cd apps/www && bun run validate:registries

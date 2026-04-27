@@ -1,4 +1,4 @@
-// import Script from "next/script"
+import Script from "next/script"
 
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
@@ -11,15 +11,14 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      {/* {process.env.NODE_ENV === "development" && (
+      {process.env.NODE_ENV === "development" && (
         <Script
           crossOrigin="anonymous"
           src="//unpkg.com/react-scan/dist/auto.global.js"
         />
-      )} */}
+      )}
       <main
         className={
-          // eslint-disable-next-line better-tailwindcss/no-unregistered-classes
           "light w-dvw overscroll-contain bg-linear-to-br from-white to-neutral-200"
         }
       >

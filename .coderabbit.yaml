@@ -3,19 +3,45 @@
 language: "en-US"
 
 reviews:
+  auto_review:
+    enabled: true
+    drafts: false
   path_filters:
     - "apps/www/registry/**"
     - "apps/www/content/docs/**"
+    - "apps/www/app/**"
+    - "apps/www/components/**"
+    - "apps/www/hooks/**"
+    - "apps/www/lib/**"
+    - "prompts/**"
+    - ".github/**"
     - "!**/node_modules/**"
     - "!**/out/**"
     - "!**/.next/**"
+    - "!**/__index__.tsx"
+    - "!**/public/r/**"
+  path_instructions:
+    - path: "apps/www/registry/default/hooks/**"
+      instructions: |
+        These are Limeplay feature hooks using the feature pattern (xxxFeature → MediaFeature<XxxStore>).
+        Ensure createSlice receives (set, get, store, events) and uses events.emit() instead of on* callbacks.
+        No convenience hooks should exist — only useXxxStore selectors.
+    - path: "apps/www/registry/default/ui/**"
+      instructions: |
+        These are headless UI components. Ensure asChild support via @radix-ui/react-slot,
+        proper ARIA attributes, keyboard interaction, and granular useXxxStore selectors.
+    - path: "apps/www/content/docs/**"
+      instructions: |
+        Documentation pages. Internal registry imports (@/registry/...) must never appear.
+        Examples must use @/components/limeplay/* or @/hooks/limeplay/* paths.
+        Verify deleted APIs are not referenced: PlayerHooks, usePlayback(), useVolume(),
+        createPlaybackStore, mediaRef, on* callback fields.
+  tools:
+    eslint:
+      enabled: true
 
 knowledge_base:
   code_guidelines:
     enabled: true
-    file_patterns:
+    filePatterns:
       - "prompts/code-rabbit.md"
-
-tools:
-  eslint:
-    enabled: true

@@ -1,28 +1,23 @@
 ---
-title: Seek Control
-description: Controls for seeking forward or backward in media playback
+title: Seek Controls
+description: Skip forward or backward by a fixed offset.
 ---
 
 <ComponentPreview name="seek-control-demo" withPlayer />
 
 ## Installation
 
-
 ```npm
 npx shadcn add @limeplay/seek-controls
 ```
 
-### Ready to Use
+<Callout>
+Requires [`timelineFeature`](/docs/hooks/use-timeline) registered in your [`createMediaKit`](/docs/components/media-provider).
+</Callout>
 
-The `SeekControl` component uses the `useSeek` hook internally, which only requires the `MediaProvider` context. No additional store setup is needed as seeking is a direct action on the media element.
+## Usage
 
-## Example Usage
-
-1. Design seek controls with icons and offset values.
-
-```tsx lineNumbers title="components/player/seek-group-control.tsx"
-"use client"
-
+```tsx title="components/player/seek-buttons.tsx"
 import {
   CaretCircleDoubleLeftIcon,
   CaretCircleDoubleRightIcon,
@@ -31,7 +26,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { SeekControl } from "@/components/limeplay/seek-controls"
 
-export function SeekGroupControl() {
+export function SeekButtons() {
   return (
     <div className="flex items-center gap-2">
       <SeekControl offset={-10} asChild>
@@ -49,12 +44,4 @@ export function SeekGroupControl() {
 }
 ```
 
-2. Use the component in your player.
-
-```tsx lineNumbers title="components/player/bottom-controls.tsx"
-<SeekGroupControl />
-```
-
-## Understanding
-
-The `SeekControl` component provides seek functionality for the media player.
+No store setup needed beyond `timelineFeature` — seeking is a direct action on the media element via the [`useSeek`](/docs/hooks/use-seek) hook internally. Supports `asChild` for custom button rendering.

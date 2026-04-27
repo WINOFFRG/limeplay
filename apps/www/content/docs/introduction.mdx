@@ -1,0 +1,26 @@
+---
+title: Introduction
+index: true
+---
+
+Limeplay is an open-source component library for building custom media player interfaces in React. It uses [Shaka Player](https://github.com/shaka-project/shaka-player) for streaming and follows the [shadcn/ui](https://ui.shadcn.com) distribution model — components live in your codebase, not in `node_modules`.
+
+## What You Get
+
+- **Streaming out of the box** — HLS, DASH, adaptive bitrate, and DRM via Shaka Player. Native HTML5 playback works too.
+- **Full ownership** — Components are copied into your `src/` directory. Modify anything — styles, logic, behavior.
+- **Feature-based architecture** — Each capability (playback, volume, timeline, etc.) is an isolated feature you opt into. Only ship what you use.
+- **Typed event system** — A centralized event emitter replaces scattered callbacks. Subscribe to `volumechange`, `seek`, `ended`, and 15+ other events with full TypeScript support.
+- **Granular reactivity** — Zustand-powered stores with per-field selectors. Components only re-render when their specific data changes.
+- **Accessible** — ARIA attributes, keyboard navigation, and focus management built into every component.
+
+## Why Not Alternatives?
+
+| Approach | Limitation |
+|---|---|
+| Shaka Player's built-in UI | Dated design, limited customization beyond config APIs |
+| Native `<video>` element | Inconsistent/limited cross-browser support for HLS/DASH/DRM |
+| react-player | React wrapper only — no customizable UI components |
+| npm component packages | Pre-compiled, can't deeply customize styles or logic |
+
+Limeplay gives you production-ready player components with the flexibility of owning the source code.

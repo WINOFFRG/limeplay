@@ -45,15 +45,11 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/player-hooks.tsx`,
-        type: "registry:component",
-      },
-      {
         path: `${BASE_SRC_URL}/ui/button.tsx`,
         type: "registry:ui",
       },
       {
-        path: `${BASE_SRC_URL}/lib/create-media-store.ts`,
+        path: `${BASE_SRC_URL}/lib/media.ts`,
         type: "registry:lib",
       },
       {
@@ -77,6 +73,10 @@ export const blocks: Registry["items"] = [
         path: `${BASE_SRC_URL}/components/volume-group-control.tsx`,
         type: "registry:component",
       },
+      {
+        path: `${BASE_SRC_URL}/components/picture-in-picture-control.tsx`,
+        type: "registry:component",
+      },
     ],
     meta: {
       iframeHeight: "750px",
@@ -91,7 +91,6 @@ export const blocks: Registry["items"] = [
       "media",
       "media-provider",
       "mute-control",
-      "player-hooks",
       "playback-control",
       "picture-in-picture-control",
       "timeline-control",
@@ -101,7 +100,6 @@ export const blocks: Registry["items"] = [
       "use-player",
       "use-track-events",
       "utils",
-      "create-media-store",
       "fallback-poster",
       "timeline-labels",
       "limeplay-logo",
@@ -136,12 +134,12 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
-        path: `blocks/basic-player/components/player-hooks.tsx`,
+        path: `blocks/basic-player/components/media-element.tsx`,
         type: "registry:component",
       },
       {
-        path: `blocks/basic-player/components/media-element.tsx`,
-        type: "registry:component",
+        path: `blocks/basic-player/lib/media.ts`,
+        type: "registry:lib",
       },
     ],
     meta: {
@@ -178,7 +176,7 @@ export const blocks: Registry["items"] = [
     description: "YouTube Music style audio player with playlist support",
     files: [
       {
-        path: "blocks/youtube-music/lib/create-media-store.ts",
+        path: "blocks/youtube-music/lib/media.ts",
         type: "registry:lib",
       },
       {
@@ -218,12 +216,12 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
-        path: "blocks/youtube-music/components/player-hooks.tsx",
+        path: "blocks/youtube-music/components/icons.tsx",
         type: "registry:component",
       },
       {
-        path: "blocks/youtube-music/components/icons.tsx",
-        type: "registry:component",
+        path: "blocks/youtube-music/hooks/use-playlist-asset.ts",
+        type: "registry:hook",
       },
       {
         path: "blocks/youtube-music/ui/button.tsx",
@@ -257,7 +255,6 @@ export const blocks: Registry["items"] = [
       "use-playlist",
       "use-asset",
       "utils",
-      "create-media-store",
     ],
     title: "YouTube Music Audio Player",
     type: "registry:block",

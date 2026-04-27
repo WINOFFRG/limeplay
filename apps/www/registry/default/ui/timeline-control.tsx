@@ -4,10 +4,13 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 import React, { useImperativeHandle, useRef } from "react"
 
 import { cn } from "@/lib/utils"
-import { MediaReadyState } from "@/registry/default/hooks/use-playback"
-import { useTimeline } from "@/registry/default/hooks/use-timeline"
+import {
+  MediaReadyState,
+  usePlaybackStore,
+} from "@/registry/default/hooks/use-playback"
+import { usePlayerStore } from "@/registry/default/hooks/use-player"
+import { useTimelineStore } from "@/registry/default/hooks/use-timeline"
 import { useTrackEvents } from "@/registry/default/hooks/use-track-events"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 export type TimelineRootPropsDocs = Pick<
   React.ComponentProps<typeof SliderPrimitive.Root>,
@@ -23,18 +26,32 @@ export const Root = React.forwardRef<
   ) as React.RefObject<HTMLDivElement>
   const { className, orientation = "horizontal", ...etc } = props
 
-  const player = useMediaStore((s) => s.player)
-  const currentTime = useMediaStore((s) => s.currentTime)
-  const duration = useMediaStore((s) => s.duration)
-  const isLive = useMediaStore((s) => s.isLive)
-  const currentValue = duration ? (currentTime / duration) * 100 : 0
-  const readyState = useMediaStore((s) => s.readyState)
+  const player = usePlayerStore((state) => state.instance)
+  const currentTime = useTimelineStore((state) => state.currentTime)
+  const duration = useTimelineStore((state) => state.duration)
+  const isLive = useTimelineStore((state) => state.isLive)
+  const readyState = usePlaybackStore((state) => state.readyState)
 
+  const currentValue = duration ? (currentTime / duration) * 100 : 0
   const disabled = props.disabled || readyState < MediaReadyState.HAVE_METADATA
 
   useImperativeHandle(ref, () => internalRef.current)
-  const { getTimeFromEvent, seek, setHoveringTime, setIsHovering } =
-    useTimeline()
+  const seek = useTimelineStore((state) => state.seek)
+  const setHoveringTime = useTimelineStore((state) => state.setHoveringTime)
+  const setIsHovering = useTimelineStore((state) => state.setIsHovering)
+
+  const getTimeFromEvent = React.useCallback(
+    (event: React.PointerEvent) => {
+      const rect = event.currentTarget.getBoundingClientRect()
+      const percentage =
+        orientation === "vertical"
+          ? (event.clientY - rect.top) / rect.height
+          : (event.clientX - rect.left) / rect.width
+      const clampedPercentage = Math.max(0, Math.min(1, percentage))
+      return duration ? clampedPercentage * duration : 0
+    },
+    [duration, orientation]
+  )
 
   const trackEvents = useTrackEvents({
     onPointerDown: (progress, event) => {
@@ -57,10 +74,19 @@ export const Root = React.forwardRef<
         const newTime = getTimeFromEvent(event)
         const seekRange = player.seekRange()
 
-        setHoveringTime(newTime)
-        setIsHovering(true)
+        const liveSeekTime = isLive
+          ? Math.max(
+              seekRange.start,
+              Math.min(
+                seekRange.end,
+                seekRange.start +
+                  (newTime / duration) * (seekRange.end - seekRange.start)
+              )
+            )
+          : newTime
 
-        const liveSeekTime = isLive ? seekRange.start + newTime : newTime
+        setHoveringTime(liveSeekTime)
+        setIsHovering(true)
 
         if (isPointerDown) {
           seek(liveSeekTime)
@@ -125,7 +151,7 @@ export const Progress = React.forwardRef<
 >((props, ref) => {
   const { className, ...etc } = props
 
-  const progress = useMediaStore((s) => s.progress)
+  const progress = useTimelineStore((state) => state.progress)
 
   return (
     <SliderPrimitive.Indicator
@@ -180,9 +206,11 @@ export const Buffered = React.forwardRef<HTMLDivElement, BufferedProps>(
   (props, ref) => {
     const { className, variant = "default", ...etc } = props
 
-    const buffered = useMediaStore((s) => s.buffered)
-    const duration = useMediaStore((s) => s.duration)
-    const { processBufferedRanges } = useTimeline()
+    const buffered = useTimelineStore((state) => state.buffered)
+    const duration = useTimelineStore((state) => state.duration)
+    const processBufferedRanges = useTimelineStore(
+      (state) => state.processBufferedRanges
+    )
 
     if (!duration || !buffered.length) {
       return null
@@ -218,9 +246,9 @@ Buffered.displayName = "SliderBuffered"
 export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
   (props, ref) => {
     const { className, position, showWithHover = false, ...etc } = props
-    const hoveringTime = useMediaStore((s) => s.hoveringTime)
-    const duration = useMediaStore((s) => s.duration)
-    const currentTime = useMediaStore((s) => s.currentTime)
+    const hoveringTime = useTimelineStore((state) => state.hoveringTime)
+    const duration = useTimelineStore((state) => state.duration)
+    const currentTime = useTimelineStore((state) => state.currentTime)
 
     let finalPosition = 0
 

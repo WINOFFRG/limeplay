@@ -1,5 +1,35 @@
 ---
 title: Hooks
-description: Used in accordance with UI components, provides store and application logic
+description: Feature hooks and utilities for media player state management.
 index: true
 ---
+
+Limeplay hooks fall into two categories:
+
+## Feature Hooks
+
+Each feature hook provides a store slice, event listeners, and optionally a Setup component. Register them in [`createMediaKit`](/docs/components/media-provider).
+
+| Hook | Store Key | Description |
+|---|---|---|
+| [`use-media`](/docs/concepts) | `media` | Base media element reference and idle state |
+| [`use-player`](/docs/hooks/use-player) | `player` | Shaka Player initialization and asset loading |
+| [`use-playback`](/docs/hooks/use-playback) | `playback` | Play/pause, status, loop, error state |
+| [`use-volume`](/docs/hooks/use-volume) | `volume` | Volume level, mute, audio detection |
+| [`use-timeline`](/docs/hooks/use-timeline) | `timeline` | Current time, duration, seeking, buffered ranges |
+| [`use-playlist`](/docs/hooks/use-playlist) | `playlist` | Queue management, shuffle, repeat modes |
+| [`use-playback-rate`](/docs/hooks/use-playback-rate) | `playbackRate` | Playback speed control |
+| [`use-picture-in-picture`](/docs/hooks/use-picture-in-picture) | `pictureInPicture` | PiP mode toggle |
+| [`use-captions`](/docs/hooks/use-captions) | `captions` | Text track management |
+| [`use-asset`](/docs/hooks/use-asset) | `asset` | Higher-order hook combining player + playlist |
+
+## Utility Hooks
+
+Standalone hooks that don't require feature registration:
+
+| Hook | Description |
+|---|---|
+| [`use-seek`](/docs/hooks/use-seek) | Seek by offset (±N seconds) |
+| [`use-idle`](/docs/hooks/use-idle) | Detect user inactivity |
+| [`use-interval`](/docs/hooks/use-interval) | `setInterval` with auto-cleanup |
+| [`use-track-events`](/docs/hooks/use-track-events) | Pointer event handling for sliders |

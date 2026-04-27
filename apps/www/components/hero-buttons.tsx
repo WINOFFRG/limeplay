@@ -6,7 +6,7 @@ import Link from "next/link"
 import { useCopyToClipboard } from "react-use"
 
 const command = "npx shadcn add @limeplay/linear-player"
-const MotionLink = motion(Link)
+const MotionLink = motion.create(Link)
 
 export default function HeroButtons() {
   const [isCopied, copyToClipboard] = useCopyToClipboard()

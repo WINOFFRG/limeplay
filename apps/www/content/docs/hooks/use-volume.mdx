@@ -1,132 +1,66 @@
 ---
 title: use-volume
-description: Hook for managing volume and mute state
+description: Feature for managing volume level and mute state.
 ---
 
-import { Step, Steps } from "fumadocs-ui/components/steps"
-
 ## Installation
-
-<Steps>
-<Step>
 
 ```npm
 npx shadcn add @limeplay/use-volume
 ```
-</Step>
 
-<Step>
-### Add Event & Action Bridge
-Import the `useVolumeStates` hook in your existing `PlayerHooks` component.
+Register the feature:
 
-```tsx lineNumbers title="components/limeplay/player-hooks.tsx"
-import React from "react"
+```tsx title="lib/media.ts"
+"use client"
 
-import { usePlaybackStates } from "@/hooks/limeplay/use-playback"
-import { usePlayerStates } from "@/hooks/limeplay/use-player"
-import { useVolumeStates } from "@/hooks/limeplay/use-volume" // [!code ++]
+import { volumeFeature } from "@/hooks/limeplay/use-volume"
 
-export const PlayerHooks = React.memo(() => {
-  usePlayerStates()
-  usePlaybackStates()
-  useVolumeStates() // [!code ++]
-
-  return null
+createMediaKit({
+  features: [..., volumeFeature()] as const,
 })
 ```
 
-</Step>
+## Store
 
-<Step>
-### Add the Store States
+Access via `useVolumeStore(selector)`:
 
-```tsx lineNumbers title="lib/create-media-store.ts"
-import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback" // [!code ++]
-import { createVolumeStore, VolumeStore } from "@/hooks/limeplay/use-volume"
+```tsx
+import { useVolumeStore } from "@/hooks/limeplay/use-volume"
 
-// [!code ++]
-
-export type TypeMediaStore = PlaybackStore &
-  VolumeStore & // [!code ++]
-  {}
-
-export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
-  const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlaybackStore(...etc), // [!code ++]
-    ...createVolumeStore(...etc), // [!code ++]
-    ...initProps,
-  }))
-  return mediaStore
-}
+const level = useVolumeStore(s => s.level)
+const muted = useVolumeStore(s => s.muted)
+const setVolume = useVolumeStore(s => s.setVolume)
 ```
 
-</Step>
-</Steps>
+### State
 
-## Example Usage
+| Field | Type | Description |
+|---|---|---|
+| `level` | `number` | Current volume (0–1) |
+| `muted` | `boolean` | Whether audio is muted |
+| `hasAudio` | `boolean` | Whether the media has audio tracks |
 
-Use the `useVolume()` hook to control volume in your components.
+### Actions
 
-```tsx lineNumbers title="components/player/volume-control.tsx"
-import { useVolume } from "@/hooks/limeplay/use-volume"
-import { useMediaStore } from "@/components/limeplay/media-provider"
+| Method | Description |
+|---|---|
+| `setVolume(volume, progress?, delta?)` | Set volume level |
+| `setMuted(muted)` | Set mute state |
+| `toggleMute()` | Toggle mute on/off |
 
-export function VolumeControl() {
-  const volume = useMediaStore((state) => state.volume)
-  const muted = useMediaStore((state) => state.muted)
-  const { setVolume, toggleMute } = useVolume()
+Setting volume to 0 automatically mutes. Unmuting from 0 restores the previous volume level.
 
-  return (
-    <div>
-      <input
-        type="range"
-        min="0"
-        max="1"
-        step="0.01"
-        value={volume}
-        onChange={(e) => setVolume(Number(e.target.value))}
-      />
-      <button onClick={toggleMute}>
-        {muted ? "Unmute" : "Mute"}
-      </button>
-    </div>
-  )
-}
-```
+## Events
 
-## Understanding
-
-The `use-volume` hook provides volume and mute management following the **Event & Action Bridge** pattern:
-
-- **Event Bridge**: `useVolumeStates()` listens to `volumechange` and `audiotrackschanged` events, syncing volume, mute, and audio track availability to the React store
-- **Action Bridge**: `useVolume()` provides `setVolume()`, `toggleMute()`, and `setMuted()` functions that control the native media element
-
-The hook automatically handles edge cases like setting volume to 0 (which automatically mutes) and provides a reset volume value when unmuting from 0.
+| Event | Payload | When |
+|---|---|---|
+| `volumechange` | `{ volume, muted }` | Volume or mute state changes |
+| `mute` | `{ muted }` | Mute is toggled |
 
 ## API Reference
-
-### useVolumeStates()
-
-Sets up event listeners for volume changes and audio track changes. This hook should be called once in your `PlayerHooks` component.
-
-### useVolume()
-
-Returns control functions for managing volume and mute state.
-
-#### Returns
-
-<AutoTypeTable
-  path="./registry/default/hooks/use-volume.ts"
-  name="UseVolumeReturn"
-/>
-
-### Store State
-
-The volume store provides the following state accessed via `useMediaStore`:
 
 <AutoTypeTable
   path="./registry/default/hooks/use-volume.ts"
   name="VolumeStore"
 />
-
-
