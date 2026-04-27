@@ -37,7 +37,7 @@ export interface TimelineEvents {
 }
 
 export interface TimelineStore extends MediaEventSlice<TimelineEvents> {
-  "timeline": {
+  timeline: {
     buffered: shaka.extern.BufferedRange[]
     currentTime: number
     duration: number
@@ -151,9 +151,7 @@ export function timelineFeature(): MediaFeature<
           set(({ timeline }) => {
             timeline.currentTime = storeCurrentTime
             timeline.progress =
-              timeline.duration > 0
-                ? storeCurrentTime / timeline.duration
-                : 0
+              timeline.duration > 0 ? storeCurrentTime / timeline.duration : 0
           })
 
           media.currentTime = actualSeekTime
@@ -220,15 +218,14 @@ function TimelineSetup() {
       liveLatency =
         mediaElement.currentTime === 0
           ? 0
-        : seekRange.end - mediaElement.currentTime
+          : seekRange.end - mediaElement.currentTime
 
       liveLatency = toFixedNumber(clamp(liveLatency, 0, seekRange.end), 4)
 
       const seekRangeSize = seekRange.end - seekRange.start
       progress =
         seekRangeSize > 0
-          ? 1 -
-            (seekRange.end - mediaElement.currentTime) / seekRangeSize
+          ? 1 - (seekRange.end - mediaElement.currentTime) / seekRangeSize
           : 0
 
       progress = toFixedNumber(clamp(progress, 0, 1), 4)
@@ -247,8 +244,7 @@ function TimelineSetup() {
       timeline.progress = progress
 
       if (isLive) {
-        timeline.duration =
-          player.seekRange().end - player.seekRange().start
+        timeline.duration = player.seekRange().end - player.seekRange().start
       }
     })
 

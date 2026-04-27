@@ -49,7 +49,7 @@ export const blocks: Registry["items"] = [
         type: "registry:ui",
       },
       {
-          path: `${BASE_SRC_URL}/lib/media.ts`,
+        path: `${BASE_SRC_URL}/lib/media.ts`,
         type: "registry:lib",
       },
       {
@@ -99,7 +99,7 @@ export const blocks: Registry["items"] = [
       "use-volume",
       "use-player",
       "use-track-events",
-        "utils",
+      "utils",
       "fallback-poster",
       "timeline-labels",
       "limeplay-logo",
@@ -176,7 +176,7 @@ export const blocks: Registry["items"] = [
     description: "YouTube Music style audio player with playlist support",
     files: [
       {
-            path: "blocks/youtube-music/lib/media.ts",
+        path: "blocks/youtube-music/lib/media.ts",
         type: "registry:lib",
       },
       {
@@ -254,7 +254,7 @@ export const blocks: Registry["items"] = [
       "use-captions",
       "use-playlist",
       "use-asset",
-        "utils",
+      "utils",
     ],
     title: "YouTube Music Audio Player",
     type: "registry:block",

@@ -233,7 +233,9 @@ export function usePlayerStore<TSelected>(
 }
 
 function PlayerSetup() {
-  const store = useMediaFeatureApi<PlaybackStore & PlayerStore>(PLAYER_FEATURE_KEY)
+  const store = useMediaFeatureApi<PlaybackStore & PlayerStore>(
+    PLAYER_FEATURE_KEY
+  )
   const events = useMediaEvents<PlayerEvents>()
   const setPlayer = usePlayerStore((state) => state.setInstance)
   const mediaElement = useMediaStore((state) => state.mediaElement)
@@ -359,7 +361,10 @@ function PlayerSetup() {
         store.setState(({ playback }) => {
           playback.status = "error"
         })
-        const err = detail instanceof Error ? detail : new Error(String(detail?.message ?? detail))
+        const err =
+          detail instanceof Error
+            ? detail
+            : new Error(String(detail?.message ?? detail))
         events.emit("playbackerror", { error: err })
       }
     }

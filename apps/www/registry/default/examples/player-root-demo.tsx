@@ -3,10 +3,7 @@
 import React, { useEffect } from "react"
 
 import { CustomDemoControls } from "@/registry/default/internal/custom-demo-controls"
-import {
-  MediaProvider,
-  useMediaStore,
-} from "@/registry/default/internal/media"
+import { MediaProvider, useMediaStore } from "@/registry/default/internal/media"
 import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 import { Media } from "@/registry/default/ui/media"

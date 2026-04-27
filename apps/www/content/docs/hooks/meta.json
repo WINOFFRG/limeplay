@@ -1,6 +1,6 @@
 {
   "title": "Hooks",
-"description": "Player state and utility hooks",
+  "description": "Player state and utility hooks",
   "pages": [
     "use-asset",
     "use-player",

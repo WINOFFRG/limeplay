@@ -42,7 +42,8 @@ export function pictureInPictureFeature(): MediaFeature<PictureInPictureStore> {
       [PICTURE_IN_PICTURE_FEATURE_KEY]: {
         active: false,
         enter: async () => {
-          const media = get().media.mediaElement as ExtendedHTMLVideoElement | null
+          const media = get().media
+            .mediaElement as ExtendedHTMLVideoElement | null
           if (!media || media.nodeName.toLowerCase() !== "video") return
 
           try {
@@ -56,7 +57,8 @@ export function pictureInPictureFeature(): MediaFeature<PictureInPictureStore> {
           }
         },
         exit: async () => {
-          const media = get().media.mediaElement as ExtendedHTMLVideoElement | null
+          const media = get().media
+            .mediaElement as ExtendedHTMLVideoElement | null
           if (!media) return
 
           try {

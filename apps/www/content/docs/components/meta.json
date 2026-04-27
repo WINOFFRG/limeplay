@@ -1,6 +1,6 @@
 {
   "title": "Components",
-"description": "Player UI components",
+  "description": "Player UI components",
   "pages": [
     "media-provider",
     "media",

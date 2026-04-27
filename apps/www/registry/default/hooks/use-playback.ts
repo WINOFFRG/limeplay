@@ -180,7 +180,8 @@ function PlaybackSetup() {
 
       store.setState(({ playback }) => {
         playback.canPlay = media.readyState >= MediaReadyState.HAVE_FUTURE_DATA
-        playback.canPlayThrough = media.readyState >= MediaReadyState.HAVE_ENOUGH_DATA
+        playback.canPlayThrough =
+          media.readyState >= MediaReadyState.HAVE_ENOUGH_DATA
         playback.ended = media.ended
         playback.error = media.error
         playback.loop = media.loop

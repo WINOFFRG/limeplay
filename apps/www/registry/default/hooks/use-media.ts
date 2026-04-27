@@ -22,9 +22,9 @@ export interface MediaStore {
   }
 }
 
-export function mediaFeature(
-  props?: { debug?: boolean }
-): MediaFeature<MediaStore> {
+export function mediaFeature(props?: {
+  debug?: boolean
+}): MediaFeature<MediaStore> {
   return {
     createSlice: (set) => ({
       media: {
@@ -32,21 +32,21 @@ export function mediaFeature(
         forceIdle: false,
         idle: false,
         mediaElement: null,
-          setDebug: (value) => {
-            set(({ media }) => {
-              media.debug = value
-            })
-          },
-          setForceIdle: (value) => {
-            set(({ media }) => {
-              media.forceIdle = value
-            })
-          },
-          setIdle: (value) => {
-            set(({ media }) => {
-              media.idle = value
-            })
-          },
+        setDebug: (value) => {
+          set(({ media }) => {
+            media.debug = value
+          })
+        },
+        setForceIdle: (value) => {
+          set(({ media }) => {
+            media.forceIdle = value
+          })
+        },
+        setIdle: (value) => {
+          set(({ media }) => {
+            media.idle = value
+          })
+        },
         setMediaElement: (element) => {
           set(({ media }) => {
             media.mediaElement = element
@@ -62,7 +62,8 @@ export function mediaFeature(
 export function useMediaStore<TSelected>(
   selector: (state: MediaStore["media"]) => TSelected
 ): TSelected {
-  return useMediaFeatureStore<MediaStore, TSelected>(MEDIA_FEATURE_KEY, (state) =>
-    selector(state.media)
+  return useMediaFeatureStore<MediaStore, TSelected>(
+    MEDIA_FEATURE_KEY,
+    (state) => selector(state.media)
   )
 }

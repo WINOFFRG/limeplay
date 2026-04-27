@@ -26,13 +26,11 @@ export async function GET(
   if (!page) notFound()
 
   return new ImageResponse(
-    (
-      <MetadataImage
-        description={page.data.description}
-        site="Limeplay"
-        title={page.data.title}
-      />
-    ),
+    <MetadataImage
+      description={page.data.description}
+      site="Limeplay"
+      title={page.data.title}
+    />,
     await getImageResponseOptions()
   )
 }

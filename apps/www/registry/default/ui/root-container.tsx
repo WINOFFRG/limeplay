@@ -37,9 +37,7 @@ export const RootContainer = React.forwardRef<
   const status = usePlaybackStore((state) => state.status)
   const debug = useMediaStore((state) => state.debug)
 
-  const setPlayerContainerRef = usePlayerStore(
-    (state) => state.setContainerRef
-  )
+  const setPlayerContainerRef = usePlayerStore((state) => state.setContainerRef)
   const aspectRatio = React.useMemo(
     () => calculateAspectRatio(width, height),
     [height, width]
