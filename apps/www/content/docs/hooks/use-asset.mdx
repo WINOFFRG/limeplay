@@ -9,7 +9,7 @@ description: Higher-order feature combining player and playlist for managing med
 npx shadcn add @limeplay/use-asset
 ```
 
-Register the feature (requires `playerFeature` and `playlistFeature`):
+Register the feature (requires `playerFeature`, `playlistFeature`, and `playbackFeature`):
 
 ```tsx title="lib/media.ts"
 import { assetFeature } from "@/hooks/limeplay/use-asset"
@@ -69,15 +69,7 @@ loadPlaylist([asset1, asset2, asset3])
 
 ### Options
 
-| Option | Type | Description |
-|---|---|---|
-| `autoplayFirst` | `boolean` | Auto-play first loaded item |
-| `maxRetries` | `number` | Max retry attempts on error |
-| `onAssetChange` | `(event) => void` | Called when playlist item changes |
-| `onAssetLoaded` | `(asset) => void` | Called after asset loads |
-| `onLoadError` | `(asset, error, ctx) => "retry" \| "skip" \| "stop"` | Error handler |
-| `onPlaybackError` | `(asset, error, ctx) => Promise<{...}>` | Playback error handler |
-| `loader` | `(asset, player, media) => Promise<void>` | Custom load function |
+<AutoTypeTable path="./registry/default/hooks/use-asset.ts" name="UseAssetOptions" />
 
 ### Returns
 

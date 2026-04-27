@@ -22,8 +22,8 @@ function CustomSlider() {
     onPointerDown: (progress) => {
       console.log("Clicked at:", progress) // 0-1
     },
-    onPointerMove: (progress, isDown) => {
-      if (isDown) {
+    onPointerMove: (progress, isPointerDown) => {
+      if (isPointerDown) {
         console.log("Dragging at:", progress)
       }
     },
@@ -43,7 +43,7 @@ function CustomSlider() {
 |---|---|---|
 | `orientation` | `"horizontal" \| "vertical"` | Slider direction |
 | `onPointerDown` | `(progress, event) => void` | Click/touch start |
-| `onPointerMove` | `(progress, isDown, event) => void` | Move/drag |
+| `onPointerMove` | `(progress, isPointerDown, event) => void` | Move/drag |
 | `onPointerUp` | `(event) => void` | Release |
 | `onPointerOut` | `(event) => void` | Pointer leaves |
 

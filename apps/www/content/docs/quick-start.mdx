@@ -35,7 +35,7 @@ This gives you a full-featured video player with playback controls, volume, time
 Install the core provider and the features you need:
 
 ```npm
-npx shadcn add @limeplay/media-provider @limeplay/use-playback @limeplay/use-volume @limeplay/use-timeline @limeplay/use-player
+npx shadcn add @limeplay/media-provider @limeplay/use-media @limeplay/use-playback @limeplay/use-volume @limeplay/use-timeline @limeplay/use-player
 ```
 
 Create a `lib/media.ts` file that composes your features:
@@ -112,7 +112,7 @@ export function MediaPlayer() {
 </Step>
 <Step>
 
-### Load content
+### Render the player
 
 Use the [`useAsset`](/docs/hooks/use-asset) hook or load directly via [`usePlayer`](/docs/hooks/use-player):
 
