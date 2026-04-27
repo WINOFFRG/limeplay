@@ -14,7 +14,7 @@ import { getMDXComponents } from "@/components/mdx-components"
 import { getPageImage, source } from "@/lib/source"
 
 export async function generateMetadata(
-  props: PageProps<"/docs/[[...slug]]">
+  props: { params: Promise<{ slug?: string[] }> }
 ): Promise<Metadata> {
   const params = await props.params
   const page = source.getPage(params.slug)
