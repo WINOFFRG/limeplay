@@ -32,7 +32,7 @@ export const PLAYER_FEATURE_KEY = "player"
 
 export interface PlayerEvents {
   bufferingchange: { isBuffering: boolean }
-  playbackerror: Error
+  playbackerror: { error: Error }
   playererror: { error: Error }
   playerready: { player: shaka.Player }
 }
@@ -101,6 +101,13 @@ export function playerFeature(): MediaFeature<PlayerStore> {
   }
 }
 
+/**
+ * Low-level player hook for manual load/preload control.
+ * Prefer `useAsset` for most use cases — it handles retry logic,
+ * playlist integration, abort/generation tracking, and preload lifecycle.
+ * Using both `usePlayer.load` and `useAsset.loadAsset` on the same
+ * content will cause split state in `preloadManagers` and retry counters.
+ */
 export function usePlayer<TAsset extends { id: string }>(
   options?: UsePlayerOptions<TAsset>
 ) {
@@ -236,6 +243,7 @@ function PlayerSetup() {
   const playerInstance = useRef<null | shaka.Player>(null)
 
   React.useLayoutEffect(() => {
+    let aborted = false
 
     async function loadPlayer() {
       const shakaLib = (
@@ -244,22 +252,33 @@ function PlayerSetup() {
           : await import("shaka-player")
       ).default
 
-      if (!mediaElement) {
+      if (!mediaElement || aborted) {
         return
       }
 
       const localPlayer = new shakaLib.Player() as shaka.Player
-      setPlayer(localPlayer)
-      playerInstance.current = localPlayer
 
       try {
         await localPlayer.attach(mediaElement)
+
+        if (aborted) {
+          void localPlayer.destroy().catch(noop)
+          return
+        }
+
+        setPlayer(localPlayer)
+        playerInstance.current = localPlayer
 
         mediaElement.player = playerInstance.current
         window.shaka = shakaLib as unknown as Window["shaka"]
 
         events.emit("playerready", { player: localPlayer })
       } catch (error) {
+        if (aborted) {
+          void localPlayer.destroy().catch(noop)
+          return
+        }
+
         const err = error instanceof Error ? error : new Error(String(error))
         console.error(
           "[usePlayer] Failed to attach player to media element:",
@@ -275,13 +294,14 @@ function PlayerSetup() {
     }
 
     return () => {
+      aborted = true
       if (playerInstance.current) {
         void playerInstance.current.destroy().catch(noop)
         setPlayer(null)
         playerInstance.current = null
       }
     }
-  }, [debug, mediaElement, setPlayer, store])
+  }, [debug, mediaElement, setPlayer, events])
 
   React.useEffect(() => {
     if (!player) return noop
@@ -337,7 +357,8 @@ function PlayerSetup() {
         store.setState(({ playback }) => {
           playback.status = "error"
         })
-        events.emit("playbackerror", detail)
+        const err = detail instanceof Error ? detail : new Error(String(detail?.message ?? detail))
+        events.emit("playbackerror", { error: err })
       }
     }
 

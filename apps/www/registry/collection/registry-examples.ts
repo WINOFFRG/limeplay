@@ -17,7 +17,6 @@ export const examples: Registry["items"] = [
       "limeplay-logo",
       "fallback-poster",
       "root-container",
-      "media-provider",
     ],
     type: "registry:example",
   },

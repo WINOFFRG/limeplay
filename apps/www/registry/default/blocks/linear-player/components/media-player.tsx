@@ -22,7 +22,6 @@ export interface LinearMediaPlayerProps<
   as?: T
   asset?: Asset
   className?: string
-  debug?: boolean
   /**
    * Props to pass to the underlying media element (video/audio)
    */

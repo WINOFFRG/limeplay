@@ -43,11 +43,14 @@ export const Root = React.forwardRef<
   const getTimeFromEvent = React.useCallback(
     (event: React.PointerEvent) => {
       const rect = event.currentTarget.getBoundingClientRect()
-      const percentage = (event.clientX - rect.left) / rect.width
+      const percentage =
+        orientation === "vertical"
+          ? (event.clientY - rect.top) / rect.height
+          : (event.clientX - rect.left) / rect.width
       const clampedPercentage = Math.max(0, Math.min(1, percentage))
       return duration ? clampedPercentage * duration : 0
     },
-    [duration]
+    [duration, orientation]
   )
 
   const trackEvents = useTrackEvents({
@@ -71,10 +74,19 @@ export const Root = React.forwardRef<
         const newTime = getTimeFromEvent(event)
         const seekRange = player.seekRange()
 
-        setHoveringTime(newTime)
-        setIsHovering(true)
+        const liveSeekTime = isLive
+          ? Math.max(
+              seekRange.start,
+              Math.min(
+                seekRange.end,
+                seekRange.start +
+                  (newTime / duration) * (seekRange.end - seekRange.start)
+              )
+            )
+          : newTime
 
-        const liveSeekTime = isLive ? seekRange.start + newTime : newTime
+        setHoveringTime(liveSeekTime)
+        setIsHovering(true)
 
         if (isPointerDown) {
           seek(liveSeekTime)

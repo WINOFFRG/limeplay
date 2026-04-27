@@ -36,5 +36,27 @@ export const internal: Registry["items"] = [
     name: "custom-demo-controls",
     type: "registry:ui",
   },
-
+  {
+    files: [
+      {
+        path: "internal/media.ts",
+        type: "registry:lib",
+      },
+    ],
+    name: "internal-media",
+    registryDependencies: [
+      "media-provider",
+      "use-asset",
+      "use-captions",
+      "use-media",
+      "use-picture-in-picture",
+      "use-playback",
+      "use-playback-rate",
+      "use-player",
+      "use-playlist",
+      "use-timeline",
+      "use-volume",
+    ],
+    type: "registry:lib",
+  },
 ]

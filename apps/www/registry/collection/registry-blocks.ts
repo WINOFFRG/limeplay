@@ -73,6 +73,10 @@ export const blocks: Registry["items"] = [
         path: `${BASE_SRC_URL}/components/volume-group-control.tsx`,
         type: "registry:component",
       },
+      {
+        path: `${BASE_SRC_URL}/components/picture-in-picture-control.tsx`,
+        type: "registry:component",
+      },
     ],
     meta: {
       iframeHeight: "750px",
@@ -132,6 +136,10 @@ export const blocks: Registry["items"] = [
       {
         path: `blocks/basic-player/components/media-element.tsx`,
         type: "registry:component",
+      },
+      {
+        path: `blocks/basic-player/lib/media.ts`,
+        type: "registry:lib",
       },
     ],
     meta: {
@@ -210,6 +218,10 @@ export const blocks: Registry["items"] = [
       {
         path: "blocks/youtube-music/components/icons.tsx",
         type: "registry:component",
+      },
+      {
+        path: "blocks/youtube-music/hooks/use-playlist-asset.ts",
+        type: "registry:hook",
       },
       {
         path: "blocks/youtube-music/ui/button.tsx",
