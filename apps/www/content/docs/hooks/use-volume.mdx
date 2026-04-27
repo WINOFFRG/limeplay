@@ -12,6 +12,8 @@ npx shadcn add @limeplay/use-volume
 Register the feature:
 
 ```tsx title="lib/media.ts"
+"use client"
+
 import { volumeFeature } from "@/hooks/limeplay/use-volume"
 
 createMediaKit({

@@ -113,7 +113,7 @@ export function playbackFeature(): MediaFeature<PlaybackStore> {
 
           media.currentTime = 0
           if (media.paused) {
-            void get().playback.play()
+            void get().playback.play().catch(noop)
           }
 
           set(({ media: mediaState, playback }) => {
@@ -199,6 +199,10 @@ function PlaybackSetup() {
         playback.status = "paused"
       })
 
+      if (prevStatus === "buffering") {
+        events.emit("buffering", { isBuffering: false })
+      }
+
       events.emit("pause")
       events.emit("statuschange", { prevStatus, status: "paused" })
     }
@@ -241,6 +245,10 @@ function PlaybackSetup() {
         playback.ended = true
         playback.status = "ended"
       })
+
+      if (prevStatus === "buffering") {
+        events.emit("buffering", { isBuffering: false })
+      }
 
       events.emit("ended")
       events.emit("statuschange", { prevStatus, status: "ended" })

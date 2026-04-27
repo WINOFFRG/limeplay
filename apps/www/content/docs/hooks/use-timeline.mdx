@@ -12,6 +12,8 @@ npx shadcn add @limeplay/use-timeline
 Register the feature:
 
 ```tsx title="lib/media.ts"
+"use client"
+
 import { timelineFeature } from "@/hooks/limeplay/use-timeline"
 
 createMediaKit({

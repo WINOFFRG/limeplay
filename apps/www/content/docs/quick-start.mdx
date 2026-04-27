@@ -35,12 +35,14 @@ This gives you a full-featured video player with playback controls, volume, time
 Install the core provider and the features you need:
 
 ```npm
-npx shadcn add @limeplay/media-provider @limeplay/use-media @limeplay/use-playback @limeplay/use-volume @limeplay/use-timeline @limeplay/use-player
+npx shadcn add @limeplay/media-provider @limeplay/use-playback @limeplay/use-volume @limeplay/use-timeline @limeplay/use-player
 ```
 
 Create a `lib/media.ts` file that composes your features:
 
 ```tsx title="lib/media.ts"
+"use client"
+
 import { mediaFeature } from "@/hooks/limeplay/use-media"
 import { playerFeature } from "@/hooks/limeplay/use-player"
 import { playbackFeature } from "@/hooks/limeplay/use-playback"
@@ -112,17 +114,48 @@ export function MediaPlayer() {
 </Step>
 <Step>
 
-### Render the player
+### Load content
 
-Use the [`useAsset`](/docs/hooks/use-asset) hook or load directly via [`usePlayer`](/docs/hooks/use-player):
+Pass a source to your player. The simplest approach is loading via [`usePlayer`](/docs/hooks/use-player) inside your `MediaPlayer`:
+
+```tsx title="components/media-player.tsx"
+"use client"
+
+import { usePlayer } from "@/hooks/limeplay/use-player"
+import { useMediaEvents } from "@/lib/media"
+// ... other imports from Step 3
+
+export function MediaPlayer({ src }: { src: string }) {
+  const { player } = usePlayer()
+  const events = useMediaEvents()
+
+  React.useEffect(() => {
+    return events.on("playerready", ({ player }) => {
+      player.load(src)
+    })
+  }, [events, src])
+
+  return (
+    <MediaProvider>
+      {/* ... same layout as Step 3 */}
+    </MediaProvider>
+  )
+}
+```
+
+Then render it with a source:
 
 ```tsx title="app/page.tsx"
 import { MediaPlayer } from "@/components/media-player"
 
 export default function Page() {
-  return <MediaPlayer />
+  return (
+    <MediaPlayer src="https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd" />
+  )
 }
 ```
+
+For playlist management, error handling, and preloading, see [`useAsset`](/docs/hooks/use-asset).
 
 </Step>
 </Steps>

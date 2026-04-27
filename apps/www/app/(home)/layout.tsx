@@ -19,7 +19,7 @@ export default function RootLayout({
       )}
       <main
         className={
-          // eslint-disable-next-line better-tailwindcss/no-unregistered-classes
+           
           "light w-dvw overscroll-contain bg-linear-to-br from-white to-neutral-200"
         }
       >

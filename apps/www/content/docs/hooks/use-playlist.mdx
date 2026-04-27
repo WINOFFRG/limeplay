@@ -12,6 +12,8 @@ npx shadcn add @limeplay/use-playlist
 Register the feature:
 
 ```tsx title="lib/media.ts"
+"use client"
+
 import { playlistFeature } from "@/hooks/limeplay/use-playlist"
 
 createMediaKit({

@@ -16,6 +16,8 @@ Every capability — playback, volume, timeline, captions — is a **feature**. 
 You compose features with `createMediaKit`:
 
 ```tsx title="lib/media.ts"
+"use client"
+
 import { createMediaKit } from "@/components/limeplay/media-provider"
 import { mediaFeature } from "@/hooks/limeplay/use-media"
 import { playbackFeature } from "@/hooks/limeplay/use-playback"

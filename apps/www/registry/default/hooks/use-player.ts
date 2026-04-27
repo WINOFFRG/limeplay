@@ -261,6 +261,7 @@ function PlayerSetup() {
       try {
         await localPlayer.attach(mediaElement)
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- mutated by cleanup closure during await
         if (aborted) {
           void localPlayer.destroy().catch(noop)
           return
@@ -274,6 +275,7 @@ function PlayerSetup() {
 
         events.emit("playerready", { player: localPlayer })
       } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- mutated by cleanup closure during await
         if (aborted) {
           void localPlayer.destroy().catch(noop)
           return
