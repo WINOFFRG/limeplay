@@ -161,9 +161,9 @@ type UnionToIntersection<TUnion> = (
 
 // ── Event bridge class ───────────────────────────────────────────────
 
-class MediaEventEmitter<TEvents extends AnyEvents>
-  implements MediaEvents<TEvents>
-{
+class MediaEventEmitter<
+  TEvents extends AnyEvents,
+> implements MediaEvents<TEvents> {
   private listeners = new Map<string, Set<AnyEventListener>>()
 
   emit = <TName extends Extract<keyof TEvents, string>>(

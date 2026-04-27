@@ -25,9 +25,7 @@ import type {
 } from "@/registry/default/ui/media-provider"
 
 import { isLoadInterrupted } from "@/registry/default/hooks/use-player"
-import {
-  usePlaylist,
-} from "@/registry/default/hooks/use-playlist"
+import { usePlaylist } from "@/registry/default/hooks/use-playlist"
 import {
   useMediaEvents,
   useMediaFeatureApi,
@@ -82,7 +80,7 @@ export interface UseAssetOptions<TAsset extends Asset> {
     | { action: "reload"; asset?: TAsset; startTime?: number }
     | { action: "skip" }
     | { action: "stop" }
-    >
+  >
   playerOptions?: Partial<UsePlayerOptions<TAsset>>
 }
 
@@ -94,9 +92,7 @@ export interface UseAssetPreloadContext<TAsset extends Asset> {
   player: shaka.Player
 }
 
-export interface UseAssetReturn<
-  TAsset extends Asset,
-  > {
+export interface UseAssetReturn<TAsset extends Asset> {
   cancelPreload: (assetId: string) => void
   currentIndex: number
   currentItem: null | { id: string; properties: TAsset }
@@ -104,9 +100,15 @@ export interface UseAssetReturn<
   getItem: (id: string) => null | { id: string; properties: TAsset }
   hasNext: boolean
   hasPrevious: boolean
-  insert: (items: { id: string; properties?: TAsset }[], atIndex: number) => void
+  insert: (
+    items: { id: string; properties?: TAsset }[],
+    atIndex: number
+  ) => void
   isPreloaded: (assetId: string) => boolean
-  load: (items: { id: string; properties?: TAsset }[], startIndex?: number) => void
+  load: (
+    items: { id: string; properties?: TAsset }[],
+    startIndex?: number
+  ) => void
   loadAsset: (asset: TAsset, startTime?: number) => Promise<boolean>
   loadPlaylist: (assets: TAsset[], startIndex?: number) => void
   newSession: () => string
@@ -161,7 +163,9 @@ export function assetFeature(): MediaFeature<
         loadAsset: async (asset, startTime) => {
           const player = get().player.instance as null | shaka.Player
           const media = get().media.mediaElement
-          const options = get().asset.installedOptions as undefined | UseAssetOptions<Asset>
+          const options = get().asset.installedOptions as
+            | undefined
+            | UseAssetOptions<Asset>
 
           if (!player || !media) {
             return false
@@ -179,8 +183,11 @@ export function assetFeature(): MediaFeature<
 
           media.pause()
 
-          const { onError: onPlayerError, onLoad, onPreload: _onPreload } =
-            options?.playerOptions ?? {}
+          const {
+            onError: onPlayerError,
+            onLoad,
+            onPreload: _onPreload,
+          } = options?.playerOptions ?? {}
 
           try {
             const preloadManagers = get().player.preloadManagers as Map<
@@ -269,7 +276,8 @@ export function assetFeature(): MediaFeature<
               return false
             }
 
-            const err = error instanceof Error ? error : new Error(String(error))
+            const err =
+              error instanceof Error ? error : new Error(String(error))
             const playlist = get().playlist
             const maxRetries = options?.maxRetries ?? 0
             const currentRetryCount = get().asset.retryCount
@@ -288,7 +296,11 @@ export function assetFeature(): MediaFeature<
                 return get().asset.loadAsset(asset, startTime)
               }
 
-              if ((decision === "skip" || (decision === "retry" && currentRetryCount >= maxRetries)) && hasNext) {
+              if (
+                (decision === "skip" ||
+                  (decision === "retry" && currentRetryCount >= maxRetries)) &&
+                hasNext
+              ) {
                 set(({ asset }) => {
                   asset.retryCount = 0
                 })
@@ -327,10 +339,13 @@ export function assetFeature(): MediaFeature<
         },
         preloadAsset: async (asset) => {
           const player = get().player.instance as null | shaka.Player
-          const options = get().asset.installedOptions as undefined | UseAssetOptions<Asset>
+          const options = get().asset.installedOptions as
+            | undefined
+            | UseAssetOptions<Asset>
           if (!player) return
 
-          const { onError: onPlayerError, onPreload } = options?.playerOptions ?? {}
+          const { onError: onPlayerError, onPreload } =
+            options?.playerOptions ?? {}
 
           try {
             const defaultPreload = async (
@@ -370,7 +385,8 @@ export function assetFeature(): MediaFeature<
               })
             }
           } catch (error) {
-            const err = error instanceof Error ? error : new Error(String(error))
+            const err =
+              error instanceof Error ? error : new Error(String(error))
             onPlayerError?.(err, asset)
             console.error("[useAsset] Preload error:", error)
           }
@@ -382,7 +398,9 @@ export function assetFeature(): MediaFeature<
           const nextItem = playlist.queue[nextIndex]
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess is off; index can be out of bounds
           if (nextItem) {
-            await get().asset.preloadAsset(nextItem.properties as unknown as Asset)
+            await get().asset.preloadAsset(
+              nextItem.properties as unknown as Asset
+            )
           }
         },
         retryCount: 0,
@@ -432,9 +450,11 @@ export function useAsset<TAsset extends Asset = Asset>(
       if (manager) {
         manager.destroy()
         preloadManagers.delete(assetId)
-          ; (api as unknown as ImmerStoreApi<PlayerStore>).setState(({ player }) => {
+        ;(api as unknown as ImmerStoreApi<PlayerStore>).setState(
+          ({ player }) => {
             player.preloadManagers = new Map(preloadManagers)
-          })
+          }
+        )
       }
     },
     [api]
@@ -443,10 +463,8 @@ export function useAsset<TAsset extends Asset = Asset>(
   const isPreloaded = useCallback(
     (assetId: string) => {
       return (
-        (api.getState() as unknown as PlayerStore).player.preloadManagers as Map<
-          string,
-          shaka.media.PreloadManager
-        >
+        (api.getState() as unknown as PlayerStore).player
+          .preloadManagers as Map<string, shaka.media.PreloadManager>
       ).has(assetId)
     },
     [api]
@@ -474,11 +492,12 @@ export function useAssetStore<TSelected>(
 
 function AssetSetup() {
   const api = useMediaFeatureApi<AssetSetupStore>(ASSET_FEATURE_KEY)
-  const events = useMediaEvents<PlaybackEvents & PlayerEvents & PlaylistEvents>()
+  const events = useMediaEvents<
+    PlaybackEvents & PlayerEvents & PlaylistEvents
+  >()
   useEffect(() => {
     const getHasNext = () => {
-      const { getNextIndex, queue, repeatMode } =
-        api.getState().playlist
+      const { getNextIndex, queue, repeatMode } = api.getState().playlist
       return repeatMode === "all" && queue.length > 0
         ? true
         : getNextIndex() !== -1
@@ -488,19 +507,20 @@ function AssetSetup() {
       const item = event.currentItem
       if (!item) return
 
-      const options = api.getState().asset
-        .installedOptions as undefined | UseAssetOptions<Asset>
+      const options = api.getState().asset.installedOptions as
+        | undefined
+        | UseAssetOptions<Asset>
 
       options?.onAssetChange?.(event as unknown as PlaylistChangeEvent<Asset>)
-      void api.getState().asset
-        .loadAsset(item.properties as unknown as Asset)
+      void api.getState().asset.loadAsset(item.properties as unknown as Asset)
     })
 
     const offPlaybackError = events.on("playbackerror", (payload) => {
       void (async () => {
         const { currentItem } = api.getState().playlist
-        const options = api.getState().asset
-          .installedOptions as undefined | UseAssetOptions<Asset>
+        const options = api.getState().asset.installedOptions as
+          | undefined
+          | UseAssetOptions<Asset>
         if (!currentItem || !options?.onPlaybackError) return
 
         const mediaElement = api.getState().media.mediaElement
@@ -516,13 +536,15 @@ function AssetSetup() {
             const assetToLoad = (decision.asset ??
               currentItem.properties) as unknown as Asset
             const startTime = decision.startTime ?? currentTime
-            void api.getState().asset
-              .loadAsset(assetToLoad, startTime)
+            void api.getState().asset.loadAsset(assetToLoad, startTime)
           } else if (decision.action === "skip" && getHasNext()) {
             api.getState().playlist.next()
           }
         } catch (callbackErr) {
-          console.error("[useAsset] onPlaybackError callback failed:", callbackErr)
+          console.error(
+            "[useAsset] onPlaybackError callback failed:",
+            callbackErr
+          )
         }
       })()
     })

@@ -54,7 +54,9 @@ export default function Home() {
               md:text-[16px] md:leading-[24px]
             `}
           >
-            <span className={`block`}>A video player isn’t just controls —</span>
+            <span className={`block`}>
+              A video player isn’t just controls —
+            </span>
             <span className={`block`}>
               {" "}
               it’s retention engineered into every interaction.{" "}

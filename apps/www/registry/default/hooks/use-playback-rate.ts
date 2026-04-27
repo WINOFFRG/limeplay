@@ -9,9 +9,7 @@ import type {
 } from "@/registry/default/ui/media-provider"
 
 import { useMediaStore } from "@/registry/default/hooks/use-media"
-import {
-  usePlaybackStore,
-} from "@/registry/default/hooks/use-playback"
+import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
 import {
   type PlayerStore,
   usePlayerStore,

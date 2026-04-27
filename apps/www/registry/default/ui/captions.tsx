@@ -12,8 +12,7 @@ import {
 } from "@/registry/default/hooks/use-captions"
 import { usePlayerStore } from "@/registry/default/hooks/use-player"
 
-export interface CaptionsControlProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface CaptionsControlProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
    * Render as child component using Radix Slot
    * @default false
