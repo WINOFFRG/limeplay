@@ -12,6 +12,8 @@ npx shadcn add @limeplay/use-asset
 Register the feature (requires `playerFeature`, `playlistFeature`, and `playbackFeature`):
 
 ```tsx title="lib/media.ts"
+"use client"
+
 import { assetFeature } from "@/hooks/limeplay/use-asset"
 
 createMediaKit({

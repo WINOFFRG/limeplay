@@ -11,7 +11,7 @@ export const lib: Registry["items"] = [
     name: "utils",
     type: "registry:lib",
   },
-    {
+  {
     dependencies: ["date-fns"],
     files: [
       {

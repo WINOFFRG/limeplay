@@ -12,6 +12,8 @@ npx shadcn add @limeplay/use-picture-in-picture
 Register the feature:
 
 ```tsx title="lib/media.ts"
+"use client"
+
 import { pictureInPictureFeature } from "@/hooks/limeplay/use-picture-in-picture"
 
 createMediaKit({

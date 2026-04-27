@@ -150,7 +150,10 @@ export function timelineFeature(): MediaFeature<
 
           set(({ timeline }) => {
             timeline.currentTime = storeCurrentTime
-            timeline.progress = storeCurrentTime / timeline.duration
+            timeline.progress =
+              timeline.duration > 0
+                ? storeCurrentTime / timeline.duration
+                : 0
           })
 
           media.currentTime = actualSeekTime
@@ -221,15 +224,20 @@ function TimelineSetup() {
 
       liveLatency = toFixedNumber(clamp(liveLatency, 0, seekRange.end), 4)
 
+      const seekRangeSize = seekRange.end - seekRange.start
       progress =
-        1 -
-      (seekRange.end - mediaElement.currentTime) /
-          (seekRange.end - seekRange.start)
+        seekRangeSize > 0
+          ? 1 -
+            (seekRange.end - mediaElement.currentTime) / seekRangeSize
+          : 0
 
       progress = toFixedNumber(clamp(progress, 0, 1), 4)
     } else {
       currentTime = clamp(mediaElement.currentTime, 0, timeline.duration)
-      progress = toFixedNumber(currentTime / timeline.duration, 4)
+      progress =
+        timeline.duration > 0
+          ? toFixedNumber(currentTime / timeline.duration, 4)
+          : 0
     }
 
     store.setState(({ timeline }) => {

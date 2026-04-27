@@ -3,7 +3,6 @@
 import type { RefObject } from "react"
 
 import { RotateCw } from "lucide-react"
-import { useSearchParams } from "next/navigation"
 import { useRef } from "react"
 import { useFullscreen, useToggle } from "react-use"
 
@@ -14,14 +13,10 @@ import { cn } from "@/lib/utils"
 import { LinearMediaPlayer } from "@/registry/default/blocks/linear-player/components/media-player"
 
 export function PlayerContainer() {
-  const searchParams = useSearchParams()
   const isMobile = useIsMobile()
   const { isPortrait } = useOrientation()
   const isMobilePortrait = isMobile && isPortrait
   const playerRef = useRef<HTMLDivElement>(null)
-
-  const debug = searchParams.get("debug") === "true"
-  // const playbackUrl = searchParams.get("playbackUrl")
 
   return (
     <>
@@ -39,7 +34,6 @@ export function PlayerContainer() {
               **:data-[layout-type='player-container']:hidden
             `
         )}
-        debug={debug}
         mediaProps={{
           autoPlay: false,
           muted: true,

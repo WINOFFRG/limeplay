@@ -12,6 +12,8 @@ npx shadcn add @limeplay/use-playback-rate
 Register the feature:
 
 ```tsx title="lib/media.ts"
+"use client"
+
 import { playbackRateFeature } from "@/hooks/limeplay/use-playback-rate"
 
 createMediaKit({

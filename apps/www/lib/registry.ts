@@ -139,7 +139,7 @@ async function createTempSourceFile(filename: string) {
 }
 
 function fixFilePaths(files: NonNullable<RegistryItem["files"]>) {
-  if (!files) {
+  if (!files.length) {
     return []
   }
 

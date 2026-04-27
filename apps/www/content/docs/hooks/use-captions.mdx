@@ -12,6 +12,8 @@ npx shadcn add @limeplay/use-captions
 Register the feature:
 
 ```tsx title="lib/media.ts"
+"use client"
+
 import { captionsFeature } from "@/hooks/limeplay/use-captions"
 
 createMediaKit({

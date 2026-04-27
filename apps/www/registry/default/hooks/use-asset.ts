@@ -380,6 +380,7 @@ export function assetFeature(): MediaFeature<
           const nextIndex = playlist.getNextIndex()
           if (nextIndex === -1) return
           const nextItem = playlist.queue[nextIndex]
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- noUncheckedIndexedAccess is off; index can be out of bounds
           if (nextItem) {
             await get().asset.preloadAsset(nextItem.properties as unknown as Asset)
           }

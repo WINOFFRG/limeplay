@@ -64,7 +64,7 @@ export function volumeFeature(): MediaFeature<VolumeStore> {
             mediaState.idle = false
           })
         },
-        setVolume: (volume, progress?, delta?) => {
+        setVolume: (volume, progress, delta) => {
           const media = get().media.mediaElement
           if (!media) return
 
@@ -159,7 +159,7 @@ function VolumeSetup() {
       off(media, "volumechange", volumeHandler)
       off(media, "audiotrackschanged", audioTracksChangedHandler)
     }
-  }, [mediaElement, getHasAudio, store])
+  }, [events, mediaElement, getHasAudio, store])
 
   return null
 }
