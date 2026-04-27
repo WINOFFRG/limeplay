@@ -6,7 +6,6 @@ import type { ReactNode } from "react"
 import { UserJotProvider } from "@userjot/next"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Agentation } from "agentation"
 import { Inter } from "next/font/google"
 
 import { JsonLd } from "@/components/json-ld"

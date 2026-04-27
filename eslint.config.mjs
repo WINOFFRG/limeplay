@@ -62,6 +62,7 @@ export const baseConfig = [
         },
       ],
       "perfectionist/sort-imports": "error",
+      "@typescript-eslint/no-explicit-any": "warn",
     },
   },
 ]

@@ -4,10 +4,12 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 import React, { useImperativeHandle, useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
-import { MediaReadyState } from "@/registry/default/hooks/use-playback"
+import {
+  MediaReadyState,
+  usePlaybackStore,
+} from "@/registry/default/hooks/use-playback"
 import { useTrackEvents } from "@/registry/default/hooks/use-track-events"
-import { useVolume } from "@/registry/default/hooks/use-volume"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
+import { useVolumeStore } from "@/registry/default/hooks/use-volume"
 
 const VOLUME_RESET_BASE = 0.05
 
@@ -19,16 +21,17 @@ export const Root = React.forwardRef<
     null
   ) as React.RefObject<HTMLDivElement>
   const { className, orientation = "horizontal", ...etc } = props
-  const volume = useMediaStore((state) => state.volume)
-  const hasAudio = useMediaStore((state) => state.hasAudio)
-  const muted = useMediaStore((state) => state.muted)
-  const readyState = useMediaStore((state) => state.readyState)
+  const volume = useVolumeStore((state) => state.level)
+  const hasAudio = useVolumeStore((state) => state.hasAudio)
+  const muted = useVolumeStore((state) => state.muted)
+  const readyState = usePlaybackStore((state) => state.readyState)
   const [currentValue, setCurrentValue] = useState(volume)
 
-  const disabled = props.disabled || readyState < MediaReadyState.HAVE_METADATA
+  const disabled =
+    props.disabled || readyState < MediaReadyState.HAVE_METADATA || !hasAudio
 
   useImperativeHandle(ref, () => internalRef.current)
-  const { setVolume } = useVolume()
+  const setVolume = useVolumeStore((state) => state.setVolume)
 
   const getVolumeFromEvent = (event: React.PointerEvent) => {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -60,10 +63,6 @@ export const Root = React.forwardRef<
     },
     orientation,
   })
-
-  if (!hasAudio) {
-    return null
-  }
 
   const currentVolumeValue = muted
     ? 0
@@ -117,8 +116,8 @@ export const Progress = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Track>
 >((props, ref) => {
   const { className, ...etc } = props
-  const volume = useMediaStore((state) => state.volume)
-  const muted = useMediaStore((state) => state.muted)
+  const volume = useVolumeStore((state) => state.level)
+  const muted = useVolumeStore((state) => state.muted)
   const currentValue = muted ? 0 : volume
 
   return (
@@ -157,7 +156,7 @@ interface ThumbProps extends React.ComponentPropsWithoutRef<
 export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
   (props, ref) => {
     const { className, showVolumeText = true, ...etc } = props
-    const volume = useMediaStore((state) => state.volume)
+    const volume = useVolumeStore((state) => state.level)
     const displayValue = Number((volume * 100).toFixed(2))
 
     return (

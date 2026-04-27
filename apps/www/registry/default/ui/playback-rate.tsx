@@ -9,19 +9,18 @@ import {
   SelectTrigger as SelectTriggerPrimitive,
   SelectValue,
 } from "@/components/ui/select"
-import { usePlaybackRate } from "@/registry/default/hooks/use-playback-rate"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
+import { usePlaybackRateStore } from "@/registry/default/hooks/use-playback-rate"
 
 export function SelectRoot(
   props: React.ComponentProps<typeof SelectPrimitive>
 ) {
-  const playbackRate = useMediaStore((state) => state.playbackRate)
-  const { setPlaybackRate } = usePlaybackRate()
+  const setPlaybackRate = usePlaybackRateStore((state) => state.setPlaybackRate)
+  const value = usePlaybackRateStore((state) => state.value)
 
   return (
     <SelectPrimitive
       onValueChange={(value) => setPlaybackRate(Number(value))}
-      value={playbackRate.toString()}
+      value={value.toString()}
       {...props}
     />
   )
@@ -41,19 +40,20 @@ export function SelectTrigger(
 
 SelectTrigger.displayName = "PlaybackRateSelectTrigger"
 
-interface SelectGroupProps
-  extends React.ComponentProps<typeof SelectGroupPrimitive> {
+interface SelectGroupProps extends React.ComponentProps<
+  typeof SelectGroupPrimitive
+> {
   suffix?: string
 }
 
 export function SelectGroup(props: SelectGroupProps) {
-  const playbackRates = useMediaStore((state) => state.playbackRates)
+  const rates = usePlaybackRateStore((state) => state.rates)
   const { children, suffix = "x", ...etc } = props
 
   return (
     <SelectGroupPrimitive {...etc}>
       {children}
-      {playbackRates.map((rate) => (
+      {rates.map((rate: number) => (
         <SelectItem key={rate} value={rate.toString()}>
           {rate}
           {suffix && <span className="text-xs">{suffix}</span>}

@@ -3,7 +3,8 @@
 import { useState } from "react"
 
 import { Button } from "@/registry/default/blocks/linear-player/ui/button"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
+import { usePlayerStore } from "@/registry/default/hooks/use-player"
+import { useTimelineStore } from "@/registry/default/hooks/use-timeline"
 import * as TimelineSlider from "@/registry/default/ui/timeline-control"
 import {
   Duration,
@@ -15,9 +16,9 @@ import {
 
 export function TimelineSliderControl() {
   const [showRemaining, setShowRemaining] = useState(false)
-  const liveLatency = useMediaStore((state) => state.liveLatency)
-  const isLive = useMediaStore((state) => state.isLive)
-  const player = useMediaStore((state) => state.player)
+  const liveLatency = useTimelineStore((state) => state.liveLatency)
+  const isLive = useTimelineStore((state) => state.isLive)
+  const player = usePlayerStore((state) => state.instance)
 
   return (
     <div className="my-auto flex grow items-center gap-3 select-none">

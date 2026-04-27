@@ -1,0 +1,117 @@
+---
+title: Events
+index: true
+---
+
+Limeplay provides a typed event emitter for reacting to media state changes. Features emit events automatically — you subscribe to them.
+
+## Subscribing
+
+Access the event emitter via `useMediaEvents`:
+
+```tsx
+import { useMediaEvents } from "@/components/limeplay/media-provider"
+import type { VolumeEvents } from "@/hooks/limeplay/use-volume"
+
+function VolumeLogger() {
+  const events = useMediaEvents<VolumeEvents>()
+
+  React.useEffect(() => {
+    const off = events.on("volumechange", ({ volume, muted }) => {
+      console.log("Volume:", volume, "Muted:", muted)
+    })
+    return off
+  }, [events])
+
+  return null
+}
+```
+
+### One-time Listeners
+
+```tsx
+events.once("playerready", ({ player }) => {
+  // Runs once, then auto-removes
+})
+```
+
+### Unsubscribing
+
+`on()` and `once()` return an unsubscribe function:
+
+```tsx
+const off = events.on("play", () => { ... })
+off() // removes the listener
+```
+
+## Event Reference
+
+### Playback
+
+| Event | Payload | Emitted When |
+|---|---|---|
+| `play` | — | Media starts playing |
+| `pause` | — | Media is paused |
+| `ended` | — | Media reaches the end |
+| `buffering` | `{ isBuffering: boolean }` | Buffering state changes |
+| `statuschange` | `{ status: MediaStatus, prevStatus: MediaStatus }` | Playback status transitions |
+
+### Volume
+
+| Event | Payload | Emitted When |
+|---|---|---|
+| `volumechange` | `{ volume: number, muted: boolean }` | Volume level or mute state changes |
+| `mute` | `{ muted: boolean }` | Mute is toggled |
+
+### Timeline
+
+| Event | Payload | Emitted When |
+|---|---|---|
+| `timeupdate` | `{ currentTime: number, duration: number, progress: number }` | Playback position updates (polled) |
+| `durationchange` | `{ duration: number }` | Media duration changes |
+| `seek` | `{ from: number, to: number }` | User seeks to a new position |
+
+### Player
+
+| Event | Payload | Emitted When |
+|---|---|---|
+| `playerready` | `{ player: shaka.Player }` | Shaka Player instance is initialized |
+| `playererror` | `{ error: Error }` | Player-level error occurs |
+| `playbackerror` | `{ error: Error }` | Playback-level error occurs |
+| `bufferingchange` | `{ isBuffering: boolean }` | Player buffering state changes |
+
+### Playback Rate
+
+| Event | Payload | Emitted When |
+|---|---|---|
+| `ratechange` | `{ rate: number }` | Playback speed changes |
+
+### Picture-in-Picture
+
+| Event | Payload | Emitted When |
+|---|---|---|
+| `enterpictureinpicture` | — | Enters PiP mode |
+| `leavepictureinpicture` | — | Leaves PiP mode |
+
+### Playlist
+
+| Event | Payload | Emitted When |
+|---|---|---|
+| `playlistchange` | `PlaylistChangeEvent` | Current playlist item changes |
+
+`PlaylistChangeEvent` contains `currentIndex`, `currentItem`, `previousIndex`, `previousItem`, and `reason` (`"load"`, `"next"`, `"previous"`, `"skip"`, `"remove"`).
+
+## Typing Events
+
+Each feature exports its event type. Import and pass it to `useMediaEvents` for type-safe subscriptions:
+
+```tsx
+import type { PlaybackEvents } from "@/hooks/limeplay/use-playback"
+import type { TimelineEvents } from "@/hooks/limeplay/use-timeline"
+
+const events = useMediaEvents<PlaybackEvents & TimelineEvents>()
+
+// ✅ Type-safe — autocompletion for event names and payloads
+events.on("statuschange", ({ status, prevStatus }) => { ... })
+events.on("seek", ({ from, to }) => { ... })
+```

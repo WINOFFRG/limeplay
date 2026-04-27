@@ -4,6 +4,19 @@ const TARGET_BASE_PATH = "hooks/limeplay"
 
 export const hooks: Registry["items"] = [
   {
+    dependencies: ["zustand"],
+    files: [
+      {
+        path: "hooks/use-media.ts",
+        target: `${TARGET_BASE_PATH}/use-media.ts`,
+        type: "registry:hook",
+      },
+    ],
+    name: "use-media",
+    registryDependencies: ["media-provider"],
+    type: "registry:hook",
+  },
+  {
     dependencies: ["lodash.clamp", "zustand"],
     devDependencies: ["@types/lodash.clamp"],
     files: [
@@ -15,16 +28,16 @@ export const hooks: Registry["items"] = [
     ],
     name: "use-volume",
     registryDependencies: [
+      "use-media",
       "use-player",
       "use-playback",
       "utils",
       "media-provider",
-      "player-hooks",
     ],
     type: "registry:hook",
   },
   {
-    dependencies: ["lodash.clamp", "zustand"],
+    dependencies: ["lodash.clamp"],
     devDependencies: ["@types/lodash.clamp"],
     files: [
       {
@@ -34,11 +47,11 @@ export const hooks: Registry["items"] = [
       },
     ],
     name: "use-track-events",
-    registryDependencies: ["player-hooks"],
+    registryDependencies: [],
     type: "registry:hook",
   },
   {
-    dependencies: ["lodash.clamp", "zustand"],
+    dependencies: ["lodash.clamp", "shaka-player", "zustand"],
     devDependencies: ["@types/lodash.clamp"],
     files: [
       {
@@ -49,12 +62,12 @@ export const hooks: Registry["items"] = [
     ],
     name: "use-timeline",
     registryDependencies: [
+      "use-media",
       "use-player",
       "use-playback",
       "utils",
       "media-provider",
       "use-interval",
-      "player-hooks",
     ],
     type: "registry:hook",
   },
@@ -69,10 +82,10 @@ export const hooks: Registry["items"] = [
     ],
     name: "use-player",
     registryDependencies: [
-      "media-provider",
-      "player-hooks",
+      "use-media",
       "use-playback",
       "utils",
+      "media-provider",
     ],
     type: "registry:hook",
   },
@@ -87,6 +100,7 @@ export const hooks: Registry["items"] = [
     ],
     name: "use-asset",
     registryDependencies: [
+      "use-media",
       "use-player",
       "use-playlist",
       "use-playback",
@@ -106,7 +120,7 @@ export const hooks: Registry["items"] = [
     type: "registry:hook",
   },
   {
-    dependencies: ["zustand"],
+    dependencies: ["shaka-player", "zustand"],
     files: [
       {
         path: "hooks/use-captions.ts",
@@ -116,11 +130,11 @@ export const hooks: Registry["items"] = [
     ],
     name: "use-captions",
     registryDependencies: [
+      "use-media",
       "use-player",
       "use-playback",
       "utils",
       "media-provider",
-      "player-hooks",
     ],
     type: "registry:hook",
   },
@@ -135,11 +149,11 @@ export const hooks: Registry["items"] = [
     ],
     name: "use-playback-rate",
     registryDependencies: [
+      "use-media",
       "use-player",
       "use-playback",
       "utils",
       "media-provider",
-      "player-hooks",
     ],
     type: "registry:hook",
   },
@@ -152,7 +166,7 @@ export const hooks: Registry["items"] = [
       },
     ],
     name: "use-seek",
-    registryDependencies: ["media-provider"],
+    registryDependencies: ["use-media", "media-provider"],
     type: "registry:hook",
   },
   {
@@ -165,7 +179,7 @@ export const hooks: Registry["items"] = [
       },
     ],
     name: "use-playlist",
-    registryDependencies: ["utils", "media-provider"],
+    registryDependencies: ["use-media", "utils", "media-provider"],
     type: "registry:hook",
   },
   {
@@ -178,7 +192,7 @@ export const hooks: Registry["items"] = [
       },
     ],
     name: "use-playback",
-    registryDependencies: ["media-provider", "utils"],
+    registryDependencies: ["use-media", "media-provider", "utils"],
     type: "registry:hook",
   },
   {
@@ -192,11 +206,25 @@ export const hooks: Registry["items"] = [
     ],
     name: "use-picture-in-picture",
     registryDependencies: [
+      "use-media",
       "use-playback",
       "utils",
       "media-provider",
-      "player-hooks",
     ],
+    type: "registry:hook",
+  },
+  {
+    dependencies: ["lodash.throttle"],
+    devDependencies: ["@types/lodash.throttle"],
+    files: [
+      {
+        path: "hooks/use-idle.ts",
+        target: `${TARGET_BASE_PATH}/use-idle.ts`,
+        type: "registry:hook",
+      },
+    ],
+    name: "use-idle",
+    registryDependencies: ["utils"],
     type: "registry:hook",
   },
 ]

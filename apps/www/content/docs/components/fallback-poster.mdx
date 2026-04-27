@@ -1,51 +1,37 @@
 ---
 title: Fallback Poster
-description: Background poster image for HTML Media Element
+description: Poster image overlay for loading states and Picture-in-Picture.
 ---
-import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 <ComponentPreview name="fallback-poster-demo" withPlayer type="overlay" className="border rounded-lg overflow-hidden" />
 
 ## Installation
 
-<Steps>
-<Step>
 ```npm
 npx shadcn add @limeplay/fallback-poster
 ```
-</Step>
 
-<Step>
-### Setup the fallback poster in player layout
+<Callout>
+Requires [`mediaFeature`](/docs/concepts) registered in your [`createMediaKit`](/docs/components/media-provider).
+</Callout>
 
-```tsx lineNumbers title="components/player/media-player.tsx"
-import { FallbackPoster } from "@/components/limeplay/fallback-poster"  // [!code ++]
-import { LimeplayLogo } from "@/components/limeplay/limeplay-logo"  // [!code ++]
+## Usage
 
-export function MediaPlayer() {
-  return (
-    <MediaProvider>
-      <PlayerHooks />
-      <Layout.RootContainer height={720} width={1280}>
-        // [!code ++]
-        <FallbackPoster>
-          <LimeplayLogo />
-        </FallbackPoster>
-        <Layout.PlayerContainer>
-          <MediaElement />
-        </Layout.PlayerContainer>
-      </Layout.RootContainer>
-    </MediaProvider>
-  )
-}
+Wrap the player layout to provide a background while the media element loads or when in PiP mode:
+
+```tsx title="components/media-player.tsx"
+import { FallbackPoster } from "@/components/limeplay/fallback-poster"
+import { LimeplayLogo } from "@/components/limeplay/limeplay-logo"
+
+<Layout.PlayerContainer>
+  <FallbackPoster className="bg-black">
+    <LimeplayLogo />
+  </FallbackPoster>
+  <Media as="video" />
+</Layout.PlayerContainer>
 ```
-</Step>
 
-</Steps>
+### Use Cases
 
-## Understanding
-
-This poster element wraps the player layout and serves two common use cases:
-
-1. Acts as a cover image for the player when in Picture-in-Picture (PiP) mode to remove the native black overlay (inspired by Prime Video).
-2. Provides a skeleton while the HTML media element loads; it will render fallback content while the media is mounting.
+1. **PiP overlay** — When the video enters Picture-in-Picture mode, the poster replaces the native black overlay (inspired by Prime Video).
+2. **Loading skeleton** — Displays fallback content while the media element is mounting.

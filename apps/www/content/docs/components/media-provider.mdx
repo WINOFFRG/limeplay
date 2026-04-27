@@ -1,94 +1,155 @@
 ---
 title: Media Provider
-description: Setup zustand singleton store for media player accessible via hooks.
+description: Creates the Zustand store, event emitter, and feature setup for a media player instance.
 ---
 
-import { Step, Steps } from "fumadocs-ui/components/steps"
-
 ## Installation
-
-<Steps>
-<Step>
 
 ```npm
 npx shadcn add @limeplay/media-provider
 ```
-</Step>
 
-<Step>
-### Setup the provider in the root
+## Setup
 
-```tsx lineNumbers title="components/player/media-player.tsx"
-import { MediaProvider } from "@/components/limeplay/media-provider" // [!code ++]
+Use `createMediaKit` to compose the features you need into a single runtime:
 
-// ... other imports
+```tsx title="lib/media.ts"
+"use client"
+
+import { createMediaKit } from "@/components/limeplay/media-provider"
+import { mediaFeature } from "@/hooks/limeplay/use-media"
+import { playerFeature } from "@/hooks/limeplay/use-player"
+import { playbackFeature } from "@/hooks/limeplay/use-playback"
+import { volumeFeature } from "@/hooks/limeplay/use-volume"
+import { timelineFeature } from "@/hooks/limeplay/use-timeline"
+
+export const media = createMediaKit({
+  features: [
+    mediaFeature(),
+    playerFeature(),
+    playbackFeature(),
+    volumeFeature(),
+    timelineFeature(),
+  ] as const,
+})
+
+export const { MediaProvider, useMediaStore, useMediaApi, useMediaEvents } = media
+```
+
+Wrap your player with `MediaProvider`:
+
+```tsx title="components/media-player.tsx"
+import { MediaProvider } from "@/lib/media"
+import { Media } from "@/components/limeplay/media"
 
 export function MediaPlayer() {
   return (
-    // [!code ++]
     <MediaProvider>
-      <PlayerHooks />
-      <Suspense>
-        <Layout.RootContainer height={720} width={1280}>
-        </Layout.RootContainer>
-      </Suspense>
+      <Media as="video" />
+      {/* Controls go here */}
     </MediaProvider>
   )
 }
 ```
 
-</Step>
+## Accessing State
 
-<Step>
-### Call the store anywhere inside the component tree
+### Selectors (reactive)
 
-```tsx lineNumbers title="components/volume-control.tsx"
-import { useMediaStore } from "@/components/limeplay/media-provider"    // [!code ++]
+```tsx
+import { useMediaStore } from "@/lib/media"
+// or per-feature hooks:
+import { useVolumeStore } from "@/hooks/limeplay/use-volume"
 
-export function VolumeStateControlDemo() {
-  const muted = useMediaStore((state) => state.muted)    // [!code ++]
-  const volume = useMediaStore((state) => state.volume)    // [!code ++]
+// Option A: unified store (namespaced)
+function VolumeDisplayNamespaced() {
+  const level = useMediaStore(s => s.volume.level)
+  return <span>{Math.round(level * 100)}%</span>
+}
 
-  return (
-    // ...
-  )
+// Option B: feature-scoped hook (flat)
+function VolumeDisplayScoped() {
+  const level = useVolumeStore(s => s.level)
+  return <span>{Math.round(level * 100)}%</span>
 }
 ```
 
-</Step>
-</Steps>
+### Store API (imperative)
 
-## Understanding
+For effects and callbacks where you don't need reactivity:
 
-`<MediaProvider />` is a composition of React's `context` and `zustand` store. This component exposes a hook `useMediaStore` which is an implementation of zustand store getter.
+```tsx
+import { useMediaApi } from "@/lib/media"
 
-As we keep on adding bound slices to the store in `lib/create-media-store.ts` file this hook will act as a getter for those values.
+function SomeEffect() {
+  const api = useMediaApi()
 
-## Components
+  React.useEffect(() => {
+    // Read without subscribing
+    const { level } = api.getState().volume
+
+    // Mutate with Immer draft
+    api.setState(({ volume }) => {
+      volume.level = 0.5
+    })
+  }, [api])
+}
+```
+
+### Events
+
+Subscribe to typed events from any feature:
+
+```tsx
+import { useMediaEvents } from "@/lib/media"
+
+function Logger() {
+  const events = useMediaEvents()
+
+  React.useEffect(() => {
+    return events.on("volumechange", ({ volume }) => {
+      console.log("Volume:", volume)
+    })
+  }, [events])
+
+  return null
+}
+```
+
+See [Events](/docs/events) for the full event reference.
+
+## Multi-Instance
+
+Each `MediaProvider` creates an isolated store. Multiple players on the same page are fully independent:
+
+```tsx
+<MediaProvider>
+  <PlayerOne />
+</MediaProvider>
+
+<MediaProvider>
+  <PlayerTwo />
+</MediaProvider>
+```
+
+## API Reference
+
+### createMediaKit
+
+```tsx
+createMediaKit({ features }) => {
+  MediaProvider,    // React component
+  useMediaStore,    // Reactive selector hook
+  useMediaApi,      // Imperative store API hook
+  useMediaEvents,   // Event emitter hook
+  features,         // Features array reference
+}
+```
 
 ### MediaProvider
 
-The main provider component that wraps your player and provides access to the media store via context.
+Wraps player components. Creates the Zustand store, event emitter, and auto-mounts each feature's Setup component.
 
-#### Basic Usage
-
-```tsx lineNumbers title="components/player/media-player.tsx"
-import { MediaProvider } from "@/components/limeplay/media-provider"
-import { useMediaStore } from "@/components/limeplay/media-provider"
-
-export function MediaPlayer() {
-  return (
-    <MediaProvider>
-      <PlayerHooks />
-      {/* Your player components */}
-    </MediaProvider>
-  )
-}
-
-// Access store anywhere inside MediaProvider
-export function SomeComponent() {
-  const status = useMediaStore((state) => state.status)
-  const volume = useMediaStore((state) => state.volume)
-  // ...
-}
+```tsx
+<MediaProvider>{children}</MediaProvider>
 ```

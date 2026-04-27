@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/registry/default/blocks/linear-player/ui/button"
 import { useAsset } from "@/registry/default/hooks/use-asset"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
+import { usePlayerStore } from "@/registry/default/hooks/use-player"
 
 /**
  * Demo assets for the linear-player
@@ -69,7 +69,7 @@ export const ASSETS: Asset[] = [
 ]
 
 export function Playlist() {
-  const player = useMediaStore((state) => state.player)
+  const player = usePlayerStore((state) => state.instance)
 
   const { currentItem, isPreloaded, loadPlaylist, preloadAsset, skipToId } =
     useAsset()

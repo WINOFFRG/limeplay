@@ -6,11 +6,13 @@ import React, { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { useCaptions } from "@/registry/default/hooks/use-captions"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
+import {
+  useCaptions,
+  useCaptionsStore,
+} from "@/registry/default/hooks/use-captions"
+import { usePlayerStore } from "@/registry/default/hooks/use-player"
 
-export interface CaptionsControlProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface CaptionsControlProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
    * Render as child component using Radix Slot
    * @default false
@@ -32,8 +34,8 @@ export const CaptionsControl = React.forwardRef<
   HTMLButtonElement,
   CaptionsControlProps
 >((props, forwardedRef) => {
-  const textTracks = useMediaStore((state) => state.textTracks)
-  const { toggleCaptionVisibility } = useCaptions()
+  const textTracks = useCaptionsStore((state) => state.tracks)
+  const { toggleVisibility } = useCaptions()
 
   const {
     "aria-label": ariaLabelProp,
@@ -50,7 +52,7 @@ export const CaptionsControl = React.forwardRef<
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onClick?.(event)
     if (!event.defaultPrevented) {
-      toggleCaptionVisibility()
+      toggleVisibility()
     }
   }
 
@@ -96,9 +98,9 @@ export const CaptionsContainer = React.forwardRef<
   CaptionsContainerProps
 >((props, ref) => {
   const { className, fontScale, ...etc } = props
-  const player = useMediaStore((state) => state.player)
-  const setContainerElement = useMediaStore(
-    (state) => state.setTextTrackContainerElement
+  const player = usePlayerStore((state) => state.instance)
+  const setContainerElement = useCaptionsStore(
+    (state) => state.setContainerElement
   )
 
   useEffect(() => {

@@ -4,12 +4,11 @@ import type { Asset } from "@/registry/default/hooks/use-asset"
 
 import { cn } from "@/lib/utils"
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
-import { PlayerHooks } from "@/registry/default/blocks/linear-player/components/player-hooks"
+import { MediaProvider } from "@/registry/default/blocks/linear-player/lib/media"
 import { CaptionsContainer } from "@/registry/default/ui/captions"
 import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 import { Media, type MediaProps } from "@/registry/default/ui/media"
-import { MediaProvider } from "@/registry/default/ui/media-provider"
 import * as Layout from "@/registry/default/ui/player-layout"
 import { RootContainer } from "@/registry/default/ui/root-container"
 
@@ -23,7 +22,6 @@ export interface LinearMediaPlayerProps<
   as?: T
   asset?: Asset
   className?: string
-  debug?: boolean
   /**
    * Props to pass to the underlying media element (video/audio)
    */
@@ -47,9 +45,9 @@ type MediaType = MediaProps["as"]
 export const LinearMediaPlayer = React.forwardRef<
   HTMLDivElement,
   LinearMediaPlayerProps
->(({ as = "video", className, debug = false, mediaProps, mediaRef }, ref) => {
+>(({ as = "video", className, mediaProps, mediaRef }, ref) => {
   return (
-    <MediaProvider debug={debug}>
+    <MediaProvider>
       <RootContainer className={cn("m-auto w-full", className)} ref={ref}>
         <Layout.PlayerContainer>
           <FallbackPoster className="bg-black">
@@ -61,7 +59,6 @@ export const LinearMediaPlayer = React.forwardRef<
             className="size-full object-cover"
             ref={mediaRef as React.Ref<HTMLMediaElement>}
           />
-          <PlayerHooks />
           <Layout.ControlsOverlayContainer />
           <Layout.ControlsContainer className="pb-6">
             <CaptionsContainer />

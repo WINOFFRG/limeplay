@@ -1,59 +1,42 @@
 ---
 title: Media Element
-description: Native HTML Media Element (Audio | Video) mounted to store
+description: Native HTML media element (video or audio) connected to the store.
 ---
-import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 ## Installation
 
-<Steps>
-<Step>
 ```npm
 npx shadcn add @limeplay/media
 ```
-</Step>
 
-<Step>
-### Setup the provider in the root
+<Callout>
+Requires [`mediaFeature`](/docs/concepts) registered in your [`createMediaKit`](/docs/components/media-provider).
+</Callout>
 
-```tsx lineNumbers title="components/player/media-player.tsx"
-import { Media } from "@/components/limeplay/media" // [!code ++]
+## Usage
 
-// ... other imports
+Renders a `<video>` or `<audio>` element and binds it to the media store automatically.
 
-export function MediaPlayer() {
-  return (
-    <MediaProvider>
-      <PlayerHooks />
-      <Suspense>
-        <Layout.RootContainer height={720} width={1280}>
-          {/* [!code ++] */}
-          <Media
-            as="video"
-            autoPlay={true}
-            className="size-full object-cover"
-            muted
-          />
-        </Layout.RootContainer>
-      </Suspense>
-    </MediaProvider>
-  )
-}
+```tsx title="components/media-player.tsx"
+import { Media } from "@/components/limeplay/media"
+
+<Media as="video" className="size-full object-cover" />
 ```
 
-</Step>
-</Steps>
+Switch to audio:
 
-## Understanding
+```tsx
+<Media as="audio" />
+```
 
-Native HTML Media Element component that provides audio and video playback capabilities. It supports both `video` and `audio` elements via the `as` prop.
+### Forwarding Refs
 
-## Components
+```tsx
+const videoRef = React.useRef<HTMLVideoElement>(null)
 
-### Media
+<Media as="video" ref={videoRef} autoPlay muted />
+```
 
-The main component that renders either a `<video>` or `<audio>` element based on the `as` prop.
-
-#### API Reference
+## API Reference
 
 <AutoTypeTable path="./registry/default/ui/media.tsx" name="MediaPropsDocs" />

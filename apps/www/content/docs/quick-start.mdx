@@ -3,46 +3,165 @@ title: Quick Start
 index: true
 ---
 
-## Installation
-
-<Callout type="info">
-  We have the exact same installation process as
-  [shadcn/ui](https://ui.shadcn.com/docs/installation/)
-</Callout>
-
 import { Step, Steps } from "fumadocs-ui/components/steps"
 
-<Steps>
-  <Step>
-  ### Create project
+Get a working player in under 5 minutes.
 
-Run the init command to create a new Next.js project or to setup an existing one:
+## Prerequisites
+
+A React project with [shadcn/ui](https://ui.shadcn.com/docs/installation/) initialized. If you don't have one:
 
 ```npm
 npx shadcn@latest init
 ```
 
-  </Step>
-  <Step>
-  ### Install the basic player example
+## Option A: Start with a Block
 
-You can now start adding components to your project.
+The fastest path — install a complete, ready-to-use player:
 
 ```npm
-npx shadcn add limeplay/basic-player
+npx shadcn add limeplay/linear-player
 ```
 
-  </Step>
-  <Step>
-   ### Building your player
+This gives you a full-featured video player with playback controls, volume, timeline, captions, and more. Customize it from your `components/` directory.
 
-You can now start building your own player or customize.
+## Option B: Build from Scratch
 
-  </Step>
+<Steps>
+<Step>
+
+### Create the media runtime
+
+Install the core provider and the features you need:
+
+```npm
+npx shadcn add @limeplay/media-provider @limeplay/use-playback @limeplay/use-volume @limeplay/use-timeline @limeplay/use-player
+```
+
+Create a `lib/media.ts` file that composes your features:
+
+```tsx title="lib/media.ts"
+"use client"
+
+import { mediaFeature } from "@/hooks/limeplay/use-media"
+import { playerFeature } from "@/hooks/limeplay/use-player"
+import { playbackFeature } from "@/hooks/limeplay/use-playback"
+import { volumeFeature } from "@/hooks/limeplay/use-volume"
+import { timelineFeature } from "@/hooks/limeplay/use-timeline"
+import { createMediaKit } from "@/components/limeplay/media-provider"
+
+export const media = createMediaKit({
+  features: [
+    mediaFeature(),
+    playerFeature(),
+    playbackFeature(),
+    volumeFeature(),
+    timelineFeature(),
+  ] as const,
+})
+
+export const { MediaProvider, useMediaStore, useMediaApi, useMediaEvents } = media
+```
+
+</Step>
+<Step>
+
+### Add UI components
+
+```npm
+npx shadcn add @limeplay/media @limeplay/playback-control @limeplay/volume-control @limeplay/timeline-control @limeplay/player-layout
+```
+
+</Step>
+<Step>
+
+### Compose the player
+
+```tsx title="components/media-player.tsx"
+"use client"
+
+import { MediaProvider } from "@/lib/media"
+import { Media } from "@/components/limeplay/media"
+import { PlaybackControl } from "@/components/limeplay/playback-control"
+import * as Volume from "@/components/limeplay/volume-control"
+import * as Timeline from "@/components/limeplay/timeline-control"
+import * as Layout from "@/components/limeplay/player-layout"
+
+export function MediaPlayer() {
+  return (
+    <MediaProvider>
+      <Layout.PlayerContainer>
+        <Media as="video" />
+        <Layout.ControlsContainer>
+          <Timeline.Root>
+            <Timeline.Track>
+              <Timeline.Progress />
+            </Timeline.Track>
+          </Timeline.Root>
+          <PlaybackControl />
+          <Volume.Root>
+            <Volume.Track>
+              <Volume.Input />
+            </Volume.Track>
+          </Volume.Root>
+        </Layout.ControlsContainer>
+      </Layout.PlayerContainer>
+    </MediaProvider>
+  )
+}
+```
+
+</Step>
+<Step>
+
+### Load content
+
+Pass a source to your player. The simplest approach is loading via [`usePlayer`](/docs/hooks/use-player) inside your `MediaPlayer`:
+
+```tsx title="components/media-player.tsx"
+"use client"
+
+import { usePlayer } from "@/hooks/limeplay/use-player"
+import { useMediaEvents } from "@/lib/media"
+// ... other imports from Step 3
+
+export function MediaPlayer({ src }: { src: string }) {
+  const { player } = usePlayer()
+  const events = useMediaEvents()
+
+  React.useEffect(() => {
+    return events.on("playerready", ({ player }) => {
+      player.load(src)
+    })
+  }, [events, src])
+
+  return (
+    <MediaProvider>
+      {/* ... same layout as Step 3 */}
+    </MediaProvider>
+  )
+}
+```
+
+Then render it with a source:
+
+```tsx title="app/page.tsx"
+import { MediaPlayer } from "@/components/media-player"
+
+export default function Page() {
+  return (
+    <MediaPlayer src="https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd" />
+  )
+}
+```
+
+For playlist management, error handling, and preloading, see [`useAsset`](/docs/hooks/use-asset).
+
+</Step>
 </Steps>
 
-## Examples
+## Next Steps
 
-<Callout type="info">
-  Coming soon! For now checkout [Blocks](https://limeplay.winoffrg.dev/blocks)
-</Callout>
+- [Concepts](/docs/concepts) — understand the feature system and event architecture
+- [Components](/docs/components) — browse all available UI components
+- [Hooks](/docs/hooks) — explore the feature hooks and utilities

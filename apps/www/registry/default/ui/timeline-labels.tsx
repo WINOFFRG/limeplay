@@ -1,8 +1,9 @@
 import React from "react"
 
 import { cn } from "@/lib/utils"
+import { usePlayerStore } from "@/registry/default/hooks/use-player"
+import { useTimelineStore } from "@/registry/default/hooks/use-timeline"
 import { durationDateTime, formatTimestamp } from "@/registry/default/lib/time"
-import { useMediaStore } from "@/registry/default/ui/media-provider"
 
 const HOURS_IN_SECONDS = 60 * 60
 
@@ -15,9 +16,9 @@ export const Elapsed = React.forwardRef<
   React.HTMLProps<HTMLTimeElement>
 >((props, forwardedRef) => {
   const { className, ...etc } = props
-  const currentTime = useMediaStore((s) => s.currentTime)
-  const duration = useMediaStore((s) => s.duration)
-  const player = useMediaStore((s) => s.player)
+  const currentTime = useTimelineStore((state) => state.currentTime)
+  const duration = useTimelineStore((state) => state.duration)
+  const player = usePlayerStore((state) => state.instance)
 
   return (
     <time
@@ -44,9 +45,9 @@ export const Remaining = React.forwardRef<
   React.HTMLProps<HTMLTimeElement>
 >((props, forwardedRef) => {
   const { className, ...etc } = props
-  const duration = useMediaStore((s) => s.duration)
-  const currentTime = useMediaStore((s) => s.currentTime)
-  const player = useMediaStore((s) => s.player)
+  const duration = useTimelineStore((state) => state.duration)
+  const currentTime = useTimelineStore((state) => state.currentTime)
+  const player = usePlayerStore((state) => state.instance)
 
   return (
     <time
@@ -75,8 +76,8 @@ export const Duration = React.forwardRef<
   React.HTMLProps<HTMLTimeElement>
 >((props, forwardedRef) => {
   const { className, ...etc } = props
-  const duration = useMediaStore((s) => s.duration)
-  const player = useMediaStore((s) => s.player)
+  const duration = useTimelineStore((state) => state.duration)
+  const player = usePlayerStore((state) => state.instance)
 
   return (
     <time
@@ -98,10 +99,10 @@ export const HoverTime = React.forwardRef<
   React.HTMLProps<HTMLTimeElement>
 >((props, forwardedRef) => {
   const { className, ...etc } = props
-  const hoveringTime = useMediaStore((s) => s.hoveringTime)
-  const player = useMediaStore((s) => s.player)
-  const duration = useMediaStore((s) => s.duration)
-  const isLive = useMediaStore((s) => s.isLive)
+  const hoveringTime = useTimelineStore((state) => state.hoveringTime)
+  const player = usePlayerStore((state) => state.instance)
+  const duration = useTimelineStore((state) => state.duration)
+  const isLive = useTimelineStore((state) => state.isLive)
 
   const hoverTime = isLive ? duration - hoveringTime : hoveringTime
 
@@ -125,7 +126,7 @@ export const LiveLatency = React.forwardRef<
   React.HTMLProps<HTMLTimeElement>
 >((props, forwardedRef) => {
   const { className, ...etc } = props
-  const liveLatency = useMediaStore((s) => s.liveLatency)
+  const liveLatency = useTimelineStore((state) => state.liveLatency)
 
   if (liveLatency == null) return null
 

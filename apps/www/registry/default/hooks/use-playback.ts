@@ -1,11 +1,16 @@
-import type { StateCreator } from "zustand"
-
 import React from "react"
 
+import type {
+  MediaEventSlice,
+  MediaFeature,
+} from "@/registry/default/ui/media-provider"
+
+import { useMediaStore } from "@/registry/default/hooks/use-media"
 import { noop, off, on } from "@/registry/default/lib/utils"
 import {
-  useGetStore,
-  useMediaStore,
+  useMediaEvents,
+  useMediaFeatureApi,
+  useMediaFeatureStore,
 } from "@/registry/default/ui/media-provider"
 
 export type MediaStatus =
@@ -31,304 +36,290 @@ export const MediaReadyState = {
 export type MediaReadyState =
   (typeof MediaReadyState)[keyof typeof MediaReadyState]
 
-export interface PlaybackStore {
-  canPlay: boolean
-  canPlayThrough: boolean
-  debug: boolean
-  ended: boolean
-  error: MediaError | null
-  forceIdle: boolean
-  idle: boolean
-  loop: boolean
-  mediaRef: React.RefObject<HTMLMediaElement | null>
-  networkState: number
-  // Event callbacks
-  onBuffering?: (payload: { isBuffering: boolean }) => void
-  onEnded?: () => void
-  onPause?: () => void
+export const PLAYBACK_FEATURE_KEY = "playback"
 
-  onPlay?: () => void
-  onStatusChange?: (payload: {
-    prevStatus: MediaStatus
+export interface PlaybackEvents {
+  buffering: { isBuffering: boolean }
+  ended: void
+  pause: void
+  play: void
+  statuschange: { prevStatus: MediaStatus; status: MediaStatus }
+}
+
+export interface PlaybackStore extends MediaEventSlice<PlaybackEvents> {
+  [PLAYBACK_FEATURE_KEY]: {
+    canPlay: boolean
+    canPlayThrough: boolean
+    ended: boolean
+    error: MediaError | null
+    loop: boolean
+    networkState: number
+    pause: () => void
+    paused: boolean
+    play: () => Promise<void>
+    readyState: MediaReadyState
+    restart: () => void
+    setLoop: (loop: boolean) => void
     status: MediaStatus
-  }) => void
-  paused: boolean
-  readyState: MediaReadyState
-  setDebug: (value: boolean) => void
-
-  setForceIdle: (value: boolean) => void
-  setIdle: (idle: boolean) => void
-  setMediaRef: (mediaRef: React.RefObject<HTMLMediaElement>) => void
-  status: MediaStatus
+    toggleLoop: () => void
+    togglePaused: () => Promise<void>
+  }
 }
 
-export const createPlaybackStore: StateCreator<
-  PlaybackStore,
-  [],
-  [],
-  PlaybackStore
-> = (set) => ({
-  canPlay: false,
-  canPlayThrough: false,
-  debug: false,
-  ended: false,
-  error: null,
-  forceIdle: false,
-  idle: false,
-  loop: false,
-  mediaRef: React.createRef<HTMLMediaElement>(),
-  networkState: 0,
-  onBuffering: undefined,
-  onEnded: undefined,
-  onPause: undefined,
-  onPlay: undefined,
-  onStatusChange: undefined,
-  paused: false,
-  readyState: MediaReadyState.HAVE_NOTHING,
-
-  setDebug: (value) => set({ debug: value }),
-  setForceIdle: (value) => set({ forceIdle: value }),
-  setIdle: (idle: boolean) => set({ idle }),
-  setMediaRef: (mediaRef: React.RefObject<HTMLMediaElement>) =>
-    set({ mediaRef }),
-  status: "init",
-})
-
-export interface UsePlaybackReturn {
-  pause: () => void
-  play: () => Promise<void>
-  restart: () => void
-  setLoop: (loop: boolean) => void
-  toggleLoop: () => void
-  togglePaused: () => Promise<void>
-}
-
-export function usePlayback(): UsePlaybackReturn {
-  const store = useGetStore()
-
-  async function play() {
-    const media = store.getState().mediaRef.current
-    if (!media) return
-
-    store.setState({
-      idle: false,
-    })
-
-    try {
-      await media.play()
-    } catch (error: unknown) {
-      console.error("Error playing media", error)
-      store.setState({
-        idle: false,
-        status: "error",
-      })
-      throw error
-    }
-  }
-
-  function pause() {
-    const media = store.getState().mediaRef.current
-    if (!media) return
-
-    media.pause()
-
-    store.setState({
-      idle: false,
-    })
-  }
-
-  async function togglePaused() {
-    const media = store.getState().mediaRef.current
-    if (!media) return
-
-    if (media.paused) {
-      await play().catch(noop)
-    } else {
-      pause()
-    }
-  }
-
-  function setLoop(loop: boolean) {
-    const media = store.getState().mediaRef.current
-    if (!media) return
-
-    media.loop = loop
-
-    store.setState({
-      idle: false,
-      loop,
-    })
-  }
-
-  function toggleLoop() {
-    const media = store.getState().mediaRef.current
-    if (!media) return
-
-    setLoop(!media.loop)
-  }
-
-  function restart() {
-    const media = store.getState().mediaRef.current
-    if (!media) return
-
-    media.currentTime = 0
-    if (media.paused) {
-      play()
-    }
-
-    store.setState({
-      ended: false,
-      idle: false,
-    })
-  }
-
+export function playbackFeature(): MediaFeature<PlaybackStore> {
   return {
-    pause,
-    play,
-    restart,
-    setLoop,
-    toggleLoop,
-    togglePaused,
+    createSlice: (set, get) => ({
+      [PLAYBACK_FEATURE_KEY]: {
+        canPlay: false,
+        canPlayThrough: false,
+        ended: false,
+        error: null,
+        loop: false,
+        networkState: 0,
+        pause: () => {
+          const media = get().media.mediaElement
+          if (!media) return
+
+          media.pause()
+
+          set(({ media: mediaState }) => {
+            mediaState.idle = false
+          })
+        },
+        paused: false,
+        play: async () => {
+          const media = get().media.mediaElement
+          if (!media) return
+
+          set(({ media: mediaState }) => {
+            mediaState.idle = false
+          })
+
+          try {
+            await media.play()
+          } catch (error: unknown) {
+            console.error("Error playing media", error)
+            set(({ media: mediaState, playback }) => {
+              playback.status = "error"
+              mediaState.idle = false
+            })
+            throw error
+          }
+        },
+        readyState: MediaReadyState.HAVE_NOTHING,
+        restart: () => {
+          const media = get().media.mediaElement
+          if (!media) return
+
+          media.currentTime = 0
+          if (media.paused) {
+            void get().playback.play().catch(noop)
+          }
+
+          set(({ media: mediaState, playback }) => {
+            mediaState.idle = false
+            playback.ended = false
+          })
+        },
+        setLoop: (loop) => {
+          const media = get().media.mediaElement
+          if (!media) return
+
+          media.loop = loop
+
+          set(({ media: mediaState, playback }) => {
+            mediaState.idle = false
+            playback.loop = loop
+          })
+        },
+        status: "init",
+        toggleLoop: () => {
+          const media = get().media.mediaElement
+          if (!media) return
+
+          get().playback.setLoop(!media.loop)
+        },
+        togglePaused: async () => {
+          const media = get().media.mediaElement
+          if (!media) return
+
+          if (media.paused) {
+            await get().playback.play().catch(noop)
+          } else {
+            get().playback.pause()
+          }
+        },
+      },
+    }),
+    key: PLAYBACK_FEATURE_KEY,
+    Setup: PlaybackSetup,
   }
 }
 
-export function usePlaybackStates() {
-  const store = useGetStore()
-  const mediaRef = useMediaStore((state) => state.mediaRef)
+export function usePlaybackStore<TSelected>(
+  selector: (state: PlaybackStore["playback"]) => TSelected
+): TSelected {
+  return useMediaFeatureStore<PlaybackStore, TSelected>(
+    PLAYBACK_FEATURE_KEY,
+    (state) => selector(state.playback)
+  )
+}
+
+function PlaybackSetup() {
+  const store = useMediaFeatureApi<PlaybackStore>(PLAYBACK_FEATURE_KEY)
+  const events = useMediaEvents<PlaybackEvents>()
+  const mediaElement = useMediaStore((state) => state.mediaElement)
 
   React.useEffect(() => {
-    if (!mediaRef.current) return noop
+    if (!mediaElement) return noop
 
-    const media = mediaRef.current
+    const media = mediaElement
 
     const setInitialState = () => {
       const status: MediaStatus = media.paused ? "paused" : "playing"
 
-      store.setState({
-        canPlay: media.readyState >= MediaReadyState.HAVE_FUTURE_DATA,
-        canPlayThrough: media.readyState >= MediaReadyState.HAVE_ENOUGH_DATA,
-        ended: media.ended,
-        error: media.error,
-        loop: media.loop,
-        networkState: media.networkState,
-        paused: media.paused,
-        readyState: media.readyState as MediaReadyState,
-        status,
+      store.setState(({ playback }) => {
+        playback.canPlay = media.readyState >= MediaReadyState.HAVE_FUTURE_DATA
+        playback.canPlayThrough =
+          media.readyState >= MediaReadyState.HAVE_ENOUGH_DATA
+        playback.ended = media.ended
+        playback.error = media.error
+        playback.loop = media.loop
+        playback.networkState = media.networkState
+        playback.paused = media.paused
+        playback.readyState = media.readyState as MediaReadyState
+        playback.status = status
       })
     }
 
-    // Playback event handlers
     const pauseHandler = () => {
-      const prevStatus = store.getState().status
-      store.setState({
-        paused: true,
-        status: "paused",
-      })
+      const prevStatus = store.getState().playback.status
 
-      store.getState().onPause?.()
-      store.getState().onStatusChange?.({ prevStatus, status: "paused" })
-    }
-
-    const playHandler = () => {
-      const prevStatus = store.getState().status
-      store.setState({
-        paused: false,
-        status: "playing",
-      })
-
-      store.getState().onPlay?.()
-      store.getState().onStatusChange?.({ prevStatus, status: "playing" })
-    }
-
-    const playingHandler = () => {
-      const prevStatus = store.getState().status
-      store.setState({
-        paused: false,
-        status: "playing",
+      store.setState(({ playback }) => {
+        playback.paused = true
+        playback.status = "paused"
       })
 
       if (prevStatus === "buffering") {
-        store.getState().onBuffering?.({ isBuffering: false })
+        events.emit("buffering", { isBuffering: false })
       }
 
-      store.getState().onStatusChange?.({ prevStatus, status: "playing" })
+      events.emit("pause")
+      events.emit("statuschange", { prevStatus, status: "paused" })
+    }
+
+    const playHandler = () => {
+      const prevStatus = store.getState().playback.status
+
+      store.setState(({ playback }) => {
+        playback.paused = false
+        playback.status = "playing"
+      })
+
+      events.emit("play")
+      events.emit("statuschange", { prevStatus, status: "playing" })
+    }
+
+    const playingHandler = () => {
+      const prevStatus = store.getState().playback.status
+
+      store.setState(({ playback }) => {
+        playback.paused = false
+        playback.status = "playing"
+      })
+
+      if (prevStatus === "buffering") {
+        events.emit("buffering", { isBuffering: false })
+      }
+
+      events.emit("statuschange", { prevStatus, status: "playing" })
     }
 
     const endedHandler = () => {
-      // DEV: When looping, ended event should be ignored to prevent UI showing ended state
       if (media.loop) {
         return
       }
-      const prevStatus = store.getState().status
-      store.setState({
-        ended: true,
-        status: "ended",
+
+      const prevStatus = store.getState().playback.status
+
+      store.setState(({ playback }) => {
+        playback.ended = true
+        playback.status = "ended"
       })
 
-      store.getState().onEnded?.()
-      store.getState().onStatusChange?.({ prevStatus, status: "ended" })
+      if (prevStatus === "buffering") {
+        events.emit("buffering", { isBuffering: false })
+      }
+
+      events.emit("ended")
+      events.emit("statuschange", { prevStatus, status: "ended" })
     }
 
-    // Loading event handlers
     const loadStartHandler = () => {
-      store.setState({
-        error: null,
-        status: "loading",
+      store.setState(({ playback }) => {
+        playback.error = null
+        playback.status = "loading"
       })
     }
 
     const loadedMetadataHandler = () => {
-      store.setState({
-        ended: false,
-        readyState: media.readyState as MediaReadyState,
+      store.setState(({ playback }) => {
+        playback.ended = false
+        playback.readyState = media.readyState as MediaReadyState
       })
     }
 
     const loadedDataHandler = () => {
-      store.setState({
-        canPlay: media.readyState >= MediaReadyState.HAVE_FUTURE_DATA,
-        ended: false,
-        readyState: media.readyState as MediaReadyState,
+      store.setState(({ playback }) => {
+        playback.canPlay = media.readyState >= MediaReadyState.HAVE_FUTURE_DATA
+        playback.ended = false
+        playback.readyState = media.readyState as MediaReadyState
       })
     }
 
     const canPlayHandler = () => {
-      store.setState({
-        canPlay: true,
-        readyState: media.readyState as MediaReadyState,
-        status: media.paused ? "paused" : "playing",
+      store.setState(({ playback }) => {
+        playback.canPlay = true
+        playback.readyState = media.readyState as MediaReadyState
+        playback.status = media.paused ? "paused" : "playing"
       })
     }
 
     const canPlayThroughHandler = () => {
-      store.setState({
-        canPlay: true,
-        canPlayThrough: true,
-        readyState: media.readyState as MediaReadyState,
-        status: media.paused ? "paused" : "playing",
+      store.setState(({ playback }) => {
+        playback.canPlay = true
+        playback.canPlayThrough = true
+        playback.readyState = media.readyState as MediaReadyState
+        playback.status = media.paused ? "paused" : "playing"
       })
     }
 
     const waitingHandler = () => {
-      const prevStatus = store.getState().status
-      store.setState({ status: "buffering" })
+      const prevStatus = store.getState().playback.status
 
-      store.getState().onBuffering?.({ isBuffering: true })
-      store.getState().onStatusChange?.({ prevStatus, status: "buffering" })
+      store.setState(({ playback }) => {
+        playback.status = "buffering"
+      })
+
+      events.emit("buffering", { isBuffering: true })
+      events.emit("statuschange", { prevStatus, status: "buffering" })
     }
 
     const stalledHandler = () => {
-      const prevStatus = store.getState().status
-      store.setState({ status: "buffering" })
+      const prevStatus = store.getState().playback.status
 
-      store.getState().onBuffering?.({ isBuffering: true })
-      store.getState().onStatusChange?.({ prevStatus, status: "buffering" })
+      store.setState(({ playback }) => {
+        playback.status = "buffering"
+      })
+
+      events.emit("buffering", { isBuffering: true })
+      events.emit("statuschange", { prevStatus, status: "buffering" })
     }
 
     const errorHandler = () => {
-      store.setState({
-        error: media.error,
-        status: "error",
+      store.setState(({ playback }) => {
+        playback.error = media.error
+        playback.status = "error"
       })
     }
 
@@ -361,5 +352,7 @@ export function usePlaybackStates() {
       off(media, "stalled", stalledHandler)
       off(media, "error", errorHandler)
     }
-  }, [store, mediaRef])
+  }, [events, store, mediaElement])
+
+  return null
 }
