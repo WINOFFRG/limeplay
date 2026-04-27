@@ -13,9 +13,9 @@ import { LLMCopyButton, ViewOptions } from "@/components/ai/page-actions"
 import { getMDXComponents } from "@/components/mdx-components"
 import { getPageImage, source } from "@/lib/source"
 
-export async function generateMetadata(
-  props: { params: Promise<{ slug?: string[] }> }
-): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Promise<{ slug?: string[] }>
+}): Promise<Metadata> {
   const params = await props.params
   const page = source.getPage(params.slug)
   if (!page) notFound()
