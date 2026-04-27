@@ -23,34 +23,49 @@ The codebase is structured around:
 Inside `apps/www/registry/default/blocks`, final reference implementations exist.
 `linear-player` is the **primary source of truth** and should always be used as the baseline example.
 
-We are using Tailwind CSS v4 for Styling, Zustand for state management and Shadcn UI (w/ Radix or BaseUI) for primitive components, React v19 and Next.js v16 for framework. Limeplay library uses shaka-player for player engine.
+We are using Tailwind CSS v4 for styling, Zustand + Immer for state management, shadcn/ui (w/ Radix or BaseUI) for primitive components, React v19 and Next.js v16 for framework. Limeplay uses shaka-player for player engine.
 
 ---
 
 ## Core Architecture (MANDATORY)
 
-Limeplay uses an **Event & Action Bridge** system in components.
+Limeplay uses a **feature-based composition** system via `createMediaKit`.
 
-### Event Bridge
+### Feature System
 
-* All native media events must be captured **only** inside `PlayerHooks`
-* Event state hooks (`usePlayerStates`, `useVolumeStates`, etc.) are **singleton**
-* Never call state hooks directly inside UI components
+* Features are registered via `createMediaKit({ features: [...] as const })`
+* Each feature exports `xxxFeature()` → returns `MediaFeature<XxxStore>` with `createSlice`, `key`, and optional `Setup` component
+* Setup components auto-mount inside `MediaProvider` — no manual wiring needed
+* Available features: `mediaFeature`, `playerFeature`, `playbackFeature`, `volumeFeature`, `timelineFeature`, `playlistFeature`, `captionsFeature`, `playbackRateFeature`, `pictureInPictureFeature`, `assetFeature`
 
-### Action Bridge
+### State Access
 
-* UI components trigger media actions using:
+* Per-feature selectors: `useXxxStore(s => s.field)` — always use granular selectors
+* Unified store: `media.useMediaStore(s => s.xxx.field)` — for cross-feature access
+* Imperative API: `media.useMediaApi()` → `api.getState()`, `api.setState()`
 
-  * `usePlayer`
-  * `useVolume`
-  * `useTimeline`
+### Event System
+
+* `MediaEventEmitter` — typed event bus shared via React context
+* Access via `useMediaEvents()` → `events.on("eventname", handler)`
+* 18 typed events: `play`, `pause`, `ended`, `buffering`, `statuschange`, `volumechange`, `mute`, `timeupdate`, `durationchange`, `seek`, `ratechange`, `playerready`, `playererror`, `playbackerror`, `bufferingchange`, `enterpictureinpicture`, `leavepictureinpicture`, `playlistchange`
+* Event names use lowercase native format (not camelCase)
+
+### What Does NOT Exist (Deleted)
+
+* ❌ `PlayerHooks` component
+* ❌ Convenience hooks: `usePlayback()`, `useVolume()`, `useTimeline()`, `usePlaybackRate()`, `usePictureInPicture()`, `useMedia()`
+* ❌ State hooks: `usePlayerStates`, `useVolumeStates`, `useTimelineStates`
+* ❌ Store creators: `createPlaybackStore`, `createVolumeStore`, `createMediaStore`
+* ❌ `mediaRef` (replaced by `mediaElement`)
+* ❌ `on*` callback fields in stores (replaced by event emitter)
 
 ---
 
 ## State & Performance Rules (STRICT)
 
 * Each `MediaProvider` owns an isolated Zustand store
-* All event listeners live inside `PlayerHooks`
+* Use granular `useXxxStore(s => s.field)` selectors — never select entire slices
 * Use `React.memo`, `useCallback`, and `useMemo` for high-frequency components
 * Never introduce unnecessary re-renders
 
@@ -100,7 +115,7 @@ If accessibility is missing, **stop and ask**.
 
 ---
 
-## 🔁 Development Workflow Rules (CRITICAL)
+## Development Workflow Rules (CRITICAL)
 
 ### Phase 1 — Feature Development (DEFAULT MODE)
 
@@ -123,7 +138,7 @@ Once feature development is complete:
 
 👉 **You MUST ask explicitly:**
 
-> “Is feature development complete, and should I proceed with registry updates?”
+> "Is feature development complete, and should I proceed with registry updates?"
 
 Only proceed if the user confirms.
 
@@ -131,7 +146,7 @@ Only proceed if the user confirms.
 
 * Registry lives under `apps/www/registry`
 * Any component/hook added or changed must be reflected in registry
-* Registry validation command:
+* Registry build command:
 
 ```bash
 bun run registry:build
@@ -141,7 +156,7 @@ bun run registry:build
 * Once done, **ask the user to test** and provide the exact install command:
 
 ```bash
-bun x shadcn@latest add http://localhost:3000/r/styles/default/$$.json
+npx shadcn add @limeplay/$$
 ```
 
 (Replace `$$` with the component name.)
@@ -150,65 +165,32 @@ bun x shadcn@latest add http://localhost:3000/r/styles/default/$$.json
 
 ### Phase 3 — Documentation (ASK FIRST)
 
-We are using fumadocs for documentation. 
+We are using fumadocs for documentation.
 
 After registry confirmation:
 
 👉 **You MUST ask explicitly:**
 
-> “Should I proceed with documentation updates?”
+> "Should I proceed with documentation updates?"
 
 #### Documentation Expectations
 
 * Professional, concise, to-the-point
 * No verbosity, no storytelling
-* Clear installation → usage → understanding → API
+* Clear installation → feature registration → usage → API
 * Every doc page must **look and feel consistent** with others
-* Follow the same architecture and structure unless explicitly told otherwise
 * Documentation must live under `apps/www/content/docs`
 * Internal registry imports must **never** appear in docs
 * All examples must use external import paths:
-
   * `@/components/limeplay/*`
   * `@/hooks/limeplay/*`
-* Use the step component for step-by-step instructions and only when, when there are more than one step.
-* Use the logical thinking to add code highlighting and line numbers where required. For example if the code is about use-player component then it should be highlighted well.
-
-```tsx lineNumbers title="lib/create-media-store.ts"
-// [!code ++]
-import { createPlaybackStore, PlaybackStore } from "@/hooks/limeplay/use-playback"
-import { createPlayerStore, PlayerStore } from "@/hooks/limeplay/use-player"
-import { createVolumeStore, VolumeStore } from "@/hooks/limeplay/use-volume"
-
-export type TypeMediaStore = PlaybackStore & PlayerStore & VolumeStore & {} // [!code ++]
-
-export function createMediaStore(initProps?: Partial<CreateMediaStoreProps>) {
-  const mediaStore = create<TypeMediaStore>()((...etc) => ({
-    ...createPlaybackStore(...etc),
-    ...createPlayerStore(...etc),
-    ...createVolumeStore(...etc), // [!code ++]
-    ...initProps,
-  }))
-  return mediaStore
-}
-```
-
-In the above code `export type TypeMediaStore = PlaybackStore & PlayerStore & VolumeStore & {} // [!code ++]` this could be line break to only highlight the line i.e `PlayerStore` since the documentation is about use-player component. Whenever required or confused ask for clarification.
+* Use the step component for multi-step instructions
+* Use code highlighting and line numbers where helpful
 
 If a change impacts multiple docs:
 
 * Apply updates **systematically**
-* Do NOT improvise different structures per page
 * Keep tone, structure, and formatting consistent
-
-* Ensure docs include:
-  1. `<ComponentPreview name="$$" withPlayer />` where applicable
-  2. Installation (Event & Action Bridge setup - In components wherever required)
-  3. Usage (working examples)
-  4. Understanding section (clear explanation)
-  5. API Reference using `<AutoTypeTable />` 
-     1. Here is the link to documentation of this https://www.fumadocs.dev/docs/ui/components/auto-type-table.mdx
-
 
 ---
 
