@@ -27,7 +27,8 @@ export const Root = React.forwardRef<
   const readyState = usePlaybackStore((state) => state.readyState)
   const [currentValue, setCurrentValue] = useState(volume)
 
-  const disabled = props.disabled || readyState < MediaReadyState.HAVE_METADATA
+  const disabled =
+    props.disabled || readyState < MediaReadyState.HAVE_METADATA || !hasAudio
 
   useImperativeHandle(ref, () => internalRef.current)
   const setVolume = useVolumeStore((state) => state.setVolume)
@@ -62,10 +63,6 @@ export const Root = React.forwardRef<
     },
     orientation,
   })
-
-  if (!hasAudio) {
-    return null
-  }
 
   const currentVolumeValue = muted
     ? 0

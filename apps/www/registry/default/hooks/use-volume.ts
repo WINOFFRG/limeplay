@@ -150,14 +150,19 @@ function VolumeSetup() {
     }
 
     on(media, "volumechange", volumeHandler)
-    on(media, "audiotrackschanged", audioTracksChangedHandler)
 
     volumeHandler()
-    audioTracksChangedHandler()
+
+    if (playerInstance) {
+      on(playerInstance, "trackschanged", audioTracksChangedHandler)
+      audioTracksChangedHandler()
+    }
 
     return () => {
       off(media, "volumechange", volumeHandler)
-      off(media, "audiotrackschanged", audioTracksChangedHandler)
+      if (playerInstance) {
+        off(playerInstance, "trackschanged", audioTracksChangedHandler)
+      }
     }
   }, [events, mediaElement, getHasAudio, store])
 
