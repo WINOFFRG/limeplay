@@ -59,13 +59,15 @@ import { useMediaStore } from "@/lib/media"
 // or per-feature hooks:
 import { useVolumeStore } from "@/hooks/limeplay/use-volume"
 
-function VolumeDisplay() {
-  // Option A: unified store (namespaced)
+// Option A: unified store (namespaced)
+function VolumeDisplayNamespaced() {
   const level = useMediaStore(s => s.volume.level)
+  return <span>{Math.round(level * 100)}%</span>
+}
 
-  // Option B: feature-scoped hook (flat)
+// Option B: feature-scoped hook (flat)
+function VolumeDisplayScoped() {
   const level = useVolumeStore(s => s.level)
-
   return <span>{Math.round(level * 100)}%</span>
 }
 ```
