@@ -28,17 +28,17 @@ Access via `usePlayerStore(selector)`:
 ```tsx
 import { usePlayerStore } from "@/hooks/limeplay/use-player"
 
-const player = usePlayerStore(s => s.instance)
-const containerRef = usePlayerStore(s => s.containerRef)
+const player = usePlayerStore((s) => s.instance)
+const containerRef = usePlayerStore((s) => s.containerRef)
 ```
 
 ### State
 
-| Field | Type | Description |
-|---|---|---|
-| `instance` | `shaka.Player \| null` | Shaka Player instance |
-| `containerRef` | `HTMLDivElement \| null` | Player container element |
-| `preloadManagers` | `Map<string, PreloadManager>` | Active preload managers |
+| Field             | Type                          | Description              |
+| ----------------- | ----------------------------- | ------------------------ |
+| `instance`        | `shaka.Player \| null`        | Shaka Player instance    |
+| `containerRef`    | `HTMLDivElement \| null`      | Player container element |
+| `preloadManagers` | `Map<string, PreloadManager>` | Active preload managers  |
 
 ## usePlayer Hook
 
@@ -59,26 +59,29 @@ const { load, preload, player } = usePlayer({
 
 ### Options
 
-<AutoTypeTable path="./registry/default/hooks/use-player.ts" name="UsePlayerOptions" />
+<AutoTypeTable
+  path="./registry/default/hooks/use-player.ts"
+  name="UsePlayerOptions"
+/>
 
 ### Returns
 
-| Method | Description |
-|---|---|
-| `load(asset, startTime?)` | Load an asset into Shaka Player |
-| `preload(asset)` | Preload an asset for instant playback |
-| `cancelPreload(assetId)` | Cancel a pending preload |
-| `isPreloaded(assetId)` | Check if an asset is preloaded |
-| `player` | Current Shaka Player instance |
+| Method                    | Description                           |
+| ------------------------- | ------------------------------------- |
+| `load(asset, startTime?)` | Load an asset into Shaka Player       |
+| `preload(asset)`          | Preload an asset for instant playback |
+| `cancelPreload(assetId)`  | Cancel a pending preload              |
+| `isPreloaded(assetId)`    | Check if an asset is preloaded        |
+| `player`                  | Current Shaka Player instance         |
 
 ## Events
 
-| Event | Payload | When |
-|---|---|---|
-| `playerready` | `{ player }` | Shaka Player initialized |
-| `playererror` | `{ error }` | Player-level error |
-| `playbackerror` | `Error` | Playback error |
-| `bufferingchange` | `{ isBuffering }` | Buffering state changes |
+| Event             | Payload           | When                     |
+| ----------------- | ----------------- | ------------------------ |
+| `playerready`     | `{ player }`      | Shaka Player initialized |
+| `playererror`     | `{ error }`       | Player-level error       |
+| `playbackerror`   | `Error`           | Playback error           |
+| `bufferingchange` | `{ isBuffering }` | Buffering state changes  |
 
 ### Debug Mode
 

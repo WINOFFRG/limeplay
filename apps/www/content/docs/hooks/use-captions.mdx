@@ -28,25 +28,25 @@ Access via `useCaptionsStore(selector)`:
 ```tsx
 import { useCaptionsStore } from "@/hooks/limeplay/use-captions"
 
-const visible = useCaptionsStore(s => s.visible)
-const tracks = useCaptionsStore(s => s.tracks)
-const activeTrack = useCaptionsStore(s => s.activeTrack)
+const visible = useCaptionsStore((s) => s.visible)
+const tracks = useCaptionsStore((s) => s.tracks)
+const activeTrack = useCaptionsStore((s) => s.activeTrack)
 ```
 
 ### State
 
-| Field | Type | Description |
-|---|---|---|
-| `visible` | `boolean` | Whether captions are visible |
-| `activeTrack` | `shaka.extern.TextTrack \| null` | Currently active text track |
-| `tracks` | `shaka.extern.TextTrack[]` | Available text tracks |
-| `containerElement` | `HTMLDivElement \| null` | Captions render container |
+| Field              | Type                             | Description                  |
+| ------------------ | -------------------------------- | ---------------------------- |
+| `visible`          | `boolean`                        | Whether captions are visible |
+| `activeTrack`      | `shaka.extern.TextTrack \| null` | Currently active text track  |
+| `tracks`           | `shaka.extern.TextTrack[]`       | Available text tracks        |
+| `containerElement` | `HTMLDivElement \| null`         | Captions render container    |
 
 ### Actions
 
-| Method | Description |
-|---|---|
-| `toggleVisibility()` | Toggle caption visibility |
+| Method                    | Description                            |
+| ------------------------- | -------------------------------------- |
+| `toggleVisibility()`      | Toggle caption visibility              |
 | `setContainerElement(el)` | Set the captions container DOM element |
 
 The feature auto-detects text tracks from the Shaka Player instance and selects a default based on the device language.

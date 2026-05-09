@@ -45,12 +45,12 @@ function CustomSlider() {
 
 ### Options
 
-| Option | Type | Description |
-|---|---|---|
-| `orientation` | `"horizontal" \| "vertical"` | Slider direction |
-| `onPointerDown` | `(progress, event) => void` | Click/touch start |
-| `onPointerMove` | `(progress, isPointerDown, event) => void` | Move/drag |
-| `onPointerUp` | `(event) => void` | Release |
-| `onPointerOut` | `(event) => void` | Pointer leaves |
+| Option          | Type                                       | Description       |
+| --------------- | ------------------------------------------ | ----------------- |
+| `orientation`   | `"horizontal" \| "vertical"`               | Slider direction  |
+| `onPointerDown` | `(progress, event) => void`                | Click/touch start |
+| `onPointerMove` | `(progress, isPointerDown, event) => void` | Move/drag         |
+| `onPointerUp`   | `(event) => void`                          | Release           |
+| `onPointerOut`  | `(event) => void`                          | Pointer leaves    |
 
 `progress` is a normalized value (0–1) based on pointer position within the track element.

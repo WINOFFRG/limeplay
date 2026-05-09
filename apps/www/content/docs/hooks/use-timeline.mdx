@@ -28,32 +28,32 @@ Access via `useTimelineStore(selector)`:
 ```tsx
 import { useTimelineStore } from "@/hooks/limeplay/use-timeline"
 
-const currentTime = useTimelineStore(s => s.currentTime)
-const duration = useTimelineStore(s => s.duration)
-const progress = useTimelineStore(s => s.progress)
-const seek = useTimelineStore(s => s.seek)
+const currentTime = useTimelineStore((s) => s.currentTime)
+const duration = useTimelineStore((s) => s.duration)
+const progress = useTimelineStore((s) => s.progress)
+const seek = useTimelineStore((s) => s.seek)
 ```
 
 ### State
 
-| Field | Type | Description |
-|---|---|---|
-| `currentTime` | `number` | Current playback time (seconds) |
-| `duration` | `number` | Total duration (seconds) |
-| `progress` | `number` | Playback progress (0–1) |
-| `hoveringTime` | `number` | Time at hover position (seconds) |
-| `isHovering` | `boolean` | Whether user is hovering the timeline |
-| `isLive` | `boolean` | Whether stream is live |
-| `liveLatency` | `number \| null` | Seconds behind live edge |
-| `buffered` | `BufferedRange[]` | Array of buffered time ranges |
+| Field          | Type              | Description                           |
+| -------------- | ----------------- | ------------------------------------- |
+| `currentTime`  | `number`          | Current playback time (seconds)       |
+| `duration`     | `number`          | Total duration (seconds)              |
+| `progress`     | `number`          | Playback progress (0–1)               |
+| `hoveringTime` | `number`          | Time at hover position (seconds)      |
+| `isHovering`   | `boolean`         | Whether user is hovering the timeline |
+| `isLive`       | `boolean`         | Whether stream is live                |
+| `liveLatency`  | `number \| null`  | Seconds behind live edge              |
+| `buffered`     | `BufferedRange[]` | Array of buffered time ranges         |
 
 ### Actions
 
-| Method | Description |
-|---|---|
-| `seek(time)` | Seek to specific time |
-| `setHoveringTime(time)` | Set the hover preview time |
-| `setIsHovering(isHovering)` | Set hover state |
+| Method                                    | Description                     |
+| ----------------------------------------- | ------------------------------- |
+| `seek(time)`                              | Seek to specific time           |
+| `setHoveringTime(time)`                   | Set the hover preview time      |
+| `setIsHovering(isHovering)`               | Set hover state                 |
 | `processBufferedRanges(ranges, variant?)` | Process ranges for UI rendering |
 
 ### Buffered Range Variants
@@ -70,11 +70,11 @@ For live streams, the timeline uses Shaka Player's `seekRange()` for proper DVR 
 
 ## Events
 
-| Event | Payload | When |
-|---|---|---|
-| `timeupdate` | `{ currentTime, duration, progress }` | Position updates (polled) |
-| `durationchange` | `{ duration }` | Duration changes |
-| `seek` | `{ from, to }` | User seeks |
+| Event            | Payload                               | When                      |
+| ---------------- | ------------------------------------- | ------------------------- |
+| `timeupdate`     | `{ currentTime, duration, progress }` | Position updates (polled) |
+| `durationchange` | `{ duration }`                        | Duration changes          |
+| `seek`           | `{ from, to }`                        | User seeks                |
 
 ## API Reference
 

@@ -82,7 +82,9 @@ export function StreamPanel({
   }, [presets])
 
   const selectedPresetName = useMemo(
-    () => presets.find((preset) => preset.id === store.presetId)?.name ?? "Select a stream",
+    () =>
+      presets.find((preset) => preset.id === store.presetId)?.name ??
+      "Select a stream",
     [presets, store.presetId]
   )
 
@@ -211,7 +213,9 @@ export function StreamPanel({
             onClick={() => setActiveOverlay("presets")}
             type="button"
           >
-            <span className="text-sm text-muted-foreground">{selectedPresetName}</span>
+            <span className="text-sm text-muted-foreground">
+              {selectedPresetName}
+            </span>
             <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
           </button>
         </Field>

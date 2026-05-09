@@ -21,7 +21,10 @@ export function StreamPanelProvider({ children }: React.PropsWithChildren) {
   const [open, setOpen] = useState(false)
 
   const onOpenChange = useCallback(
-    (isOpen: boolean, _eventDetails: PopoverPrimitive.Root.ChangeEventDetails) => {
+    (
+      isOpen: boolean,
+      _eventDetails: PopoverPrimitive.Root.ChangeEventDetails
+    ) => {
       setOpen(isOpen)
     },
     []

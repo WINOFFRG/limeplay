@@ -28,46 +28,46 @@ Access via `usePlaylistStore(selector)`:
 ```tsx
 import { usePlaylistStore } from "@/hooks/limeplay/use-playlist"
 
-const queue = usePlaylistStore(s => s.queue)
-const currentItem = usePlaylistStore(s => s.currentItem)
-const repeatMode = usePlaylistStore(s => s.repeatMode)
+const queue = usePlaylistStore((s) => s.queue)
+const currentItem = usePlaylistStore((s) => s.currentItem)
+const repeatMode = usePlaylistStore((s) => s.repeatMode)
 ```
 
 ### State
 
-| Field | Type | Description |
-|---|---|---|
-| `queue` | `PlaylistItem[]` | Current playlist items |
-| `currentItem` | `PlaylistItem \| null` | Currently playing item |
-| `currentIndex` | `number` | Index of current item |
-| `repeatMode` | `"off" \| "one" \| "all"` | Repeat mode |
-| `shuffle` | `boolean` | Shuffle enabled |
-| `shuffleOrder` | `number[]` | Randomized indices |
-| `history` | `PlaylistItem[]` | Playback history |
-| `sessionId` | `string` | Current session identifier |
+| Field          | Type                      | Description                |
+| -------------- | ------------------------- | -------------------------- |
+| `queue`        | `PlaylistItem[]`          | Current playlist items     |
+| `currentItem`  | `PlaylistItem \| null`    | Currently playing item     |
+| `currentIndex` | `number`                  | Index of current item      |
+| `repeatMode`   | `"off" \| "one" \| "all"` | Repeat mode                |
+| `shuffle`      | `boolean`                 | Shuffle enabled            |
+| `shuffleOrder` | `number[]`                | Randomized indices         |
+| `history`      | `PlaylistItem[]`          | Playback history           |
+| `sessionId`    | `string`                  | Current session identifier |
 
 ### Actions
 
-| Method | Description |
-|---|---|
-| `load(items, startIndex?)` | Load a playlist |
-| `next()` | Advance to next item |
-| `previous()` | Go to previous item (from history) |
-| `skipTo(index)` | Jump to specific index |
-| `skipToId(id)` | Jump to item by ID |
-| `append(items)` | Add items to end |
-| `prepend(items)` | Add items to start |
-| `insert(items, atIndex)` | Insert at position |
-| `playNext(items)` | Insert after current |
-| `remove(id)` | Remove by ID |
-| `removeAt(index)` | Remove by index |
-| `reorder(from, to)` | Move item position |
-| `clear()` | Clear the playlist |
-| `setRepeatMode(mode)` | Set repeat mode |
-| `cycleRepeatMode()` | Cycle through off → one → all |
-| `setShuffle(enabled)` | Enable/disable shuffle |
-| `toggleShuffle()` | Toggle shuffle |
-| `newSession()` | Generate new session ID |
+| Method                     | Description                        |
+| -------------------------- | ---------------------------------- |
+| `load(items, startIndex?)` | Load a playlist                    |
+| `next()`                   | Advance to next item               |
+| `previous()`               | Go to previous item (from history) |
+| `skipTo(index)`            | Jump to specific index             |
+| `skipToId(id)`             | Jump to item by ID                 |
+| `append(items)`            | Add items to end                   |
+| `prepend(items)`           | Add items to start                 |
+| `insert(items, atIndex)`   | Insert at position                 |
+| `playNext(items)`          | Insert after current               |
+| `remove(id)`               | Remove by ID                       |
+| `removeAt(index)`          | Remove by index                    |
+| `reorder(from, to)`        | Move item position                 |
+| `clear()`                  | Clear the playlist                 |
+| `setRepeatMode(mode)`      | Set repeat mode                    |
+| `cycleRepeatMode()`        | Cycle through off → one → all      |
+| `setShuffle(enabled)`      | Enable/disable shuffle             |
+| `toggleShuffle()`          | Toggle shuffle                     |
+| `newSession()`             | Generate new session ID            |
 
 ## usePlaylist Hook
 
@@ -81,8 +81,8 @@ const { next, previous, hasNext, hasPrevious, orderedItems } = usePlaylist()
 
 ## Events
 
-| Event | Payload | When |
-|---|---|---|
+| Event            | Payload               | When                 |
+| ---------------- | --------------------- | -------------------- |
 | `playlistchange` | `PlaylistChangeEvent` | Current item changes |
 
 `PlaylistChangeEvent` includes `currentIndex`, `currentItem`, `previousIndex`, `previousItem`, and `reason` (`"load"`, `"next"`, `"previous"`, `"skip"`, `"remove"`).

@@ -40,9 +40,7 @@ export function CustomDemoControls({
         <div className="flex items-start gap-4">
           <div className="min-w-0 flex-1">{children}</div>
           {trailingSlot ? (
-            <div className="relative z-20 ml-auto shrink-0">
-              {trailingSlot}
-            </div>
+            <div className="relative z-20 ml-auto shrink-0">{trailingSlot}</div>
           ) : null}
         </div>
       </div>

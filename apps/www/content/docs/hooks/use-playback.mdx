@@ -28,62 +28,62 @@ Access via `usePlaybackStore(selector)`:
 ```tsx
 import { usePlaybackStore } from "@/hooks/limeplay/use-playback"
 
-const status = usePlaybackStore(s => s.status)
-const paused = usePlaybackStore(s => s.paused)
-const togglePaused = usePlaybackStore(s => s.togglePaused)
+const status = usePlaybackStore((s) => s.status)
+const paused = usePlaybackStore((s) => s.paused)
+const togglePaused = usePlaybackStore((s) => s.togglePaused)
 ```
 
 ### State
 
-| Field | Type | Description |
-|---|---|---|
-| `paused` | `boolean` | Whether media is paused |
-| `ended` | `boolean` | Whether media has ended |
-| `loop` | `boolean` | Whether looping is enabled |
-| `status` | `MediaStatus` | Current playback status |
-| `readyState` | `number` | Media ready state (0-4) |
-| `canPlay` | `boolean` | Enough data to start playback |
-| `canPlayThrough` | `boolean` | Enough data to play without buffering |
-| `error` | `MediaError \| null` | Current error, if any |
-| `networkState` | `number` | Network state |
+| Field            | Type                 | Description                           |
+| ---------------- | -------------------- | ------------------------------------- |
+| `paused`         | `boolean`            | Whether media is paused               |
+| `ended`          | `boolean`            | Whether media has ended               |
+| `loop`           | `boolean`            | Whether looping is enabled            |
+| `status`         | `MediaStatus`        | Current playback status               |
+| `readyState`     | `number`             | Media ready state (0-4)               |
+| `canPlay`        | `boolean`            | Enough data to start playback         |
+| `canPlayThrough` | `boolean`            | Enough data to play without buffering |
+| `error`          | `MediaError \| null` | Current error, if any                 |
+| `networkState`   | `number`             | Network state                         |
 
 ### Actions
 
-| Method | Description |
-|---|---|
-| `play()` | Start playback (returns `Promise`) |
-| `pause()` | Pause playback |
+| Method           | Description                           |
+| ---------------- | ------------------------------------- |
+| `play()`         | Start playback (returns `Promise`)    |
+| `pause()`        | Pause playback                        |
 | `togglePaused()` | Toggle play/pause (returns `Promise`) |
-| `restart()` | Restart from the beginning |
-| `setLoop(loop)` | Enable/disable looping |
-| `toggleLoop()` | Toggle loop state |
+| `restart()`      | Restart from the beginning            |
+| `setLoop(loop)`  | Enable/disable looping                |
+| `toggleLoop()`   | Toggle loop state                     |
 
 ## Events
 
 Emits to the [event system](/docs/events):
 
-| Event | Payload | When |
-|---|---|---|
-| `play` | — | Media starts playing |
-| `pause` | — | Media is paused |
-| `ended` | — | Media reaches the end |
-| `buffering` | `{ isBuffering }` | Buffering state changes |
-| `statuschange` | `{ status, prevStatus }` | Status transitions |
+| Event          | Payload                  | When                    |
+| -------------- | ------------------------ | ----------------------- |
+| `play`         | —                        | Media starts playing    |
+| `pause`        | —                        | Media is paused         |
+| `ended`        | —                        | Media reaches the end   |
+| `buffering`    | `{ isBuffering }`        | Buffering state changes |
+| `statuschange` | `{ status, prevStatus }` | Status transitions      |
 
 ### Media Status Values
 
-| Status | Description |
-|---|---|
-| `init` | Initializing (readyState 0) |
-| `loading` | Loading media data |
-| `buffering` | Waiting for data |
-| `canplay` | Ready to start playback |
+| Status           | Description                             |
+| ---------------- | --------------------------------------- |
+| `init`           | Initializing (readyState 0)             |
+| `loading`        | Loading media data                      |
+| `buffering`      | Waiting for data                        |
+| `canplay`        | Ready to start playback                 |
 | `canplaythrough` | Ready to play through without buffering |
-| `playing` | Currently playing |
-| `paused` | Paused |
-| `ended` | Reached the end |
-| `error` | Error occurred |
-| `stopped` | Stopped |
+| `playing`        | Currently playing                       |
+| `paused`         | Paused                                  |
+| `ended`          | Reached the end                         |
+| `error`          | Error occurred                          |
+| `stopped`        | Stopped                                 |
 
 ## API Reference
 

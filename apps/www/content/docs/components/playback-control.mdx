@@ -12,7 +12,8 @@ npx shadcn add @limeplay/playback-control
 ```
 
 <Callout>
-Requires [`playbackFeature`](/docs/hooks/use-playback) registered in your [`createMediaKit`](/docs/components/media-provider).
+  Requires [`playbackFeature`](/docs/hooks/use-playback) registered in your
+  [`createMediaKit`](/docs/components/media-provider).
 </Callout>
 
 ## Usage
@@ -25,7 +26,7 @@ import { usePlaybackStore } from "@/hooks/limeplay/use-playback"
 import { PlaybackControl } from "@/components/limeplay/playback-control"
 
 export function PlaybackButton() {
-  const status = usePlaybackStore(s => s.status)
+  const status = usePlaybackStore((s) => s.status)
 
   return (
     <PlaybackControl asChild>

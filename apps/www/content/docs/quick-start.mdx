@@ -60,7 +60,8 @@ export const media = createMediaKit({
   ] as const,
 })
 
-export const { MediaProvider, useMediaStore, useMediaApi, useMediaEvents } = media
+export const { MediaProvider, useMediaStore, useMediaApi, useMediaEvents } =
+  media
 ```
 
 </Step>
@@ -135,11 +136,7 @@ export function MediaPlayer({ src }: { src: string }) {
     })
   }, [events, src])
 
-  return (
-    <MediaProvider>
-      {/* ... same layout as Step 3 */}
-    </MediaProvider>
-  )
+  return <MediaProvider>{/* ... same layout as Step 3 */}</MediaProvider>
 }
 ```
 
