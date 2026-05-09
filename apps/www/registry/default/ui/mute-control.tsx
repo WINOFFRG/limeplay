@@ -10,14 +10,16 @@ import {
 } from "@/registry/default/hooks/use-playback"
 import { useVolumeStore } from "@/registry/default/hooks/use-volume"
 
-export interface MuteControlProps extends React.ComponentProps<typeof Button> {
+export interface MuteControlProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean
+  render?: React.ReactElement
   shortcut?: string
 }
 
 export type MuteControlPropsDocs = Pick<
   MuteControlProps,
-  "asChild" | "shortcut"
+  "asChild" | "render" | "shortcut"
 >
 
 export const MuteControl = React.forwardRef<
@@ -34,11 +36,12 @@ export const MuteControl = React.forwardRef<
     children,
     disabled: userDisabled,
     onClick,
+    render,
     shortcut,
     ...restProps
   } = props
 
-  const Comp = asChild ? Slot : Button
+  const Comp = render ? Slot : asChild ? Slot : Button
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onClick?.(event)
@@ -65,7 +68,9 @@ export const MuteControl = React.forwardRef<
       onClick={handleClick}
       ref={forwardedRef}
     >
-      {children}
+      {render
+        ? React.cloneElement(render, undefined, children)
+        : children}
     </Comp>
   )
 })

@@ -143,8 +143,22 @@ async function validateBuiltRegistryJson() {
   return result.data
 }
 
+const SHADCN_REGISTRY_URL = "https://ui.shadcn.com/r/styles/default"
+
+async function resolveFromShadcn(name: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${SHADCN_REGISTRY_URL}/${name}.json`, {
+      method: "HEAD",
+    })
+    return res.ok
+  } catch {
+    return false
+  }
+}
+
 /**
  * 5. Validate registryDependencies resolve to existing items.
+ *    Unresolved deps are checked against shadcn's public registry.
  */
 async function validateDependencyResolution(
   registryData: null | {
@@ -159,19 +173,17 @@ async function validateDependencyResolution(
   console.log("\n🔗 Validating dependency resolution...")
 
   const allNames = new Set(registryData.items.map((item) => item.name))
+  const shadcnCache = new Map<string, boolean>()
   let missingCount = 0
 
   for (const item of registryData.items) {
     if (!item.registryDependencies?.length) continue
 
     for (const dep of item.registryDependencies) {
-      // URL dependencies - extract the name and check the JSON exists
       if (dep.startsWith("http")) {
         const depName = dep.split("/").pop()?.replace(".json", "")
         if (depName && !allNames.has(depName)) {
-          // Check if it's an external dependency (shadcn, etc.)
           if (!dep.includes("limeplay")) {
-            // External dependency - skip validation
             continue
           }
           warn(
@@ -182,8 +194,14 @@ async function validateDependencyResolution(
         continue
       }
 
-      // Non-URL dependencies
       if (!dep.startsWith("@") && !allNames.has(dep)) {
+        if (!shadcnCache.has(dep)) {
+          shadcnCache.set(dep, await resolveFromShadcn(dep))
+        }
+        if (shadcnCache.get(dep)) {
+          continue
+        }
+
         warn(`"${item.name}" depends on "${dep}" which is not in the registry`)
         missingCount++
       }

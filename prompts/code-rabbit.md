@@ -38,6 +38,9 @@ Flag PRs where:
 * Registry entries are missing
 * Dependencies are incorrect
 * Public APIs are undocumented
+* Block files in `lib/`, `ui/`, `hooks/` folders have filenames matching any registry item in the dependency tree — the shadcn CLI rewrites those imports to the registry item's target path instead of the block's file. Use `components/` folder (always block-scoped) or a non-colliding filename.
+* Dependencies with breaking major versions are unpinned (e.g. `"shaka-player"` instead of `"shaka-player@^4"`)
+* Control primitives support `asChild` but not `render?: React.ReactElement` — the b0 shadcn preset transforms `asChild` to `render` at install time, so primitives must accept both
 
 ---
 
@@ -85,6 +88,24 @@ Flag these patterns:
 * **Scope-violating mutations** — A setter for X must not silently clobber Y (e.g., muting should not zero the volume value).
 * **Retry exhaustion without fallthrough** — Any retry loop must have a path for when retries are spent; it must not hang.
 * **Split-owner mutable state** — If two APIs write the same shared state, one must be canonical and the other must document that it bypasses tracking.
+
+### Zustand + Immer Middleware Safety
+
+Flag and block these patterns in Zustand stores that use Immer middleware:
+
+* Reassigning the producer argument (e.g. `state = nextState`) instead of mutating draft or returning new state.
+* Returning `undefined` from a producer.
+* Mutating class instances without `[immerable] = true`.
+* Mutating exotic/non-draftable objects in draft updates.
+* Creating non-tree state (circular refs or one object referenced in multiple branches).
+* Mutating external payload objects after assigning them into draft state.
+* Assuming Immer-generated patches are minimal/optimal in patch-sensitive logic.
+* Nested `produce` calls where the inner result is not used.
+* Equality logic that depends on draft referential identity (`===`, `indexOf` against draft values).
+* Array mutations outside numeric indices or `length`.
+* With `enableArrayMethods()`, mutating callback parameters of overridden methods (`filter`, `find`, `some`, `every`, `slice`) as if they were drafts.
+
+If these are present, mark as correctness risk because Zustand subscriptions can be skipped or state can be mutated outside tracking.
 
 ---
 

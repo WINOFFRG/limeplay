@@ -4,7 +4,7 @@ import type { Asset } from "@/registry/default/hooks/use-asset"
 
 import { cn } from "@/lib/utils"
 import { BottomControls } from "@/registry/default/blocks/linear-player/components/bottom-controls"
-import { MediaProvider } from "@/registry/default/blocks/linear-player/lib/media"
+import { MediaProvider } from "@/registry/default/blocks/linear-player/lib/media-kit"
 import { CaptionsContainer } from "@/registry/default/ui/captions"
 import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"

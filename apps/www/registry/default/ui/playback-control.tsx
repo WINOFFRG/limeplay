@@ -9,12 +9,14 @@ import {
   usePlaybackStore,
 } from "@/registry/default/hooks/use-playback"
 
-interface PlaybackControlProps extends React.ComponentProps<typeof Button> {
+interface PlaybackControlProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
    * Render as child component using Radix Slot
    * @default false
    */
   asChild?: boolean
+  render?: React.ReactElement
   /**
    * Keyboard shortcut hint displayed in aria-label
    * @example "Space"
@@ -36,11 +38,12 @@ export const PlaybackControl = React.forwardRef<
     children,
     disabled: userDisabled,
     onClick,
+    render,
     shortcut,
     ...restProps
   } = props
 
-  const Comp = asChild ? Slot : Button
+  const Comp = render ? Slot : asChild ? Slot : Button
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onClick?.(event)
@@ -79,7 +82,9 @@ export const PlaybackControl = React.forwardRef<
       onClick={handleClick}
       ref={forwardedRef}
     >
-      {children}
+      {render
+        ? React.cloneElement(render, undefined, children)
+        : children}
     </Comp>
   )
 })

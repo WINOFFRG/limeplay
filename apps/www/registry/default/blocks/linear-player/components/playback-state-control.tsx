@@ -7,7 +7,7 @@ import {
   RepeatIcon,
 } from "@phosphor-icons/react"
 
-import { Button } from "@/registry/default/blocks/linear-player/ui/button"
+import { Button } from "@/registry/default/blocks/linear-player/components/button"
 import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
 import { PlaybackControl } from "@/registry/default/ui/playback-control"
 
