@@ -1,96 +1,51 @@
-// @ts-nocheck fix css later
-
 import React from "react"
 
-export function CustomDemoControls({ children }: React.PropsWithChildren) {
+interface CustomDemoControlsProps extends React.PropsWithChildren {
+  trailingSlot?: React.ReactNode
+}
+
+export function CustomDemoControls({
+  children,
+  trailingSlot,
+}: CustomDemoControlsProps) {
   return (
-    <section
-      className={`
-        relative mt-10 flex w-full animate-in flex-row bg-linear-to-br from-gray-100 to-primary px-8 py-3 transition-all duration-500 ease-in-out
-        fade-in-100
-        dark:from-neutral-900 dark:to-neutral-950
-      `}
-    >
-      <div
-        className={`
-          absolute top-0 left-[calc(var(--offset)/2*-1)] z-20 h-(--height) w-[calc(100%+var(--offset))]
-          bg-[linear-gradient(to_right,var(--color),var(--color)_50%,transparent_0,transparent)] bg-size-[var(--width)_var(--height)] mask-exclude
-          dark:bg-[linear-gradient(to_right,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]
-        `}
-        style={{
-          ["--background"]: "#ffffff",
-          "--color": "rgba(0, 0, 0, 0.2)",
-          "--color-dark": "rgba(255, 255, 255, 0.2)",
-          "--fade-stop": "90%",
-          "--height": "1px",
-          "--offset": "20px",
-          "--width": "5px",
-          maskComposite: "exclude",
-          maskImage:
-            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
-        }}
-      ></div>
+    <section className="relative overflow-hidden">
+      <svg className="pointer-events-none absolute top-0 left-0 z-10 h-px w-full">
+        <line
+          className="text-border"
+          stroke="currentColor"
+          strokeDasharray="8 4"
+          strokeWidth="1"
+          x1="0"
+          x2="100%"
+          y1="0"
+          y2="0"
+        />
+      </svg>
 
-      <div
-        className={`
-          absolute top-auto bottom-0 left-[calc(var(--offset)/2*-1)] z-20 h-(--height) w-[calc(100%+var(--offset))]
-          bg-[linear-gradient(to_right,var(--color),var(--color)_50%,transparent_0,transparent)] bg-size-[var(--width)_var(--height)] mask-exclude
-          dark:bg-[linear-gradient(to_right,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]
-        `}
-        style={{
-          "--background": "#ffffff",
-          "--color": "rgba(0, 0, 0, 0.2)",
-          "--color-dark": "rgba(255, 255, 255, 0.2)",
-          "--fade-stop": "90%",
-          "--height": "1px",
-          "--offset": "20px",
-          "--width": "5px",
-          maskComposite: "exclude",
-          maskImage:
-            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
-        }}
-      ></div>
+      <svg className="pointer-events-none absolute bottom-0 left-0 z-10 h-px w-full">
+        <line
+          className="text-border"
+          stroke="currentColor"
+          strokeDasharray="8 4"
+          strokeWidth="1"
+          x1="0"
+          x2="100%"
+          y1="0"
+          y2="0"
+        />
+      </svg>
 
-      <div
-        className={`
-          absolute top-[calc(var(--offset)/2*-1)] left-0 z-20 h-[calc(100%+var(--offset))] w-(--width)
-          bg-[linear-gradient(to_bottom,var(--color),var(--color)_50%,transparent_0,transparent)] bg-size-[var(--width)_var(--height)] mask-exclude
-          dark:bg-[linear-gradient(to_bottom,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]
-        `}
-        style={{
-          "--background": "#ffffff",
-          "--color": "rgba(0, 0, 0, 0.2)",
-          "--color-dark": "rgba(255, 255, 255, 0.2)",
-          "--fade-stop": "90%",
-          "--height": "5px",
-          "--offset": "40px",
-          "--width": "1px",
-          maskComposite: "exclude",
-          maskImage:
-            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
-        }}
-      ></div>
-
-      <div
-        className={`
-          absolute top-[calc(var(--offset)/2*-1)] right-0 left-auto z-20 h-[calc(100%+var(--offset))] w-(--width)
-          bg-[linear-gradient(to_bottom,var(--color),var(--color)_50%,transparent_0,transparent)] bg-size-[var(--width)_var(--height)] mask-exclude
-          dark:bg-[linear-gradient(to_bottom,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]
-        `}
-        style={{
-          "--background": "#ffffff",
-          "--color": "rgba(0, 0, 0, 0.2)",
-          "--color-dark": "rgba(255, 255, 255, 0.2)",
-          "--fade-stop": "90%",
-          "--height": "5px",
-          "--offset": "40px",
-          "--width": "1px",
-          maskComposite: "exclude",
-          maskImage:
-            "linear-gradient(to top,var(--background)var(--fade-stop),transparent),linear-gradient(to bottom,var(--background)var(--fade-stop),transparent),linear-gradient(black,black)",
-        }}
-      ></div>
-      {children}
+      <div className="px-8 py-4">
+        <div className="flex items-start gap-4">
+          <div className="min-w-0 flex-1">{children}</div>
+          {trailingSlot ? (
+            <div className="relative z-20 ml-auto shrink-0">
+              {trailingSlot}
+            </div>
+          ) : null}
+        </div>
+      </div>
     </section>
   )
 }
