@@ -83,7 +83,6 @@ export function ComponentPreviewControl({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: activeTab === "preview" ? 50 : -50 }}
             initial={{ opacity: 0, x: activeTab === "preview" ? -50 : 50 }}
-            key={activeTab}
             transition={{
               duration: 0.35,
               ease: [0.32, 0.72, 0, 1],
