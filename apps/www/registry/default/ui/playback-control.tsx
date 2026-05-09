@@ -50,9 +50,7 @@ export const PlaybackControl = React.forwardRef<
   }
 
   const isDisabled =
-    readyState < MediaReadyState.HAVE_CURRENT_DATA ||
-    status === "buffering" ||
-    userDisabled
+    readyState < MediaReadyState.HAVE_CURRENT_DATA || userDisabled
 
   const getDefaultAriaLabel = () => {
     const shortcutText = shortcut ? ` (keyboard shortcut ${shortcut})` : ""

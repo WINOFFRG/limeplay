@@ -43,17 +43,12 @@ export async function ComponentPreview({
   const filePath = path.join(Component?.files?.[0]?.path)
   const fileContent = await fs.promises.readFile(filePath, "utf-8")
   const fileName = path.basename(filePath)
-  const PreviewComponent = withPlayer ? PlayerLayoutDemo : React.Fragment
 
   const rendered = await highlight(fileContent, {
     components: {
       pre: (props) => <Pre {...props} />,
     },
     lang: "tsx",
-    themes: {
-      dark: "min-dark",
-      light: "github-light",
-    },
   })
 
   return (
@@ -61,39 +56,53 @@ export async function ComponentPreview({
       className={cn("group relative my-4 mb-12 flex flex-col space-y-2")}
       {...props}
     >
-      <ComponentPreviewControl
-        className="relative mr-auto w-full rounded-none"
-        hideCode={hideCode}
-      >
-        <TabsContent
-          className={`
-            relative hidden
-            data-[state=active]:block
-          `}
-          forceMount
-          value="preview"
-        >
-          <div className={className}>
-            <PreviewComponent
-              blockChildren={blockChildren}
-              overlayChildren={overlayChildren}
-              type={type}
+      {withPlayer ? (
+        <PlayerLayoutDemo
+          blockChildren={blockChildren}
+          codeSlot={
+            <CustomCodeBlock
+              data-line-numbers
+              data-line-numbers-start={1}
+              title={fileName}
+              {...props}
             >
-              <PreviewTabComponent componentName={name} />
-            </PreviewComponent>
-          </div>
-        </TabsContent>
-        <TabsContent value="code">
-          <CustomCodeBlock
-            data-line-numbers
-            data-line-numbers-start={1}
-            title={fileName}
-            {...props}
+              {rendered}
+            </CustomCodeBlock>
+          }
+          overlayChildren={overlayChildren}
+          type={type}
+        >
+          <PreviewTabComponent componentName={name} />
+        </PlayerLayoutDemo>
+      ) : (
+        <ComponentPreviewControl
+          className="relative mr-auto w-full rounded-none"
+          hideCode={hideCode}
+        >
+          <TabsContent
+            className={`
+              relative hidden
+              data-[state=active]:block
+            `}
+            forceMount
+            value="preview"
           >
-            {rendered}
-          </CustomCodeBlock>
-        </TabsContent>
-      </ComponentPreviewControl>
+            <div className={className}>
+              <PreviewTabComponent componentName={name} />
+            </div>
+          </TabsContent>
+          <TabsContent className="dark" value="code">
+            <CustomCodeBlock
+              data-line-numbers
+              data-line-numbers-start={1}
+              title={fileName}
+              {...props}
+            >
+              {rendered}
+            </CustomCodeBlock>
+          </TabsContent>
+        </ComponentPreviewControl>
+      )}
     </div>
   )
 }

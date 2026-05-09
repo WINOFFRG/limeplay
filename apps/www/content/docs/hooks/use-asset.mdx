@@ -32,20 +32,14 @@ createMediaKit({
 ```tsx
 import { useAsset, type Asset } from "@/hooks/limeplay/use-asset"
 
-const {
-  loadAsset,
-  loadPlaylist,
-  next,
-  previous,
-  hasNext,
-  currentItem,
-} = useAsset({
-  onAssetLoaded: (asset) => console.log("Loaded:", asset.title),
-  onLoadError: (asset, error, ctx) => {
-    console.error("Failed:", asset.title, error)
-    return "skip" // or "retry" or "stop"
-  },
-})
+const { loadAsset, loadPlaylist, next, previous, hasNext, currentItem } =
+  useAsset({
+    onAssetLoaded: (asset) => console.log("Loaded:", asset.title),
+    onLoadError: (asset, error, ctx) => {
+      console.error("Failed:", asset.title, error)
+      return "skip" // or "retry" or "stop"
+    },
+  })
 
 // Load a single asset
 loadAsset({
@@ -60,21 +54,27 @@ loadPlaylist([asset1, asset2, asset3])
 
 ### Asset Interface
 
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `id` | `string` | Yes | Unique identifier |
-| `src` | `string` | Yes | Media source URL |
-| `title` | `string` | No | Display title |
-| `description` | `string` | No | Description |
-| `poster` | `string` | No | Poster image URL |
-| `config` | `shaka.extern.PlayerConfiguration` | No | Per-asset Shaka config |
+| Field         | Type                               | Required | Description            |
+| ------------- | ---------------------------------- | -------- | ---------------------- |
+| `id`          | `string`                           | Yes      | Unique identifier      |
+| `src`         | `string`                           | Yes      | Media source URL       |
+| `title`       | `string`                           | No       | Display title          |
+| `description` | `string`                           | No       | Description            |
+| `poster`      | `string`                           | No       | Poster image URL       |
+| `config`      | `shaka.extern.PlayerConfiguration` | No       | Per-asset Shaka config |
 
 ### Options
 
-<AutoTypeTable path="./registry/default/hooks/use-asset.ts" name="UseAssetOptions" />
+<AutoTypeTable
+  path="./registry/default/hooks/use-asset.ts"
+  name="UseAssetOptions"
+/>
 
 ### Returns
 
-<AutoTypeTable path="./registry/default/hooks/use-asset.ts" name="UseAssetReturn" />
+<AutoTypeTable
+  path="./registry/default/hooks/use-asset.ts"
+  name="UseAssetReturn"
+/>
 
 `useAsset` orchestrates `usePlayer` and `usePlaylist` — it automatically loads assets when the playlist advances, handles preloading, auto-advances on playback end, and provides error recovery.

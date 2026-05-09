@@ -28,35 +28,35 @@ Access via `useVolumeStore(selector)`:
 ```tsx
 import { useVolumeStore } from "@/hooks/limeplay/use-volume"
 
-const level = useVolumeStore(s => s.level)
-const muted = useVolumeStore(s => s.muted)
-const setVolume = useVolumeStore(s => s.setVolume)
+const level = useVolumeStore((s) => s.level)
+const muted = useVolumeStore((s) => s.muted)
+const setVolume = useVolumeStore((s) => s.setVolume)
 ```
 
 ### State
 
-| Field | Type | Description |
-|---|---|---|
-| `level` | `number` | Current volume (0–1) |
-| `muted` | `boolean` | Whether audio is muted |
+| Field      | Type      | Description                        |
+| ---------- | --------- | ---------------------------------- |
+| `level`    | `number`  | Current volume (0–1)               |
+| `muted`    | `boolean` | Whether audio is muted             |
 | `hasAudio` | `boolean` | Whether the media has audio tracks |
 
 ### Actions
 
-| Method | Description |
-|---|---|
-| `setVolume(volume, progress?, delta?)` | Set volume level |
-| `setMuted(muted)` | Set mute state |
-| `toggleMute()` | Toggle mute on/off |
+| Method                                 | Description        |
+| -------------------------------------- | ------------------ |
+| `setVolume(volume, progress?, delta?)` | Set volume level   |
+| `setMuted(muted)`                      | Set mute state     |
+| `toggleMute()`                         | Toggle mute on/off |
 
 Setting volume to 0 automatically mutes. Unmuting from 0 restores the previous volume level.
 
 ## Events
 
-| Event | Payload | When |
-|---|---|---|
+| Event          | Payload             | When                         |
+| -------------- | ------------------- | ---------------------------- |
 | `volumechange` | `{ volume, muted }` | Volume or mute state changes |
-| `mute` | `{ muted }` | Mute is toggled |
+| `mute`         | `{ muted }`         | Mute is toggled              |
 
 ## API Reference
 

@@ -3,7 +3,12 @@ title: Fallback Poster
 description: Poster image overlay for loading states and Picture-in-Picture.
 ---
 
-<ComponentPreview name="fallback-poster-demo" withPlayer type="overlay" className="border rounded-lg overflow-hidden" />
+<ComponentPreview
+  name="fallback-poster-demo"
+  withPlayer
+  type="overlay"
+  className="border rounded-lg overflow-hidden"
+/>
 
 ## Installation
 
@@ -12,7 +17,8 @@ npx shadcn add @limeplay/fallback-poster
 ```
 
 <Callout>
-Requires [`mediaFeature`](/docs/concepts) registered in your [`createMediaKit`](/docs/components/media-provider).
+  Requires [`mediaFeature`](/docs/concepts) registered in your
+  [`createMediaKit`](/docs/components/media-provider).
 </Callout>
 
 ## Usage
@@ -23,7 +29,7 @@ Wrap the player layout to provide a background while the media element loads or 
 import { FallbackPoster } from "@/components/limeplay/fallback-poster"
 import { LimeplayLogo } from "@/components/limeplay/limeplay-logo"
 
-<Layout.PlayerContainer>
+;<Layout.PlayerContainer>
   <FallbackPoster className="bg-black">
     <LimeplayLogo />
   </FallbackPoster>
