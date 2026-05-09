@@ -72,13 +72,13 @@ export function StreamPanel({
   const presets = getPresetsForType(playerType)
 
   const groupedPresets = useMemo(() => {
-    const groups: Record<string, StreamPreset[]> = {}
+    const groups: Partial<Record<string, StreamPreset[]>> = {}
     for (const preset of presets) {
       const tag = preset.tags?.[0]?.toUpperCase() ?? preset.format.toUpperCase()
       if (!groups[tag]) groups[tag] = []
       groups[tag].push(preset)
     }
-    return groups
+    return groups as Record<string, StreamPreset[]>
   }, [presets])
 
   const selectedPresetName = useMemo(
