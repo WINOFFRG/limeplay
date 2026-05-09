@@ -18,12 +18,13 @@ export function PlaybackRateControl() {
       </Select.SelectTrigger>
       <Select.SelectContent
         align="start"
-        className={`dark min-w-24 border border-border bg-background/70 backdrop-blur-md backdrop-saturate-[1.15]`}
-        position="popper"
+        alignItemWithTrigger={false}
+        className={`dark min-w-28 border border-border bg-background/85 backdrop-blur-lg`}
         side="top"
+        sideOffset={12}
       >
         <PlaybackRate.SelectGroup className={`tracking-wider`}>
-          <Select.SelectLabel>Playback Rate</Select.SelectLabel>
+          <Select.SelectLabel className="whitespace-nowrap">Playback Rate</Select.SelectLabel>
         </PlaybackRate.SelectGroup>
       </Select.SelectContent>
     </PlaybackRate.SelectRoot>
