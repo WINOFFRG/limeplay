@@ -15,11 +15,12 @@ function SelectContent({
   children,
   className,
   side = "bottom",
-  sideOffset = 4,
+  sideOffset,
+  sticky = false,
   ...props
 }: Pick<
     SelectPrimitive.Positioner.Props,
-    "align" | "alignItemWithTrigger" | "alignOffset" | "side" | "sideOffset"
+    "align" | "alignItemWithTrigger" | "alignOffset" | "side" | "sideOffset" | "sticky"
   > &
   SelectPrimitive.Popup.Props) {
   return (
@@ -29,8 +30,10 @@ function SelectContent({
         alignItemWithTrigger={alignItemWithTrigger}
         alignOffset={alignOffset}
         className="isolate z-50"
+        collisionBoundary="clipping-ancestors"
         side={side}
         sideOffset={sideOffset}
+        sticky={sticky}
       >
         <SelectPrimitive.Popup
           className={cn(
@@ -51,6 +54,7 @@ function SelectContent({
           )}
           data-align-trigger={alignItemWithTrigger}
           data-slot="select-content"
+
           {...props}
         >
           <SelectScrollUpButton />

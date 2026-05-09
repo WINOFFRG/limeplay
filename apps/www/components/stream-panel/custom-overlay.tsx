@@ -107,7 +107,7 @@ export function CustomOverlay({ onBack, onLoad, show }: CustomOverlayProps) {
 
   return (
     <OverlayShell onBack={onBack} show={show} title="Custom Stream">
-      <div className={cn("no-scrollbar flex-1 overflow-y-auto p-2", "flex flex-col gap-3 p-3")}>
+      <div className={cn("no-scrollbar flex-1 overflow-y-auto", "flex flex-col gap-3 p-3")}>
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-muted-foreground">
             Playback URL
