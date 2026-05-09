@@ -19,9 +19,14 @@ function SelectContent({
   sticky = false,
   ...props
 }: Pick<
-    SelectPrimitive.Positioner.Props,
-    "align" | "alignItemWithTrigger" | "alignOffset" | "side" | "sideOffset" | "sticky"
-  > &
+  SelectPrimitive.Positioner.Props,
+  | "align"
+  | "alignItemWithTrigger"
+  | "alignOffset"
+  | "side"
+  | "sideOffset"
+  | "sticky"
+> &
   SelectPrimitive.Popup.Props) {
   return (
     <SelectPrimitive.Portal>
@@ -54,7 +59,6 @@ function SelectContent({
           )}
           data-align-trigger={alignItemWithTrigger}
           data-slot="select-content"
-
           {...props}
         >
           <SelectScrollUpButton />

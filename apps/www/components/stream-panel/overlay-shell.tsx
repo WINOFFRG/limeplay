@@ -41,9 +41,7 @@ export function OverlayShell({
         >
           <ChevronLeft className="size-3.5" />
         </Button>
-        <span className="text-sm font-semibold tracking-[0.01em]">
-          {title}
-        </span>
+        <span className="text-sm font-semibold tracking-[0.01em]">{title}</span>
       </div>
 
       {children}

@@ -12,7 +12,8 @@ npx shadcn add @limeplay/timeline-labels
 ```
 
 <Callout>
-Requires [`timelineFeature`](/docs/hooks/use-timeline) registered in your [`createMediaKit`](/docs/components/media-provider).
+  Requires [`timelineFeature`](/docs/hooks/use-timeline) registered in your
+  [`createMediaKit`](/docs/components/media-provider).
 </Callout>
 
 ## Usage
@@ -31,7 +32,7 @@ import {
 
 export function TimeDisplay() {
   const [showRemaining, setShowRemaining] = useState(false)
-  const isLive = useTimelineStore(s => s.isLive)
+  const isLive = useTimelineStore((s) => s.isLive)
 
   return (
     <div className="flex items-center gap-3 select-none">
@@ -56,12 +57,12 @@ export function TimeDisplay() {
 
 ## Components
 
-| Component | Description |
-|---|---|
-| `Elapsed` | Current playback time |
-| `Duration` | Total media duration |
-| `Remaining` | Time remaining (shows with `-` prefix) |
-| `HoverTime` | Time at the current hover position on the timeline |
-| `LiveLatency` | Latency behind live edge (for live streams) |
+| Component     | Description                                        |
+| ------------- | -------------------------------------------------- |
+| `Elapsed`     | Current playback time                              |
+| `Duration`    | Total media duration                               |
+| `Remaining`   | Time remaining (shows with `-` prefix)             |
+| `HoverTime`   | Time at the current hover position on the timeline |
+| `LiveLatency` | Latency behind live edge (for live streams)        |
 
 All components accept `className` for styling and automatically format time based on duration (e.g. `1:23` vs `1:23:45`).

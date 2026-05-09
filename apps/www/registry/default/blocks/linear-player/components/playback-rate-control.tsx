@@ -24,7 +24,9 @@ export function PlaybackRateControl() {
         sideOffset={12}
       >
         <PlaybackRate.SelectGroup className={`tracking-wider`}>
-          <Select.SelectLabel className="whitespace-nowrap">Playback Rate</Select.SelectLabel>
+          <Select.SelectLabel className="whitespace-nowrap">
+            Playback Rate
+          </Select.SelectLabel>
         </PlaybackRate.SelectGroup>
       </Select.SelectContent>
     </PlaybackRate.SelectRoot>

@@ -12,7 +12,8 @@ npx shadcn add @limeplay/mute-control
 ```
 
 <Callout>
-Requires [`volumeFeature`](/docs/hooks/use-volume) registered in your [`createMediaKit`](/docs/components/media-provider).
+  Requires [`volumeFeature`](/docs/hooks/use-volume) registered in your
+  [`createMediaKit`](/docs/components/media-provider).
 </Callout>
 
 ## Usage
@@ -29,8 +30,8 @@ import { useVolumeStore } from "@/hooks/limeplay/use-volume"
 import { MuteControl } from "@/components/limeplay/mute-control"
 
 export function MuteButton() {
-  const muted = useVolumeStore(s => s.muted)
-  const level = useVolumeStore(s => s.level)
+  const muted = useVolumeStore((s) => s.muted)
+  const level = useVolumeStore((s) => s.level)
 
   return (
     <MuteControl asChild>

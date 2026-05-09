@@ -118,10 +118,10 @@ export function Playlist() {
                   className={`
                     dark p-0 transition-colors
                     ${
-                    isCurrentAsset
-                      ? "border-primary/20 bg-primary/10"
-                      : "hover:bg-accent/50"
-                  }
+                      isCurrentAsset
+                        ? "border-primary/20 bg-primary/10"
+                        : "hover:bg-accent/50"
+                    }
                   `}
                   key={asset.id}
                   onClick={() => handleAssetSelect(asset)}

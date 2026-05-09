@@ -12,7 +12,8 @@ npx shadcn add @limeplay/picture-in-picture-control
 ```
 
 <Callout>
-Requires [`pictureInPictureFeature`](/docs/hooks/use-picture-in-picture) registered in your [`createMediaKit`](/docs/components/media-provider).
+  Requires [`pictureInPictureFeature`](/docs/hooks/use-picture-in-picture)
+  registered in your [`createMediaKit`](/docs/components/media-provider).
 </Callout>
 
 ## Usage
@@ -25,15 +26,12 @@ import { usePictureInPictureStore } from "@/hooks/limeplay/use-picture-in-pictur
 import { PictureInPictureControl } from "@/components/limeplay/picture-in-picture-control"
 
 export function PipButton() {
-  const active = usePictureInPictureStore(s => s.active)
+  const active = usePictureInPictureStore((s) => s.active)
 
   return (
     <PictureInPictureControl asChild shortcut="P">
       <Button variant="ghost" size="icon">
-        <PictureInPictureIcon
-          weight={active ? "fill" : "regular"}
-          size={18}
-        />
+        <PictureInPictureIcon weight={active ? "fill" : "regular"} size={18} />
       </Button>
     </PictureInPictureControl>
   )
@@ -43,7 +41,8 @@ export function PipButton() {
 Supports `asChild` for custom button rendering. The component auto-detects browser support and disables itself when PiP is unavailable.
 
 <Callout title="Browser Support" type="warning">
-  PiP API is not natively supported in Firefox. [Reference](https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API)
+  PiP API is not natively supported in Firefox.
+  [Reference](https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API)
 </Callout>
 
 ## API Reference

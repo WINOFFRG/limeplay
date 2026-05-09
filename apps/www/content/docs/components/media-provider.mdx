@@ -33,7 +33,8 @@ export const media = createMediaKit({
   ] as const,
 })
 
-export const { MediaProvider, useMediaStore, useMediaApi, useMediaEvents } = media
+export const { MediaProvider, useMediaStore, useMediaApi, useMediaEvents } =
+  media
 ```
 
 Wrap your player with `MediaProvider`:
@@ -63,13 +64,13 @@ import { useVolumeStore } from "@/hooks/limeplay/use-volume"
 
 // Option A: unified store (namespaced)
 function VolumeDisplayNamespaced() {
-  const level = useMediaStore(s => s.volume.level)
+  const level = useMediaStore((s) => s.volume.level)
   return <span>{Math.round(level * 100)}%</span>
 }
 
 // Option B: feature-scoped hook (flat)
 function VolumeDisplayScoped() {
-  const level = useVolumeStore(s => s.level)
+  const level = useVolumeStore((s) => s.level)
   return <span>{Math.round(level * 100)}%</span>
 }
 ```
