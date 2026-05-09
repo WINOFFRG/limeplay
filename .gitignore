@@ -45,3 +45,5 @@ apps/www/public/r/*
 apps/www/registry.json
 apps/www/registry-pro.json
 apps/www/registry/__index__.tsx
+
+.claude
