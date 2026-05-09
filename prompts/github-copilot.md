@@ -45,6 +45,7 @@ Limeplay is a shadcn/ui-based, headless, composable media player UI library buil
 #### Component Design
 
 * ❌ Missing `asChild` support via `@radix-ui/react-slot`
+* ❌ Control primitives that accept `asChild` but not `render?: React.ReactElement` — the b0 preset CLI transforms `asChild` to `render` during install, so both must be supported
 * ❌ Blocking event propagation
 * ❌ Forced prop overrides
 
@@ -53,6 +54,8 @@ Limeplay is a shadcn/ui-based, headless, composable media player UI library buil
 * ❌ New or modified components/hooks without registry updates
 * ❌ Missing dependencies in registry metadata
 * ❌ CLI install must not break
+* ❌ Block files in `lib/`, `ui/`, `hooks/` whose filename (without extension) matches any registry item in the dependency tree (shadcn CLI hijacks the import) — use `components/` folder or a non-colliding name
+* ❌ Unpinned dependencies with breaking major versions (e.g. `"shaka-player"` instead of `"shaka-player@^4"`)
 
 #### Imports
 
@@ -69,6 +72,22 @@ Limeplay is a shadcn/ui-based, headless, composable media player UI library buil
 * ❌ A setter for X silently clobbering Y (e.g., muting should not zero volume)
 * ❌ Retry loops without a fallthrough path when retries are exhausted
 * ❌ Two APIs writing the same shared mutable state without a documented single owner
+
+#### Zustand + Immer Correctness (BLOCKER)
+
+* ❌ Reassigning the Immer recipe argument inside `set((state) => ...)` (e.g. `state = nextState`)
+* ❌ Returning `undefined` from an Immer producer (ambiguous no-op)
+* ❌ Mutating class instances in store state without `[immerable] = true` (can break Zustand subscriptions)
+* ❌ Mutating non-draftable or exotic objects (e.g. `window.location`, non-immerable class instances)
+* ❌ Introducing circular references or shared object identity in multiple branches of state
+* ❌ Mutating payload objects from outside state after assigning into draft (mutates source object unexpectedly)
+* ❌ Assuming Immer patch output is minimal/optimal when implementing patch-based logic
+* ❌ Nested `produce`/Immer calls whose returned value is ignored
+* ❌ Equality checks that rely on draft referential identity (`===` / `indexOf` on draft values)
+* ❌ Mutating array custom properties in Immer (only indices and `length` are tracked)
+* ❌ With `enableArrayMethods()`: mutating items inside callback params of overridden methods (`filter`/`find`/`some`/`every`/`slice`) as if they were drafts
+
+When any of the above appears in Zustand store updates, block the PR.
 
 #### Accessibility
 

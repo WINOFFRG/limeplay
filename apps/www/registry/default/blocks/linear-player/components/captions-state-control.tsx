@@ -2,7 +2,7 @@
 
 import { ClosedCaptioningIcon } from "@phosphor-icons/react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/registry/default/blocks/linear-player/components/button"
 import { useCaptionsStore } from "@/registry/default/hooks/use-captions"
 import { CaptionsControl } from "@/registry/default/ui/captions"
 

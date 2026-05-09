@@ -64,6 +64,23 @@ export function fixImport(content: string) {
     type: string,
     component: string
   ) => {
+    const blockMatch = type.match(/blocks\/([\w-]+)\/(\w+)$/)
+    if (blockMatch) {
+      const [, blockName, folder] = blockMatch
+      if (folder === "ui") {
+        return `@/components/${blockName}/ui/${component}`
+      }
+      if (folder === "components") {
+        return `@/components/${blockName}/components/${component}`
+      }
+      if (folder === "lib") {
+        return `@/components/${blockName}/lib/${component}`
+      }
+      if (folder === "hooks") {
+        return `@/components/${blockName}/hooks/${component}`
+      }
+    }
+
     if (type.endsWith("components")) {
       return `@/components/${component}`
     } else if (type.endsWith("ui")) {

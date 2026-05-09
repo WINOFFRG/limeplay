@@ -6,7 +6,7 @@ import {
   SpeakerXIcon,
 } from "@phosphor-icons/react"
 
-import { Button } from "@/registry/default/blocks/linear-player/ui/button"
+import { Button } from "@/registry/default/blocks/linear-player/components/button"
 import { useVolumeStore } from "@/registry/default/hooks/use-volume"
 import { MuteControl } from "@/registry/default/ui/mute-control"
 

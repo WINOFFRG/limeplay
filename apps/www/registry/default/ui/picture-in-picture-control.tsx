@@ -10,14 +10,14 @@ import {
   usePlaybackStore,
 } from "@/registry/default/hooks/use-playback"
 
-export interface PictureInPictureControlProps extends React.ComponentProps<
-  typeof Button
-> {
+export interface PictureInPictureControlProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
    * Render as child component using Radix Slot
    * @default false
    */
   asChild?: boolean
+  render?: React.ReactElement
   /**
    * Keyboard shortcut hint displayed in aria-label
    * @example "P"
@@ -27,7 +27,7 @@ export interface PictureInPictureControlProps extends React.ComponentProps<
 
 export type PictureInPictureControlPropsDocs = Pick<
   PictureInPictureControlProps,
-  "asChild" | "shortcut"
+  "asChild" | "render" | "shortcut"
 >
 
 export const PictureInPictureControl = React.forwardRef<
@@ -49,11 +49,12 @@ export const PictureInPictureControl = React.forwardRef<
     children,
     disabled: userDisabled,
     onClick,
+    render,
     shortcut,
     ...restProps
   } = props
 
-  const Comp = asChild ? Slot : Button
+  const Comp = render ? Slot : asChild ? Slot : Button
 
   const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     onClick?.(event)
@@ -85,7 +86,9 @@ export const PictureInPictureControl = React.forwardRef<
       onClick={handleClick}
       ref={forwardedRef}
     >
-      {children}
+      {render
+        ? React.cloneElement(render, undefined, children)
+        : children}
     </Comp>
   )
 })

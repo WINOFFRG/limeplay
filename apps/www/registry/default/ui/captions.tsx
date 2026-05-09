@@ -18,6 +18,7 @@ export interface CaptionsControlProps extends React.ButtonHTMLAttributes<HTMLBut
    * @default false
    */
   asChild?: boolean
+  render?: React.ReactElement
   /**
    * Keyboard shortcut hint displayed in aria-label
    * @example "C"
@@ -27,7 +28,7 @@ export interface CaptionsControlProps extends React.ButtonHTMLAttributes<HTMLBut
 
 export type CaptionsControlPropsDocs = Pick<
   CaptionsControlProps,
-  "asChild" | "shortcut"
+  "asChild" | "render" | "shortcut"
 >
 
 export const CaptionsControl = React.forwardRef<
@@ -43,11 +44,12 @@ export const CaptionsControl = React.forwardRef<
     children,
     disabled: userDisabled,
     onClick,
+    render,
     shortcut,
     ...restProps
   } = props
 
-  const Comp = asChild ? Slot : Button
+  const Comp = render ? Slot : asChild ? Slot : Button
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onClick?.(event)
@@ -73,7 +75,9 @@ export const CaptionsControl = React.forwardRef<
       onClick={handleClick}
       ref={forwardedRef}
     >
-      {children}
+      {render
+        ? React.cloneElement(render, undefined, children)
+        : children}
     </Comp>
   )
 })
