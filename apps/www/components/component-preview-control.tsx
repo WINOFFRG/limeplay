@@ -78,7 +78,7 @@ export function ComponentPreviewControl({
         ) : null}
       </div>
       <div className="overflow-hidden">
-        <AnimatePresence initial={false} mode="popLayout">
+        <AnimatePresence mode="popLayout">
           <motion.div
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: activeTab === "preview" ? 50 : -50 }}
