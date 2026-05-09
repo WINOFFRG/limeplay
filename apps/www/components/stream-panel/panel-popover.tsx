@@ -16,8 +16,6 @@ import { getPresetsForType, type StreamPreset } from "@/lib/stream-presets"
 import { cn } from "@/lib/utils"
 
 import { CustomOverlay } from "./custom-overlay"
-import { PanelHeaderIcon } from "./panel-header"
-import { PanelSlider } from "./panel-slider"
 import { PresetsOverlay } from "./presets-overlay"
 import { useStreamPanel } from "./provider"
 import { SavedOverlay } from "./saved-overlay"
@@ -42,7 +40,7 @@ interface StreamPanelProps {
 
 const positionClasses: Record<PanelPosition, string> = {
   "bottom-left": "bottom-4 left-4",
-  "bottom-right": "-bottom-10 right-4",
+  "bottom-right": "bottom-10 right-4",
   "top-left": "top-4 left-4",
   "top-right": "top-4 right-4",
 }
