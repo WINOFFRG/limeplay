@@ -176,9 +176,7 @@ export type TimelineThumbPropsDocs = Pick<
   "position" | "showWithHover"
 >
 
-interface BufferedProps extends React.ComponentProps<
-  typeof SliderPrimitive.Track
-> {
+interface BufferedProps extends React.ComponentProps<"div"> {
   /**
    * How to render buffered ranges
    * - "default": Show each buffered range separately

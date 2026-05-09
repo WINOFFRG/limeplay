@@ -28,23 +28,23 @@ Access via `usePlaybackRateStore(selector)`:
 ```tsx
 import { usePlaybackRateStore } from "@/hooks/limeplay/use-playback-rate"
 
-const rate = usePlaybackRateStore(s => s.value)
-const rates = usePlaybackRateStore(s => s.rates)
-const setRate = usePlaybackRateStore(s => s.setPlaybackRate)
+const rate = usePlaybackRateStore((s) => s.value)
+const rates = usePlaybackRateStore((s) => s.rates)
+const setRate = usePlaybackRateStore((s) => s.setPlaybackRate)
 ```
 
 ### State
 
-| Field | Type | Description |
-|---|---|---|
-| `value` | `number` | Current playback rate |
+| Field   | Type       | Description            |
+| ------- | ---------- | ---------------------- |
+| `value` | `number`   | Current playback rate  |
 | `rates` | `number[]` | Available rate options |
 
 ### Actions
 
-| Method | Description |
-|---|---|
-| `setPlaybackRate(rate)` | Set playback speed |
+| Method                            | Description                         |
+| --------------------------------- | ----------------------------------- |
+| `setPlaybackRate(rate)`           | Set playback speed                  |
 | `setTrickplayRate(rate, forced?)` | Set trickplay rate (Shaka-specific) |
 
 Default rates: `[0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]`
@@ -55,6 +55,6 @@ Shaka Player supports trickplay — specialized streams optimized for fast-forwa
 
 ## Events
 
-| Event | Payload | When |
-|---|---|---|
+| Event        | Payload    | When                   |
+| ------------ | ---------- | ---------------------- |
 | `ratechange` | `{ rate }` | Playback speed changes |

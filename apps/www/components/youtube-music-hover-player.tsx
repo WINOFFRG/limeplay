@@ -29,7 +29,7 @@ export function YouTubeMusicHoverPlayer() {
           open: { opacity: 1, scale: 1, y: 0 },
         }}
       >
-        <div className="flex h-14 w-fit flex-row items-center gap-3 rounded-t-4xl bg-black px-4">
+        <div className="flex h-14 w-fit flex-row items-center gap-3 rounded-t-3xl bg-black px-4">
           <div className="flex w-full items-center justify-center gap-1">
             <svg
               height="36px"

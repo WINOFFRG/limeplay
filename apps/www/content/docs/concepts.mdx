@@ -24,11 +24,7 @@ import { playbackFeature } from "@/hooks/limeplay/use-playback"
 import { volumeFeature } from "@/hooks/limeplay/use-volume"
 
 export const media = createMediaKit({
-  features: [
-    mediaFeature(),
-    playbackFeature(),
-    volumeFeature(),
-  ] as const,
+  features: [mediaFeature(), playbackFeature(), volumeFeature()] as const,
 })
 ```
 
@@ -36,18 +32,18 @@ This returns a `MediaProvider` component and typed hooks. Each feature's Setup c
 
 ### Available Features
 
-| Feature | Key | Factory | Events |
-|---|---|---|---|
-| [Media](/docs/concepts) | `media` | `mediaFeature()` | — |
-| [Player](/docs/hooks/use-player) | `player` | `playerFeature()` | `playerready`, `playererror`, `playbackerror`, `bufferingchange` |
-| [Playback](/docs/hooks/use-playback) | `playback` | `playbackFeature()` | `play`, `pause`, `ended`, `buffering`, `statuschange` |
-| [Volume](/docs/hooks/use-volume) | `volume` | `volumeFeature()` | `volumechange`, `mute` |
-| [Timeline](/docs/hooks/use-timeline) | `timeline` | `timelineFeature()` | `timeupdate`, `durationchange`, `seek` |
-| [Playlist](/docs/hooks/use-playlist) | `playlist` | `playlistFeature()` | `playlistchange` |
-| [Playback Rate](/docs/hooks/use-playback-rate) | `playbackRate` | `playbackRateFeature()` | `ratechange` |
-| [Picture-in-Picture](/docs/hooks/use-picture-in-picture) | `pictureInPicture` | `pictureInPictureFeature()` | `enterpictureinpicture`, `leavepictureinpicture` |
-| [Captions](/docs/hooks/use-captions) | `captions` | `captionsFeature()` | — |
-| [Asset](/docs/hooks/use-asset) | `asset` | `assetFeature()` | — |
+| Feature                                                  | Key                | Factory                     | Events                                                           |
+| -------------------------------------------------------- | ------------------ | --------------------------- | ---------------------------------------------------------------- |
+| [Media](/docs/concepts)                                  | `media`            | `mediaFeature()`            | —                                                                |
+| [Player](/docs/hooks/use-player)                         | `player`           | `playerFeature()`           | `playerready`, `playererror`, `playbackerror`, `bufferingchange` |
+| [Playback](/docs/hooks/use-playback)                     | `playback`         | `playbackFeature()`         | `play`, `pause`, `ended`, `buffering`, `statuschange`            |
+| [Volume](/docs/hooks/use-volume)                         | `volume`           | `volumeFeature()`           | `volumechange`, `mute`                                           |
+| [Timeline](/docs/hooks/use-timeline)                     | `timeline`         | `timelineFeature()`         | `timeupdate`, `durationchange`, `seek`                           |
+| [Playlist](/docs/hooks/use-playlist)                     | `playlist`         | `playlistFeature()`         | `playlistchange`                                                 |
+| [Playback Rate](/docs/hooks/use-playback-rate)           | `playbackRate`     | `playbackRateFeature()`     | `ratechange`                                                     |
+| [Picture-in-Picture](/docs/hooks/use-picture-in-picture) | `pictureInPicture` | `pictureInPictureFeature()` | `enterpictureinpicture`, `leavepictureinpicture`                 |
+| [Captions](/docs/hooks/use-captions)                     | `captions`         | `captionsFeature()`         | —                                                                |
+| [Asset](/docs/hooks/use-asset)                           | `asset`            | `assetFeature()`            | —                                                                |
 
 ## Store
 
@@ -59,11 +55,11 @@ Use the typed selector hooks to subscribe to specific fields:
 
 ```tsx
 // Per-feature convenience hook
-const level = useVolumeStore(s => s.level)
-const paused = usePlaybackStore(s => s.paused)
+const level = useVolumeStore((s) => s.level)
+const paused = usePlaybackStore((s) => s.paused)
 
 // Or the unified hook from createMediaKit
-const level = media.useMediaStore(s => s.volume.level)
+const level = media.useMediaStore((s) => s.volume.level)
 ```
 
 Components only re-render when the selected value changes.

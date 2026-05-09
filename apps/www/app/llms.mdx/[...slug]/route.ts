@@ -9,14 +9,13 @@ export const revalidate = false
 export function generateStaticParams() {
   const routes = source.generateParams()
 
-  return routes
-    .map((route) => {
-      const slug = [...route.slug]
-      if (slug.length > 0) {
-        slug[slug.length - 1] = `${slug[slug.length - 1]}.mdx`
-      }
-      return { slug }
-    })
+  return routes.map((route) => {
+    const slug = [...route.slug]
+    if (slug.length > 0) {
+      slug[slug.length - 1] = `${slug[slug.length - 1]}.mdx`
+    }
+    return { slug }
+  })
 }
 
 export async function GET(
@@ -24,9 +23,9 @@ export async function GET(
   { params }: { params: Promise<{ slug: string[] }> }
 ) {
   const slug = (await params).slug
-  const pageSlug = slug.map((segment: string, index: number) => 
-    index === slug.length - 1 && segment.endsWith('.mdx') 
-      ? segment.slice(0, -4) 
+  const pageSlug = slug.map((segment: string, index: number) =>
+    index === slug.length - 1 && segment.endsWith(".mdx")
+      ? segment.slice(0, -4)
       : segment
   )
   const page = source.getPage(pageSlug)

@@ -46,7 +46,7 @@ export default async function Page(props: {
     <DocsPage full={page.data.full} toc={page.data.toc}>
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
-      <div className="flex flex-row flex-wrap items-center gap-2 border-b pb-6">
+      <div className="flex flex-row flex-wrap items-center gap-2 pb-6">
         <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
         <ViewOptions
           githubUrl={`https://github.com/winoffrg/limeplay/blob/main/apps/www/content/docs/${page.path}`}

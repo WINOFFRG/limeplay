@@ -12,7 +12,8 @@ npx shadcn add @limeplay/captions
 ```
 
 <Callout>
-Requires [`captionsFeature`](/docs/hooks/use-captions) registered in your [`createMediaKit`](/docs/components/media-provider).
+  Requires [`captionsFeature`](/docs/hooks/use-captions) registered in your
+  [`createMediaKit`](/docs/components/media-provider).
 </Callout>
 
 ## Usage
@@ -24,7 +25,7 @@ Place the container in your player layout. It registers itself with Shaka Player
 ```tsx title="components/media-player.tsx"
 import { CaptionsContainer } from "@/components/limeplay/captions"
 
-<Layout.PlayerContainer>
+;<Layout.PlayerContainer>
   <Media as="video" />
   <Layout.ControlsContainer>
     <CaptionsContainer />
@@ -50,15 +51,12 @@ import { useCaptionsStore } from "@/hooks/limeplay/use-captions"
 import { CaptionsControl } from "@/components/limeplay/captions"
 
 export function CaptionsButton() {
-  const visible = useCaptionsStore(s => s.visible)
+  const visible = useCaptionsStore((s) => s.visible)
 
   return (
     <Button size="icon" variant="ghost" asChild>
       <CaptionsControl>
-        <ClosedCaptioningIcon
-          weight={visible ? "fill" : "regular"}
-          size={18}
-        />
+        <ClosedCaptioningIcon weight={visible ? "fill" : "regular"} size={18} />
       </CaptionsControl>
     </Button>
   )
@@ -69,8 +67,14 @@ export function CaptionsButton() {
 
 ### CaptionsContainer
 
-<AutoTypeTable path="./registry/default/ui/captions.tsx" name="CaptionsContainerPropsDocs" />
+<AutoTypeTable
+  path="./registry/default/ui/captions.tsx"
+  name="CaptionsContainerPropsDocs"
+/>
 
 ### CaptionsControl
 
-<AutoTypeTable path="./registry/default/ui/captions.tsx" name="CaptionsControlPropsDocs" />
+<AutoTypeTable
+  path="./registry/default/ui/captions.tsx"
+  name="CaptionsControlPropsDocs"
+/>

@@ -29,7 +29,9 @@ Pass `null` as the delay to pause the interval:
 const [active, setActive] = useState(true)
 
 useInterval(
-  () => { console.log("tick") },
+  () => {
+    console.log("tick")
+  },
   active ? 500 : null
 )
 ```

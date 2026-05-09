@@ -8,7 +8,7 @@ export function PlaybackRateDemo() {
     <PlaybackRate.SelectRoot>
       <Select.SelectTrigger
         className={`
-          border-none bg-transparent shadow-none
+          border-none bg-transparent whitespace-nowrap shadow-none
           hover:bg-foreground/10
           dark:bg-transparent dark:shadow-none
         `}
@@ -18,8 +18,8 @@ export function PlaybackRateDemo() {
       </Select.SelectTrigger>
       <Select.SelectContent
         align="start"
-        className={`dark min-w-24 border border-border bg-background/70 backdrop-blur-md backdrop-saturate-[1.15]`}
-        position="popper"
+        alignItemWithTrigger={false}
+        className={`dark min-w-28 border border-border bg-background/70 backdrop-blur-md backdrop-saturate-[1.15]`}
         side="top"
       >
         <PlaybackRate.SelectGroup className={`tracking-wider`}>

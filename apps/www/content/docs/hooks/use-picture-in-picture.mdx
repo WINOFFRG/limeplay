@@ -28,33 +28,35 @@ Access via `usePictureInPictureStore(selector)`:
 ```tsx
 import { usePictureInPictureStore } from "@/hooks/limeplay/use-picture-in-picture"
 
-const active = usePictureInPictureStore(s => s.active)
-const supported = usePictureInPictureStore(s => s.supported)
-const toggle = usePictureInPictureStore(s => s.toggle)
+const active = usePictureInPictureStore((s) => s.active)
+const supported = usePictureInPictureStore((s) => s.supported)
+const toggle = usePictureInPictureStore((s) => s.toggle)
 ```
 
 ### State
 
-| Field | Type | Description |
-|---|---|---|
-| `active` | `boolean` | Whether PiP is currently active |
-| `supported` | `boolean` | Whether browser supports PiP |
+| Field       | Type      | Description                     |
+| ----------- | --------- | ------------------------------- |
+| `active`    | `boolean` | Whether PiP is currently active |
+| `supported` | `boolean` | Whether browser supports PiP    |
 
 ### Actions
 
-| Method | Description |
-|---|---|
-| `enter()` | Enter PiP mode |
-| `exit()` | Exit PiP mode |
+| Method     | Description       |
+| ---------- | ----------------- |
+| `enter()`  | Enter PiP mode    |
+| `exit()`   | Exit PiP mode     |
 | `toggle()` | Toggle PiP on/off |
 
 <Callout title="Browser Support" type="warning">
-  PiP API is not natively supported in Firefox. The `supported` field will be `false` on unsupported browsers. [Reference](https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API)
+  PiP API is not natively supported in Firefox. The `supported` field will be
+  `false` on unsupported browsers.
+  [Reference](https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API)
 </Callout>
 
 ## Events
 
-| Event | Payload | When |
-|---|---|---|
-| `enterpictureinpicture` | — | Enters PiP mode |
-| `leavepictureinpicture` | — | Leaves PiP mode |
+| Event                   | Payload | When            |
+| ----------------------- | ------- | --------------- |
+| `enterpictureinpicture` | —       | Enters PiP mode |
+| `leavepictureinpicture` | —       | Leaves PiP mode |

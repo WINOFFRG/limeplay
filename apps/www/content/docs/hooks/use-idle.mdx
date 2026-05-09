@@ -27,10 +27,10 @@ function PlayerControls() {
 
 ### Options
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `timeout` | `number` | `3000` | Milliseconds of inactivity before idle |
-| `initialState` | `boolean` | `false` | Initial idle state |
-| `events` | `string[]` | `["mousemove", "keydown", ...]` | Events that reset the idle timer |
+| Option         | Type       | Default                         | Description                            |
+| -------------- | ---------- | ------------------------------- | -------------------------------------- |
+| `timeout`      | `number`   | `3000`                          | Milliseconds of inactivity before idle |
+| `initialState` | `boolean`  | `false`                         | Initial idle state                     |
+| `events`       | `string[]` | `["mousemove", "keydown", ...]` | Events that reset the idle timer       |
 
 Returns `true` when the user has been inactive for longer than `timeout`.

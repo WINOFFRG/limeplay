@@ -12,7 +12,8 @@ npx shadcn add @limeplay/timeline-control
 ```
 
 <Callout>
-Requires [`timelineFeature`](/docs/hooks/use-timeline) registered in your [`createMediaKit`](/docs/components/media-provider).
+  Requires [`timelineFeature`](/docs/hooks/use-timeline) registered in your
+  [`createMediaKit`](/docs/components/media-provider).
 </Callout>
 
 ## Usage
@@ -63,19 +64,28 @@ Timeline automatically handles live streams — it uses Shaka Player's `seekRang
 
 Main slider container with click/drag seek handling. Height is controlled via `--lp-timeline-track-height` CSS variable.
 
-<AutoTypeTable path="./registry/default/ui/timeline-control.tsx" name="TimelineRootPropsDocs" />
+<AutoTypeTable
+  path="./registry/default/ui/timeline-control.tsx"
+  name="TimelineRootPropsDocs"
+/>
 
 ### Thumb
 
 Positioned indicator via `--lp-timeline-thumb-position` CSS variable. All visual styles must be provided by the consumer.
 
-<AutoTypeTable path="./registry/default/ui/timeline-control.tsx" name="TimelineThumbPropsDocs" />
+<AutoTypeTable
+  path="./registry/default/ui/timeline-control.tsx"
+  name="TimelineThumbPropsDocs"
+/>
 
 ### Buffered
 
 Displays buffered ranges. Supports 3 variants: `default`, `combined`, `from-zero`.
 
-<AutoTypeTable path="./registry/default/ui/timeline-control.tsx" name="TimelineBufferedPropsDocs" />
+<AutoTypeTable
+  path="./registry/default/ui/timeline-control.tsx"
+  name="TimelineBufferedPropsDocs"
+/>
 
 ### Track
 

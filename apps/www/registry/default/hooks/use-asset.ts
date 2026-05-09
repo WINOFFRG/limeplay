@@ -235,9 +235,10 @@ export function assetFeature(): MediaFeature<
             }
 
             if (preloadManager) {
-              preloadManagers.delete(asset.id)
+              const updated = new Map(preloadManagers)
+              updated.delete(asset.id)
               set(({ player }) => {
-                player.preloadManagers = new Map(preloadManagers)
+                player.preloadManagers = updated
               })
             }
 
@@ -375,13 +376,14 @@ export function assetFeature(): MediaFeature<
             }
 
             if (manager) {
-              const preloadManagers = get().player.preloadManagers as Map<
+              const existing = get().player.preloadManagers as Map<
                 string,
                 shaka.media.PreloadManager
               >
-              preloadManagers.set(asset.id, manager)
+              const updated = new Map(existing)
+              updated.set(asset.id, manager)
               set(({ player }) => {
-                player.preloadManagers = new Map(preloadManagers)
+                player.preloadManagers = updated
               })
             }
           } catch (error) {
@@ -449,10 +451,11 @@ export function useAsset<TAsset extends Asset = Asset>(
       const manager = preloadManagers.get(assetId)
       if (manager) {
         manager.destroy()
-        preloadManagers.delete(assetId)
+        const updated = new Map(preloadManagers)
+        updated.delete(assetId)
         ;(api as unknown as ImmerStoreApi<PlayerStore>).setState(
           ({ player }) => {
-            player.preloadManagers = new Map(preloadManagers)
+            player.preloadManagers = updated
           }
         )
       }

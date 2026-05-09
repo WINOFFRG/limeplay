@@ -48,55 +48,55 @@ off() // removes the listener
 
 ### Playback
 
-| Event | Payload | Emitted When |
-|---|---|---|
-| `play` | — | Media starts playing |
-| `pause` | — | Media is paused |
-| `ended` | — | Media reaches the end |
-| `buffering` | `{ isBuffering: boolean }` | Buffering state changes |
+| Event          | Payload                                            | Emitted When                |
+| -------------- | -------------------------------------------------- | --------------------------- |
+| `play`         | —                                                  | Media starts playing        |
+| `pause`        | —                                                  | Media is paused             |
+| `ended`        | —                                                  | Media reaches the end       |
+| `buffering`    | `{ isBuffering: boolean }`                         | Buffering state changes     |
 | `statuschange` | `{ status: MediaStatus, prevStatus: MediaStatus }` | Playback status transitions |
 
 ### Volume
 
-| Event | Payload | Emitted When |
-|---|---|---|
+| Event          | Payload                              | Emitted When                       |
+| -------------- | ------------------------------------ | ---------------------------------- |
 | `volumechange` | `{ volume: number, muted: boolean }` | Volume level or mute state changes |
-| `mute` | `{ muted: boolean }` | Mute is toggled |
+| `mute`         | `{ muted: boolean }`                 | Mute is toggled                    |
 
 ### Timeline
 
-| Event | Payload | Emitted When |
-|---|---|---|
-| `timeupdate` | `{ currentTime: number, duration: number, progress: number }` | Playback position updates (polled) |
-| `durationchange` | `{ duration: number }` | Media duration changes |
-| `seek` | `{ from: number, to: number }` | User seeks to a new position |
+| Event            | Payload                                                       | Emitted When                       |
+| ---------------- | ------------------------------------------------------------- | ---------------------------------- |
+| `timeupdate`     | `{ currentTime: number, duration: number, progress: number }` | Playback position updates (polled) |
+| `durationchange` | `{ duration: number }`                                        | Media duration changes             |
+| `seek`           | `{ from: number, to: number }`                                | User seeks to a new position       |
 
 ### Player
 
-| Event | Payload | Emitted When |
-|---|---|---|
-| `playerready` | `{ player: shaka.Player }` | Shaka Player instance is initialized |
-| `playererror` | `{ error: Error }` | Player-level error occurs |
-| `playbackerror` | `{ error: Error }` | Playback-level error occurs |
-| `bufferingchange` | `{ isBuffering: boolean }` | Player buffering state changes |
+| Event             | Payload                    | Emitted When                         |
+| ----------------- | -------------------------- | ------------------------------------ |
+| `playerready`     | `{ player: shaka.Player }` | Shaka Player instance is initialized |
+| `playererror`     | `{ error: Error }`         | Player-level error occurs            |
+| `playbackerror`   | `{ error: Error }`         | Playback-level error occurs          |
+| `bufferingchange` | `{ isBuffering: boolean }` | Player buffering state changes       |
 
 ### Playback Rate
 
-| Event | Payload | Emitted When |
-|---|---|---|
+| Event        | Payload            | Emitted When           |
+| ------------ | ------------------ | ---------------------- |
 | `ratechange` | `{ rate: number }` | Playback speed changes |
 
 ### Picture-in-Picture
 
-| Event | Payload | Emitted When |
-|---|---|---|
-| `enterpictureinpicture` | — | Enters PiP mode |
-| `leavepictureinpicture` | — | Leaves PiP mode |
+| Event                   | Payload | Emitted When    |
+| ----------------------- | ------- | --------------- |
+| `enterpictureinpicture` | —       | Enters PiP mode |
+| `leavepictureinpicture` | —       | Leaves PiP mode |
 
 ### Playlist
 
-| Event | Payload | Emitted When |
-|---|---|---|
+| Event            | Payload               | Emitted When                  |
+| ---------------- | --------------------- | ----------------------------- |
 | `playlistchange` | `PlaylistChangeEvent` | Current playlist item changes |
 
 `PlaylistChangeEvent` contains `currentIndex`, `currentItem`, `previousIndex`, `previousItem`, and `reason` (`"load"`, `"next"`, `"previous"`, `"skip"`, `"remove"`).
