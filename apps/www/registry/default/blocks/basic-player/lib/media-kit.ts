@@ -1,3 +1,5 @@
+"use client"
+
 import { mediaFeature } from "@/registry/default/hooks/use-media"
 import { playbackFeature } from "@/registry/default/hooks/use-playback"
 import { playerFeature } from "@/registry/default/hooks/use-player"

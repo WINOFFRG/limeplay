@@ -138,7 +138,7 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
-        path: `blocks/basic-player/lib/media.ts`,
+        path: `blocks/basic-player/lib/media-kit.ts`,
         type: "registry:lib",
       },
     ],
