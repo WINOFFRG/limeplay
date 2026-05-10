@@ -16,6 +16,7 @@
  */
 
 import { promises as fs } from "fs"
+import { globSync } from "glob"
 import path from "path"
 import { registryItemSchema, registrySchema } from "shadcn/schema"
 
@@ -95,6 +96,7 @@ async function main() {
   const individualItems = await validateIndividualJsonFiles()
   await crossReferenceItems(registryData, individualItems)
   await validateDependencyResolution(registryData)
+  await validateImportCompleteness()
   await validateTierRegistries()
 
   // Summary
@@ -143,8 +145,57 @@ async function validateBuiltRegistryJson() {
   return result.data
 }
 
+const SHADCN_REGISTRY_URL = "https://ui.shadcn.com/r/styles/default"
+
+/** Extract common block path prefix from the first file entry, e.g. "blocks/youtube-music" */
+function getBlockPrefix(files: Array<{ path: string }>): null | string {
+  const first = files[0]?.path
+  if (!first) return null
+  const match = /^(blocks\/[^/]+)\//.exec(first)
+  return match ? match[1] : null
+}
+
+async function resolveFromShadcn(name: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${SHADCN_REGISTRY_URL}/${name}.json`, {
+      method: "HEAD",
+    })
+    return res.ok
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Recursively resolve all transitive registryDependencies for a set of
+ * direct dependency names.
+ */
+function resolveTransitiveDeps(directDeps: string[]): Set<string> {
+  const itemMap = new Map<string, string[]>()
+  for (const item of registryCollection.items) {
+    itemMap.set(
+      item.name,
+      (item.registryDependencies as string[] | undefined) ?? []
+    )
+  }
+
+  const resolved = new Set<string>()
+  const stack = [...directDeps]
+  while (stack.length > 0) {
+    const name = stack.pop()!
+    if (resolved.has(name)) continue
+    resolved.add(name)
+    const children = itemMap.get(name)
+    if (children) {
+      stack.push(...children)
+    }
+  }
+  return resolved
+}
+
 /**
  * 5. Validate registryDependencies resolve to existing items.
+ *    Unresolved deps are checked against shadcn's public registry.
  */
 async function validateDependencyResolution(
   registryData: null | {
@@ -159,19 +210,17 @@ async function validateDependencyResolution(
   console.log("\n🔗 Validating dependency resolution...")
 
   const allNames = new Set(registryData.items.map((item) => item.name))
+  const shadcnCache = new Map<string, boolean>()
   let missingCount = 0
 
   for (const item of registryData.items) {
     if (!item.registryDependencies?.length) continue
 
     for (const dep of item.registryDependencies) {
-      // URL dependencies - extract the name and check the JSON exists
       if (dep.startsWith("http")) {
         const depName = dep.split("/").pop()?.replace(".json", "")
         if (depName && !allNames.has(depName)) {
-          // Check if it's an external dependency (shadcn, etc.)
           if (!dep.includes("limeplay")) {
-            // External dependency - skip validation
             continue
           }
           warn(
@@ -182,8 +231,14 @@ async function validateDependencyResolution(
         continue
       }
 
-      // Non-URL dependencies
       if (!dep.startsWith("@") && !allNames.has(dep)) {
+        if (!shadcnCache.has(dep)) {
+          shadcnCache.set(dep, await resolveFromShadcn(dep))
+        }
+        if (shadcnCache.get(dep)) {
+          continue
+        }
+
         warn(`"${item.name}" depends on "${dep}" which is not in the registry`)
         missingCount++
       }
@@ -192,6 +247,114 @@ async function validateDependencyResolution(
 
   if (missingCount === 0) {
     pass("All registryDependencies resolve correctly")
+  }
+}
+
+async function validateImportCompleteness() {
+  console.log("\n🔎 Validating import completeness...")
+
+  const REGISTRY_DEFAULT_DIR = path.join(process.cwd(), "registry", "default")
+
+  const allItemNames = new Set(
+    registryCollection.items.map((item) => item.name)
+  )
+
+  const IMPORT_PATTERNS: Array<{ nameGroup: number; regex: RegExp }> = [
+    {
+      nameGroup: 1,
+      regex: /from\s+["']@\/registry\/default\/hooks\/([^"'/]+)["']/,
+    },
+    {
+      nameGroup: 1,
+      regex: /from\s+["']@\/registry\/default\/ui\/([^"'/]+)["']/,
+    },
+    {
+      nameGroup: 1,
+      regex: /from\s+["']@\/registry\/default\/lib\/([^"'/]+)["']/,
+    },
+    { nameGroup: 1, regex: /from\s+["']@\/hooks\/limeplay\/([^"'/]+)["']/ },
+    {
+      nameGroup: 1,
+      regex: /from\s+["']@\/components\/limeplay\/([^"'/]+)["']/,
+    },
+  ]
+
+  let errorTotal = 0
+
+  for (const item of registryCollection.items) {
+    if (item.type !== "registry:block") continue
+    if (!item.files?.length) continue
+
+    const directDeps = (item.registryDependencies as string[] | undefined) ?? []
+    const declared = new Set(directDeps)
+    const transitive = resolveTransitiveDeps(directDeps)
+    const blockPrefix = getBlockPrefix(item.files as Array<{ path: string }>)
+
+    const sourceFiles: string[] = []
+    for (const f of item.files as Array<{ path: string }>) {
+      const abs = path.join(REGISTRY_DEFAULT_DIR, f.path)
+      const matches = globSync(abs)
+      sourceFiles.push(...matches)
+    }
+
+    const missing: Array<{
+      dep: string
+      file: string
+      transitivelyCovered: boolean
+    }> = []
+
+    for (const srcFile of sourceFiles) {
+      let content: string
+      try {
+        content = await fs.readFile(srcFile, "utf-8")
+      } catch {
+        continue
+      }
+
+      for (const line of content.split("\n")) {
+        for (const { nameGroup, regex } of IMPORT_PATTERNS) {
+          const m = regex.exec(line)
+          if (!m) continue
+          const depName = m[nameGroup]
+
+          if (blockPrefix && line.includes(blockPrefix)) continue
+          if (!allItemNames.has(depName)) continue
+
+          if (!declared.has(depName)) {
+            missing.push({
+              dep: depName,
+              file: path.relative(REGISTRY_DEFAULT_DIR, srcFile),
+              transitivelyCovered: transitive.has(depName),
+            })
+          }
+        }
+      }
+    }
+
+    if (missing.length > 0) {
+      for (const { dep, file, transitivelyCovered } of missing) {
+        if (transitivelyCovered) {
+          // Covered transitively — won't break install, but not declared directly
+          warn(
+            `"${item.name}" imports "${dep}" (in ${file}) — resolved transitively but not in direct registryDependencies`
+          )
+        } else {
+          // Not covered at all — this WILL break install
+          error(
+            `"${item.name}" imports "${dep}" (in ${file}) but it is NOT in registryDependencies (even transitively)`
+          )
+          errorTotal++
+        }
+      }
+    }
+  }
+
+  if (errorTotal === 0 && warningCount === 0) {
+    pass("All block imports are covered by registryDependencies")
+  } else if (errorTotal === 0) {
+    pass(
+      "All block imports resolve (some only transitively — see warnings above)"
+    )
   }
 }
 
@@ -273,7 +436,7 @@ async function validateRegistryCollection() {
 }
 
 /**
- * 6. Validate tier-specific registries (free/pro).
+ * 7. Validate tier-specific registries (free/pro).
  */
 async function validateTierRegistries() {
   for (const tier of TIERS) {

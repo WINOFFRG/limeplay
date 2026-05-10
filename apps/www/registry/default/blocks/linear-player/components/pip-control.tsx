@@ -2,7 +2,7 @@
 
 import { PictureInPictureIcon } from "@phosphor-icons/react"
 
-import { Button } from "@/registry/default/blocks/linear-player/ui/button"
+import { Button } from "@/registry/default/blocks/linear-player/components/button"
 import { usePictureInPictureStore } from "@/registry/default/hooks/use-picture-in-picture"
 import { PictureInPictureControl as PictureInPictureControlPrimitive } from "@/registry/default/ui/picture-in-picture-control"
 
