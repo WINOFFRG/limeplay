@@ -9,6 +9,7 @@
     "registry:build": "REGISTRY_HOST=https://limeplay.winoffrg.dev exec tsx --tsconfig ./tsconfig.scripts.json ./scripts/registry-dev.mts",
     "registry:dev": "REGISTRY_HOST=http://localhost:3000 exec tsx --tsconfig ./tsconfig.scripts.json ./scripts/registry-dev.mts --watch",
     "validate:registries": "bun run ./scripts/validate-registries.ts",
+    "test:registry-install": "bun run scripts/test-registry-install.ts",
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache --config ../../prettier.config.cjs && next lint",
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache --config ../../prettier.config.cjs",
     "install:vercel": "bash ./scripts/vercel-install.sh",

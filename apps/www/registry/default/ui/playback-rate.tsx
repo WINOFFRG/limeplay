@@ -6,8 +6,6 @@ import {
   SelectGroup as SelectGroupPrimitive,
   SelectItem,
   Select as SelectPrimitive,
-  SelectTrigger as SelectTriggerPrimitive,
-  SelectValue,
 } from "@/components/ui/select"
 import { usePlaybackRateStore } from "@/registry/default/hooks/use-playback-rate"
 
@@ -27,18 +25,6 @@ export function SelectRoot(
 }
 
 SelectRoot.displayName = "PlaybackRateSelectRoot"
-
-export function SelectTrigger(
-  props: React.ComponentProps<typeof SelectTriggerPrimitive>
-) {
-  return (
-    <SelectTriggerPrimitive {...props}>
-      <SelectValue />
-    </SelectTriggerPrimitive>
-  )
-}
-
-SelectTrigger.displayName = "PlaybackRateSelectTrigger"
 
 interface SelectGroupProps extends React.ComponentProps<
   typeof SelectGroupPrimitive

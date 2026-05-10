@@ -15,7 +15,7 @@ export function PlaybackStateControl() {
   const status = usePlaybackStore((state) => state.status)
 
   return (
-    <Button asChild size="icon" variant="glass">
+    <Button asChild size="icon" variant="ghost">
       <PlaybackControl>
         {status === "playing" ? (
           <PauseIcon size={18} weight="fill" />
