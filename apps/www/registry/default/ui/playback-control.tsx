@@ -9,8 +9,7 @@ import {
   usePlaybackStore,
 } from "@/registry/default/hooks/use-playback"
 
-interface PlaybackControlProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface PlaybackControlProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
    * Render as child component using Radix Slot
    * @default false
@@ -82,9 +81,7 @@ export const PlaybackControl = React.forwardRef<
       onClick={handleClick}
       ref={forwardedRef}
     >
-      {render
-        ? React.cloneElement(render, undefined, children)
-        : children}
+      {render ? React.cloneElement(render, undefined, children) : children}
     </Comp>
   )
 })

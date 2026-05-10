@@ -70,7 +70,10 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ asChild = false, children, className, render, size, variant, ...props }, ref) => {
+  (
+    { asChild = false, children, className, render, size, variant, ...props },
+    ref
+  ) => {
     const Comp = render ? Slot : asChild ? Slot : "button"
     return (
       <Comp
@@ -79,9 +82,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {render
-          ? React.cloneElement(render, undefined, children)
-          : children}
+        {render ? React.cloneElement(render, undefined, children) : children}
       </Comp>
     )
   }
