@@ -75,9 +75,7 @@ export const CaptionsControl = React.forwardRef<
       onClick={handleClick}
       ref={forwardedRef}
     >
-      {render
-        ? React.cloneElement(render, undefined, children)
-        : children}
+      {render ? React.cloneElement(render, undefined, children) : children}
     </Comp>
   )
 })

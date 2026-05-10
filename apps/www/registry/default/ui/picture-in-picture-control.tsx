@@ -10,8 +10,7 @@ import {
   usePlaybackStore,
 } from "@/registry/default/hooks/use-playback"
 
-export interface PictureInPictureControlProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface PictureInPictureControlProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**
    * Render as child component using Radix Slot
    * @default false
@@ -86,9 +85,7 @@ export const PictureInPictureControl = React.forwardRef<
       onClick={handleClick}
       ref={forwardedRef}
     >
-      {render
-        ? React.cloneElement(render, undefined, children)
-        : children}
+      {render ? React.cloneElement(render, undefined, children) : children}
     </Comp>
   )
 })
