@@ -35,12 +35,18 @@ jobs:
   typecheck:
     name: Type Check
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        if: github.event_name == 'push'
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.WINOFFRG_PAT }}
           submodules: recursive
+          persist-credentials: false
+
+      - name: Checkout
+        if: github.event_name != 'push'
+        uses: actions/checkout@v4
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -76,14 +82,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: [registry]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        if: github.event_name == 'push'
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.WINOFFRG_PAT }}
           submodules: recursive
+          persist-credentials: false
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
+      - name: Checkout
+        if: github.event_name != 'push'
+        uses: actions/checkout@v4
 
       - uses: oven-sh/setup-bun@v2
         with:
