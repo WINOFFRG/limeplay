@@ -15,12 +15,9 @@ export function useSeek() {
 
     media.currentTime = Math.max(0, Math.min(newTime, media.duration || 0))
 
-    store.setState((state) => ({
-      media: {
-        ...state.media,
-        idle: false,
-      },
-    }))
+    store.setState(({ media }) => {
+      media.idle = false
+    })
   }
 
   return {

@@ -66,18 +66,24 @@ export interface ButtonProps
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  render?: React.ReactElement
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ asChild = false, className, size, variant, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+  (
+    { asChild = false, children, className, render, size, variant, ...props },
+    ref
+  ) => {
+    const Comp = render ? Slot : asChild ? Slot : "button"
     return (
       <Comp
         className={cn(buttonVariants({ className, size, variant }))}
         data-slot="button"
         ref={ref}
         {...props}
-      />
+      >
+        {render ? React.cloneElement(render, undefined, children) : children}
+      </Comp>
     )
   }
 )

@@ -69,6 +69,24 @@ Limeplay uses a **feature-based composition** system via `createMediaKit`.
 * Use `React.memo`, `useCallback`, and `useMemo` for high-frequency components
 * Never introduce unnecessary re-renders
 
+### Zustand + Immer Non-Negotiables
+
+When updating store state with `zustand/middleware/immer`:
+
+* In `set((state) => { ... })`, mutate draft fields directly. Never reassign `state`.
+* If replacing state, return a new value explicitly. Never return `undefined`.
+* Never mutate class instances unless they are explicitly immerable (`[immerable] = true`).
+* Never mutate exotic/non-draftable objects inside producers.
+* Keep state a strict unidirectional tree (no circular refs, no shared object identity across branches).
+* Treat external payloads as external: clone/sanitize before storing if they might be mutated.
+* Do not assume Immer patches are minimal/optimal if implementing patch-dependent workflows.
+* Avoid nested `produce`; if used, always apply the returned result.
+* Do not rely on draft referential equality (`===` / `indexOf` against draft values). Compare by id or outside producer.
+* For arrays, only mutate numeric indices and `length`.
+* If `enableArrayMethods()` is enabled, callbacks of overridden methods (`filter`, `find`, `some`, `every`, `slice`) receive base values, not drafts.
+
+If a store update violates any of these rules, stop and fix it before continuing.
+
 ---
 
 ## Component Design Rules
@@ -129,6 +147,61 @@ While developing the feature:
 * ✅ Assume the developer is testing manually using live preview
 
 You are **assisting**, not completing the feature end-to-end.
+
+---
+
+### shadcn CLI Limitations (CRITICAL — Registry Authoring)
+
+The `shadcn add` CLI has an import rewriting system that can break block-internal imports. Understand these rules when authoring registry items:
+
+#### Import Name Collision
+
+When `shadcn add` installs a registry item, it rewrites import paths by matching **filenames** against all registry items in scope (your own registryDependencies + shadcn built-ins like `button`, `toggle`, `select`). If a block file's name matches any registry item that's being installed as a dependency, the CLI hijacks the import to point at that registry item's target path instead of your block's file.
+
+**Rule:** Block-internal files MUST have unique names that don't collide with any registry item name in the dependency tree.
+
+* ❌ `blocks/linear-player/lib/media.ts` — "media" is a limeplay registry item (registryDependency) → import gets hijacked to its target
+* ❌ `blocks/linear-player/ui/button.tsx` — "button" is a shadcn built-in registry item → import gets hijacked
+* ❌ `blocks/linear-player/components/picture-in-picture-control.tsx` — same name as limeplay primitive → hijacked
+* ✅ `blocks/linear-player/components/media-kit.ts` — "media-kit" doesn't match any registry item
+* ✅ `blocks/linear-player/components/pip-control.tsx` — "pip-control" doesn't match any registry item
+* ✅ `blocks/linear-player/components/button.tsx` — in `components/` folder, CLI scopes it to the block
+* ✅ `blocks/linear-player/lib/test-util.ts` — "test-util" doesn't match any registry item
+
+#### Folder Scoping in Blocks
+
+The CLI treats `components/` inside a block as block-scoped — imports always resolve correctly regardless of filename collisions. Files in `ui/`, `lib/`, `hooks/` within a block are vulnerable to name collision hijacking.
+
+**Rule:** Prefer `components/` for all block-internal files. Only use `lib/`, `ui/`, `hooks/` if the filename is guaranteed unique across all registry items in the dependency tree.
+
+File **installation** (target path) always works correctly via PATH_MAPPINGS. The problem is only with **import string rewriting** in consuming files.
+
+#### `asChild` → `render` Transformation (b0 preset)
+
+The b0 shadcn preset uses Base UI instead of Radix. During `shadcn add`, the CLI transforms `asChild` patterns to Base UI's `render` prop pattern:
+
+```tsx
+// Source (what you write):
+<MuteControl asChild>
+  <Button>...</Button>
+</MuteControl>
+
+// Installed (b0 preset transforms to):
+<MuteControl render={<Button />}>...</MuteControl>
+```
+
+**Rule:** All control primitives that support `asChild` MUST also accept a `render?: React.ReactElement` prop. Use `Slot` for both — when `render` is provided, clone the render element with children.
+
+#### Version Pinning
+
+Always pin dependencies that have breaking changes across majors:
+* ✅ `"shaka-player@^4"` — v5 removed APIs we use
+* ❌ `"shaka-player"` — installs latest (v5), breaks types
+
+#### Related upstream issues
+
+* [shadcn-ui/ui#8196](https://github.com/shadcn-ui/ui/issues/8196) — blocks alias in import transformation
+* [shadcn-ui/ui#9481](https://github.com/shadcn-ui/ui/issues/9481) — registry:build loses file type and target
 
 ---
 

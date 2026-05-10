@@ -16,7 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@/registry/default/blocks/linear-player/ui/button"
+import { Button } from "@/registry/default/blocks/linear-player/components/button"
 import { useAsset } from "@/registry/default/hooks/use-asset"
 import { usePlayerStore } from "@/registry/default/hooks/use-player"
 

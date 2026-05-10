@@ -10,7 +10,7 @@ export const blocks: Registry["items"] = [
       "@base-ui/react",
       "@radix-ui/react-toggle",
       "zustand",
-      "shaka-player",
+      "shaka-player@^4",
       "lodash.clamp",
     ],
     description: "Modern seamless flat linear.app Media Player",
@@ -45,11 +45,11 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/ui/button.tsx`,
-        type: "registry:ui",
+        path: `${BASE_SRC_URL}/components/button.tsx`,
+        type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/lib/media.ts`,
+        path: `${BASE_SRC_URL}/lib/media-kit.ts`,
         type: "registry:lib",
       },
       {
@@ -74,7 +74,7 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/picture-in-picture-control.tsx`,
+        path: `${BASE_SRC_URL}/components/pip-control.tsx`,
         type: "registry:component",
       },
     ],
@@ -117,7 +117,7 @@ export const blocks: Registry["items"] = [
   },
   {
     author: "Rohan Gupta (@winoffrg)",
-    dependencies: ["@phosphor-icons/react", "zustand", "shaka-player"],
+    dependencies: ["@phosphor-icons/react", "zustand", "shaka-player@^4"],
     description: "Limeplay Basic Player",
     files: [
       {
@@ -170,13 +170,16 @@ export const blocks: Registry["items"] = [
     dependencies: [
       "@phosphor-icons/react",
       "@radix-ui/react-slot",
+      "async-retry",
+      "motion",
       "zustand",
-      "shaka-player",
+      "shaka-player@^4",
     ],
     description: "YouTube Music style audio player with playlist support",
+    devDependencies: ["@types/async-retry"],
     files: [
       {
-        path: "blocks/youtube-music/lib/media.ts",
+        path: "blocks/youtube-music/lib/media-kit.ts",
         type: "registry:lib",
       },
       {
@@ -224,8 +227,8 @@ export const blocks: Registry["items"] = [
         type: "registry:hook",
       },
       {
-        path: "blocks/youtube-music/ui/button.tsx",
-        type: "registry:ui",
+        path: "blocks/youtube-music/components/button.tsx",
+        type: "registry:component",
       },
       {
         path: "blocks/youtube-music/youtube-music.module.css",
