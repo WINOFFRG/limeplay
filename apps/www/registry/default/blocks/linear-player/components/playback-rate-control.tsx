@@ -1,5 +1,7 @@
 "use client"
 
+import React from "react"
+
 import * as Select from "@/components/ui/select"
 import * as PlaybackRate from "@/registry/default/ui/playback-rate"
 
@@ -18,10 +20,13 @@ export function PlaybackRateControl() {
       </Select.SelectTrigger>
       <Select.SelectContent
         align="start"
-        alignItemWithTrigger={false}
         className={`dark min-w-28 border border-border bg-background/85 backdrop-blur-lg`}
         side="top"
         sideOffset={12}
+        {...({
+          alignItemWithTrigger: false,
+          position: "popper",
+        } as React.ComponentProps<typeof Select.SelectContent>)}
       >
         <PlaybackRate.SelectGroup className={`tracking-wider`}>
           <Select.SelectLabel className="whitespace-nowrap">
