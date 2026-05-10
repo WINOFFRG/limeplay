@@ -95,9 +95,8 @@ const FRAMEWORKS: FrameworkConfig[] = [
     generateRoute: (blockName, importPath, component, props) => ({
       content: [
         `"use client"`,
-        `import dynamic from "next/dynamic"`,
-        `const C = dynamic(() => import("@/${importPath}").then(m => ({ default: m.${component} })), { ssr: false })`,
-        `export default function Page() { return <C ${props ?? ""}/> }`,
+        `import { ${component} } from "@/${importPath}"`,
+        `export default function Page() { return <${component} ${props ?? ""}/> }`,
       ].join("\n"),
       path: `app/${blockName}/page.tsx`,
     }),
