@@ -13,11 +13,24 @@ export const examples: Registry["items"] = [
       "player-layout",
       "media-provider",
       "media",
+      "error-screen",
       "custom-demo-controls",
       "limeplay-logo",
       "fallback-poster",
       "root-container",
+      "use-asset",
     ],
+    type: "registry:example",
+  },
+  {
+    files: [
+      {
+        path: "examples/error-screen-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+    name: "error-screen-demo",
+    registryDependencies: ["error-screen"],
     type: "registry:example",
   },
   {

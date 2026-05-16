@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/item"
 import { cn } from "@/lib/utils"
 
-const MEDIA_ERROR_MAP: Record<number, { code: string; title: string }> = {
+const MEDIA_ERROR_MAP: Partial<Record<number, { code: string; title: string }>> = {
   1: { code: "MEDIA_ERR_ABORTED", title: "Playback aborted" },
   2: { code: "MEDIA_ERR_NETWORK", title: "Unable to connect" },
   3: { code: "MEDIA_ERR_DECODE", title: "Playback error" },
@@ -43,81 +43,36 @@ export interface ErrorDetails {
   title: string
 }
 
-interface ErrorScreenProps extends ComponentPropsWithoutRef<"div"> {
-  error?: unknown
-  message?: string
-}
-
-export function getErrorDetails(error: unknown): ErrorDetails {
-  if (!error) {
-    return {
-      code: "ERR_UNKNOWN",
-      description:
-        "Something went wrong during playback. Please try again or check your connection.",
-      title: "Something went wrong",
-    }
-  }
-
-  if (isMediaError(error)) {
-    const mapped = MEDIA_ERROR_MAP[error.code]
-    return {
-      code: mapped.code,
-      description:
-        error.code === 2
-          ? "There was an issue connecting with the stream. Please check your internet connection and try again."
-          : "This content could not be played. Try a different stream or check your connection.",
-      title: mapped.title,
-    }
-  }
-
-  if (isShakaError(error)) {
-    const categoryLabel =
-      SHAKA_CATEGORY_MAP[error.category] ?? `Category ${error.category}`
-    const isNetwork = error.category === 1
-    return {
-      code: `SHAKA-${error.category}_${error.code}`,
-      description: isNetwork
-        ? "There was an issue connecting with the stream. Please check your internet connection and try again."
-        : `A ${categoryLabel.toLowerCase()} occurred while loading content. Try a different stream or check your connection.`,
-      shakaDocsUrl: `${SHAKA_DOCS_BASE}#:~:text=${error.code}`,
-      title: isNetwork ? "Unable to connect" : categoryLabel,
-    }
-  }
-
-  return {
-    code: "ERR_PLAYBACK",
-    description:
-      "This content could not be played. Try a different stream or check your connection.",
-    title: "Playback error",
-  }
-}
-
-export function isMediaError(error: unknown): error is MediaError {
-  return typeof MediaError !== "undefined" && error instanceof MediaError
-}
-
-export function isShakaError(
-  error: unknown
-): error is {
+export type ShakaErrorLike = {
   category: number
   code: number
   message: string
   severity: number
-} {
-  return error instanceof shaka.util.Error
+}
+
+interface ErrorScreenProps extends ComponentPropsWithoutRef<"div"> {
+  description?: string
+  error?: unknown
+  message?: string
+}
+
+interface MediaErrorLike {
+  code: number
 }
 
 export const ErrorScreen = React.forwardRef<HTMLDivElement, ErrorScreenProps>(
-  ({ children, className, error, message, ...props }, ref) => {
+  ({ children, className, description, error, message, ...props }, ref) => {
     const details = getErrorDetails(error)
 
     return (
       <div
+        aria-live="assertive"
         className={cn(
           "absolute inset-0 z-50 flex items-center justify-center bg-background text-foreground",
           className
         )}
         ref={ref}
+        role="alert"
         {...props}
       >
         <Item
@@ -154,7 +109,7 @@ export const ErrorScreen = React.forwardRef<HTMLDivElement, ErrorScreenProps>(
                 sm:text-sm
               `}
             >
-              {details.description}
+              {description ?? details.description}
             </ItemDescription>
           </ItemContent>
           {children && (
@@ -165,5 +120,109 @@ export const ErrorScreen = React.forwardRef<HTMLDivElement, ErrorScreenProps>(
     )
   }
 )
+
+export function getErrorDetails(error: unknown): ErrorDetails {
+  if (!error) {
+    return {
+      code: "ERR_UNKNOWN",
+      description:
+        "Something went wrong during playback. Please try again or check your connection.",
+      title: "Something went wrong",
+    }
+  }
+
+  if (isMediaError(error)) {
+    const mapped = MEDIA_ERROR_MAP[error.code]
+
+    return {
+      code: mapped?.code ?? `MEDIA_ERR_${error.code}`,
+      description:
+        error.code === 2
+          ? "There was an issue connecting with the stream. Please check your internet connection and try again."
+          : "This content could not be played. Try a different stream or check your connection.",
+      title: mapped?.title ?? "Playback error",
+    }
+  }
+
+  if (isShakaError(error)) {
+    const categoryLabel =
+      SHAKA_CATEGORY_MAP[error.category] ?? `Category ${error.category}`
+    const isNetwork = error.category === 1
+
+    return {
+      code: `SHAKA-${error.category}_${error.code}`,
+      description: isNetwork
+        ? "There was an issue connecting with the stream. Please check your internet connection and try again."
+        : `A ${categoryLabel.toLowerCase()} occurred while loading content. Try a different stream or check your connection.`,
+      shakaDocsUrl: `${SHAKA_DOCS_BASE}#:~:text=${error.code}`,
+      title: isNetwork ? "Unable to connect" : categoryLabel,
+    }
+  }
+
+  return {
+    code: "ERR_PLAYBACK",
+    description:
+      "This content could not be played. Try a different stream or check your connection.",
+    title: "Playback error",
+  }
+}
+
+export function isMediaError(error: unknown): error is MediaErrorLike {
+  if (!error || typeof error !== "object") {
+    return false
+  }
+
+  if (
+    typeof MediaError !== "undefined" &&
+    error instanceof MediaError
+  ) {
+    return true
+  }
+
+  return (
+    !hasNumberProperty(error, "category") &&
+    hasNumberProperty(error, "code")
+  )
+}
+
+export function isShakaError(error: unknown): error is ShakaErrorLike {
+  if (!error || typeof error !== "object") {
+    return false
+  }
+
+  return (
+    error instanceof shaka.util.Error ||
+    (hasNumberProperty(error, "category") &&
+      hasNumberProperty(error, "code") &&
+      hasNumberProperty(error, "severity") &&
+      hasStringProperty(error, "message"))
+  )
+}
+
+function hasNumberProperty<Key extends string>(
+  value: unknown,
+  key: Key
+): value is Record<Key, number> {
+  if (!value || typeof value !== "object") {
+    return false
+  }
+
+  const record = value as Record<string, unknown>
+
+  return typeof record[key] === "number"
+}
+
+function hasStringProperty<Key extends string>(
+  value: unknown,
+  key: Key
+): value is Record<Key, string> {
+  if (!value || typeof value !== "object") {
+    return false
+  }
+
+  const record = value as Record<string, unknown>
+
+  return typeof record[key] === "string"
+}
 
 ErrorScreen.displayName = "ErrorScreen"
