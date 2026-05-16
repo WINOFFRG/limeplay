@@ -69,7 +69,7 @@ export interface UseAssetOptions<TAsset extends Asset> {
   onAssetLoaded?: (asset: TAsset) => void
   onLoadError?: (
     asset: TAsset,
-    error: Error,
+    error: unknown,
     context: { hasNext: boolean; retryCount: number }
   ) => "retry" | "skip" | "stop"
   onPlaybackError?: (
@@ -264,11 +264,6 @@ export function assetFeature(): MediaFeature<
             options?.onAssetLoaded?.(asset)
             return true
           } catch (error) {
-            onPlayerError?.(
-              error instanceof Error ? error : new Error(String(error)),
-              asset
-            )
-
             if (
               get().asset.loadGeneration !== generation ||
               isLoadInterrupted(error) ||
@@ -277,15 +272,18 @@ export function assetFeature(): MediaFeature<
               return false
             }
 
-            const err =
-              error instanceof Error ? error : new Error(String(error))
+
+            onPlayerError?.(
+              error instanceof Error ? error : Object.assign(new Error(String(error)), error as object),
+              asset
+            )
             const playlist = get().playlist
             const maxRetries = options?.maxRetries ?? 0
             const currentRetryCount = get().asset.retryCount
             const hasNext = playlist.getNextIndex() !== -1
 
             if (options?.onLoadError) {
-              const decision = options.onLoadError(asset, err, {
+              const decision = options.onLoadError(asset, error, {
                 hasNext,
                 retryCount: currentRetryCount,
               })
@@ -388,7 +386,11 @@ export function assetFeature(): MediaFeature<
             }
           } catch (error) {
             const err =
-              error instanceof Error ? error : new Error(String(error))
+              error instanceof Error
+                ? error
+                : typeof error === "object" && error !== null
+                  ? Object.assign(new Error(String((error as { message?: string }).message ?? error)), error)
+                  : new Error(String(error))
             onPlayerError?.(err, asset)
             console.error("[useAsset] Preload error:", error)
           }

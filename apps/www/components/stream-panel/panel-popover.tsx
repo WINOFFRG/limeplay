@@ -74,9 +74,9 @@ export function StreamPanel({
   const groupedPresets = useMemo(() => {
     const groups: Partial<Record<string, StreamPreset[]>> = {}
     for (const preset of presets) {
-      const tag = preset.tags?.[0]?.toUpperCase() ?? preset.format.toUpperCase()
-      if (!groups[tag]) groups[tag] = []
-      groups[tag].push(preset)
+      const group = preset.group
+      if (!groups[group]) groups[group] = []
+      groups[group].push(preset)
     }
     return groups as Record<string, StreamPreset[]>
   }, [presets])
@@ -110,7 +110,7 @@ export function StreamPanel({
         align={align}
         className={cn(
           `
-            relative min-h-90 gap-4 overflow-hidden rounded-[20px] border border-border/60 bg-popover/90 tracking-wide text-popover-foreground
+            relative min-h-96 gap-4 overflow-hidden rounded-[20px] border border-border/60 bg-popover/90 tracking-wide text-popover-foreground
             backdrop-blur-lg
           `,
           variant === "floating" && originMap[position],
