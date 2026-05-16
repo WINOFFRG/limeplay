@@ -14,7 +14,8 @@
     "playback-rate",
     "picture-in-picture-control",
     "captions",
-    "fallback-poster"
+    "fallback-poster",
+    "error-screen"
   ],
   "defaultOpen": true
 }
