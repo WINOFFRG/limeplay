@@ -79,7 +79,20 @@ export function useStreamPanelSync() {
 
   const handleLoadStream = useCallback(
     (src: string, config?: string) => {
-      const parsedConfig = config ? safeParseJson(config) : undefined
+      let parsedConfig: Record<string, unknown> | undefined
+      if (config) {
+        const parseResult = safeParseJson(config)
+        if (!parseResult.ok) {
+          store.setState(({ playback }) => {
+            playback.status = "error"
+            playback.error = new Error(
+              "Invalid JSON config: " + parseResult.error
+            )
+          })
+          return
+        }
+        parsedConfig = parseResult.value
+      }
       const asset: StreamPreset = {
         config: parsedConfig,
         features: [],
@@ -92,7 +105,7 @@ export function useStreamPanelSync() {
       }
       loadPlaylist([asset as unknown as Asset])
     },
-    [loadPlaylist]
+    [loadPlaylist, store]
   )
 
   return {
@@ -101,10 +114,12 @@ export function useStreamPanelSync() {
   }
 }
 
-function safeParseJson(str: string): Record<string, unknown> | undefined {
+function safeParseJson(
+  str: string
+): { error: string; ok: false } | { ok: true; value: Record<string, unknown> } {
   try {
-    return JSON.parse(str)
-  } catch {
-    return undefined
+    return { ok: true, value: JSON.parse(str) }
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : String(e), ok: false }
   }
 }

@@ -23,6 +23,7 @@ export const examples: Registry["items"] = [
     type: "registry:example",
   },
   {
+    dependencies: ["lucide-react"],
     files: [
       {
         path: "examples/error-screen-demo.tsx",
