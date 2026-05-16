@@ -1,15 +1,20 @@
 "use client"
 
-import { useCallback, useEffect, useRef } from "react"
+import { useCallback, useEffect, useMemo, useRef } from "react"
+
+import type { StreamPreset } from "@/lib/stream-presets"
+import type { Asset, UseAssetOptions } from "@/registry/default/hooks/use-asset"
 
 import { useDocsDialStore } from "@/lib/docs-dial-store"
-import { getPresetById, type StreamPreset } from "@/lib/stream-presets"
+import { getPresetById } from "@/lib/stream-presets"
+import { useAsset } from "@/registry/default/hooks/use-asset"
 import { useVolumeStore } from "@/registry/default/hooks/use-volume"
-import { useMediaStore } from "@/registry/default/internal/media"
+import { useMediaApi, useMediaStore } from "@/registry/default/internal/media"
 
 export function useStreamPanelSync() {
-  const player = useMediaStore((state) => state.player.instance)
+  const store = useMediaApi()
   const mediaElement = useMediaStore((state) => state.media.mediaElement)
+  const player = useMediaStore((state) => state.player.instance)
 
   const volume = useDocsDialStore((s) => s.volume)
   const muted = useDocsDialStore((s) => s.muted)
@@ -18,6 +23,21 @@ export function useStreamPanelSync() {
 
   const setVolume = useVolumeStore((s) => s.setVolume)
   const setMuted = useVolumeStore((s) => s.setMuted)
+
+  const assetOptions = useMemo<UseAssetOptions<Asset>>(
+    () => ({
+      onLoadError: (_asset, error) => {
+        store.setState(({ playback }) => {
+          playback.status = "error"
+          playback.error = error
+        })
+        return "stop"
+      },
+    }),
+    [store]
+  )
+
+  const { loadPlaylist } = useAsset(assetOptions)
 
   const prevPresetId = useRef(presetId)
   const initialLoadDone = useRef(false)
@@ -37,28 +57,6 @@ export function useStreamPanelSync() {
     mediaElement.autoplay = autoplay
   }, [autoplay, mediaElement])
 
-  const loadStream = useCallback(
-    (src: string, config?: string) => {
-      if (!player || !mediaElement) return
-
-      if (mediaElement instanceof HTMLVideoElement) {
-        mediaElement.poster = ""
-      }
-
-      if (config) {
-        try {
-          const parsed = JSON.parse(config)
-          player.configure(parsed)
-        } catch {
-          // invalid config — skip
-        }
-      }
-
-      void player.load(src)
-    },
-    [player, mediaElement]
-  )
-
   useEffect(() => {
     if (!player || !mediaElement) return
     if (presetId === prevPresetId.current && initialLoadDone.current) return
@@ -68,26 +66,45 @@ export function useStreamPanelSync() {
 
     const preset = getPresetById(presetId)
     if (preset) {
-      loadStream(preset.src)
+      loadPlaylist([preset as unknown as Asset])
     }
-  }, [presetId, player, mediaElement, loadStream])
+  }, [presetId, player, mediaElement, loadPlaylist])
 
   const handlePresetChange = useCallback(
     (preset: StreamPreset) => {
-      loadStream(preset.src)
+      loadPlaylist([preset as unknown as Asset])
     },
-    [loadStream]
+    [loadPlaylist]
   )
 
   const handleLoadStream = useCallback(
     (src: string, config?: string) => {
-      loadStream(src, config)
+      const parsedConfig = config ? safeParseJson(config) : undefined
+      const asset: StreamPreset = {
+        config: parsedConfig,
+        features: [],
+        format: "progressive",
+        group: "Special",
+        id: `custom-${Date.now()}`,
+        name: "Custom Stream",
+        src,
+        type: "video",
+      }
+      loadPlaylist([asset as unknown as Asset])
     },
-    [loadStream]
+    [loadPlaylist]
   )
 
   return {
     handleLoadStream,
     handlePresetChange,
+  }
+}
+
+function safeParseJson(str: string): Record<string, unknown> | undefined {
+  try {
+    return JSON.parse(str)
+  } catch {
+    return undefined
   }
 }
