@@ -1,0 +1,59 @@
+---
+title: Error Screen
+description: Error overlay for failed playback, loading, and stream setup states.
+---
+
+<ComponentPreview
+  name="error-screen-demo"
+  className="overflow-hidden rounded-xl border border-border/50"
+/>
+
+## Installation
+
+```npm
+npx shadcn add @limeplay/error-screen
+```
+
+<Callout>
+  No specific feature is required. Most apps pair this component with
+  [`playbackFeature`](/docs/hooks/use-playback) or [`playerFeature`](/docs/hooks/use-player)
+  and render it when loading or playback enters an error state.
+</Callout>
+
+## Usage
+
+```tsx title="components/player/player-error-overlay.tsx"
+import { RotateCwIcon } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { usePlaybackStore } from "@/hooks/limeplay/use-playback"
+import { ErrorScreen } from "@/components/limeplay/error-screen"
+
+export function PlayerErrorOverlay() {
+  const error = usePlaybackStore((s) => s.error)
+  const status = usePlaybackStore((s) => s.status)
+
+  if (status !== "error") return null
+
+  return (
+    <ErrorScreen className="rounded-lg" error={error}>
+      <Button size="sm">
+        <RotateCwIcon />
+        Retry
+      </Button>
+    </ErrorScreen>
+  )
+}
+```
+
+Use the `message` and `description` props to override the generated copy when you want a custom title or recovery guidance.
+
+## Components
+
+### ErrorScreen
+
+Renders an absolute-positioned overlay with a mapped title, error code, and recovery copy. Pass action buttons as children for retry, reload, or debug actions.
+
+### getErrorDetails
+
+Maps native `MediaError` instances, Shaka errors, and compatible serialized error objects into a display-friendly `{ title, code, description }` shape.

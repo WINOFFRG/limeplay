@@ -356,17 +356,14 @@ function PlayerSetup() {
     on(player, "loading", loadingHandler)
 
     const errorHandler = (event: Event) => {
-      const detail = (event as CustomEvent).detail
-      if (detail && !isLoadInterrupted(detail)) {
-        store.setState(({ playback }) => {
-          playback.status = "error"
-        })
-        const err =
-          detail instanceof Error
-            ? detail
-            : new Error(String(detail?.message ?? detail))
-        events.emit("playbackerror", { error: err })
-      }
+      const detail = (event as CustomEvent).detail as shaka.util.Error
+      if (isLoadInterrupted(detail)) return
+
+      store.setState(({ playback }) => {
+        playback.status = "error"
+        playback.error = detail
+      })
+      events.emit("playbackerror", { error: detail as unknown as Error })
     }
 
     player.addEventListener("error", errorHandler)
