@@ -32,7 +32,7 @@ function checkManifestSupport(format: StreamPreset["format"]): null | string {
     const hasMse =
       typeof MediaSource !== "undefined" || "ManagedMediaSource" in globalThis
 
-    if (hasMse) {
+    if (hasMse && typeof MediaSource !== "undefined") {
       const hlsSupported =
         MediaSource.isTypeSupported('video/mp4; codecs="avc1.42E01E"') ||
         MediaSource.isTypeSupported("video/mp2t")
@@ -123,13 +123,13 @@ const DRM_FEATURES: StreamFeature[] = [
   "FairPlay",
 ]
 
-let supportResultsCache: Map<string, StreamSupportResult> | null = null
+const supportResultsCache = new Map<string, StreamSupportResult>()
 let probePromise: null | Promise<void> = null
 
 export function getStreamSupport(preset: StreamPreset): StreamSupportResult {
   if (typeof window === "undefined") return { supported: true }
 
-  const cached = supportResultsCache?.get(preset.id)
+  const cached = supportResultsCache.get(preset.id)
   if (cached) return cached
 
   return computeSupport(preset)
@@ -138,14 +138,16 @@ export function getStreamSupport(preset: StreamPreset): StreamSupportResult {
 export async function initStreamSupport(
   presets: StreamPreset[]
 ): Promise<void> {
-  if (supportResultsCache) return
-  if (probePromise) return probePromise
+  if (probePromise) await probePromise
 
-  probePromise = probeAllDrm(presets).then(() => {
-    supportResultsCache = new Map()
-    for (const preset of presets) {
+  const uncached = presets.filter((p) => !supportResultsCache.has(p.id))
+  if (uncached.length === 0) return
+
+  probePromise = probeAllDrm(uncached).then(() => {
+    for (const preset of uncached) {
       supportResultsCache.set(preset.id, computeSupport(preset))
     }
+    probePromise = null
   })
   return probePromise
 }

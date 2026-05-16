@@ -100,56 +100,59 @@ export function PresetsOverlay({
                   const displayFeatures = getDisplayFeatures(preset.features)
 
                   return (
-                    <MenuPrimitive.RadioItem
-                      className={cn(
-                        `
-                          relative flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm outline-hidden transition-[colors,transform]
-                          select-none
-                          hover:bg-accent/70 hover:text-accent-foreground
-                          focus:bg-accent/70 focus:text-accent-foreground
-                          active:scale-[0.985]
-                        `,
-                        preset.id === presetId &&
-                          "bg-accent/85 font-medium text-accent-foreground",
-                        !support.supported && "pointer-events-none opacity-40"
-                      )}
-                      disabled={!support.supported}
+                    <span
                       key={preset.id}
-                      title={support.reason}
-                      value={preset.id}
+                      title={!support.supported ? support.reason : undefined}
                     >
-                      <div className="flex min-w-0 flex-1 flex-col gap-1">
-                        <span className="truncate pr-5">{preset.name}</span>
-                        {(displayFeatures.length > 0 || !support.supported) && (
-                          <div className="flex flex-wrap gap-1">
-                            {displayFeatures.map((f) => (
-                              <Badge
-                                className="rounded-md px-1.5 py-0 text-[10px] leading-4"
-                                key={f}
-                                variant="secondary"
-                              >
-                                {FEATURE_LABELS[f]}
-                              </Badge>
-                            ))}
-                            {!support.supported && (
-                              <Badge
-                                className="gap-0.5 rounded-md px-1.5 py-0 text-[10px] leading-4"
-                                variant="destructive"
-                              >
-                                Unsupported
-                              </Badge>
-                            )}
-                          </div>
+                      <MenuPrimitive.RadioItem
+                        className={cn(
+                          `
+                            relative flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm outline-hidden transition-[colors,transform]
+                            select-none
+                            hover:bg-accent/70 hover:text-accent-foreground
+                            focus:bg-accent/70 focus:text-accent-foreground
+                            active:scale-[0.985]
+                          `,
+                          preset.id === presetId &&
+                            "bg-accent/85 font-medium text-accent-foreground",
+                          !support.supported && "pointer-events-none opacity-40"
                         )}
-                      </div>
-                      <MenuPrimitive.RadioItemIndicator
-                        render={
-                          <span className="pointer-events-none absolute top-2.5 right-2 flex size-3.5 items-center justify-center">
-                            <CheckIcon className="size-4" />
-                          </span>
-                        }
-                      />
-                    </MenuPrimitive.RadioItem>
+                        value={preset.id}
+                      >
+                        <div className="flex min-w-0 flex-1 flex-col gap-1">
+                          <span className="truncate pr-5">{preset.name}</span>
+                          {(displayFeatures.length > 0 ||
+                            !support.supported) && (
+                            <div className="flex flex-wrap gap-1">
+                              {displayFeatures.map((f) => (
+                                <Badge
+                                  className="rounded-md px-1.5 py-0 text-[10px] leading-4"
+                                  key={f}
+                                  variant="secondary"
+                                >
+                                  {FEATURE_LABELS[f]}
+                                </Badge>
+                              ))}
+                              {!support.supported && (
+                                <Badge
+                                  className="gap-0.5 rounded-md px-1.5 py-0 text-[10px] leading-4"
+                                  variant="destructive"
+                                >
+                                  Unsupported
+                                </Badge>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <MenuPrimitive.RadioItemIndicator
+                          render={
+                            <span className="pointer-events-none absolute top-2.5 right-2 flex size-3.5 items-center justify-center">
+                              <CheckIcon className="size-4" />
+                            </span>
+                          }
+                        />
+                      </MenuPrimitive.RadioItem>
+                    </span>
                   )
                 })}
               </MenuPrimitive.Group>
