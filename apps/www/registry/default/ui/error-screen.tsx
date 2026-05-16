@@ -14,7 +14,9 @@ import {
 } from "@/components/ui/item"
 import { cn } from "@/lib/utils"
 
-const MEDIA_ERROR_MAP: Partial<Record<number, { code: string; title: string }>> = {
+const MEDIA_ERROR_MAP: Partial<
+  Record<number, { code: string; title: string }>
+> = {
   1: { code: "MEDIA_ERR_ABORTED", title: "Playback aborted" },
   2: { code: "MEDIA_ERR_NETWORK", title: "Unable to connect" },
   3: { code: "MEDIA_ERR_DECODE", title: "Playback error" },
@@ -172,16 +174,12 @@ export function isMediaError(error: unknown): error is MediaErrorLike {
     return false
   }
 
-  if (
-    typeof MediaError !== "undefined" &&
-    error instanceof MediaError
-  ) {
+  if (typeof MediaError !== "undefined" && error instanceof MediaError) {
     return true
   }
 
   return (
-    !hasNumberProperty(error, "category") &&
-    hasNumberProperty(error, "code")
+    !hasNumberProperty(error, "category") && hasNumberProperty(error, "code")
   )
 }
 
