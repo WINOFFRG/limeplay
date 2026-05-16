@@ -6,6 +6,18 @@ export const ui: Registry["items"] = [
   {
     files: [
       {
+        path: "ui/error-screen.tsx",
+        target: `${TARGET_BASE_PATH}/error-screen.tsx`,
+        type: "registry:ui",
+      },
+    ],
+    name: "error-screen",
+    registryDependencies: ["media-provider"],
+    type: "registry:ui",
+  },
+  {
+    files: [
+      {
         path: "ui/fallback-poster.tsx",
         target: `${TARGET_BASE_PATH}/fallback-poster.tsx`,
         type: "registry:ui",

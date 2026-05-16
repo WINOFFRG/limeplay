@@ -51,7 +51,7 @@ export interface PlaybackStore extends MediaEventSlice<PlaybackEvents> {
     canPlay: boolean
     canPlayThrough: boolean
     ended: boolean
-    error: MediaError | null
+    error: unknown
     loop: boolean
     networkState: number
     pause: () => void
@@ -194,6 +194,13 @@ function PlaybackSetup() {
 
     const pauseHandler = () => {
       const prevStatus = store.getState().playback.status
+
+      if (prevStatus === "error") {
+        store.setState(({ playback }) => {
+          playback.paused = true
+        })
+        return
+      }
 
       store.setState(({ playback }) => {
         playback.paused = true
