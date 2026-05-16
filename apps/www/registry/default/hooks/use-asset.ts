@@ -272,9 +272,10 @@ export function assetFeature(): MediaFeature<
               return false
             }
 
-
             onPlayerError?.(
-              error instanceof Error ? error : Object.assign(new Error(String(error)), error as object),
+              error instanceof Error
+                ? error
+                : Object.assign(new Error(String(error)), error as object),
               asset
             )
             const playlist = get().playlist
@@ -389,7 +390,12 @@ export function assetFeature(): MediaFeature<
               error instanceof Error
                 ? error
                 : typeof error === "object" && error !== null
-                  ? Object.assign(new Error(String((error as { message?: string }).message ?? error)), error)
+                  ? Object.assign(
+                      new Error(
+                        String((error as { message?: string }).message ?? error)
+                      ),
+                      error
+                    )
                   : new Error(String(error))
             onPlayerError?.(err, asset)
             console.error("[useAsset] Preload error:", error)

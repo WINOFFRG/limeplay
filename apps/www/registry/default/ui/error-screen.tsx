@@ -48,10 +48,7 @@ interface ErrorScreenProps extends ComponentPropsWithoutRef<"div"> {
   message?: string
 }
 
-export function getErrorDetails(
-  error: unknown
-): ErrorDetails {
-
+export function getErrorDetails(error: unknown): ErrorDetails {
   if (!error) {
     return {
       code: "ERR_UNKNOWN",
@@ -101,7 +98,12 @@ export function isMediaError(error: unknown): error is MediaError {
 
 export function isShakaError(
   error: unknown
-): error is { category: number; code: number; message: string; severity: number } {
+): error is {
+  category: number
+  code: number
+  message: string
+  severity: number
+} {
   return error instanceof shaka.util.Error
 }
 
@@ -155,7 +157,9 @@ export const ErrorScreen = React.forwardRef<HTMLDivElement, ErrorScreenProps>(
               {details.description}
             </ItemDescription>
           </ItemContent>
-          {children && <ItemActions className="basis-full">{children}</ItemActions>}
+          {children && (
+            <ItemActions className="basis-full">{children}</ItemActions>
+          )}
         </Item>
       </div>
     )
