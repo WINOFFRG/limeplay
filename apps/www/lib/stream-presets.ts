@@ -191,8 +191,7 @@ export const STREAM_PRESETS: StreamPreset[] = [
     config: {
       drm: {
         servers: {
-          "com.widevine.alpha":
-            "https://cwip-shaka-proxy.appspot.com/no_auth",
+          "com.widevine.alpha": "https://cwip-shaka-proxy.appspot.com/no_auth",
         },
       },
     },
@@ -227,8 +226,7 @@ export const STREAM_PRESETS: StreamPreset[] = [
     config: {
       drm: {
         servers: {
-          "com.widevine.alpha":
-            "https://cwip-shaka-proxy.appspot.com/no_auth",
+          "com.widevine.alpha": "https://cwip-shaka-proxy.appspot.com/no_auth",
         },
       },
     },
@@ -251,8 +249,7 @@ export const STREAM_PRESETS: StreamPreset[] = [
           },
         },
         servers: {
-          "com.widevine.alpha":
-            "https://cwip-shaka-proxy.appspot.com/no_auth",
+          "com.widevine.alpha": "https://cwip-shaka-proxy.appspot.com/no_auth",
         },
       },
     },

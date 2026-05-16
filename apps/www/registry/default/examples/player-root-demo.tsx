@@ -1,7 +1,12 @@
 "use client"
 
 import * as TabsPrimitive from "@radix-ui/react-tabs"
-import { CogIcon, ExternalLinkIcon, RotateCcwIcon, RotateCwIcon } from "lucide-react"
+import {
+  CogIcon,
+  ExternalLinkIcon,
+  RotateCcwIcon,
+  RotateCwIcon,
+} from "lucide-react"
 import { AnimatePresence, motion } from "motion/react"
 import React, { useCallback, useState } from "react"
 

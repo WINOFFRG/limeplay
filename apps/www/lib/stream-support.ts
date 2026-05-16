@@ -22,8 +22,7 @@ function checkManifestSupport(format: StreamPreset["format"]): null | string {
 
   if (format === "dash") {
     const hasMse =
-      typeof MediaSource !== "undefined" ||
-      "ManagedMediaSource" in globalThis
+      typeof MediaSource !== "undefined" || "ManagedMediaSource" in globalThis
     if (!hasMse) return "DASH requires Media Source Extensions"
     return null
   }
@@ -31,8 +30,7 @@ function checkManifestSupport(format: StreamPreset["format"]): null | string {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (format === "hls") {
     const hasMse =
-      typeof MediaSource !== "undefined" ||
-      "ManagedMediaSource" in globalThis
+      typeof MediaSource !== "undefined" || "ManagedMediaSource" in globalThis
 
     if (hasMse) {
       const hlsSupported =
@@ -66,13 +64,9 @@ async function probeDrmSupport(feature: string): Promise<boolean> {
 
   const config: MediaKeySystemConfiguration[] = [
     {
-      audioCapabilities: [
-        { contentType: 'audio/mp4; codecs="mp4a.40.2"' },
-      ],
+      audioCapabilities: [{ contentType: 'audio/mp4; codecs="mp4a.40.2"' }],
       initDataTypes: ["cenc"],
-      videoCapabilities: [
-        { contentType: 'video/mp4; codecs="avc1.42E01E"' },
-      ],
+      videoCapabilities: [{ contentType: 'video/mp4; codecs="avc1.42E01E"' }],
     },
   ]
 
@@ -91,7 +85,7 @@ async function probeDrmSupport(feature: string): Promise<boolean> {
 }
 
 const CODEC_CHECKS: Partial<
-  Record<StreamFeature, { label: string; mime: string; }>
+  Record<StreamFeature, { label: string; mime: string }>
 > = {
   "Dolby Atmos": {
     label: "Dolby Atmos (E-AC-3)",

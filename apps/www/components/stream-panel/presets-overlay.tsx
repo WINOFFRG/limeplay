@@ -111,8 +111,7 @@ export function PresetsOverlay({
                         `,
                         preset.id === presetId &&
                           "bg-accent/85 font-medium text-accent-foreground",
-                        !support.supported &&
-                          "pointer-events-none opacity-40"
+                        !support.supported && "pointer-events-none opacity-40"
                       )}
                       disabled={!support.supported}
                       key={preset.id}
@@ -121,8 +120,7 @@ export function PresetsOverlay({
                     >
                       <div className="flex min-w-0 flex-1 flex-col gap-1">
                         <span className="truncate pr-5">{preset.name}</span>
-                        {(displayFeatures.length > 0 ||
-                          !support.supported) && (
+                        {(displayFeatures.length > 0 || !support.supported) && (
                           <div className="flex flex-wrap gap-1">
                             {displayFeatures.map((f) => (
                               <Badge
@@ -168,8 +166,6 @@ function getDisplayFeatures(
   max = 3
 ): StreamFeature[] {
   return [...features]
-    .sort(
-      (a, b) => FEATURE_PRIORITY.indexOf(a) - FEATURE_PRIORITY.indexOf(b)
-    )
+    .sort((a, b) => FEATURE_PRIORITY.indexOf(a) - FEATURE_PRIORITY.indexOf(b))
     .slice(0, max)
 }
