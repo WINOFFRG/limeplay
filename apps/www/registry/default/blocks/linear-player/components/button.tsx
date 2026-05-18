@@ -40,7 +40,7 @@ const buttonVariants = cva(
         `,
         ghost: `hover:bg-accent hover:text-accent-foreground`,
         glass: `
-          bg-transparent text-primary
+          bg-transparent text-secondary-foreground
           hover:bg-primary/10
           active:scale-[0.97]
         `,
