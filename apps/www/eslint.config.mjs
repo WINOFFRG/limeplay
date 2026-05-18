@@ -21,7 +21,7 @@ const eslintConfig = [
         "error",
         { printWidth: 150 },
       ],
-      "better-tailwindcss/no-unregistered-classes": [
+      "better-tailwindcss/no-unknown-classes": [
         "error",
         { ignore: ["dark", "shiki", "not-prose"] },
       ],

@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 
 import { RootProvider } from "fumadocs-ui/provider/next"
 
-import { BlocksSidebar } from "@/components/blocks/blocks-sidebar"
+import { BlocksSidebar } from "@/components/blocks/sidebar"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { blocksSource } from "@/lib/blocks-source"
 
@@ -19,7 +19,7 @@ export default function BlocksLayout({ children }: { children: ReactNode }) {
   return (
     <RootProvider
       theme={{
-        forcedTheme: "light",
+        defaultTheme: "dark",
       }}
     >
       <SidebarProvider
