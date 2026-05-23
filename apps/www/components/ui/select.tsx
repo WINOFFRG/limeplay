@@ -206,7 +206,9 @@ function SelectTrigger({
           data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)]
           *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center
           *:data-[slot=select-value]:gap-1.5
-          dark:bg-input/30 dark:hover:bg-input/50 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+          dark:bg-input/30
+          dark:hover:bg-input/50
+          dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
           [&_svg]:pointer-events-none [&_svg]:shrink-0
           [&_svg:not([class*='size-'])]:size-4
         `,

@@ -99,7 +99,7 @@ export function TimelineSliderControl() {
       )}
       {liveLatency && liveLatency <= 1 && (
         <div className="flex items-center rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold tracking-wide">
-          <div className="mr-1 h-2 w-2 animate-caret-blink rounded-full bg-foreground" />
+          <div className="mr-1 size-2 animate-caret-blink rounded-full bg-foreground" />
           <span className="tracking-widest">LIVE</span>
         </div>
       )}

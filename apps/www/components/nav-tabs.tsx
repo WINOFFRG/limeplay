@@ -97,7 +97,7 @@ export function NavTabs({ tabs }: NavTabsProps) {
               onMouseEnter={(e) => handleMouseEnter(e.currentTarget)}
               target={tab.target}
             >
-              {tab.icon && <span className="!size-5 shrink-0">{tab.icon}</span>}
+              {tab.icon && <span className="size-5! shrink-0">{tab.icon}</span>}
               {tab.label}
             </Link>
           </li>

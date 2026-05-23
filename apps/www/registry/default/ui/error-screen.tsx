@@ -107,7 +107,7 @@ export const ErrorScreen = React.forwardRef<HTMLDivElement, ErrorScreenProps>(
             </ItemDescription>
             <ItemDescription
               className={`
-                text-xs leading-relaxed text-muted-foreground/60
+                text-xs/relaxed text-muted-foreground/60
                 sm:text-sm
               `}
             >

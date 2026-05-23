@@ -14,6 +14,9 @@ const eslintConfig = [
         },
       },
     },
+    plugins: {
+      "better-tailwindcss": pluginBetterTailwindcss,
+    },
     rules: {
       ...pluginBetterTailwindcss.configs["recommended-warn"].rules,
       ...pluginBetterTailwindcss.configs["recommended-error"].rules,

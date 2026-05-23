@@ -35,9 +35,9 @@ function Header() {
 
   return (
     <div className="sticky top-0 flex items-start gap-2">
-      <div className="flex-1 rounded-xl border bg-fd-card p-3 text-fd-card-foreground">
+      <div className="bg-fd-card text-fd-card-foreground flex-1 rounded-xl border p-3">
         <p className="mb-2 text-sm font-medium">Ask AI</p>
-        <p className="text-xs text-fd-muted-foreground">
+        <p className="text-fd-muted-foreground text-xs">
           Powered by{" "}
           <a
             href="https://inkeep.com"
@@ -123,8 +123,8 @@ function Input(props: ComponentProps<"textarea">) {
         {...props}
         className={cn(
           `
-            resize-none bg-transparent
             placeholder:text-fd-muted-foreground
+            resize-none bg-transparent
             focus-visible:outline-none
           `,
           shared
@@ -231,7 +231,7 @@ function SearchAIInput(props: ComponentProps<"form">) {
           onClick={stop}
           type="button"
         >
-          <Loader2 className="size-4 animate-spin text-fd-muted-foreground" />
+          <Loader2 className="text-fd-muted-foreground size-4 animate-spin" />
           Abort Answer
         </button>
       ) : (
@@ -296,7 +296,7 @@ export function AISearchTrigger() {
             translate: 100% 0;
           }
         }
-        
+
         @keyframes ask-ai-close {
           to {
             translate: 100% 0;
@@ -308,9 +308,9 @@ export function AISearchTrigger() {
         <div
           className={cn(
             `
-              fixed inset-y-2 z-30 flex flex-col rounded-2xl border bg-fd-popover p-2 text-fd-popover-foreground shadow-lg
+              bg-fd-popover text-fd-popover-foreground fixed inset-y-2 z-30 flex flex-col rounded-2xl border p-2 shadow-lg
               max-sm:inset-x-2
-              sm:end-2 sm:w-[460px]
+              sm:inset-e-2 sm:w-[460px]
             `,
             open
               ? "animate-[ask-ai-open_300ms]"
@@ -335,8 +335,10 @@ export function AISearchTrigger() {
           </List>
           <div
             className={`
-              rounded-xl border bg-fd-card text-fd-card-foreground
-              has-focus-visible:ring-2 has-focus-visible:ring-fd-ring
+              bg-fd-card text-fd-card-foreground
+              has-focus-visible:ring-fd-ring
+              rounded-xl border
+              has-focus-visible:ring-2
             `}
           >
             <SearchAIInput />
@@ -354,10 +356,10 @@ export function AISearchTrigger() {
       <button
         className={cn(
           `
-            fixed bottom-4 z-20 flex h-10 w-24 items-center gap-3 rounded-2xl border bg-fd-secondary px-2 text-sm font-medium text-fd-muted-foreground
+            bg-fd-secondary text-fd-muted-foreground fixed bottom-4 z-20 flex h-10 w-24 items-center gap-3 rounded-2xl border px-2 text-sm font-medium
             shadow-lg transition-[translate,opacity]
           `,
-          "end-[calc(var(--removed-body-scroll-bar-size,0px)+var(--fd-layout-offset)+1rem)]",
+          "inset-e-[calc(var(--removed-body-scroll-bar-size,0)+var(--fd-layout-offset)+1rem)]",
           open && "translate-y-10 opacity-0"
         )}
         onClick={() => setOpen(true)}
@@ -391,7 +393,7 @@ function Message({
     <div {...props}>
       <p
         className={cn(
-          "mb-1 text-sm font-medium text-fd-muted-foreground",
+          "text-fd-muted-foreground mb-1 text-sm font-medium",
           message.role === "assistant" && "text-fd-primary"
         )}
       >
@@ -405,8 +407,8 @@ function Message({
           {links.map((item, i) => (
             <Link
               className={`
-                block rounded-lg border p-3 text-xs
                 hover:bg-fd-accent hover:text-fd-accent-foreground
+                block rounded-lg border p-3 text-xs
               `}
               href={item.url}
               key={i}
