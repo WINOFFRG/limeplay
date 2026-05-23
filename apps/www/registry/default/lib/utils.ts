@@ -47,7 +47,6 @@ export function off<R extends HTMLElement>(
   events: string | string[],
   callback: (event: React.SyntheticEvent<R>) => void
 ): EventTarget
-
 /**
  * Implementation
  */
@@ -75,7 +74,6 @@ export function on<R extends HTMLElement>(
   events: string | string[],
   callback: (event: React.SyntheticEvent<R>) => void
 ): EventTarget
-
 /**
  * Implementation
  */
