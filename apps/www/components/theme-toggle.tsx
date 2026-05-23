@@ -19,12 +19,18 @@ export const useThemeToggle = ({
   start?: AnimationStart
   variant?: AnimationVariant
 } = {}) => {
-  const { resolvedTheme, setTheme, theme } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
 
-  const [isDark, setIsDark] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+  const [isDark, setIsDark] = useState(() => resolvedTheme === "dark")
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // Sync isDark state with resolved theme after hydration
   useEffect(() => {
+    if (resolvedTheme === undefined) return
     setIsDark(resolvedTheme === "dark")
   }, [resolvedTheme])
 
@@ -45,7 +51,10 @@ export const useThemeToggle = ({
   }, [])
 
   const toggleTheme = useCallback(() => {
-    setIsDark(!isDark)
+    if (resolvedTheme === undefined) return
+
+    const nextIsDark = resolvedTheme !== "dark"
+    setIsDark(nextIsDark)
 
     const animation = createAnimation(variant, start, blur, gifUrl)
 
@@ -54,7 +63,7 @@ export const useThemeToggle = ({
     if (typeof window === "undefined") return
 
     const switchTheme = () => {
-      setTheme(theme === "light" ? "dark" : "light")
+      setTheme(nextIsDark ? "dark" : "light")
     }
 
     if (!document.startViewTransition) {
@@ -64,14 +73,13 @@ export const useThemeToggle = ({
 
     document.startViewTransition(switchTheme)
   }, [
-    theme,
+    resolvedTheme,
     setTheme,
     variant,
     start,
     blur,
     gifUrl,
     updateStyles,
-    isDark,
     setIsDark,
   ])
 
@@ -144,6 +152,7 @@ export const useThemeToggle = ({
 
   return {
     isDark,
+    isMounted,
     setCrazyDarkTheme,
     setCrazyLightTheme,
     setCrazySystemTheme,
@@ -167,12 +176,14 @@ export const ThemeToggleButton = ({
   start?: AnimationStart
   variant?: AnimationVariant
 }) => {
-  const { isDark, toggleTheme } = useThemeToggle({
+  const { isDark, isMounted, toggleTheme } = useThemeToggle({
     blur,
     gifUrl,
     start,
     variant,
   })
+
+  if (!isMounted) return null
 
   return (
     <button

@@ -128,7 +128,7 @@ function SidebarDismissLayer() {
     <button
       aria-label="Close Sidebar"
       className={`
-        fixed inset-0 z-15 hidden bg-transparent
+        fixed inset-0 z-[15] hidden bg-transparent
         md:block
       `}
       onClick={() => setOpen(false)}

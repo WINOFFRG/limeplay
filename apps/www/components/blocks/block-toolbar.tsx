@@ -205,7 +205,11 @@ export function BlockToolbar({
     activePanel === null ? 52 : contentHeight > 0 ? contentHeight + 52 : 52
 
   function handleItemClick(item: ToolbarItem) {
-    if (item.id === "refresh") return
+    if (item.id === "refresh") {
+      onReload()
+      void handleRotateEnd()
+      return
+    }
     if (item.type === "tab") {
       handleSettingsToggle()
     } else {
@@ -306,14 +310,6 @@ export function BlockToolbar({
                         className={sharedClassName}
                         initial={false}
                         onClick={() => handleItemClick(item)}
-                        onTap={
-                          item.id === "refresh"
-                            ? () => {
-                                onReload()
-                                void handleRotateEnd()
-                              }
-                            : undefined
-                        }
                         onTapStart={
                           item.id === "refresh" ? handleRotateStart : undefined
                         }
