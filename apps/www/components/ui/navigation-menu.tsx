@@ -45,11 +45,11 @@ const NavigationMenuContent = React.forwardRef<
   <Primitive.Content
     className={cn(
       `
-        absolute inset-x-0 top-0
         data-[motion=from-end]:animate-fd-enterFromRight
         data-[motion=from-start]:animate-fd-enterFromLeft
         data-[motion=to-end]:animate-fd-exitToRight
         data-[motion=to-start]:animate-fd-exitToLeft
+        absolute inset-x-0 top-0
       `,
       className
     )}
@@ -70,10 +70,10 @@ const NavigationMenuViewport = React.forwardRef<
       {...props}
       className={cn(
         `
-          relative h-(--radix-navigation-menu-viewport-height) w-full origin-[top_center] overflow-hidden text-popover-foreground
-          transition-[width,height] duration-300
           data-[state=closed]:animate-fd-nav-menu-out
           data-[state=open]:animate-fd-nav-menu-in
+          relative h-(--radix-navigation-menu-viewport-height) w-full origin-[top_center] overflow-hidden text-popover-foreground
+          transition-[width,height] duration-300
         `,
         className
       )}

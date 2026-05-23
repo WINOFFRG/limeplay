@@ -126,7 +126,7 @@ export function PresetsOverlay({
                             <div className="flex flex-wrap gap-1">
                               {displayFeatures.map((f) => (
                                 <Badge
-                                  className="rounded-md px-1.5 py-0 text-[10px] leading-4"
+                                  className="rounded-md px-1.5 py-0 text-[10px]/4"
                                   key={f}
                                   variant="secondary"
                                 >
@@ -135,7 +135,7 @@ export function PresetsOverlay({
                               ))}
                               {!support.supported && (
                                 <Badge
-                                  className="gap-0.5 rounded-md px-1.5 py-0 text-[10px] leading-4"
+                                  className="gap-0.5 rounded-md px-1.5 py-0 text-[10px]/4"
                                   variant="destructive"
                                 >
                                   Unsupported

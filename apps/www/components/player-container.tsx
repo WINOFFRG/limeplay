@@ -72,7 +72,7 @@ function RotateMessage({
           Rotate to Landscape
         </h3>
 
-        <p className="mb-4 text-xs leading-relaxed text-neutral-400">
+        <p className="mb-4 text-xs/relaxed text-neutral-400">
           For the best viewing experience, rotate your device to landscape mode.
         </p>
 
@@ -86,7 +86,7 @@ function RotateMessage({
           size="sm"
           variant="outline"
         >
-          <RotateCw className={`mr-2 h-3 w-3`} />
+          <RotateCw className={`mr-2 size-3`} />
           Rotate
         </Button>
       </div>

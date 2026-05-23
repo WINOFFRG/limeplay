@@ -37,8 +37,8 @@ export default function Home() {
           </div>
           <div
             className={`
-              mx-auto my-4 flex max-w-lg items-center justify-center px-5 text-[28px] leading-[28px] font-semibold tracking-tighter
-              md:text-[38px] md:leading-11
+              mx-auto my-4 flex max-w-lg items-center justify-center px-5 text-[28px]/7 font-semibold tracking-tighter
+              md:text-[38px]/11
             `}
           >
             <div
@@ -51,7 +51,7 @@ export default function Home() {
           <p
             className={`
               text-center text-sm tracking-[-0.16px] text-muted-foreground
-              md:text-[16px] md:leading-[24px]
+              md:text-[16px]/6
             `}
           >
             <span className={`block`}>
