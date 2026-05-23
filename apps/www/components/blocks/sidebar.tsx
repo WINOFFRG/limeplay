@@ -48,7 +48,7 @@ export function BlocksSidebar({ items }: { items: BlocksSidebarItem[] }) {
 
         <nav
           className={`
-            relative z-10 flex h-full flex-col gap-6 overflow-y-auto px-3 py-32 [scrollbar-width:none]
+            relative z-10 flex h-full scrollbar-none flex-col gap-6 overflow-y-auto px-3 py-32
             [&::-webkit-scrollbar]:hidden
           `}
           data-lenis-prevent="true"

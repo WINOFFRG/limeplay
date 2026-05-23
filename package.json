@@ -16,10 +16,11 @@
   "packageManager": "bun@1.2.19",
   "private": true,
   "scripts": {
-    "lint": "bun --filter www lint",
-    "lint:fix": "bun --filter www lint:fix",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
-    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\""
+    "lint": "cd apps/www && ../../node_modules/.bin/eslint .",
+    "lint:fix": "cd apps/www && ../../node_modules/.bin/eslint . --fix",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md,mdx}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md,mdx}\"",
+    "test:local": "bun run format && bun run lint:fix && cd apps/www && bun run build"
   },
   "workspaces": [
     "apps/*"
