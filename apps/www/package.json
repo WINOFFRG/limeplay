@@ -3,8 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
     "build": "bun run registry:build && next build",
     "dev": "next dev --turbopack",
     "start": "next start",
@@ -12,8 +10,6 @@
     "registry:dev": "REGISTRY_HOST=http://localhost:3000 bun --watch run ./scripts/registry-dev.mts --watch",
     "validate:registries": "bun run ./scripts/validate-registries.ts",
     "test:registry-install": "bun run scripts/test-registry-install.ts",
-    "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache --config ../../prettier.config.cjs && next lint",
-    "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache --config ../../prettier.config.cjs",
     "install:vercel": "bash ./scripts/vercel-install.sh",
     "postinstall": "fumadocs-mdx"
   },

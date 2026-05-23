@@ -16,6 +16,7 @@ export const baseConfig = [
       "**/__index__.tsx",
       "**/.source/**",
       "**/prettier.config.cjs",
+      "**/node_modules/**",
     ],
   },
   eslint.configs.recommended,
