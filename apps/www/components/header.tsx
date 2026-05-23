@@ -30,7 +30,7 @@ const navLinks = [
 export function Header() {
   return (
     <header
-      className={`top-0 right-0 left-0 z-20 flex w-full flex-row items-center justify-center border-b border-border px-page backdrop-blur-xl`}
+      className={`inset-x-0 top-0 z-20 flex w-full flex-row items-center justify-center border-b border-border px-page backdrop-blur-xl`}
     >
       <div
         className={`relative z-1 mx-auto flex w-full max-w-5xl origin-center flex-row items-center justify-center border-x border-border py-3`}

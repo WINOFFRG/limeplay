@@ -1,5 +1,4 @@
 import eslint from "@eslint/js"
-import eslintPluginBetterTailwindcss from "eslint-plugin-better-tailwindcss"
 import perfectionist from "eslint-plugin-perfectionist"
 import turboPlugin from "eslint-plugin-turbo"
 import tseslint from "typescript-eslint"
@@ -17,6 +16,7 @@ export const baseConfig = [
       "**/__index__.tsx",
       "**/.source/**",
       "**/prettier.config.cjs",
+      "**/node_modules/**",
     ],
   },
   eslint.configs.recommended,
@@ -31,7 +31,6 @@ export const baseConfig = [
     },
     plugins: {
       turbo: turboPlugin,
-      "better-tailwindcss": eslintPluginBetterTailwindcss,
     },
     rules: {
       ...turboPlugin.configs.recommended.rules,

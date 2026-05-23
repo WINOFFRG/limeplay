@@ -97,7 +97,7 @@ function Sidebar({
             <SheetTitle>Sidebar</SheetTitle>
             <SheetDescription>Displays the mobile sidebar.</SheetDescription>
           </SheetHeader>
-          <div className="flex h-full w-full flex-col">{children}</div>
+          <div className="flex size-full flex-col">{children}</div>
         </SheetContent>
       </Sheet>
     )
@@ -137,11 +137,11 @@ function Sidebar({
           side === "left"
             ? `
               left-0
-              group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]
+              group-data-[collapsible=offcanvas]:-left-(--sidebar-width)
             `
             : `
               right-0
-              group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]
+              group-data-[collapsible=offcanvas]:-right-(--sidebar-width)
             `,
           // Adjust the padding for floating and inset variants.
           variant === "floating" || variant === "inset"
@@ -161,7 +161,7 @@ function Sidebar({
       >
         <div
           className={`
-            flex h-full w-full flex-col bg-sidebar
+            flex size-full flex-col bg-sidebar
             group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border
             group-data-[variant=floating]:shadow-sm
           `}
@@ -318,7 +318,8 @@ function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
         "relative flex w-full flex-1 flex-col bg-background",
         `
           md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl
-          md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2
+          md:peer-data-[variant=inset]:shadow-sm
+          md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2
         `,
         className
       )}
@@ -475,7 +476,8 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
           [[data-side=right][data-state=collapsed]_&]:cursor-w-resize
         `,
         `
-          group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full
+          group-data-[collapsible=offcanvas]:translate-x-0
+          group-data-[collapsible=offcanvas]:after:left-full
           hover:group-data-[collapsible=offcanvas]:bg-sidebar
         `,
         "[[data-side=left][data-collapsible=offcanvas]_&]:-right-2",

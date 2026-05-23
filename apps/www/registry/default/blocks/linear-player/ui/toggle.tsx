@@ -35,7 +35,8 @@ const toggleVariants = cva(
           bg-transparent text-primary
           hover:bg-primary/10
           active:scale-[0.97]
-          data-[state=on]:bg-transparent data-[state=on]:hover:bg-primary/10
+          data-[state=on]:bg-transparent
+          data-[state=on]:hover:bg-primary/10
         `,
         outline: `
           border border-input bg-transparent shadow-xs

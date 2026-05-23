@@ -128,7 +128,7 @@ export function Playlist() {
                   onMouseEnter={() => handleAssetHover(asset)}
                 >
                   <div className="flex w-full items-center gap-3 p-2">
-                    <div className="relative aspect-video w-20 shrink-0 overflow-hidden rounded">
+                    <div className="relative aspect-video w-20 shrink-0 overflow-hidden rounded-sm">
                       <img
                         alt={asset.title}
                         className="object-cover"

@@ -296,7 +296,7 @@ export function AISearchTrigger() {
             translate: 100% 0;
           }
         }
-        
+
         @keyframes ask-ai-close {
           to {
             translate: 100% 0;
@@ -310,7 +310,7 @@ export function AISearchTrigger() {
             `
               fixed inset-y-2 z-30 flex flex-col rounded-2xl border bg-fd-popover p-2 text-fd-popover-foreground shadow-lg
               max-sm:inset-x-2
-              sm:end-2 sm:w-[460px]
+              sm:inset-e-2 sm:w-[460px]
             `,
             open
               ? "animate-[ask-ai-open_300ms]"
@@ -357,7 +357,7 @@ export function AISearchTrigger() {
             fixed bottom-4 z-20 flex h-10 w-24 items-center gap-3 rounded-2xl border bg-fd-secondary px-2 text-sm font-medium text-fd-muted-foreground
             shadow-lg transition-[translate,opacity]
           `,
-          "end-[calc(var(--removed-body-scroll-bar-size,0px)+var(--fd-layout-offset)+1rem)]",
+          "inset-e-[calc(var(--removed-body-scroll-bar-size,0)+var(--fd-layout-offset)+1rem)]",
           open && "translate-y-10 opacity-0"
         )}
         onClick={() => setOpen(true)}
