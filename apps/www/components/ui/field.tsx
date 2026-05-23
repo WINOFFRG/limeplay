@@ -83,7 +83,9 @@ const fieldVariants = cva(
         responsive: `
           flex-col
           *:w-full
-          @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:w-auto @md/field-group:has-[>[data-slot=field-content]]:items-start
+          @md/field-group:flex-row @md/field-group:items-center
+          @md/field-group:*:w-auto
+          @md/field-group:has-[>[data-slot=field-content]]:items-start
           @md/field-group:*:data-[slot=field-label]:flex-auto
           [&>.sr-only]:w-auto
           @md/field-group:has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px
@@ -132,7 +134,7 @@ function FieldDescription({ className, ...props }: React.ComponentProps<"p">) {
     <p
       className={cn(
         `
-          text-left text-sm leading-normal font-normal text-muted-foreground
+          text-left text-sm/normal font-normal text-muted-foreground
           group-has-data-horizontal/field:text-balance
           [[data-variant=legend]+&]:-mt-1.5
         `,

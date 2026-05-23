@@ -39,7 +39,7 @@ export function Hero() {
             </h2>
             <p
               className={`
-                text-sm leading-relaxed font-medium text-muted-foreground
+                text-sm/relaxed font-medium text-muted-foreground
                 sm:text-base
                 md:text-lg
               `}

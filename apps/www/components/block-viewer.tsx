@@ -141,7 +141,7 @@ function BlockViewerCode() {
   return (
     <div
       className={`
-        mr-[14px] flex overflow-hidden rounded-xl border border-border bg-background
+        mr-3.5 flex overflow-hidden rounded-xl border border-border bg-background
         group-data-[view=preview]/block-view-wrapper:hidden
         md:h-(--height)
       `}
@@ -153,8 +153,9 @@ function BlockViewerCode() {
         <ResizableHandle
           className={`
             relative w-1 bg-transparent p-0
-            after:absolute after:top-1/2 after:left-1/2 after:h-8 after:w-[3px] after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full
-            after:bg-border after:transition-all after:hover:h-10
+            after:absolute after:top-1/2 after:left-1/2 after:h-8 after:w-0.75 after:-translate-1/2 after:rounded-full after:bg-border
+            after:transition-all
+            after:hover:h-10
           `}
         />
         <ResizablePanel defaultSize={75} minSize={60}>
@@ -325,7 +326,7 @@ function BlockViewerToolbar() {
           <TabsTrigger value="code">Code</TabsTrigger>
         </TabsList>
       </Tabs>
-      <Separator className="mx-2 !h-4" orientation="vertical" />
+      <Separator className="mx-2 h-4!" orientation="vertical" />
       <span
         className={`
           flex-1 text-sm font-medium text-primary-foreground
@@ -351,15 +352,15 @@ function BlockViewerToolbar() {
             type="single"
           >
             <ToggleGroupItem title="Desktop" value="100">
-              <Monitor className="h-3.5 w-3.5" />
+              <Monitor className="size-3.5" />
             </ToggleGroupItem>
             <ToggleGroupItem title="Tablet" value="60">
-              <Tablet className="h-3.5 w-3.5" />
+              <Tablet className="size-3.5" />
             </ToggleGroupItem>
             <ToggleGroupItem title="Mobile" value="30">
-              <Smartphone className="h-3.5 w-3.5" />
+              <Smartphone className="size-3.5" />
             </ToggleGroupItem>
-            <Separator className="!h-4" orientation="vertical" />
+            <Separator className="h-4!" orientation="vertical" />
             <Button
               asChild
               className={`
@@ -372,10 +373,10 @@ function BlockViewerToolbar() {
             >
               <Link href={`/view/${item.name}`} target="_blank">
                 <span className="sr-only">Open in New Tab</span>
-                <Fullscreen className="h-3.5 w-3.5" />
+                <Fullscreen className="size-3.5" />
               </Link>
             </Button>
-            <Separator className="!h-4" orientation="vertical" />
+            <Separator className="h-4!" orientation="vertical" />
             <Button
               className={`
                 size-6 rounded-sm p-0
@@ -390,15 +391,15 @@ function BlockViewerToolbar() {
               title="Refresh Preview"
               variant="ghost"
             >
-              <RotateCw className="h-3.5 w-3.5" />
+              <RotateCw className="size-3.5" />
               <span className="sr-only">Refresh Preview</span>
             </Button>
           </ToggleGroup>
         </div>
-        <Separator className="mx-1 !h-4" orientation="vertical" />
+        <Separator className="mx-1 h-4!" orientation="vertical" />
         <Button
           className={`
-            w-fit gap-1 border border-border bg-muted px-2 py-2 shadow-none
+            w-fit gap-1 border border-border bg-muted p-2 shadow-none
             hover:bg-accent hover:text-accent-foreground
           `}
           onClick={() => {
@@ -408,13 +409,13 @@ function BlockViewerToolbar() {
           variant="outline"
         >
           {isCopied.value ? (
-            <Check className="h-3.5 w-3.5" />
+            <Check className="size-3.5" />
           ) : (
-            <Terminal className="h-3.5 w-3.5" />
+            <Terminal className="size-3.5" />
           )}
           <span>npx shadcn add {item.name}</span>
         </Button>
-        <Separator className="mx-1 !h-4" orientation="vertical" />
+        <Separator className="mx-1 h-4!" orientation="vertical" />
         <OpenInV0Button
           className={`
             border border-border bg-muted text-foreground
@@ -443,10 +444,8 @@ function BlockViewerView() {
       <div className="relative grid w-full gap-4">
         <div
           className={`
-            absolute inset-0 right-4 m-1.5
-            [background-image:radial-gradient(#d4d4d4_1px,transparent_1px)]
-            [background-size:20px_20px]
-            dark:[background-image:radial-gradient(#404040_1px,transparent_1px)]
+            absolute inset-0 right-4 m-1.5 bg-[radial-gradient(#d4d4d4_1px,transparent_1px)] bg-size-[20px_20px]
+            dark:bg-[radial-gradient(#404040_1px,transparent_1px)]
           `}
         />
         <ResizablePanelGroup
@@ -457,7 +456,7 @@ function BlockViewerView() {
         >
           <ResizablePanel
             className={`
-              relative aspect-[4/2.5] overflow-hidden rounded-lg border bg-transparent
+              relative aspect-4/2.5 overflow-hidden rounded-lg border bg-transparent
               md:aspect-auto md:rounded-xl
             `}
             defaultSize={100}
@@ -469,8 +468,9 @@ function BlockViewerView() {
           <ResizableHandle
             className={`
               relative hidden w-3 bg-transparent p-0
-              after:absolute after:top-1/2 after:right-0 after:h-8 after:w-[6px] after:translate-x-[-1px] after:-translate-y-1/2 after:rounded-full
-              after:bg-primary-foreground/80 after:transition-all after:hover:h-10
+              after:absolute after:top-1/2 after:right-0 after:h-8 after:w-[6px] after:-translate-x-px after:-translate-y-1/2 after:rounded-full
+              after:bg-primary-foreground/80 after:transition-all
+              after:hover:h-10
               md:block
             `}
           />
@@ -510,7 +510,7 @@ function Tree({ index, item }: { index: number; item: FileTree }) {
           }
         >
           <ChevronRight className="invisible" />
-          <File className="h-4 w-4" />
+          <File className="size-4" />
           {item.name}
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -543,7 +543,7 @@ function Tree({ index, item }: { index: number; item: FileTree }) {
             }
           >
             <ChevronRight className="transition-transform" />
-            <Folder className="h-4 w-4" />
+            <Folder className="size-4" />
             {item.name}
           </SidebarMenuButton>
         </CollapsibleTrigger>

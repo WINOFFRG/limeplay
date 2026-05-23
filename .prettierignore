@@ -13,6 +13,8 @@ out
 
 # Generated files
 public/r
+next-env.d.ts
+**/next-env.d.ts
 
 # Markdown and MDX files (contain code examples that may not parse correctly)
 *.md

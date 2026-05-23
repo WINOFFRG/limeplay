@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
+@import "../global.css";
 
 @theme {
   --spacing-fd-container: 1436px;

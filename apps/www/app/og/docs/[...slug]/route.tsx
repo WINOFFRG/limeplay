@@ -1,36 +1,36 @@
+import { generate as DefaultImage } from "fumadocs-ui/og"
 import { notFound } from "next/navigation"
 import { ImageResponse } from "next/og"
 
-import {
-  getImageResponseOptions,
-  generate as MetadataImage,
-} from "@/lib/og/mono"
+import { PROD_BASE_HOST } from "@/lib/constants"
 import { getPageImage, source } from "@/lib/source"
 
 export const revalidate = false
 
-export function generateStaticParams(): {
-  slug: string[]
-}[] {
+export function generateStaticParams() {
   return source.getPages().map((page) => ({
+    lang: page.locale,
     slug: getPageImage(page).segments,
   }))
 }
 
 export async function GET(
   _req: Request,
-  { params }: { params: Promise<{ slug: string[] }> }
+  { params }: RouteContext<"/og/docs/[...slug]">
 ) {
   const { slug } = await params
   const page = source.getPage(slug.slice(0, -1))
   if (!page) notFound()
 
   return new ImageResponse(
-    <MetadataImage
+    <DefaultImage
       description={page.data.description}
-      site="Limeplay"
+      site={PROD_BASE_HOST}
       title={page.data.title}
     />,
-    await getImageResponseOptions()
+    {
+      height: 630,
+      width: 1200,
+    }
   )
 }

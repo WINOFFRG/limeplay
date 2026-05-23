@@ -11,8 +11,8 @@
  *   --watch   Re-run on file changes in registry/collection/ and registry/default/
  *
  * Usage:
- *   REGISTRY_HOST=http://localhost:3000 tsx --tsconfig ./tsconfig.scripts.json ./scripts/registry-dev.mts --watch
- *   REGISTRY_HOST=https://limeplay.winoffrg.dev tsx --tsconfig ./tsconfig.scripts.json ./scripts/registry-dev.mts
+ *   REGISTRY_HOST=http://localhost:3000 bun --watch run ./scripts/registry-dev.mts --watch
+ *   REGISTRY_HOST=https://limeplay.winoffrg.dev bun run ./scripts/registry-dev.mts
  */
 
 import { type ChildProcess, exec } from "child_process"

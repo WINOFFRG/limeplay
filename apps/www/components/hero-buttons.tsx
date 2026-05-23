@@ -70,9 +70,9 @@ export default function HeroButtons() {
               }}
             >
               {isCopied.value ? (
-                <Check className="h-4 w-4" />
+                <Check className="size-4" />
               ) : (
-                <Copy className="h-4 w-4" />
+                <Copy className="size-4" />
               )}
             </motion.span>
           </span>

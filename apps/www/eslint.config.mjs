@@ -6,13 +6,16 @@ import { baseConfig } from "../../eslint.config.mjs"
 
 const eslintConfig = [
   {
-    files: ["**/*.{jsx,tsx}"],
+    files: ["**/*"],
     languageOptions: {
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
       },
+    },
+    plugins: {
+      "better-tailwindcss": pluginBetterTailwindcss,
     },
     rules: {
       ...pluginBetterTailwindcss.configs["recommended-warn"].rules,
@@ -23,13 +26,16 @@ const eslintConfig = [
       ],
       "better-tailwindcss/no-unknown-classes": [
         "error",
-        { ignore: ["dark", "shiki", "not-prose"] },
+        { ignore: ["dark", "shiki", "not-prose", "light"] },
       ],
     },
     settings: {
       "better-tailwindcss": {
         entryPoint: "app/global.css",
-        tailwindConfig: "tailwind.config.js",
+        detectComponentClasses: true,
+      },
+      "better-tailwindcss": {
+        entryPoint: "app/docs/docs.css",
         detectComponentClasses: true,
       },
     },
