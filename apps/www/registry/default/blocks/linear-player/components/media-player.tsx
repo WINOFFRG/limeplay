@@ -21,6 +21,7 @@ export interface LinearMediaPlayerProps<
    */
   as?: T
   asset?: Asset
+  children?: React.ReactNode
   className?: string
   /**
    * Props to pass to the underlying media element (video/audio)
@@ -45,12 +46,12 @@ type MediaType = MediaProps["as"]
 export const LinearMediaPlayer = React.forwardRef<
   HTMLDivElement,
   LinearMediaPlayerProps
->(({ as = "video", className, mediaProps, mediaRef }, ref) => {
+>(({ as = "video", children, className, mediaProps, mediaRef }, ref) => {
   return (
     <MediaProvider>
       <RootContainer className={cn("m-auto w-full", className)} ref={ref}>
         <Layout.PlayerContainer>
-          <FallbackPoster className="bg-black">
+          <FallbackPoster>
             <LimeplayLogo />
           </FallbackPoster>
           <Media
@@ -66,6 +67,7 @@ export const LinearMediaPlayer = React.forwardRef<
           </Layout.ControlsContainer>
         </Layout.PlayerContainer>
       </RootContainer>
+      {children}
     </MediaProvider>
   )
 })

@@ -17,9 +17,12 @@ function ResizableHandle({
         `
           relative flex w-px items-center justify-center
           after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2
-          data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full data-[panel-group-direction=vertical]:after:left-0
-          data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full
-          data-[panel-group-direction=vertical]:after:translate-x-0 data-[panel-group-direction=vertical]:after:-translate-y-1/2
+          focus:outline-none
+          focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+          data-[panel-group-direction=vertical]:h-px data-[panel-group-direction=vertical]:w-full
+          data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1
+          data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:translate-x-0
+          data-[panel-group-direction=vertical]:after:-translate-y-1/2
           [&[data-panel-group-direction=vertical]>div]:rotate-90
         `,
         className
@@ -28,7 +31,7 @@ function ResizableHandle({
       {...props}
     >
       {withHandle && (
-        <div className="z-10 flex h-8 w-2 shrink-0 translate-x-px rounded-lg border bg-border" />
+        <div className="z-10 flex h-8 w-2 shrink-0 translate-x-px rounded-lg bg-border" />
       )}
     </ResizablePrimitive.Separator>
   )
@@ -46,7 +49,7 @@ function ResizablePanelGroup({
     <ResizablePrimitive.Group
       className={cn(
         `
-          flex h-full w-full
+          flex size-full
           aria-[orientation=vertical]:flex-col
         `,
         className
