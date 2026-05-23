@@ -50,7 +50,6 @@ export function SidebarToggleIcon({
       {/* Inner panel — pure path morph, no opacity / translate tricks */}
       <motion.path
         animate={{ d: isOpen ? PANEL_OPEN : PANEL_CLOSED }}
-        d={isOpen ? PANEL_OPEN : PANEL_CLOSED}
         style={{ fill: "var(--background)" }}
         transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
       />
