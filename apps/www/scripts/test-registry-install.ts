@@ -48,21 +48,15 @@ interface BlockConfig {
 }
 
 const BLOCK_CONFIGS: Record<string, BlockConfig> = {
-  "basic-player": {
-    component: "LimeplayMediaPlayer",
-    importPath: "components/basic-player/components/media-player",
-    props: `src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"`,
-    url: "/r/basic-player.json",
+  "audio-player": {
+    component: "AudioPlayer",
+    importPath: "components/audio-player/components/media-player",
+    url: "/r/audio-player.json",
   },
-  "linear-player": {
-    component: "LinearMediaPlayer",
-    importPath: "components/linear-player/components/media-player",
-    url: "/r/linear-player.json",
-  },
-  "youtube-music": {
-    component: "YouTubeMusicPlayer",
-    importPath: "components/youtube-music/components/media-player",
-    url: "/r/pro/youtube-music.json",
+  "video-player": {
+    component: "VideoPlayer",
+    importPath: "components/video-player/components/media-player",
+    url: "/r/video-player.json",
   },
 }
 
@@ -184,7 +178,11 @@ async function buildApp(app: PreparedApp): Promise<TestResult> {
 
 function buildRegistry() {
   console.log("\n📦 Building registry...")
-  const result = runSync("bun run registry:build", WWW_DIR, "registry:build")
+  const result = runSync(
+    `REGISTRY_HOST=http://localhost:${SERVER_PORT} bun run ./scripts/registry-dev.mts`,
+    WWW_DIR,
+    "registry:build"
+  )
   if (!result.ok) {
     console.log("❌ Registry build failed")
     process.exit(1)

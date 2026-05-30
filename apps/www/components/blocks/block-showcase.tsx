@@ -1,7 +1,8 @@
 import type { ReactNode } from "react"
 
-import { LinearMediaPlayer } from "@/registry/default/blocks/linear-player/components/media-player"
-import { YouTubeMusicPlayer } from "@/registry/pro/blocks/youtube-music/components/media-player"
+import { AudioPlayerDemo } from "@/components/players/audio-player/demo-player"
+import { VIDEO_PLAYER_DEMO_ASSETS } from "@/components/players/video-player/demo-assets"
+import { VideoPlayer } from "@/registry/default/blocks/video-player/components/media-player"
 
 import { BlockPreviewPane } from "./preview-background"
 import { BlockPreviewWithToolbar } from "./preview-pane"
@@ -11,23 +12,23 @@ type BlockShowcaseDefinition = {
 }
 
 const blockShowcaseRegistry = {
-  "linear-player": {
+  "audio-player": {
     component: () => (
       <BlockPreviewWithToolbar>
-        <div className="flex size-full">
+        <div className="flex size-full items-end">
           <BlockPreviewPane>
-            <LinearMediaPlayer as="video" />
+            <AudioPlayerDemo />
           </BlockPreviewPane>
         </div>
       </BlockPreviewWithToolbar>
     ),
   },
-  "youtube-music": {
+  "video-player": {
     component: () => (
       <BlockPreviewWithToolbar>
-        <div className="flex size-full items-end">
+        <div className="flex size-full">
           <BlockPreviewPane>
-            <YouTubeMusicPlayer />
+            <VideoPlayer playlist={VIDEO_PLAYER_DEMO_ASSETS} />
           </BlockPreviewPane>
         </div>
       </BlockPreviewWithToolbar>

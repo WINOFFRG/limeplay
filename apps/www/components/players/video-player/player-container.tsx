@@ -1,0 +1,98 @@
+"use client"
+
+import type { RefObject } from "react"
+
+import { RotateCw } from "lucide-react"
+import { useRef } from "react"
+import { useFullscreen, useToggle } from "react-use"
+
+import { Button } from "@/components/ui/button"
+import { useIsMobile } from "@/hooks/use-mobile"
+import { useOrientation } from "@/hooks/use-orientation"
+import { cn } from "@/lib/utils"
+import { VideoPlayer } from "@/registry/default/blocks/video-player/components/media-player"
+
+import { VIDEO_PLAYER_DEMO_ASSETS } from "./demo-assets"
+
+export function VideoPlayerContainer() {
+  const isMobile = useIsMobile()
+  const { isPortrait } = useOrientation()
+  const isMobilePortrait = isMobile && isPortrait
+  const playerRef = useRef<HTMLDivElement>(null)
+
+  return (
+    <>
+      {isMobilePortrait && <RotateMessage playerRef={playerRef} />}
+      <VideoPlayer
+        className={cn(
+          `
+            dark mx-auto mt-6 overflow-hidden
+            sm:mx-2 sm:my-0 sm:w-full
+            md:mx-0
+          `,
+          isMobilePortrait &&
+            `
+              bg-black/90
+              **:data-[layout-type='player-container']:hidden
+            `
+        )}
+        mediaProps={{
+          autoPlay: false,
+          muted: true,
+        }}
+        playlist={VIDEO_PLAYER_DEMO_ASSETS}
+        ref={playerRef}
+      />
+    </>
+  )
+}
+
+function RotateMessage({
+  playerRef,
+}: {
+  playerRef: RefObject<HTMLDivElement | null>
+}) {
+  const [show, toggle] = useToggle(false)
+  useFullscreen(playerRef as RefObject<Element>, show, {
+    onClose: () => {
+      toggle(false)
+    },
+  })
+
+  const handleRotate = () => {
+    toggle(true)
+  }
+
+  return (
+    <div
+      className={`
+        absolute inset-0 z-50 flex items-center justify-center
+        md:hidden
+      `}
+    >
+      <div className={`mx-1 max-w-xs rounded-xl text-center`}>
+        <h3 className="mb-2 text-sm font-medium text-neutral-100">
+          Rotate to Landscape
+        </h3>
+
+        <p className="mb-4 text-xs/relaxed text-neutral-400">
+          For the best viewing experience, rotate your device to landscape mode.
+        </p>
+
+        <Button
+          className={`
+            w-full border-neutral-700 bg-neutral-800/50 text-neutral-200
+            hover:bg-neutral-700 hover:text-white
+            disabled:opacity-50
+          `}
+          onClick={handleRotate}
+          size="sm"
+          variant="outline"
+        >
+          <RotateCw className={`mr-2 size-3`} />
+          Rotate
+        </Button>
+      </div>
+    </div>
+  )
+}

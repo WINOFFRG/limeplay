@@ -1,6 +1,6 @@
 ---
 title: use-asset
-description: Higher-order feature combining player and playlist for managing media assets.
+description: Asset playback orchestration for player, playlist, preloading, and source resolution.
 ---
 
 ## Installation
@@ -9,16 +9,19 @@ description: Higher-order feature combining player and playlist for managing med
 npx shadcn add @limeplay/use-asset
 ```
 
-Register the feature (requires `playerFeature`, `playlistFeature`, and `playbackFeature`):
+Register the feature after `playerFeature`, `playlistFeature`, and `playbackFeature`:
 
 ```tsx title="lib/media.ts"
 "use client"
 
 import { assetFeature } from "@/hooks/limeplay/use-asset"
+import { playbackFeature } from "@/hooks/limeplay/use-playback"
+import { playerFeature } from "@/hooks/limeplay/use-player"
+import { playlistFeature } from "@/hooks/limeplay/use-playlist"
+import { createMediaKit } from "@/components/limeplay/media-provider"
 
 createMediaKit({
   features: [
-    ...,
     playerFeature(),
     playlistFeature(),
     playbackFeature(),
@@ -27,41 +30,70 @@ createMediaKit({
 })
 ```
 
-## useAsset Hook
+## Usage
 
 ```tsx
 import { useAsset, type Asset } from "@/hooks/limeplay/use-asset"
 
-const { loadAsset, loadPlaylist, next, previous, hasNext, currentItem } =
-  useAsset({
-    onAssetLoaded: (asset) => console.log("Loaded:", asset.title),
-    onLoadError: (asset, error, ctx) => {
-      console.error("Failed:", asset.title, error)
-      return "skip" // or "retry" or "stop"
-    },
+interface VideoAsset extends Asset {
+  playbackUrl: string
+  slug: string
+}
+
+export function PlaylistController({ assets }: { assets: VideoAsset[] }) {
+  const { currentItem, loadPlaylist, next, previous } = useAsset<VideoAsset>({
+    getAssetId: (asset) => asset.slug,
+    resolveSource: ({ asset }) => ({
+      config: asset.config,
+      src: asset.playbackUrl,
+    }),
   })
 
-// Load a single asset
-loadAsset({
-  id: "movie-1",
-  src: "https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd",
-  title: "Angel One",
-})
-
-// Load a playlist
-loadPlaylist([asset1, asset2, asset3])
+  return (
+    <div>
+      <button onClick={() => loadPlaylist(assets)}>Load playlist</button>
+      <button onClick={previous}>Previous</button>
+      <button onClick={next}>Next</button>
+      <span>{currentItem?.properties.title}</span>
+    </div>
+  )
+}
 ```
+
+Use `loadAsset` for a single item and `loadPlaylist` for a queue. When a playlist advances, `useAsset` loads the active item and can preload the next item.
 
 ### Asset Interface
 
-| Field         | Type                               | Required | Description            |
-| ------------- | ---------------------------------- | -------- | ---------------------- |
-| `id`          | `string`                           | Yes      | Unique identifier      |
-| `src`         | `string`                           | Yes      | Media source URL       |
-| `title`       | `string`                           | No       | Display title          |
-| `description` | `string`                           | No       | Description            |
-| `poster`      | `string`                           | No       | Poster image URL       |
-| `config`      | `shaka.extern.PlayerConfiguration` | No       | Per-asset Shaka config |
+| Field         | Type                               | Required | Description                      |
+| ------------- | ---------------------------------- | -------- | -------------------------------- |
+| `id`          | `string`                           | No       | Stable identifier for the asset. |
+| `src`         | `string`                           | No       | Media source URL.                |
+| `config`      | `shaka.extern.PlayerConfiguration` | No       | Per-asset Shaka config.          |
+| `title`       | `string`                           | No       | Display title.                   |
+| `description` | `string`                           | No       | Description.                     |
+| `poster`      | `string`                           | No       | Poster image URL.                |
+
+If `id` is omitted, `useAsset` derives one from `getAssetId` or `src`. Assets without `src` should provide `resolveSource`.
+
+### Source Resolution
+
+Use `resolveSource` when the playable source is not stored directly on `asset.src`.
+
+```tsx
+useAsset({
+  resolveSource: async ({ asset, operation, signal }) => {
+    const response = await fetch(`/api/assets/${asset.id}/source`, { signal })
+    const source = await response.json()
+
+    return {
+      config: source.config,
+      src: source.url,
+    }
+  },
+})
+```
+
+`operation` is `"load"` or `"preload"`, so source endpoints can avoid expensive work during preloading when needed.
 
 ### Options
 
@@ -77,4 +109,4 @@ loadPlaylist([asset1, asset2, asset3])
   name="UseAssetReturn"
 />
 
-`useAsset` orchestrates `usePlayer` and `usePlaylist` — it automatically loads assets when the playlist advances, handles preloading, auto-advances on playback end, and provides error recovery.
+`useAsset` orchestrates `usePlayer` and `usePlaylist`. It owns load cancellation, playlist-driven loading, preloading, auto-advance on playback end, and error recovery.

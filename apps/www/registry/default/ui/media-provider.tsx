@@ -280,7 +280,10 @@ export function createMediaKit<
     }
   }
 
-  function MediaProvider({ children }: React.PropsWithChildren) {
+  function MediaProvider({
+    children,
+    debug,
+  }: React.PropsWithChildren<MediaProviderProps>) {
     const runtimeRef = React.useRef<null | {
       events: MediaEvents<RuntimeEvents>
       store: ImmerStoreApi<RuntimeStore>
@@ -291,9 +294,18 @@ export function createMediaKit<
 
     if (!runtimeRef.current) {
       runtimeRef.current = createMediaStore()
+      if (typeof debug === "boolean") {
+        setMediaDebug(runtimeRef.current.store, debug)
+      }
     }
 
     const runtime = runtimeRef.current
+
+    React.useLayoutEffect(() => {
+      if (typeof debug !== "boolean") return
+
+      setMediaDebug(runtime.store, debug)
+    }, [debug, runtime.store])
 
     return (
       <MediaRuntimeContext.Provider
@@ -441,6 +453,20 @@ function assertFeature(featureKey: string, featureKeys: Set<string>) {
       `Missing "${featureKey}" feature in MediaProvider. Add ${featureKey}Feature() to createMediaKit({ features }).`
     )
   }
+}
+
+function setMediaDebug(store: ImmerStoreApi<AnyMediaStore>, debug: boolean) {
+  const state = store.getState()
+
+  if (!("media" in state) || typeof state.media !== "object") {
+    return
+  }
+
+  store.setState((state) => {
+    if ("media" in state && typeof state.media === "object") {
+      ;(state.media as MediaStore["media"]).debug = debug
+    }
+  })
 }
 
 function useMediaRuntime() {

@@ -1,0 +1,56 @@
+---
+title: use-playback-source
+description: Normalizes block source props into useAsset playback state.
+---
+
+## Installation
+
+```npm
+npx shadcn add @limeplay/use-playback-source
+```
+
+<Callout>
+  Requires [`assetFeature`](/docs/hooks/use-asset) registered in your
+  [`createMediaKit`](/docs/components/media-provider).
+</Callout>
+
+## Usage
+
+Use `PlaybackSourceController` inside a block to load exactly one source model: `asset`, `playlist`, or `mediaSrc`.
+
+```tsx
+import { PlaybackSourceController } from "@/hooks/limeplay/use-playback-source"
+
+export function SourceController({ src }: { src?: string }) {
+  return <PlaybackSourceController mediaSrc={src} />
+}
+```
+
+For typed assets, pass `asset`, `playlist`, `getAssetId`, and `resolveSource` through to `useAsset`.
+
+```tsx
+import type { Asset } from "@/hooks/limeplay/use-asset"
+import { PlaybackSourceController } from "@/hooks/limeplay/use-playback-source"
+
+interface VideoAsset extends Asset {
+  playbackUrl: string
+  slug: string
+}
+
+export function VideoSource({ playlist }: { playlist: VideoAsset[] }) {
+  return (
+    <PlaybackSourceController
+      getAssetId={(asset) => asset.slug}
+      playlist={playlist}
+      resolveSource={({ asset }) => asset.playbackUrl}
+    />
+  )
+}
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="./registry/default/hooks/use-playback-source.ts"
+  name="UsePlaybackSourceOptions"
+/>

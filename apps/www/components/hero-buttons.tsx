@@ -5,7 +5,7 @@ import { motion } from "motion/react"
 import Link from "next/link"
 import { useCopyToClipboard } from "react-use"
 
-const command = "npx shadcn add @limeplay/linear-player"
+const command = "npx shadcn add @limeplay/video-player"
 const MotionLink = motion.create(Link)
 
 export default function HeroButtons() {
@@ -84,7 +84,7 @@ export default function HeroButtons() {
           hover:bg-primary/90
           md:flex
         `}
-        href="/blocks/linear-player"
+        href="/blocks/video-player"
         initial={{ padding: "0px 20px" }}
         transition={{
           bounce: 0.6,

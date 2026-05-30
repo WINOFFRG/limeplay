@@ -261,7 +261,8 @@ function PlayerSetup() {
       const localPlayer = new shakaLib.Player() as shaka.Player
 
       try {
-        await localPlayer.attach(mediaElement)
+        // DEV: initializeMediaSource is false, otherwise player is in loaded status by default
+        await localPlayer.attach(mediaElement, false)
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- mutated by cleanup closure during await
         if (aborted) {

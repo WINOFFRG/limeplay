@@ -14,7 +14,7 @@ export type MediaProps =
        *
        * @default video
        */
-      as: "video"
+      as?: "video"
     })
 
 export type MediaPropsDocs = Pick<MediaProps, "as">

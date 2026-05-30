@@ -25,8 +25,8 @@ export function BlockPreviewWithToolbar({
   const [reloadKey, setReloadKey] = useState(0)
   const panelRef = useRef<HTMLDivElement>(null)
   const [panelRect, setPanelRect] = useState({
-    height: 0,
-    left: 0,
+    height: "100%",
+    left: "100%",
     top: 0,
     width: 0,
   })
@@ -37,8 +37,8 @@ export function BlockPreviewWithToolbar({
       if (!panelRef.current) return
       const rect = panelRef.current.getBoundingClientRect()
       setPanelRect({
-        height: rect.height,
-        left: rect.left,
+        height: rect.height as any,
+        left: rect.left as any,
         top: rect.top,
         width: rect.width,
       })

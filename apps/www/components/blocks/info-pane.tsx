@@ -24,8 +24,18 @@ export function BlockInfoPane({
       `}
     >
       <DocsPage>
-        <DocsTitle className="text-4xl">{title}</DocsTitle>
-        <DocsDescription>{description}</DocsDescription>
+        <DocsTitle
+          className="
+            text-3xl
+            sm:text-4xl
+            md:text-5xl
+          "
+        >
+          {title}
+        </DocsTitle>
+        <DocsDescription className="mt-1 leading-relaxed">
+          {description}
+        </DocsDescription>
         <DocsBody>{content}</DocsBody>
       </DocsPage>
     </div>
