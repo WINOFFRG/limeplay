@@ -21,7 +21,7 @@ The codebase is structured around:
 * Composed blocks (`registry/default/blocks`)
 
 Inside `apps/www/registry/default/blocks`, final reference implementations exist.
-`linear-player` is the **primary source of truth** and should always be used as the baseline example.
+`video-player` is the **primary source of truth** and should always be used as the baseline example.
 
 We are using Tailwind CSS v4 for styling, Zustand + Immer for state management, shadcn/ui (w/ Radix or BaseUI) for primitive components, React v19 and Next.js v16 for framework. Limeplay uses shaka-player for player engine.
 
@@ -160,13 +160,13 @@ When `shadcn add` installs a registry item, it rewrites import paths by matching
 
 **Rule:** Block-internal files MUST have unique names that don't collide with any registry item name in the dependency tree.
 
-* ❌ `blocks/linear-player/lib/media.ts` — "media" is a limeplay registry item (registryDependency) → import gets hijacked to its target
-* ❌ `blocks/linear-player/ui/button.tsx` — "button" is a shadcn built-in registry item → import gets hijacked
-* ❌ `blocks/linear-player/components/picture-in-picture-control.tsx` — same name as limeplay primitive → hijacked
-* ✅ `blocks/linear-player/components/media-kit.ts` — "media-kit" doesn't match any registry item
-* ✅ `blocks/linear-player/components/pip-control.tsx` — "pip-control" doesn't match any registry item
-* ✅ `blocks/linear-player/components/button.tsx` — in `components/` folder, CLI scopes it to the block
-* ✅ `blocks/linear-player/lib/test-util.ts` — "test-util" doesn't match any registry item
+* ❌ `blocks/video-player/lib/media.ts` — "media" is a limeplay registry item (registryDependency) → import gets hijacked to its target
+* ❌ `blocks/video-player/ui/button.tsx` — "button" is a shadcn built-in registry item → import gets hijacked
+* ❌ `blocks/video-player/components/picture-in-picture-control.tsx` — same name as limeplay primitive → hijacked
+* ✅ `blocks/video-player/components/media-kit.ts` — "media-kit" doesn't match any registry item
+* ✅ `blocks/video-player/components/pip-control.tsx` — "pip-control" doesn't match any registry item
+* ✅ `blocks/video-player/components/button.tsx` — in `components/` folder, CLI scopes it to the block
+* ✅ `blocks/video-player/lib/test-util.ts` — "test-util" doesn't match any registry item
 
 #### Folder Scoping in Blocks
 

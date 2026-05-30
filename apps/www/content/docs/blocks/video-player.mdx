@@ -1,0 +1,60 @@
+---
+title: Video Player
+description: A polished video player with playlist support, captions, picture-in-picture, playback speed, preloading, and smooth overlay controls.
+component: video-player
+preview: video-player
+registry: default
+status: free
+---
+
+## Installation
+
+```npm
+npx shadcn add @limeplay/video-player
+```
+
+## Usage
+
+```tsx
+import {
+  VideoPlayer,
+  type VideoPlayerAsset,
+} from "@/components/video-player/components/media-player"
+
+const playlist: VideoPlayerAsset[] = [
+  {
+    id: "sing-2",
+    src: "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8",
+    title: "Sing 2 Trailer",
+  },
+]
+
+export function Player() {
+  return <VideoPlayer playlist={playlist} />
+}
+```
+
+## Features
+
+- Playlist queue with active item switching.
+- Asset preloading when users hover playlist items.
+- Timeline scrubbing with buffered progress feedback.
+- Volume, mute, captions, playback rate, and picture-in-picture controls.
+- Shaka-backed playback for HLS, DASH, and DRM-capable streams.
+
+## Notes
+
+- `VideoPlayer` renders a video element internally. You do not need an `as` prop.
+- Pass `mediaProps` for native video options like `muted`, `playsInline`, or `autoPlay`.
+- Use `resolveSource` when your app needs signed URLs, token refresh, or custom asset loading.
+
+## API Reference
+
+<AutoTypeTable
+  path="./registry/default/blocks/video-player/components/media-player.tsx"
+  name="VideoPlayerProps"
+/>
+
+<Attribution name="Linear" href="https://linear.app" />
+
+<License />

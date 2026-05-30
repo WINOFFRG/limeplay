@@ -254,8 +254,13 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
         load: (items, startIndex = 0) => {
           const playlist = get().playlist as PlaylistStore["playlist"]
           const normalized = normalizeItems(items)
+          const normalizedStartIndex = clamp(
+            startIndex,
+            0,
+            Math.max(normalized.length - 1, 0)
+          )
           const shuffleOrder = playlist.shuffle
-            ? createShuffleOrder(normalized.length, startIndex)
+            ? createShuffleOrder(normalized.length, normalizedStartIndex)
             : []
 
           set(({ playlist }) => {
@@ -267,17 +272,17 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
             playlist.shuffleOrder = shuffleOrder
           })
 
-          if (normalized.length > 0 && startIndex < normalized.length) {
-            const startItem = normalized[startIndex] as PlaylistItem
+          if (normalized.length > 0) {
+            const startItem = normalized[normalizedStartIndex] as PlaylistItem
 
             set(({ playlist }) => {
-              playlist.currentIndex = startIndex
+              playlist.currentIndex = normalizedStartIndex
               playlist.currentItem = startItem
             })
 
             emitPlaylistChange(
               events.emit,
-              startIndex,
+              normalizedStartIndex,
               startItem,
               -1,
               null,

@@ -2,7 +2,7 @@
 
 import type shaka from "shaka-player"
 
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useId } from "react"
 
 import type {
   PlaybackEvents,
@@ -11,7 +11,6 @@ import type {
 import type {
   PlayerEvents,
   PlayerStore,
-  UsePlayerOptions,
 } from "@/registry/default/hooks/use-player"
 import type {
   PlaylistChangeEvent,
@@ -35,38 +34,88 @@ import {
 export interface Asset {
   config?: shaka.extern.PlayerConfiguration
   description?: string
-  id: string
+  id?: string
   poster?: string
-  src: string
+  src?: string
   title?: string
 }
 
-export interface UseAssetLoadContext<TAsset extends Asset> {
+export interface AssetLoadContext<TAsset extends Asset = Asset> {
   asset: TAsset
-  defaultLoad: (
-    source?: null | shaka.media.PreloadManager | string,
-    startTime?: number
+  loadDefault: (
+    source?: null | PlaybackSource | shaka.media.PreloadManager | string,
+    options?: number | { startTime?: number }
   ) => Promise<void>
   media: HTMLMediaElement
   player: shaka.Player
   preloadManager?: shaka.media.PreloadManager
+  previousError?: unknown
+  retryCount: number
   signal: AbortSignal
   startTime?: number
 }
 
+export interface AssetPreloadContext<TAsset extends Asset = Asset> {
+  asset: TAsset
+  player: shaka.Player
+  preloadDefault: (
+    source?: PlaybackSource | string
+  ) => Promise<null | shaka.media.PreloadManager>
+  previousError?: unknown
+  retryCount: number
+  signal: AbortSignal
+}
+
+export type AssetSourceOperation = "load" | "preload"
+
+export type GetAssetId<TAsset extends Asset = Asset> = (
+  asset: TAsset,
+  context: {
+    index?: number
+    origin: "asset" | "media-props" | "playlist"
+  }
+) => null | string | undefined
+
+export interface NormalizedAsset<TAsset extends Asset = Asset> {
+  id: string
+  properties: TAsset
+}
+
+export interface PlaybackSource {
+  config?: shaka.extern.PlayerConfiguration
+  src?: string
+}
+
+export type ResolveSource<TAsset extends Asset = Asset> = (
+  context: ResolveSourceContext<TAsset>
+) => MaybePromise<null | PlaybackSource | string | undefined>
+
+export interface ResolveSourceContext<TAsset extends Asset = Asset> {
+  asset: TAsset
+  operation: AssetSourceOperation
+  previousError?: unknown
+  retryCount: number
+  signal: AbortSignal
+  startTime?: number
+}
+
+export type UseAssetLoadContext<TAsset extends Asset> = AssetLoadContext<TAsset>
+
 export interface UseAssetLoader<TAsset extends Asset> {
-  load?: (context: UseAssetLoadContext<TAsset>) => Promise<void>
+  load?: (context: AssetLoadContext<TAsset>) => Promise<void>
   preload?: (
-    context: UseAssetPreloadContext<TAsset>
+    context: AssetPreloadContext<TAsset>
   ) => Promise<null | shaka.media.PreloadManager>
 }
 
 export interface UseAssetOptions<TAsset extends Asset> {
   autoplayFirst?: boolean
+  getAssetId?: GetAssetId<TAsset>
   loader?: UseAssetLoader<TAsset>
   maxRetries?: number
   onAssetChange?: (event: PlaylistChangeEvent<TAsset>) => void
   onAssetLoaded?: (asset: TAsset) => void
+  onError?: (error: Error, asset?: TAsset) => void
   onLoadError?: (
     asset: TAsset,
     error: unknown,
@@ -81,16 +130,11 @@ export interface UseAssetOptions<TAsset extends Asset> {
     | { action: "skip" }
     | { action: "stop" }
   >
-  playerOptions?: Partial<UsePlayerOptions<TAsset>>
+  resolveSource?: ResolveSource<TAsset>
 }
 
-export interface UseAssetPreloadContext<TAsset extends Asset> {
-  asset: TAsset
-  defaultPreload: (
-    source?: string
-  ) => Promise<null | shaka.media.PreloadManager>
-  player: shaka.Player
-}
+export type UseAssetPreloadContext<TAsset extends Asset> =
+  AssetPreloadContext<TAsset>
 
 export interface UseAssetReturn<TAsset extends Asset> {
   cancelPreload: (assetId: string) => void
@@ -135,20 +179,30 @@ export const ASSET_FEATURE_KEY = "asset"
 
 export interface AssetStore {
   [ASSET_FEATURE_KEY]: {
+    clearOptions: (ownerId: string) => void
     installedOptions?: UseAssetOptions<Asset>
     isFirstLoad: boolean
     loadAbortController: AbortController | null
     loadAsset: (asset: Asset, startTime?: number) => Promise<boolean>
     loadGeneration: number
     loadPlaylist: (assets: Asset[], startIndex?: number) => void
+    optionsOwnerId: null | string
     preloadAsset: (asset: Asset) => Promise<void>
     preloadNext: () => Promise<void>
+    previousError: unknown
     retryCount: number
-    setOptions: (options?: UseAssetOptions<Asset>) => void
+    setOptions: (options: UseAssetOptions<Asset>, ownerId: string) => void
   }
 }
 
 type AssetSetupStore = AssetStore & PlaybackStore & PlayerStore & PlaylistStore
+
+type MaybePromise<T> = Promise<T> | T
+
+type NormalizedSource = {
+  config?: shaka.extern.PlayerConfiguration
+  source?: null | shaka.media.PreloadManager | string
+}
 
 export function assetFeature(): MediaFeature<
   AssetStore,
@@ -157,6 +211,14 @@ export function assetFeature(): MediaFeature<
   return {
     createSlice: (set, get) => ({
       [ASSET_FEATURE_KEY]: {
+        clearOptions: (ownerId) => {
+          if (get().asset.optionsOwnerId !== ownerId) return
+
+          set(({ asset }) => {
+            asset.installedOptions = undefined
+            asset.optionsOwnerId = null
+          })
+        },
         installedOptions: undefined,
         isFirstLoad: true,
         loadAbortController: null,
@@ -171,6 +233,10 @@ export function assetFeature(): MediaFeature<
             return false
           }
 
+          const assetId = getNormalizedAssetId(asset, options, {
+            origin: "asset",
+          })
+
           const generation = get().asset.loadGeneration + 1
           get().asset.loadAbortController?.abort()
 
@@ -183,60 +249,89 @@ export function assetFeature(): MediaFeature<
 
           media.pause()
 
-          const {
-            onError: onPlayerError,
-            onLoad,
-            onPreload: _onPreload,
-          } = options?.playerOptions ?? {}
-
           try {
             const preloadManagers = get().player.preloadManagers as Map<
               string,
               shaka.media.PreloadManager
             >
-            const preloadManager = preloadManagers.get(asset.id)
+            const preloadManager = preloadManagers.get(assetId)
+            const retryCount = get().asset.retryCount
+            const previousError = get().asset.previousError ?? undefined
 
-            const defaultLoad = async (
-              source?: null | shaka.media.PreloadManager | string,
-              customStartTime?: number
+            const loadDefault = async (
+              source?:
+                | null
+                | PlaybackSource
+                | shaka.media.PreloadManager
+                | string,
+              loadOptions?: number | { startTime?: number }
             ) => {
+              const normalizedSource = normalizePlaybackSource(source)
               player.resetConfiguration()
+
               if (asset.config) {
                 player.configure(asset.config)
               }
 
-              const resolvedSource =
-                source === undefined ? (preloadManager ?? asset.src) : source
+              if (normalizedSource.config) {
+                player.configure(normalizedSource.config)
+              }
 
-              const finalStartTime = customStartTime ?? startTime
+              const shouldUseFallbackSource =
+                source === undefined ||
+                source === null ||
+                (Boolean(normalizedSource.config) && !normalizedSource.source)
+              const resolvedSource = shouldUseFallbackSource
+                ? (preloadManager ?? normalizedSource.source ?? asset.src)
+                : normalizedSource.source
+
+              const finalStartTime =
+                typeof loadOptions === "number"
+                  ? loadOptions
+                  : (loadOptions?.startTime ?? startTime)
               const timeToLoad = finalStartTime ?? undefined
 
-              if (resolvedSource) {
-                await player.load(resolvedSource, timeToLoad)
-              } else {
-                await player.load(asset.src, timeToLoad)
+              if (!resolvedSource) {
+                throw new Error(
+                  `[useAsset] Missing playback source for asset "${assetId}". Provide asset.src or resolveSource.`
+                )
               }
+
+              await player.load(resolvedSource, timeToLoad)
             }
 
             if (options?.loader?.load) {
               await options.loader.load({
                 asset,
-                defaultLoad,
+                loadDefault,
                 media,
                 player,
                 preloadManager,
+                previousError,
+                retryCount,
                 signal: abortController.signal,
                 startTime,
               })
-            } else if (onLoad) {
-              await onLoad(asset, player, media, preloadManager, startTime)
             } else {
-              await defaultLoad()
+              const resolved = await resolveSourceValue(options, {
+                asset,
+                operation: "load",
+                previousError,
+                retryCount,
+                signal: abortController.signal,
+                startTime,
+              })
+
+              if (abortController.signal.aborted) {
+                return false
+              }
+
+              await loadDefault(resolved)
             }
 
             if (preloadManager) {
               const updated = new Map(preloadManagers)
-              updated.delete(asset.id)
+              updated.delete(assetId)
               set(({ player }) => {
                 player.preloadManagers = updated
               })
@@ -258,6 +353,7 @@ export function assetFeature(): MediaFeature<
 
             set(({ asset }) => {
               asset.isFirstLoad = false
+              asset.previousError = null
               asset.retryCount = 0
             })
 
@@ -272,16 +368,16 @@ export function assetFeature(): MediaFeature<
               return false
             }
 
-            onPlayerError?.(
-              error instanceof Error
-                ? error
-                : Object.assign(new Error(String(error)), error as object),
-              asset
-            )
+            const normalizedError = toError(error)
+            options?.onError?.(normalizedError, asset)
             const playlist = get().playlist
             const maxRetries = options?.maxRetries ?? 0
             const currentRetryCount = get().asset.retryCount
             const hasNext = playlist.getNextIndex() !== -1
+
+            set(({ asset }) => {
+              asset.previousError = error
+            })
 
             if (options?.onLoadError) {
               const decision = options.onLoadError(asset, error, {
@@ -302,6 +398,7 @@ export function assetFeature(): MediaFeature<
                 hasNext
               ) {
                 set(({ asset }) => {
+                  asset.previousError = null
                   asset.retryCount = 0
                 })
                 playlist.next()
@@ -309,6 +406,7 @@ export function assetFeature(): MediaFeature<
               }
 
               set(({ asset }) => {
+                asset.previousError = null
                 asset.retryCount = 0
               })
               return false
@@ -316,6 +414,7 @@ export function assetFeature(): MediaFeature<
 
             if (hasNext) {
               set(({ asset }) => {
+                asset.previousError = null
                 asset.retryCount = 0
               })
               playlist.next()
@@ -325,18 +424,20 @@ export function assetFeature(): MediaFeature<
         },
         loadGeneration: 0,
         loadPlaylist: (assets, startIndex = 0) => {
+          const options = get().asset.installedOptions as
+            | undefined
+            | UseAssetOptions<Asset>
+          const normalizedAssets = normalizeAssets(assets, options)
+
           set(({ asset }) => {
             asset.isFirstLoad = true
+            asset.previousError = null
+            asset.retryCount = 0
           })
 
-          get().playlist.load(
-            assets.map((asset) => ({
-              id: asset.id,
-              properties: asset,
-            })),
-            startIndex
-          )
+          get().playlist.load(normalizedAssets, startIndex)
         },
+        optionsOwnerId: null,
         preloadAsset: async (asset) => {
           const player = get().player.instance as null | shaka.Player
           const options = get().asset.installedOptions as
@@ -344,19 +445,32 @@ export function assetFeature(): MediaFeature<
             | UseAssetOptions<Asset>
           if (!player) return
 
-          const { onError: onPlayerError, onPreload } =
-            options?.playerOptions ?? {}
+          const assetId = getNormalizedAssetId(asset, options, {
+            origin: "asset",
+          })
 
           try {
-            const defaultPreload = async (
-              source?: string
+            const retryCount = get().asset.retryCount
+            const previousError = get().asset.previousError ?? undefined
+            const abortController = new AbortController()
+
+            const preloadDefault = async (
+              source?: PlaybackSource | string
             ): Promise<null | shaka.media.PreloadManager> => {
-              const resolvedSource = source ?? asset.src
+              const normalizedSource = normalizePlaybackSource(source)
+              const resolvedSource = normalizedSource.source ?? asset.src
+
+              if (!resolvedSource || typeof resolvedSource !== "string") {
+                throw new Error(
+                  `[useAsset] Missing preload source for asset "${assetId}". Provide asset.src or resolveSource.`
+                )
+              }
+
               return player.preload(
                 resolvedSource,
                 undefined,
                 undefined,
-                asset.config
+                mergePlayerConfiguration(asset.config, normalizedSource.config)
               )
             }
 
@@ -365,13 +479,22 @@ export function assetFeature(): MediaFeature<
             if (options?.loader?.preload) {
               manager = await options.loader.preload({
                 asset,
-                defaultPreload,
                 player,
+                preloadDefault,
+                previousError,
+                retryCount,
+                signal: abortController.signal,
               })
-            } else if (onPreload) {
-              manager = await onPreload(asset, player)
             } else {
-              manager = await defaultPreload()
+              const resolved = await resolveSourceValue(options, {
+                asset,
+                operation: "preload",
+                previousError,
+                retryCount,
+                signal: abortController.signal,
+              })
+
+              manager = await preloadDefault(resolved ?? undefined)
             }
 
             if (manager) {
@@ -379,25 +502,21 @@ export function assetFeature(): MediaFeature<
                 string,
                 shaka.media.PreloadManager
               >
+              const previousManager = existing.get(assetId)
+
+              if (previousManager && previousManager !== manager) {
+                void previousManager.destroy()
+              }
+
               const updated = new Map(existing)
-              updated.set(asset.id, manager)
+              updated.set(assetId, manager)
               set(({ player }) => {
                 player.preloadManagers = updated
               })
             }
           } catch (error) {
-            const err =
-              error instanceof Error
-                ? error
-                : typeof error === "object" && error !== null
-                  ? Object.assign(
-                      new Error(
-                        String((error as { message?: string }).message ?? error)
-                      ),
-                      error
-                    )
-                  : new Error(String(error))
-            onPlayerError?.(err, asset)
+            const err = toError(error)
+            options?.onError?.(err, asset)
             console.error("[useAsset] Preload error:", error)
           }
         },
@@ -413,10 +532,12 @@ export function assetFeature(): MediaFeature<
             )
           }
         },
+        previousError: null,
         retryCount: 0,
-        setOptions: (options) => {
+        setOptions: (options, ownerId) => {
           set(({ asset }) => {
             asset.installedOptions = options
+            asset.optionsOwnerId = ownerId
           })
         },
       },
@@ -425,11 +546,11 @@ export function assetFeature(): MediaFeature<
     Setup: AssetSetup,
   }
 }
-
 export function useAsset<TAsset extends Asset = Asset>(
   options?: UseAssetOptions<TAsset>
 ): UseAssetReturn<TAsset> {
   const api = useMediaFeatureApi<AssetStore>(ASSET_FEATURE_KEY)
+  const optionsOwnerId = useId()
   const playlist = usePlaylist<TAsset>()
   const loadAsset = useAssetStore((state) => state.loadAsset) as (
     asset: TAsset,
@@ -447,10 +568,17 @@ export function useAsset<TAsset extends Asset = Asset>(
   useEffect(() => {
     if (!options) return
 
-    api.setState(({ asset }) => {
-      asset.installedOptions = options as unknown as UseAssetOptions<Asset>
-    })
-  }, [api, options])
+    api
+      .getState()
+      .asset.setOptions(
+        options as unknown as UseAssetOptions<Asset>,
+        optionsOwnerId
+      )
+
+    return () => {
+      api.getState().asset.clearOptions(optionsOwnerId)
+    }
+  }, [api, options, optionsOwnerId])
 
   const cancelPreload = useCallback(
     (assetId: string) => {
@@ -547,6 +675,9 @@ function AssetSetup() {
             const assetToLoad = (decision.asset ??
               currentItem.properties) as unknown as Asset
             const startTime = decision.startTime ?? currentTime
+            api.setState(({ asset }) => {
+              asset.previousError = payload.error
+            })
             void api.getState().asset.loadAsset(assetToLoad, startTime)
           } else if (decision.action === "skip" && getHasNext()) {
             api.getState().playlist.next()
@@ -574,4 +705,115 @@ function AssetSetup() {
   }, [api, events])
 
   return null
+}
+
+function getNormalizedAssetId(
+  asset: Asset,
+  options: undefined | UseAssetOptions<Asset>,
+  context: { index?: number; origin: "asset" | "media-props" | "playlist" }
+): string {
+  const id = asset.id ?? options?.getAssetId?.(asset, context)
+  if (id) return id
+
+  if (asset.src) {
+    return `lp_src_${hashString(asset.src)}`
+  }
+
+  throw new Error(
+    `[useAsset] Missing asset id. Provide asset.id, asset.src, or getAssetId for ${context.origin} assets.`
+  )
+}
+
+function hashString(value: string): string {
+  let hash = 0
+
+  for (let index = 0; index < value.length; index++) {
+    hash = (hash << 5) - hash + value.charCodeAt(index)
+    hash |= 0
+  }
+
+  return Math.abs(hash).toString(36)
+}
+
+function mergePlayerConfiguration(
+  base?: shaka.extern.PlayerConfiguration,
+  override?: shaka.extern.PlayerConfiguration
+): shaka.extern.PlayerConfiguration | undefined {
+  if (!base) return override
+  if (!override) return base
+
+  return {
+    ...base,
+    ...override,
+  }
+}
+
+function normalizeAssets(
+  assets: Asset[],
+  options?: UseAssetOptions<Asset>
+): NormalizedAsset[] {
+  const usedIds = new Set<string>()
+
+  return assets.map((asset, index) => {
+    const id = getNormalizedAssetId(asset, options, {
+      index,
+      origin: "playlist",
+    })
+
+    if (usedIds.has(id)) {
+      throw new Error(
+        `[useAsset] Duplicate asset id "${id}". Provide explicit ids for duplicate playlist entries.`
+      )
+    }
+
+    usedIds.add(id)
+
+    return {
+      id,
+      properties: asset,
+    }
+  })
+}
+
+function normalizePlaybackSource(
+  source?: null | PlaybackSource | shaka.media.PreloadManager | string
+): NormalizedSource {
+  if (typeof source === "string") {
+    return { source }
+  }
+
+  if (!source) {
+    return {}
+  }
+
+  if ("src" in source || "config" in source) {
+    const playbackSource = source as PlaybackSource
+
+    return {
+      config: playbackSource.config,
+      source: playbackSource.src,
+    }
+  }
+
+  return { source: source as shaka.media.PreloadManager }
+}
+
+async function resolveSourceValue(
+  options: undefined | UseAssetOptions<Asset>,
+  context: ResolveSourceContext<Asset>
+): Promise<null | PlaybackSource | string | undefined> {
+  return options?.resolveSource?.(context)
+}
+
+function toError(error: unknown): Error {
+  if (error instanceof Error) return error
+
+  if (typeof error === "object" && error !== null) {
+    return Object.assign(
+      new Error(String((error as { message?: string }).message ?? error)),
+      error
+    )
+  }
+
+  return new Error(String(error))
 }
