@@ -104,15 +104,15 @@ export function Playlist() {
           )}
 
           {displayAssets.map(({ asset, id }, index) => (
-              <TrackRow
-                asset={asset}
-                index={index}
-                isActive={currentItem?.id === id}
-                key={id}
-                onSelect={() => handleAssetSelect(id)}
-                preloaded={isPreloaded(id)}
-              />
-            ))}
+            <TrackRow
+              asset={asset}
+              index={index}
+              isActive={currentItem?.id === id}
+              key={id}
+              onSelect={() => handleAssetSelect(id)}
+              preloaded={isPreloaded(id)}
+            />
+          ))}
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
