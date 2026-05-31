@@ -58,7 +58,11 @@ export function VolumeControl() {
               key={isMuted ? "muted" : "unmuted"}
               transition={{ bounce: 0, duration: 0.3, type: "spring" }}
             >
-              {isMuted ? <VolumeMutedIcon /> : <VolumeFullIcon />}
+              {isMuted ? (
+                <VolumeMutedIcon aria-hidden="true" />
+              ) : (
+                <VolumeFullIcon aria-hidden="true" />
+              )}
             </motion.span>
           </AnimatePresence>
         </Button>

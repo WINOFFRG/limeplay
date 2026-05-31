@@ -109,4 +109,31 @@ useAsset({
   name="UseAssetReturn"
 />
 
+## Store
+
+`assetFeature` adds a store slice that tracks active options, load cancellation, retry state, and preload cancellation.
+
+### State
+
+<AutoTypeTable
+  path="./registry/default/hooks/use-asset.ts"
+  name="UseAssetState"
+/>
+
+## Actions
+
+<AutoTypeTable
+  path="./registry/default/hooks/use-asset.ts"
+  name="UseAssetActions"
+/>
+
+## Events
+
+`useAsset` listens to player and playlist events instead of exposing a separate event emitter.
+
+<AutoTypeTable
+  path="./registry/default/hooks/use-asset.ts"
+  name="UseAssetEvents"
+/>
+
 `useAsset` orchestrates `usePlayer` and `usePlaylist`. It owns load cancellation, playlist-driven loading, preloading, auto-advance on playback end, and error recovery.

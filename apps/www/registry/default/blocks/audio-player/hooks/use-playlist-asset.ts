@@ -14,10 +14,7 @@ export type { PlaybackUrls }
 export type PlaylistAsset = AudioPlayerAsset
 
 export interface UsePlaylistAssetReturn extends UseAssetReturn<PlaylistAsset> {
-  error: Error | null
-  isLoading: boolean
   items: PlaylistAsset[]
-  refetch: () => Promise<void>
 }
 
 export function usePlaylistAsset(): UsePlaylistAssetReturn {
@@ -26,9 +23,6 @@ export function usePlaylistAsset(): UsePlaylistAssetReturn {
 
   return {
     ...asset,
-    error: source.error,
-    isLoading: source.isLoading,
     items: source.items,
-    refetch: source.refetch,
   }
 }

@@ -12,6 +12,9 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ asChild = false, className, render, size = "large", ...props }, ref) => {
     const Comp = render ? Slot : asChild ? Slot : "button"
+    const buttonProps =
+      Comp === "button" ? { type: props.type ?? "button", ...props } : props
+
     return (
       <Comp
         className={cn(
@@ -46,7 +49,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           className
         )}
         ref={ref}
-        {...props}
+        {...buttonProps}
       >
         {render
           ? React.cloneElement(render, undefined, props.children)

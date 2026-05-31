@@ -42,10 +42,6 @@ export interface VideoPlayerProps {
     React.VideoHTMLAttributes<HTMLVideoElement>,
     "as" | "className"
   >
-  /**
-   * Ref to the underlying video element.
-   */
-  mediaRef?: React.Ref<HTMLVideoElement>
   playlist?: VideoPlayerAsset[]
   resolveSource?: ResolveSource<VideoPlayerAsset>
 }
@@ -61,7 +57,6 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
       getAssetId,
       initialIndex,
       mediaProps,
-      mediaRef,
       playlist,
       resolveSource,
     },
@@ -91,7 +86,6 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
               >)}
               as="video"
               className="size-full object-cover"
-              ref={mediaRef as React.Ref<HTMLMediaElement>}
             />
             <Layout.ControlsOverlayContainer />
             <Layout.ControlsContainer className="pb-6">

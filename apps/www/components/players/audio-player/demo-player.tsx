@@ -23,13 +23,16 @@ export function AudioPlayerDemo({
   useEffect(() => {
     const abortController = new AbortController()
 
-    void fetchAudioPlayerDemoPlaylist(playlistId, abortController.signal).then(
-      (items) => {
+    void fetchAudioPlayerDemoPlaylist(playlistId, abortController.signal)
+      .then((items) => {
         if (!abortController.signal.aborted) {
           setPlaylist(items)
         }
-      }
-    )
+      })
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return
+        console.error("Failed to load audio player demo playlist:", error)
+      })
 
     return () => {
       abortController.abort()

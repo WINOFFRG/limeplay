@@ -120,7 +120,8 @@ function useStablePlaybackState(
         timeoutRef.current = null
       }
     }
-  }, [isBuffering, delayMs])
+    // DEV: The spinner from lastIntentRef.current, but this effect never reruns when status changes while isBuffering stays true. A pause during buffering can still show the delayed loading spinner because the old timeout is left in place.
+  }, [isBuffering, delayMs, status])
 
   // During transient buffering, hold the last intent as the visual state
   const stableIsPlaying = isBuffering

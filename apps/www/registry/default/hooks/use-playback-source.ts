@@ -59,6 +59,10 @@ export function usePlaybackSource<TAsset extends Asset>(
   const { loadPlaylist } = useAsset<TAsset>(installedOptions)
   const loadedSourceKeyRef = useRef<null | string>(null)
 
+  useEffect(() => {
+    loadedSourceKeyRef.current = null
+  }, [player])
+
   const assets = useMemo(() => {
     if (playlist) return playlist
     if (asset) return [asset]

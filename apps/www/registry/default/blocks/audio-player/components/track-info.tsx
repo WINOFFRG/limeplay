@@ -10,6 +10,7 @@ export function TrackInfo() {
   const asset = currentItem?.properties
   const title = asset?.title ?? "No track playing"
   const genre = asset?.genre ?? ""
+  const releaseYear = asset?.releaseYear ?? asset?.year
 
   return (
     <div className="flex min-w-0 items-center gap-3">
@@ -44,7 +45,8 @@ export function TrackInfo() {
         </div>
         {genre && (
           <div className="truncate text-xs/snug text-secondary">
-            {genre} • 2026
+            {genre}
+            {releaseYear ? ` • ${releaseYear}` : ""}
           </div>
         )}
       </div>

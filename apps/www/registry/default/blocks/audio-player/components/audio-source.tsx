@@ -17,14 +17,13 @@ export interface AudioPlayerAsset extends Asset {
   genre?: string
   playbackUrls?: PlaybackUrls
   poster?: string
+  releaseYear?: number | string
   title?: string
+  year?: number | string
 }
 
 export interface AudioSourceContextValue {
-  error: Error | null
-  isLoading: boolean
   items: AudioPlayerAsset[]
-  refetch: () => Promise<void>
 }
 
 export interface AudioSourceProviderProps {
@@ -37,6 +36,7 @@ export interface AudioSourceProviderProps {
   children?: React.ReactNode
   getAssetId?: GetAssetId<AudioPlayerAsset>
   initialIndex?: number
+  mediaSrc?: string
   playlist?: AudioPlayerAsset[]
   resolveSource?: ResolveSource<AudioPlayerAsset>
 }
@@ -62,6 +62,7 @@ export function AudioSourceProvider({
   children,
   getAssetId,
   initialIndex,
+  mediaSrc,
   playlist,
   resolveSource,
 }: AudioSourceProviderProps) {
@@ -120,6 +121,10 @@ export function AudioSourceProvider({
       }
 
       const src = await fetchPlaybackUrl(asset.playbackUrls.primary, signal)
+      if (signal.aborted) {
+        throw new DOMException("Playback source request aborted", "AbortError")
+      }
+
       return {
         config: asset.config,
         src,
@@ -127,16 +132,12 @@ export function AudioSourceProvider({
     },
     [resolveSource]
   )
-  const refetch = React.useCallback(async () => {}, [])
 
   const value = React.useMemo(
     () => ({
-      error: null,
-      isLoading: false,
       items,
-      refetch,
     }),
-    [items, refetch]
+    [items]
   )
 
   return (
@@ -147,6 +148,7 @@ export function AudioSourceProvider({
         autoLoad={autoLoad}
         getAssetId={resolvedGetAssetId}
         initialIndex={initialIndex}
+        mediaSrc={mediaSrc}
         playlist={playlist}
         resolveSource={resolvedSource}
       />

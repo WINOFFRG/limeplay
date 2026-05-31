@@ -1,4 +1,10 @@
-import type { ReactNode } from "react"
+"use client"
+
+import type {
+  AudioHTMLAttributes,
+  ComponentPropsWithoutRef,
+  ReactNode,
+} from "react"
 
 import type {
   AudioPlayerAsset,
@@ -21,11 +27,19 @@ export interface AudioPlayerProps {
   asset?: AudioSourceProviderProps["asset"]
   assetOptions?: AudioSourceProviderProps["assetOptions"]
   autoLoad?: boolean
+  autoPlay?: boolean
   children?: ReactNode
   className?: string
   debug?: boolean
   getAssetId?: AudioSourceProviderProps["getAssetId"]
   initialIndex?: number
+  /**
+   * Props to pass to the underlying audio element.
+   */
+  mediaProps?: Omit<
+    AudioHTMLAttributes<HTMLAudioElement>,
+    "as" | "autoPlay" | "className"
+  >
   playlist?: AudioPlayerAsset[]
   resolveSource?: AudioSourceProviderProps["resolveSource"]
 }
@@ -34,14 +48,18 @@ export function AudioPlayer({
   asset,
   assetOptions,
   autoLoad,
+  autoPlay = false,
   children,
   className,
   debug,
   getAssetId,
   initialIndex,
+  mediaProps,
   playlist,
   resolveSource,
 }: AudioPlayerProps = {}) {
+  const { src: mediaSrc, ...safeMediaProps } = mediaProps ?? {}
+
   return (
     <MediaProvider debug={debug}>
       <AudioSourceProvider
@@ -50,6 +68,7 @@ export function AudioPlayer({
         autoLoad={autoLoad}
         getAssetId={getAssetId}
         initialIndex={initialIndex}
+        mediaSrc={typeof mediaSrc === "string" ? mediaSrc : undefined}
         playlist={playlist}
         resolveSource={resolveSource}
       >
@@ -60,7 +79,11 @@ export function AudioPlayer({
             className
           )}
         >
-          <Media as="audio" autoPlay />
+          <Media
+            {...(safeMediaProps as ComponentPropsWithoutRef<typeof Media>)}
+            as="audio"
+            autoPlay={autoPlay}
+          />
           <TimelineControl />
           <PlayerControls />
         </div>
