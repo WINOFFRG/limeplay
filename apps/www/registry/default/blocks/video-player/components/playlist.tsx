@@ -1,6 +1,7 @@
 "use client"
 
 import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react"
+import { useMemo } from "react"
 
 import type { VideoPlayerAsset } from "@/registry/default/blocks/video-player/components/media-player"
 
@@ -14,18 +15,41 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/registry/default/blocks/video-player/components/button"
-import { useAsset } from "@/registry/default/hooks/use-asset"
+import { useAssetStore } from "@/registry/default/hooks/use-asset"
+import { usePlayerStore } from "@/registry/default/hooks/use-player"
+import { usePlaylistStore } from "@/registry/default/hooks/use-playlist"
 
 export function Playlist() {
-  const { currentItem, isPreloaded, orderedItems, preloadAsset, skipToId } =
-    useAsset<VideoPlayerAsset>()
+  const currentItem = usePlaylistStore(
+    (state) => state.currentItem as null | { id: string; properties: VideoPlayerAsset }
+  )
+  const preloadAsset = useAssetStore((state) => state.preloadAsset) as (
+    asset: VideoPlayerAsset
+  ) => Promise<void>
+  const preloadManagers = usePlayerStore((state) => state.preloadManagers)
+  const queue = usePlaylistStore(
+    (state) => state.queue as { id: string; properties: VideoPlayerAsset }[]
+  )
+  const shuffle = usePlaylistStore((state) => state.shuffle)
+  const shuffleOrder = usePlaylistStore((state) => state.shuffleOrder)
+  const skipToId = usePlaylistStore((state) => state.skipToId)
+
+  const orderedItems = useMemo(() => {
+    if (!shuffle || shuffleOrder.length === 0) return queue
+
+    return shuffleOrder
+      .map((index) => queue[index])
+      .filter((item): item is { id: string; properties: VideoPlayerAsset } =>
+        Boolean(item)
+      )
+  }, [queue, shuffle, shuffleOrder])
 
   const handleAssetSelect = async (assetId: string) => {
     await skipToId(assetId)
   }
 
   const handleAssetHover = async (assetId: string, asset: VideoPlayerAsset) => {
-    if (!isPreloaded(assetId) && currentItem?.id !== assetId) {
+    if (!preloadManagers.has(assetId) && currentItem?.id !== assetId) {
       await preloadAsset(asset)
     }
   }
@@ -51,7 +75,7 @@ export function Playlist() {
             {orderedItems.map((item) => {
               const asset = item.properties
               const isCurrentAsset = currentItem?.id === item.id
-              const isAssetPreloaded = isPreloaded(item.id)
+              const isAssetPreloaded = preloadManagers.has(item.id)
 
               return (
                 <DropdownMenuItem

@@ -99,6 +99,21 @@ export interface ResolveSourceContext<TAsset extends Asset = Asset> {
   startTime?: number
 }
 
+export interface UseAssetActions {
+  clearOptions: (ownerId: string) => void
+  loadAsset: (asset: Asset, startTime?: number) => Promise<boolean>
+  loadPlaylist: (assets: Asset[], startIndex?: number) => void
+  preloadAsset: (asset: Asset) => Promise<void>
+  preloadNext: () => Promise<void>
+  setOptions: (options: UseAssetOptions<Asset>, ownerId: string) => void
+}
+
+export interface UseAssetEvents {
+  ended: "advance to the next playlist item when available"
+  playbackerror: "delegate reload, skip, or stop decisions to onPlaybackError"
+  playlistchange: "load the newly active playlist item"
+}
+
 export type UseAssetLoadContext<TAsset extends Asset> = AssetLoadContext<TAsset>
 
 export interface UseAssetLoader<TAsset extends Asset> {
@@ -175,6 +190,16 @@ export interface UseAssetReturn<TAsset extends Asset> {
   toggleShuffle: () => void
 }
 
+export interface UseAssetState {
+  installedOptions?: UseAssetOptions<Asset>
+  isFirstLoad: boolean
+  loadAbortController: AbortController | null
+  loadGeneration: number
+  optionsOwnerId: null | string
+  previousError: unknown
+  retryCount: number
+}
+
 export const ASSET_FEATURE_KEY = "asset"
 
 export interface AssetStore {
@@ -186,7 +211,10 @@ export interface AssetStore {
     loadAsset: (asset: Asset, startTime?: number) => Promise<boolean>
     loadGeneration: number
     loadPlaylist: (assets: Asset[], startIndex?: number) => void
+    optionsByOwner: Record<string, undefined | UseAssetOptions<Asset>>
     optionsOwnerId: null | string
+    optionsOwnerOrder: string[]
+    preloadAbortControllers: Record<string, AbortController | undefined>
     preloadAsset: (asset: Asset) => Promise<void>
     preloadNext: () => Promise<void>
     previousError: unknown
@@ -212,11 +240,22 @@ export function assetFeature(): MediaFeature<
     createSlice: (set, get) => ({
       [ASSET_FEATURE_KEY]: {
         clearOptions: (ownerId) => {
-          if (get().asset.optionsOwnerId !== ownerId) return
+          if (!get().asset.optionsByOwner[ownerId]) return
 
           set(({ asset }) => {
-            asset.installedOptions = undefined
-            asset.optionsOwnerId = null
+            delete asset.optionsByOwner[ownerId]
+            asset.optionsOwnerOrder = asset.optionsOwnerOrder.filter(
+              (id) => id !== ownerId
+            )
+
+            if (asset.optionsOwnerId !== ownerId) return
+
+            const nextOwnerId =
+              asset.optionsOwnerOrder[asset.optionsOwnerOrder.length - 1] ?? null
+            asset.optionsOwnerId = nextOwnerId
+            asset.installedOptions = nextOwnerId
+              ? asset.optionsByOwner[nextOwnerId]
+              : undefined
           })
         },
         installedOptions: undefined,
@@ -437,7 +476,10 @@ export function assetFeature(): MediaFeature<
 
           get().playlist.load(normalizedAssets, startIndex)
         },
+        optionsByOwner: {},
         optionsOwnerId: null,
+        optionsOwnerOrder: [],
+        preloadAbortControllers: {},
         preloadAsset: async (asset) => {
           const player = get().player.instance as null | shaka.Player
           const options = get().asset.installedOptions as
@@ -448,15 +490,29 @@ export function assetFeature(): MediaFeature<
           const assetId = getNormalizedAssetId(asset, options, {
             origin: "asset",
           })
+          get().asset.preloadAbortControllers[assetId]?.abort()
+          const abortController = new AbortController()
+
+          set(({ asset }) => {
+            asset.preloadAbortControllers[assetId] = abortController
+          })
+
+          const isCurrentPreload = () => {
+            return (
+              get().asset.preloadAbortControllers[assetId] === abortController &&
+              !abortController.signal.aborted
+            )
+          }
 
           try {
             const retryCount = get().asset.retryCount
             const previousError = get().asset.previousError ?? undefined
-            const abortController = new AbortController()
 
             const preloadDefault = async (
               source?: PlaybackSource | string
             ): Promise<null | shaka.media.PreloadManager> => {
+              if (!isCurrentPreload()) return null
+
               const normalizedSource = normalizePlaybackSource(source)
               const resolvedSource = normalizedSource.source ?? asset.src
 
@@ -466,12 +522,18 @@ export function assetFeature(): MediaFeature<
                 )
               }
 
-              return player.preload(
+              const manager = await player.preload(
                 resolvedSource,
                 undefined,
                 undefined,
                 mergePlayerConfiguration(asset.config, normalizedSource.config)
               )
+              if (!isCurrentPreload()) {
+                void manager?.destroy()
+                return null
+              }
+
+              return manager
             }
 
             let manager: null | shaka.media.PreloadManager = null
@@ -494,7 +556,14 @@ export function assetFeature(): MediaFeature<
                 signal: abortController.signal,
               })
 
+              if (!isCurrentPreload()) return
+
               manager = await preloadDefault(resolved ?? undefined)
+            }
+
+            if (!isCurrentPreload()) {
+              void manager?.destroy()
+              return
             }
 
             if (manager) {
@@ -515,6 +584,13 @@ export function assetFeature(): MediaFeature<
               })
             }
           } catch (error) {
+            if (
+              abortController.signal.aborted ||
+              (error instanceof DOMException && error.name === "AbortError")
+            ) {
+              return
+            }
+
             const err = toError(error)
             options?.onError?.(err, asset)
             console.error("[useAsset] Preload error:", error)
@@ -536,6 +612,11 @@ export function assetFeature(): MediaFeature<
         retryCount: 0,
         setOptions: (options, ownerId) => {
           set(({ asset }) => {
+            asset.optionsByOwner[ownerId] = options
+            asset.optionsOwnerOrder = [
+              ...asset.optionsOwnerOrder.filter((id) => id !== ownerId),
+              ownerId,
+            ]
             asset.installedOptions = options
             asset.optionsOwnerId = ownerId
           })
@@ -582,6 +663,10 @@ export function useAsset<TAsset extends Asset = Asset>(
 
   const cancelPreload = useCallback(
     (assetId: string) => {
+      const preloadAbortController = api.getState().asset
+        .preloadAbortControllers[assetId]
+      preloadAbortController?.abort()
+
       const preloadManagers = (api.getState() as unknown as PlayerStore).player
         .preloadManagers as Map<string, shaka.media.PreloadManager>
       const manager = preloadManagers.get(assetId)
@@ -595,6 +680,10 @@ export function useAsset<TAsset extends Asset = Asset>(
           }
         )
       }
+
+      ;(api as unknown as ImmerStoreApi<AssetStore>).setState(({ asset }) => {
+        delete asset.preloadAbortControllers[assetId]
+      })
     },
     [api]
   )

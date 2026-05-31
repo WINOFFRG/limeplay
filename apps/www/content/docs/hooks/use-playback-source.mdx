@@ -48,6 +48,64 @@ export function VideoSource({ playlist }: { playlist: VideoAsset[] }) {
 }
 ```
 
+## Feature Registration
+
+`use-playback-source` is a controller helper, not a store feature. Register `assetFeature` with your media kit, then mount `PlaybackSourceController` inside the player tree.
+
+```tsx title="lib/media.ts"
+"use client"
+
+import { assetFeature } from "@/hooks/limeplay/use-asset"
+import { playbackFeature } from "@/hooks/limeplay/use-playback"
+import { playerFeature } from "@/hooks/limeplay/use-player"
+import { playlistFeature } from "@/hooks/limeplay/use-playlist"
+import { createMediaKit } from "@/components/limeplay/media-provider"
+
+export const media = createMediaKit({
+  features: [
+    playerFeature(),
+    playlistFeature(),
+    playbackFeature(),
+    assetFeature(),
+  ] as const,
+})
+```
+
+```tsx
+import type { UsePlaybackSourceOptions } from "@/hooks/limeplay/use-playback-source"
+import { PlaybackSourceController } from "@/hooks/limeplay/use-playback-source"
+
+export function Source<TAsset extends { src?: string }>(
+  props: UsePlaybackSourceOptions<TAsset>
+) {
+  return <PlaybackSourceController {...props} />
+}
+```
+
+## Store
+
+| State | Owner | Description |
+| ----- | ----- | ----------- |
+| `asset`, `playlist`, `mediaSrc` | `UsePlaybackSourceOptions` | Source inputs normalized by `PlaybackSourceController`. |
+| `sourceKey` | `UsePlaybackSourceOptions` | Optional stable key used to avoid duplicate playlist loads. |
+| `player` | `use-player` | The current Shaka player instance required before loading. |
+
+## Actions
+
+| Action | Symbol | Description |
+| ------ | ------ | ----------- |
+| Load source | `PlaybackSourceController` | Mounts a controller that calls `usePlaybackSource`. |
+| Normalize options | `usePlaybackSource` | Converts one asset, a playlist, or `mediaSrc` into a playlist load. |
+| Load playlist | `loadPlaylist` from `useAsset` | Receives normalized assets and the configured `initialIndex`. |
+
+## Events
+
+| Event | Emitted by | Description |
+| ----- | ---------- | ----------- |
+| `playlistchange` | `use-playlist` | Fired after the normalized source is loaded into the queue and the active item changes. |
+| `playerready` | `use-player` | The controller waits for a player instance before calling `loadPlaylist`. |
+| None | `use-playback-source` | The hook itself does not emit custom events. |
+
 ## API Reference
 
 <AutoTypeTable

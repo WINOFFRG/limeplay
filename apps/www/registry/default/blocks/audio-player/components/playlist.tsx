@@ -1,7 +1,7 @@
 "use client"
 
 import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react"
-import { Loader2, Volume2Icon } from "lucide-react"
+import { Volume2Icon } from "lucide-react"
 import { useCallback, useMemo, useRef } from "react"
 
 import type { AudioPlayerAsset } from "@/registry/default/blocks/audio-player/components/audio-source"
@@ -23,7 +23,7 @@ export function Playlist() {
 
   const { currentItem, isPreloaded, orderedItems, skipToId } =
     useAsset<AudioPlayerAsset>()
-  const { error, isLoading, items, refetch } = useAudioSource()
+  const { items } = useAudioSource()
 
   const displayAssets = useMemo(() => {
     if (orderedItems.length > 0)
@@ -97,39 +97,13 @@ export function Playlist() {
           ref={scrollRef}
           style={{ scrollbarWidth: "none" }}
         >
-          {isLoading && (
-            <div className="flex items-center justify-center py-14">
-              <Loader2 className="size-4 animate-spin text-white/15" />
-            </div>
-          )}
-
-          {error && (
-            <div className="py-12 text-center">
-              <p className="text-[13px] text-white/25">
-                Couldn&apos;t load queue
-              </p>
-              <button
-                className={`
-                  mt-2 rounded-md px-3 py-1.5 text-[12px] text-white/40 transition-[color,background-color] duration-150 ease-out
-                  hover:bg-white/5 hover:text-white/60
-                `}
-                onClick={() => refetch()}
-                type="button"
-              >
-                Retry
-              </button>
-            </div>
-          )}
-
-          {!isLoading && !error && displayAssets.length === 0 && (
+          {displayAssets.length === 0 && (
             <div className="py-14 text-center text-[13px] text-white/15">
               Queue is empty
             </div>
           )}
 
-          {!isLoading &&
-            !error &&
-            displayAssets.map(({ asset, id }, index) => (
+          {displayAssets.map(({ asset, id }, index) => (
               <TrackRow
                 asset={asset}
                 index={index}
@@ -178,11 +152,13 @@ function TrackRow({
       onClick={onSelect}
     >
       <div className="relative size-10 shrink-0 overflow-hidden rounded-sm bg-white/4 outline-1 -outline-offset-1 outline-white/10">
-        <img
-          alt=""
-          className="absolute inset-0 size-full object-cover"
-          src={asset.poster ?? ""}
-        />
+        {asset.poster && (
+          <img
+            alt=""
+            className="absolute inset-0 size-full object-cover"
+            src={asset.poster}
+          />
+        )}
         <div
           className={cn(
             "absolute inset-0 flex items-center justify-center transition-[background-color] duration-150 ease-out",
