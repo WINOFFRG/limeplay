@@ -21,7 +21,8 @@ import { usePlaylistStore } from "@/registry/default/hooks/use-playlist"
 
 export function Playlist() {
   const currentItem = usePlaylistStore(
-    (state) => state.currentItem as null | { id: string; properties: VideoPlayerAsset }
+    (state) =>
+      state.currentItem as null | { id: string; properties: VideoPlayerAsset }
   )
   const preloadAsset = useAssetStore((state) => state.preloadAsset) as (
     asset: VideoPlayerAsset

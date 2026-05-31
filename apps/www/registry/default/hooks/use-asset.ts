@@ -251,7 +251,8 @@ export function assetFeature(): MediaFeature<
             if (asset.optionsOwnerId !== ownerId) return
 
             const nextOwnerId =
-              asset.optionsOwnerOrder[asset.optionsOwnerOrder.length - 1] ?? null
+              asset.optionsOwnerOrder[asset.optionsOwnerOrder.length - 1] ??
+              null
             asset.optionsOwnerId = nextOwnerId
             asset.installedOptions = nextOwnerId
               ? asset.optionsByOwner[nextOwnerId]
@@ -499,8 +500,8 @@ export function assetFeature(): MediaFeature<
 
           const isCurrentPreload = () => {
             return (
-              get().asset.preloadAbortControllers[assetId] === abortController &&
-              !abortController.signal.aborted
+              get().asset.preloadAbortControllers[assetId] ===
+                abortController && !abortController.signal.aborted
             )
           }
 
@@ -663,8 +664,8 @@ export function useAsset<TAsset extends Asset = Asset>(
 
   const cancelPreload = useCallback(
     (assetId: string) => {
-      const preloadAbortController = api.getState().asset
-        .preloadAbortControllers[assetId]
+      const preloadAbortController =
+        api.getState().asset.preloadAbortControllers[assetId]
       preloadAbortController?.abort()
 
       const preloadManagers = (api.getState() as unknown as PlayerStore).player
