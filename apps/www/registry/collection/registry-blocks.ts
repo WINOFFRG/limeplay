@@ -1,6 +1,6 @@
 import { type Registry } from "shadcn/schema"
 
-const BASE_SRC_URL = "blocks/linear-player"
+const VIDEO_PLAYER_SRC_URL = "blocks/video-player"
 
 export const blocks: Registry["items"] = [
   {
@@ -13,68 +13,68 @@ export const blocks: Registry["items"] = [
       "shaka-player@^4",
       "lodash.clamp",
     ],
-    description: "Modern seamless flat linear.app Media Player",
+    description: "Modern seamless flat video player",
     files: [
       {
-        path: `${BASE_SRC_URL}/page.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/page.tsx`,
         target: "app/player/page.tsx",
         type: "registry:page",
       },
       {
-        path: `${BASE_SRC_URL}/components/media-player.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/components/media-player.tsx`,
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/volume-state-control.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/components/volume-state-control.tsx`,
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/playback-state-control.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/components/playback-state-control.tsx`,
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/volume-slider-control.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/components/volume-slider-control.tsx`,
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/timeline-slider-control.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/components/timeline-slider-control.tsx`,
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/bottom-controls.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/components/bottom-controls.tsx`,
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/button.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/components/button.tsx`,
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/lib/media-kit.ts`,
+        path: `${VIDEO_PLAYER_SRC_URL}/lib/media-kit.ts`,
         type: "registry:lib",
       },
       {
-        path: `${BASE_SRC_URL}/components/playlist.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/components/playlist.tsx`,
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/captions-state-control.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/components/captions-state-control.tsx`,
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/playback-rate-control.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/components/playback-rate-control.tsx`,
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/ui/toggle.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/ui/toggle.tsx`,
         target: "components/ui/toggle.tsx",
         type: "registry:ui",
       },
       {
-        path: `${BASE_SRC_URL}/components/volume-group-control.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/components/volume-group-control.tsx`,
         type: "registry:component",
       },
       {
-        path: `${BASE_SRC_URL}/components/pip-control.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/components/pip-control.tsx`,
         type: "registry:component",
       },
     ],
@@ -84,7 +84,7 @@ export const blocks: Registry["items"] = [
         src: "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8",
       },
     },
-    name: "linear-player",
+    name: "video-player",
     registryDependencies: [
       "dropdown-menu",
       "player-layout",
@@ -112,134 +112,88 @@ export const blocks: Registry["items"] = [
       "use-picture-in-picture",
       "use-playlist",
       "use-asset",
+      "use-media",
+      "use-playback-source",
     ],
     type: "registry:block",
   },
   {
     author: "Rohan Gupta (@winoffrg)",
-    dependencies: ["@phosphor-icons/react", "zustand", "shaka-player@^4"],
-    description: "Limeplay Basic Player",
-    files: [
-      {
-        path: `blocks/basic-player/page.tsx`,
-        target: "app/player/page.tsx",
-        type: "registry:page",
-      },
-      {
-        path: `blocks/basic-player/components/media-player.tsx`,
-        type: "registry:component",
-      },
-      {
-        path: `blocks/basic-player/components/playback-state-control.tsx`,
-        type: "registry:component",
-      },
-      {
-        path: `blocks/basic-player/components/media-element.tsx`,
-        type: "registry:component",
-      },
-      {
-        path: `blocks/basic-player/lib/media-kit.ts`,
-        type: "registry:lib",
-      },
-    ],
-    meta: {
-      iframeHeight: "750px",
-      props: {
-        src: "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8",
-      },
-    },
-    name: "basic-player",
-    registryDependencies: [
-      "media-provider",
-      "player-layout",
-      "root-container",
-      "fallback-poster",
-      "limeplay-logo",
-      "media",
-      "utils",
-      "button",
-      "playback-control",
-      "use-player",
-      "use-playback",
-    ],
-    type: "registry:block",
-  },
-  {
-    author: "Rohan Gupta (@winoffrg)",
-    categories: ["pro"],
     dependencies: [
       "@phosphor-icons/react",
       "@radix-ui/react-slot",
-      "async-retry",
       "motion",
       "zustand",
       "shaka-player@^4",
     ],
-    description: "YouTube Music style audio player with playlist support",
-    devDependencies: ["@types/async-retry"],
+    description: "Compact audio player with playlist support",
     files: [
       {
-        path: "blocks/youtube-music/lib/media-kit.ts",
+        path: "blocks/audio-player/lib/media-kit.ts",
         type: "registry:lib",
       },
       {
-        path: "blocks/youtube-music/components/media-player.tsx",
+        path: "blocks/audio-player/components/media-player.tsx",
         type: "registry:component",
       },
       {
-        path: "blocks/youtube-music/components/controls.tsx",
+        path: "blocks/audio-player/components/audio-source.tsx",
         type: "registry:component",
       },
       {
-        path: "blocks/youtube-music/components/playback-controls.tsx",
+        path: "blocks/audio-player/components/controls.tsx",
         type: "registry:component",
       },
       {
-        path: "blocks/youtube-music/components/action-controls.tsx",
+        path: "blocks/audio-player/components/playback-controls.tsx",
         type: "registry:component",
       },
       {
-        path: "blocks/youtube-music/components/playback-mode-controls.tsx",
+        path: "blocks/audio-player/components/action-controls.tsx",
         type: "registry:component",
       },
       {
-        path: "blocks/youtube-music/components/volume-group-control.tsx",
+        path: "blocks/audio-player/components/playback-mode-controls.tsx",
         type: "registry:component",
       },
       {
-        path: "blocks/youtube-music/components/fixed-timeline-control.tsx",
+        path: "blocks/audio-player/components/volume-group-control.tsx",
         type: "registry:component",
       },
       {
-        path: "blocks/youtube-music/components/track-info.tsx",
+        path: "blocks/audio-player/components/fixed-timeline-control.tsx",
         type: "registry:component",
       },
       {
-        path: "blocks/youtube-music/components/playlist.tsx",
+        path: "blocks/audio-player/components/track-info.tsx",
         type: "registry:component",
       },
       {
-        path: "blocks/youtube-music/components/icons.tsx",
+        path: "blocks/audio-player/components/playlist.tsx",
         type: "registry:component",
       },
       {
-        path: "blocks/youtube-music/hooks/use-playlist-asset.ts",
+        path: "blocks/audio-player/components/icons.tsx",
+        type: "registry:component",
+      },
+      {
+        path: "blocks/audio-player/hooks/use-playlist-asset.ts",
         type: "registry:hook",
       },
       {
-        path: "blocks/youtube-music/components/button.tsx",
+        path: "blocks/audio-player/components/button.tsx",
         type: "registry:component",
       },
       {
-        path: "blocks/youtube-music/youtube-music.module.css",
-        target: "components/youtube-music/youtube-music.module.css",
+        path: "blocks/audio-player/audio-player.module.css",
+        target: "components/audio-player/audio-player.module.css",
         type: "registry:style",
       },
     ],
     meta: {
       iframeHeight: "100px",
     },
-    name: "youtube-music",
+    name: "audio-player",
     registryDependencies: [
       "media-provider",
       "media",
@@ -257,9 +211,11 @@ export const blocks: Registry["items"] = [
       "use-captions",
       "use-playlist",
       "use-asset",
+      "use-media",
+      "use-playback-source",
       "utils",
     ],
-    title: "YouTube Music Audio Player",
+    title: "Audio Player",
     type: "registry:block",
   },
 ]

@@ -6,8 +6,9 @@ import { useMediaFeatureStore } from "@/registry/default/ui/media-provider"
 
 export const MEDIA_FEATURE_KEY = "media"
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface MediaProviderProps {}
+export interface MediaProviderProps {
+  debug?: boolean
+}
 
 export interface MediaStore {
   media: {

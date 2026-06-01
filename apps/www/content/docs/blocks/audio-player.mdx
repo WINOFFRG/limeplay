@@ -1,0 +1,62 @@
+---
+title: Audio Player
+description: A compact audio player with playlist support, timeline scrubbing, volume controls, repeat and shuffle modes, and track artwork.
+component: audio-player
+preview: audio-player
+registry: default
+status: free
+---
+
+## Installation
+
+```npm
+npx shadcn add @limeplay/audio-player
+```
+
+## Usage
+
+```tsx
+import {
+  AudioPlayer,
+  type AudioPlayerAsset,
+} from "@/components/limeplay/audio-player/components/media-player"
+
+const playlist: AudioPlayerAsset[] = [
+  {
+    duration: 372_000,
+    id: "soundhelix-1",
+    poster: "https://placehold.co/160x160/png",
+    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    title: "SoundHelix Song 1",
+  },
+]
+
+export function Player() {
+  return <AudioPlayer playlist={playlist} />
+}
+```
+
+## Features
+
+- Playlist queue with track artwork, title, genre, and duration.
+- Fixed timeline with elapsed, duration, hover time, and scrub support.
+- Previous, play/pause, next, volume, mute, repeat, and shuffle controls.
+- Playback URL resolution for direct `src` values or `playbackUrls.primary` endpoints.
+- Automatic skip/reload behavior for recoverable load and playback failures.
+
+## Notes
+
+- `AudioPlayer` does not ship with bundled tracks. Pass a playlist from your app.
+- Use `duration` in milliseconds when you want stable duration labels before metadata loads.
+- Use `resolveSource` for signed audio URLs, token refresh, or custom playback URL APIs.
+
+## API Reference
+
+<AutoTypeTable
+  path="./registry/default/blocks/audio-player/components/media-player.tsx"
+  name="AudioPlayerProps"
+/>
+
+<Attribution name="Youtube Music" href="https://music.youtube.com" />
+
+<License />

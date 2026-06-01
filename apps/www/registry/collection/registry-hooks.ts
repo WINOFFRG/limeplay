@@ -111,6 +111,18 @@ export const hooks: Registry["items"] = [
   {
     files: [
       {
+        path: "hooks/use-playback-source.ts",
+        target: `${TARGET_BASE_PATH}/use-playback-source.ts`,
+        type: "registry:hook",
+      },
+    ],
+    name: "use-playback-source",
+    registryDependencies: ["use-asset", "use-player"],
+    type: "registry:hook",
+  },
+  {
+    files: [
+      {
         path: "hooks/use-interval.ts",
         target: `${TARGET_BASE_PATH}/use-interval.ts`,
         type: "registry:hook",

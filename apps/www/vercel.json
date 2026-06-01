@@ -7,6 +7,46 @@
       "permanent": true
     },
     {
+      "source": "/blocks/linear-player",
+      "destination": "/blocks/video-player",
+      "permanent": true
+    },
+    {
+      "source": "/blocks/youtube-music",
+      "destination": "/blocks/audio-player",
+      "permanent": true
+    },
+    {
+      "source": "/docs/blocks/linear-player",
+      "destination": "/blocks/video-player",
+      "permanent": true
+    },
+    {
+      "source": "/docs/blocks/youtube-music",
+      "destination": "/blocks/audio-player",
+      "permanent": true
+    },
+    {
+      "source": "/r/linear-player.json",
+      "destination": "/r/video-player.json",
+      "permanent": true
+    },
+    {
+      "source": "/r/basic-player.json",
+      "destination": "/r/video-player.json",
+      "permanent": true
+    },
+    {
+      "source": "/r/pro/youtube-music.json",
+      "destination": "/r/audio-player.json",
+      "permanent": true
+    },
+    {
+      "source": "/r/pro/audio-player.json",
+      "destination": "/r/audio-player.json",
+      "permanent": true
+    },
+    {
       "source": "/r/pro/:path*",
       "destination": "/403",
       "permanent": false

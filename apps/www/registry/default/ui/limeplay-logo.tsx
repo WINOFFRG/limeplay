@@ -5,15 +5,7 @@ export function LimeplayLogo(props: React.SVGProps<SVGSVGElement>) {
 
   return (
     <svg
-      className={cn(
-        `
-          size-18 text-primary
-          sm:size-24
-          md:size-36
-          lg:size-48
-        `,
-        className
-      )}
+      className={cn("h-auto w-1/5 text-primary", className)}
       viewBox="248.92 245.57 243.13 238.13"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
