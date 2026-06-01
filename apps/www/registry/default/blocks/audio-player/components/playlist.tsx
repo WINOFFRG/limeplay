@@ -19,7 +19,8 @@ import { usePlaylistStore } from "@/registry/default/hooks/use-playlist"
 
 export function Playlist() {
   const currentItem = usePlaylistStore(
-    (state) => state.currentItem as null | { id: string; properties: AudioPlayerAsset }
+    (state) =>
+      state.currentItem as null | { id: string; properties: AudioPlayerAsset }
   )
   const preloadManagers = usePlayerStore((state) => state.preloadManagers)
   const queue = usePlaylistStore(
