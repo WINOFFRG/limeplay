@@ -14,16 +14,32 @@ import {
 import { cn } from "@/lib/utils"
 import { useAudioSource } from "@/registry/default/blocks/audio-player/components/audio-source"
 import { Button } from "@/registry/default/blocks/audio-player/components/button"
-import { useAsset } from "@/registry/default/hooks/use-asset"
+import { usePlayerStore } from "@/registry/default/hooks/use-player"
 import { usePlaylistStore } from "@/registry/default/hooks/use-playlist"
 
 export function Playlist() {
+  const currentItem = usePlaylistStore(
+    (state) => state.currentItem as null | { id: string; properties: AudioPlayerAsset }
+  )
+  const preloadManagers = usePlayerStore((state) => state.preloadManagers)
+  const queue = usePlaylistStore(
+    (state) => state.queue as { id: string; properties: AudioPlayerAsset }[]
+  )
   const shuffle = usePlaylistStore((state) => state.shuffle)
+  const shuffleOrder = usePlaylistStore((state) => state.shuffleOrder)
+  const skipToId = usePlaylistStore((state) => state.skipToId)
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const { currentItem, isPreloaded, orderedItems, skipToId } =
-    useAsset<AudioPlayerAsset>()
   const { items } = useAudioSource()
+  const orderedItems = useMemo(() => {
+    if (!shuffle || shuffleOrder.length === 0) return queue
+
+    return shuffleOrder
+      .map((index) => queue[index])
+      .filter((item): item is { id: string; properties: AudioPlayerAsset } =>
+        Boolean(item)
+      )
+  }, [queue, shuffle, shuffleOrder])
 
   const displayAssets = useMemo(() => {
     if (orderedItems.length > 0)
@@ -110,7 +126,8 @@ export function Playlist() {
               isActive={currentItem?.id === id}
               key={id}
               onSelect={() => handleAssetSelect(id)}
-              preloaded={isPreloaded(id)}
+              preloaded={preloadManagers.has(id)}
+              setSize={displayAssets.length}
             />
           ))}
         </div>
@@ -130,17 +147,23 @@ function formatDuration(ms?: number) {
 
 function TrackRow({
   asset,
+  index,
   isActive,
   onSelect,
+  preloaded,
+  setSize,
 }: {
   asset: AudioPlayerAsset
   index: number
   isActive: boolean
   onSelect: () => void
   preloaded: boolean
+  setSize: number
 }) {
   return (
     <Button
+      aria-posinset={index + 1}
+      aria-setsize={setSize}
       className={cn(
         `
           group relative flex h-auto w-full cursor-pointer items-center gap-4 rounded-lg px-3 py-2.5 text-left transition-[color,background-color]
@@ -186,19 +209,27 @@ function TrackRow({
       </div>
 
       <div className="min-w-0 flex-1">
-        <p
-          className={cn(
-            "truncate text-[13px] leading-snug",
-            isActive
-              ? "font-medium text-white"
-              : `
-                text-white/70
-                group-hover:text-white/80
-              `
+        <div className="flex items-center gap-2">
+          <span className="w-4 shrink-0 text-[10px] text-white/25 tabular-nums">
+            {index + 1}
+          </span>
+          <p
+            className={cn(
+              "truncate text-[13px] leading-snug",
+              isActive
+                ? "font-medium text-white"
+                : `
+                  text-white/70
+                  group-hover:text-white/80
+                `
+            )}
+          >
+            {asset.title ?? "Untitled track"}
+          </p>
+          {preloaded && !isActive && (
+            <span className="size-1.5 shrink-0 rounded-full bg-white/30" />
           )}
-        >
-          {asset.title ?? "Untitled track"}
-        </p>
+        </div>
         {asset.genre && (
           <p className="mt-0.5 truncate text-[11px] text-white/40">
             {asset.genre}
