@@ -147,7 +147,7 @@ async function validateBuiltRegistryJson() {
 
 const SHADCN_REGISTRY_URL = "https://ui.shadcn.com/r/styles/default"
 
-/** Extract common block path prefix from the first file entry, e.g. "blocks/youtube-music" */
+/** Extract common block path prefix from the first file entry, e.g. "blocks/audio-player" */
 function getBlockPrefix(files: Array<{ path: string }>): null | string {
   const first = files[0]?.path
   if (!first) return null

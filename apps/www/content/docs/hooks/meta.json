@@ -3,6 +3,7 @@
   "description": "Player state and utility hooks",
   "pages": [
     "use-asset",
+    "use-playback-source",
     "use-player",
     "use-playback",
     "use-volume",

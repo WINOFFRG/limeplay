@@ -4,9 +4,9 @@ import { FeatureTrailSection } from "@/components/feature-trail-section"
 import { FeatureGrid } from "@/components/features"
 import { Hero } from "@/components/hero"
 import { ImmersiveScrollPlayer } from "@/components/immersive-scroll-player"
-import { PlayerContainer } from "@/components/player-container"
+import { AudioPlayerHover } from "@/components/players/audio-player/hover-player"
+import { VideoPlayerContainer } from "@/components/players/video-player/player-container"
 import { ScrollIndicator } from "@/components/scroll-indicator"
-import { YouTubeMusicHoverPlayer } from "@/components/youtube-music-hover-player"
 
 export default function Home() {
   return (
@@ -21,7 +21,7 @@ export default function Home() {
             />
           }
         >
-          <PlayerContainer />
+          <VideoPlayerContainer />
         </Suspense>
       </ImmersiveScrollPlayer>
       <ScrollIndicator />
@@ -71,7 +71,7 @@ export default function Home() {
           </p>
         </div>
       </FeatureTrailSection>
-      <YouTubeMusicHoverPlayer />
+      <AudioPlayerHover />
       <div
         className={`
           mx-auto w-full
