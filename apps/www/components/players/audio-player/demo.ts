@@ -5,7 +5,7 @@ import type {
 
 export const AUDIO_PLAYER_DEMO_PLAYLIST_ID = "324531068"
 
-const API_BASE_URL = "https://limeplay.winoff.workers.dev/api/playlist"
+const API_BASE_URL = "https://limeplay.winoffrg.workers.dev/api/playlist"
 
 export interface AudioPlayerPlaylistApiResponse {
   cached_at: string
