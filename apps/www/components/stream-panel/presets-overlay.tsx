@@ -6,7 +6,6 @@ import { useEffect, useMemo, useState } from "react"
 
 import type { StreamFeature, StreamPreset } from "@/lib/stream-presets"
 
-import { useStreamPanelStore } from "@/lib/docs-dial-store"
 import { getStreamSupport, initStreamSupport } from "@/lib/stream-support"
 import { cn } from "@/lib/utils"
 
@@ -77,9 +76,7 @@ export function PresetsOverlay({
   show,
   title = "Presets",
 }: PresetsOverlayProps) {
-  const presetId = useStreamPanelStore((s) => s.presetId)
   const [, setProbed] = useState(false)
-  const value = selectedPresetId ?? presetId
 
   const allPresets = useMemo(
     () => Object.values(groupedPresets).flat(),
@@ -100,17 +97,17 @@ export function PresetsOverlay({
         title={title}
       >
         <div className="no-scrollbar flex-1 overflow-y-auto p-2 pt-1">
-          <MenuPrimitive.RadioGroup onValueChange={onSelect} value={value}>
-            {Object.entries(groupedPresets).map(([group, items], index) => (
+          <MenuPrimitive.RadioGroup
+            onValueChange={onSelect}
+            value={selectedPresetId ?? ""}
+          >
+            {Object.entries(groupedPresets).map(([group, items]) => (
               <MenuPrimitive.Group className="space-y-1" key={group}>
-                {index > 0 && (
-                  <MenuPrimitive.Separator className="mx-3 my-2 h-px bg-border/45" />
-                )}
-
-                <MenuPrimitive.GroupLabel className="
-                  px-2 pt-1 pb-0.5 text-[10px] leading-none font-semibold tracking-[0.16em] text-muted-foreground/70 uppercase
-                ">
-                  {group}
+                <MenuPrimitive.GroupLabel className="flex items-center gap-2 px-2 pt-1 pb-0.5">
+                  <span className="text-[10px] font-semibold text-muted-foreground/70 uppercase">
+                    {group}
+                  </span>
+                  <MenuPrimitive.Separator className="h-px flex-1 bg-border/45" />
                 </MenuPrimitive.GroupLabel>
 
                 {items.map((preset) => {
@@ -128,13 +125,13 @@ export function PresetsOverlay({
                       <MenuPrimitive.RadioItem
                         className={cn(
                           `
-                            relative flex w-full items-center gap-3 rounded-[18px] p-2.5 text-sm outline-hidden
+                            relative flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-sm outline-hidden
                             transition-[background-color,color,transform] select-none
                             hover:bg-foreground/4
                             focus:bg-foreground/4
                             active:scale-[0.985]
                           `,
-                          preset.id === value && "font-medium",
+                          preset.id === selectedPresetId && "font-medium",
                           !support.supported && "pointer-events-none opacity-40"
                         )}
                         value={preset.id}
@@ -144,7 +141,7 @@ export function PresetsOverlay({
                             <span className="truncate">{preset.name}</span>
                           </div>
                           {preset.description ? (
-                            <span className="mt-1 block truncate text-xs text-muted-foreground">
+                            <span className="mt-1 block truncate text-[11px] text-muted-foreground">
                               {preset.description}
                             </span>
                           ) : null}
@@ -153,10 +150,10 @@ export function PresetsOverlay({
                               Unsupported
                             </span>
                           ) : displayFeatures.length > 0 ? (
-                            <div className="mt-1 flex flex-wrap gap-1">
+                            <div className="mt-1.5 flex flex-wrap gap-1">
                               {displayFeatures.map((feature) => (
                                 <span
-                                  className="rounded-md bg-foreground/5 px-1.5 py-0.5 text-[10px]/3 font-medium text-muted-foreground"
+                                  className="rounded-xs bg-foreground/5 px-1.5 py-0.5 text-[10px]/3 font-medium text-muted-foreground"
                                   key={feature}
                                 >
                                   {FEATURE_LABELS[feature]}
@@ -192,6 +189,8 @@ function getDisplayFeatures(
 ): StreamFeature[] {
   return features
     .filter((feature) => !omitLive || feature !== "LIVE")
-    .toSorted((a, b) => FEATURE_PRIORITY.indexOf(a) - FEATURE_PRIORITY.indexOf(b))
+    .toSorted(
+      (a, b) => FEATURE_PRIORITY.indexOf(a) - FEATURE_PRIORITY.indexOf(b)
+    )
     .slice(0, max)
 }

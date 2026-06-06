@@ -3,10 +3,10 @@
 import { AnimatePresence, m } from "motion/react"
 import React, { useState } from "react"
 
+import { useStreamPanelStore } from "@/components/stream-panel/use-stream-panel"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { useStreamPanelStore } from "@/lib/docs-dial-store"
 import { cn } from "@/lib/utils"
 
 import { OverlayShell, type OverlayShellPlacement } from "./overlay-shell"
@@ -133,7 +133,7 @@ export function CustomOverlay({
           </label>
           <Input
             aria-invalid={urlError}
-            className="h-9 rounded-2xl text-sm"
+            className="h-9 rounded-lg text-sm"
             id="custom-stream-url"
             onChange={(e) => handleUrlChange(e.target.value)}
             placeholder="https://example.com/stream.m3u8"
@@ -167,7 +167,7 @@ export function CustomOverlay({
           </div>
           <Textarea
             aria-invalid={configError}
-            className="min-h-24 resize-none rounded-2xl font-mono text-sm"
+            className="min-h-32 resize-none rounded-lg font-mono text-sm"
             id="custom-stream-config"
             onChange={(e) => handleConfigChange(e.target.value)}
             onPaste={handleConfigPaste}
@@ -195,7 +195,7 @@ export function CustomOverlay({
                 Stream Name
               </label>
               <Input
-                className="h-9 rounded-2xl text-sm"
+                className="h-9 rounded-lg text-sm"
                 id="custom-stream-name"
                 onChange={(e) => setSaveName(e.target.value)}
                 placeholder="My custom stream"
@@ -209,7 +209,7 @@ export function CustomOverlay({
           {showSave ? (
             <>
               <Button
-                className="h-9 flex-1 rounded-2xl text-sm"
+                className="h-9 flex-1 rounded-lg text-sm"
                 disabled={!canSave}
                 onClick={handleSave}
                 size="sm"
@@ -217,7 +217,7 @@ export function CustomOverlay({
                 Save
               </Button>
               <Button
-                className="h-9 rounded-2xl text-sm"
+                className="h-9 rounded-lg text-sm"
                 onClick={() => {
                   setShowSave(false)
                   setSaveName("")
@@ -231,7 +231,7 @@ export function CustomOverlay({
           ) : (
             <>
               <Button
-                className="h-9 flex-1 rounded-2xl text-sm"
+                className="h-9 flex-1 rounded-lg text-sm"
                 disabled={!canLoad}
                 onClick={handleLoad}
                 size="sm"
@@ -239,7 +239,7 @@ export function CustomOverlay({
                 Load Stream
               </Button>
               <Button
-                className="h-9 rounded-2xl text-sm"
+                className="h-9 rounded-lg text-sm"
                 disabled={!canLoad}
                 onClick={() => setShowSave(true)}
                 size="sm"

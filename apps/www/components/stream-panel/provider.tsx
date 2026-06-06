@@ -1,19 +1,22 @@
 "use client"
 
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover"
-import React, { createContext, use, useCallback, useMemo, useState } from "react"
+import React, {
+  createContext,
+  use,
+  useCallback,
+  useMemo,
+  useState,
+} from "react"
 
 import type { StreamPanelPlaylistPreset } from "@/components/stream-panel/content-catalog"
-import type { StreamPanelPlayerType } from "@/lib/docs-dial-store"
+import type { StreamPanelPlayerType } from "@/components/stream-panel/use-stream-panel"
 import type { StreamPreset } from "@/lib/stream-presets"
 
 export interface StreamPanelController {
   onLoadStream?: (src: string, config?: string) => void
   onPlaylistChange?: (playlist: StreamPanelPlaylistPreset) => void
-  onPresetChange?: (
-    preset: StreamPreset,
-    kind?: "live" | "stream"
-  ) => void
+  onPresetChange?: (preset: StreamPreset, kind?: "live" | "stream") => void
   playerType: StreamPanelPlayerType
 }
 

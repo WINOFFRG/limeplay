@@ -1,16 +1,20 @@
 "use client"
 
+import type { CentralIconBaseProps } from "@central-icons-react/round-filled-radius-0-stroke-1/CentralIconBase"
+
+import { IconBookmarkPlus } from "@central-icons-react/round-filled-radius-0-stroke-1/IconBookmarkPlus"
+import { IconProjects } from "@central-icons-react/round-filled-radius-0-stroke-1/IconProjects"
 import { ChevronRight } from "lucide-react"
 import React, { useMemo, useState } from "react"
 
-import type { StreamPanelContentKind } from "@/lib/docs-dial-store"
+import type { StreamPanelContentKind } from "@/components/stream-panel/use-stream-panel"
 
 import { getPlaylistPresetsForType } from "@/components/stream-panel/content-catalog"
+import { useStreamPanelStore } from "@/components/stream-panel/use-stream-panel"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Popover, PopoverContent } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { useStreamPanelStore } from "@/lib/docs-dial-store"
 import { getPresetsForType, type StreamPreset } from "@/lib/stream-presets"
 import { cn } from "@/lib/utils"
 
@@ -18,7 +22,6 @@ import type { OverlayShellPlacement } from "./overlay-shell"
 
 import { ContentOverviewOverlay } from "./content-overview-overlay"
 import { CustomOverlay } from "./custom-overlay"
-import { type IconProps, PencilEdit, StackTemplate } from "./icons"
 import {
   type PanelPosition,
   STREAM_PANEL_CONTENT_OVERLAYS,
@@ -100,8 +103,7 @@ export function StreamPanel({
     const preset = presets.find((p) => p.id === presetId)
     if (!preset) return
 
-    store.setPresetId(presetId)
-    store.setContentSelection(playerType, { id: presetId, kind })
+    store.setContentSelection(playerType, { id: presetId, index: 0, kind })
     onPresetChange?.(preset, kind)
   }
 
@@ -167,112 +169,135 @@ export function StreamPanel({
 
   const content = (
     <div
-      className="relative mt-2 flex min-h-0 w-full flex-col gap-2 overflow-visible"
+      className="relative mt-2 grid max-h-(--stream-panel-max-height,100dvh) min-h-0 w-full overflow-hidden rounded-lg"
       data-stream-panel-root=""
     >
-      <Field className="gap-0">
-        <FieldLabel className="mx-2 text-[10px] text-muted-foreground/70 uppercase">
-          Media Settings
-        </FieldLabel>
+      <div
+        className={cn(
+          "col-start-1 row-start-1 flex min-h-0 w-full flex-col gap-2",
+          activeOverlay !== STREAM_PANEL_OVERLAY.NONE &&
+            "pointer-events-none absolute inset-x-0 top-0 opacity-0"
+        )}
+        inert={activeOverlay !== STREAM_PANEL_OVERLAY.NONE ? true : undefined}
+      >
+        <Field className="gap-0">
+          <FieldLabel className="mx-2 text-[10px] text-muted-foreground/70 uppercase">
+            Media Settings
+          </FieldLabel>
 
-        <PanelToggleRow onValueChange={store.setMuted} value={store.muted}>
-          Muted
-        </PanelToggleRow>
-        <PanelToggleRow
-          onValueChange={store.setAutoplay}
-          value={store.autoplay}
-        >
-          Autoplay
-        </PanelToggleRow>
-      </Field>
+          <PanelToggleRow onValueChange={store.setMuted} value={store.muted}>
+            Muted
+          </PanelToggleRow>
+          <PanelToggleRow
+            onValueChange={store.setAutoplay}
+            value={store.autoplay}
+          >
+            Autoplay
+          </PanelToggleRow>
+        </Field>
 
-      <Separator className="h-px bg-border/45" />
+        <Separator className="h-px bg-border/45" />
 
-      <PanelActionRow
-        detail={selectedContentName}
-        Icon={StackTemplate}
-        label="Presets"
-        onClick={() => openOverlay(STREAM_PANEL_OVERLAY.CONTENT)}
-      />
-
-      <PanelActionRow
-        detail={
-          store.savedStreams.length > 0
-            ? `${store.savedStreams.length} saved stream${
-                store.savedStreams.length > 1 ? "s" : ""
-              }`
-            : "Add a custom stream"
-        }
-        Icon={PencilEdit}
-        label="Saved Streams"
-        onClick={() => openOverlay(STREAM_PANEL_OVERLAY.SAVED)}
-      />
-
-      {presetOverlays.map((presetOverlay) => (
-        <PresetsOverlay
-          groupedPresets={presetOverlay.groupedPresets}
-          key={presetOverlay.overlay}
-          onBack={() => openOverlay(STREAM_PANEL_OVERLAY.CONTENT)}
-          onSelect={(presetId) => {
-            handlePresetChange(presetId, presetOverlay.kind)
-            closeOverlays()
-            setOpen(false)
-          }}
-          placement={getOverlayPlacement(presetOverlay.overlay)}
-          selectedPresetId={
-            contentSelection?.kind === presetOverlay.kind
-              ? contentSelection.id
-              : undefined
-          }
-          show={activeOverlay === presetOverlay.overlay}
-          title={presetOverlay.title}
+        <PanelActionRow
+          detail={selectedContentName}
+          Icon={IconProjects}
+          label="Presets"
+          onClick={() => openOverlay(STREAM_PANEL_OVERLAY.CONTENT)}
         />
-      ))}
 
-      <PlaylistsOverlay
-        onBack={() => openOverlay(STREAM_PANEL_OVERLAY.CONTENT)}
-        onSelect={(playlist) => {
-          store.setContentSelection(playerType, {
-            id: playlist.id,
-            kind: "playlist",
-          })
-          onPlaylistChange?.(playlist)
-          closeOverlays()
-          setOpen(false)
-        }}
-        placement={getOverlayPlacement(STREAM_PANEL_OVERLAY.PLAYLISTS)}
-        playlists={playlistPresets}
-        selection={contentSelection}
-        show={activeOverlay === STREAM_PANEL_OVERLAY.PLAYLISTS}
-      />
+        <PanelActionRow
+          detail={
+            store.savedStreams.length > 0
+              ? `${store.savedStreams.length} saved stream${
+                  store.savedStreams.length > 1 ? "s" : ""
+                }`
+              : "Add a custom stream"
+          }
+          Icon={IconBookmarkPlus}
+          label="Saved Streams"
+          onClick={() => openOverlay(STREAM_PANEL_OVERLAY.SAVED)}
+        />
+      </div>
 
-      <ContentOverviewOverlay
-        liveCount={livePresets.length}
-        onBack={closeOverlays}
-        onSelect={(kind) => {
-          openOverlay(STREAM_PANEL_CONTENT_OVERLAYS[kind])
-        }}
-        placement={getOverlayPlacement(STREAM_PANEL_OVERLAY.CONTENT)}
-        playerType={playerType}
-        playlistCount={playlistPresets.length}
-        show={activeOverlay === STREAM_PANEL_OVERLAY.CONTENT}
-        streamCount={streamPresets.length}
-      />
+      <div
+        className="
+          relative col-start-1 row-start-1 max-h-[inherit] min-h-0 overflow-hidden rounded-lg
+          data-[empty=true]:pointer-events-none data-[empty=true]:absolute data-[empty=true]:inset-0
+        "
+        data-empty={activeOverlay === STREAM_PANEL_OVERLAY.NONE}
+      >
+        <div
+          className="relative max-h-[inherit] min-h-0 rounded-lg"
+          inert={activeOverlay === STREAM_PANEL_OVERLAY.NONE ? true : undefined}
+        >
+          {presetOverlays.map((presetOverlay) => (
+            <PresetsOverlay
+              groupedPresets={presetOverlay.groupedPresets}
+              key={presetOverlay.overlay}
+              onBack={() => openOverlay(STREAM_PANEL_OVERLAY.CONTENT)}
+              onSelect={(presetId) => {
+                handlePresetChange(presetId, presetOverlay.kind)
+                closeOverlays()
+                setOpen(false)
+              }}
+              placement={getOverlayPlacement(presetOverlay.overlay)}
+              selectedPresetId={
+                contentSelection?.kind === presetOverlay.kind
+                  ? contentSelection.id
+                  : undefined
+              }
+              show={activeOverlay === presetOverlay.overlay}
+              title={presetOverlay.title}
+            />
+          ))}
 
-      <SavedOverlay
-        onAddCustom={() => openOverlay(STREAM_PANEL_OVERLAY.CUSTOM)}
-        onBack={closeOverlays}
-        onSelect={handleLoadSaved}
-        placement={getOverlayPlacement(STREAM_PANEL_OVERLAY.SAVED)}
-        show={activeOverlay === STREAM_PANEL_OVERLAY.SAVED}
-      />
+          <PlaylistsOverlay
+            onBack={() => openOverlay(STREAM_PANEL_OVERLAY.CONTENT)}
+            onSelect={(playlist) => {
+              store.setContentSelection(playerType, {
+                id: playlist.id,
+                index: 0,
+                kind: "playlist",
+              })
+              onPlaylistChange?.(playlist)
+              closeOverlays()
+              setOpen(false)
+            }}
+            placement={getOverlayPlacement(STREAM_PANEL_OVERLAY.PLAYLISTS)}
+            playlists={playlistPresets}
+            selection={contentSelection}
+            show={activeOverlay === STREAM_PANEL_OVERLAY.PLAYLISTS}
+          />
 
-      <CustomOverlay
-        onBack={() => openOverlay(STREAM_PANEL_OVERLAY.SAVED)}
-        onLoad={handleLoadCustom}
-        placement={getOverlayPlacement(STREAM_PANEL_OVERLAY.CUSTOM)}
-        show={activeOverlay === STREAM_PANEL_OVERLAY.CUSTOM}
-      />
+          <ContentOverviewOverlay
+            liveCount={livePresets.length}
+            onBack={closeOverlays}
+            onSelect={(kind) => {
+              openOverlay(STREAM_PANEL_CONTENT_OVERLAYS[kind])
+            }}
+            placement={getOverlayPlacement(STREAM_PANEL_OVERLAY.CONTENT)}
+            playerType={playerType}
+            playlistCount={playlistPresets.length}
+            show={activeOverlay === STREAM_PANEL_OVERLAY.CONTENT}
+            streamCount={streamPresets.length}
+          />
+
+          <SavedOverlay
+            onAddCustom={() => openOverlay(STREAM_PANEL_OVERLAY.CUSTOM)}
+            onBack={closeOverlays}
+            onSelect={handleLoadSaved}
+            placement={getOverlayPlacement(STREAM_PANEL_OVERLAY.SAVED)}
+            show={activeOverlay === STREAM_PANEL_OVERLAY.SAVED}
+          />
+
+          <CustomOverlay
+            onBack={() => openOverlay(STREAM_PANEL_OVERLAY.SAVED)}
+            onLoad={handleLoadCustom}
+            placement={getOverlayPlacement(STREAM_PANEL_OVERLAY.CUSTOM)}
+            show={activeOverlay === STREAM_PANEL_OVERLAY.CUSTOM}
+          />
+        </div>
+      </div>
     </div>
   )
 
@@ -283,12 +308,22 @@ export function StreamPanel({
       <PopoverContent
         align={align}
         className={cn(
-          `dark relative w-72 gap-2 overflow-hidden rounded-3xl bg-background/95 p-2 text-foreground shadow-2xl shadow-background/40 backdrop-blur-xl`,
+          `
+            dark relative max-h-(--stream-panel-max-height) w-72 gap-2 overflow-hidden rounded-lg bg-background/95 p-2 text-foreground shadow-2xl
+            shadow-background/40 backdrop-blur-xl
+          `,
           variant === "floating" && STREAM_PANEL_ORIGIN_CLASSES[position],
           variant === "floating" && STREAM_PANEL_POSITION_CLASSES[position]
         )}
         positionMethod={variant === "floating" ? "fixed" : undefined}
         side={side}
+        sideOffset={50}
+        style={
+          {
+            "--stream-panel-max-height":
+              "min(420px, calc(var(--available-height, 100dvh) - 0.5rem))",
+          } as React.CSSProperties
+        }
       >
         {content}
       </PopoverContent>
@@ -313,7 +348,7 @@ function PanelActionRow({
   onClick,
 }: {
   detail?: string
-  Icon?: React.ComponentType<IconProps>
+  Icon?: React.FC<CentralIconBaseProps>
   label: string
   onClick: () => void
 }) {
@@ -369,7 +404,7 @@ function PanelToggleRow({
   value: boolean
 }) {
   return (
-    <div className="flex h-10 items-center justify-between px-2.5 text-sm">
+    <div className="flex h-10 items-center justify-between rounded-lg px-2.5 text-sm">
       <span className="font-medium text-foreground/85">{children}</span>
       <ToggleGroup
         onValueChange={(v) => {

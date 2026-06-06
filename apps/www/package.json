@@ -17,6 +17,7 @@
     "@ai-sdk/openai-compatible": "^1.0.39",
     "@ai-sdk/react": "^2.0.101",
     "@base-ui/react": "^1.5.0",
+    "@central-icons-react/round-filled-radius-0-stroke-1": "^1.1.257",
     "@lottiefiles/dotlottie-react": "^0.14.4",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-collapsible": "^1.1.12",
