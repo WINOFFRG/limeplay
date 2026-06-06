@@ -1,7 +1,7 @@
 "use client"
 
 import { domAnimation, LazyMotion, m } from "motion/react"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import React, { useCallback, useLayoutEffect, useState } from "react"
 
 import { StreamPanelProvider } from "@/components/stream-panel"
@@ -21,9 +21,9 @@ export function BlockPreviewWithToolbar({
 }) {
   const pathname = usePathname()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [expanded, setExpanded] = useState(() => {
-    if (typeof window === "undefined") return false
-    return getExpandedFromUrl()
+    return searchParams.get(EXPANDED_QUERY_PARAM) === "true"
   })
   const { isDark, toggleTheme } = useThemeToggle({
     blur: false,
@@ -35,7 +35,7 @@ export function BlockPreviewWithToolbar({
 
   const updateExpandedQuery = useCallback(
     (nextExpanded: boolean) => {
-      const nextSearchParams = new URLSearchParams(window.location.search)
+      const nextSearchParams = new URLSearchParams(searchParams.toString())
       if (nextExpanded) {
         nextSearchParams.set(EXPANDED_QUERY_PARAM, "true")
       } else {
@@ -47,7 +47,7 @@ export function BlockPreviewWithToolbar({
         scroll: false,
       })
     },
-    [pathname, router]
+    [pathname, router, searchParams]
   )
 
   const handleExpandToggle = useCallback(() => {
@@ -63,8 +63,8 @@ export function BlockPreviewWithToolbar({
   }, [])
 
   useLayoutEffect(() => {
-    setExpanded(getExpandedFromUrl())
-  }, [pathname])
+    setExpanded(searchParams.get(EXPANDED_QUERY_PARAM) === "true")
+  }, [pathname, searchParams])
 
   // DEV: This controls the left doc section to be hidden when preview is expanded
   useLayoutEffect(() => {
@@ -82,7 +82,10 @@ export function BlockPreviewWithToolbar({
         <m.div
           animate={{ opacity: 1, scale: 1 }}
           className={cn(
-            "z-40 overflow-hidden p-4",
+            `
+              z-40 overflow-hidden
+              lg:p-4
+            `,
             expanded
               ? `
                 fixed inset-0 bg-background
@@ -94,7 +97,12 @@ export function BlockPreviewWithToolbar({
           transition={{ damping: 35, stiffness: 300, type: "spring" }}
         >
           <div className="flex size-full flex-col">
-            <div className="relative flex flex-1 flex-col overflow-hidden rounded-2xl bg-muted">
+            <div
+              className="
+                relative flex flex-1 flex-col overflow-hidden bg-muted
+                lg:rounded-2xl
+              "
+            >
               <div
                 className="relative flex flex-1 items-center justify-center overflow-hidden"
                 key={reloadKey}
@@ -115,12 +123,5 @@ export function BlockPreviewWithToolbar({
         </m.div>
       </LazyMotion>
     </StreamPanelProvider>
-  )
-}
-
-function getExpandedFromUrl() {
-  return (
-    new URLSearchParams(window.location.search).get(EXPANDED_QUERY_PARAM) ===
-    "true"
   )
 }

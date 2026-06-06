@@ -100,6 +100,7 @@ export const blocks: Registry["items"] = [
       "use-player",
       "use-track-events",
       "utils",
+      "error-screen",
       "fallback-poster",
       "timeline-labels",
       "limeplay-logo",

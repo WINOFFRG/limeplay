@@ -2,7 +2,7 @@
 
 import type { RefObject } from "react"
 
-import { ChevronDownIcon, MonitorPlayIcon, RotateCw } from "lucide-react"
+import { ChevronDownIcon, MonitorPlayIcon, RotateCwIcon } from "lucide-react"
 import { useRef } from "react"
 import { useFullscreen, useToggle } from "react-use"
 
@@ -143,7 +143,7 @@ function RotateMessage({
           size="sm"
           variant="outline"
         >
-          <RotateCw className={`mr-2 size-3`} />
+          <RotateCwIcon className={`mr-2 size-3`} />
           Rotate
         </Button>
       </div>

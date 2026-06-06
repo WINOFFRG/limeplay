@@ -1,3 +1,6 @@
+"use client"
+
+import { RotateCwIcon } from "lucide-react"
 import React from "react"
 
 import type {
@@ -9,9 +12,13 @@ import type {
 
 import { cn } from "@/lib/utils"
 import { BottomControls } from "@/registry/default/blocks/video-player/components/bottom-controls"
+import { Button } from "@/registry/default/blocks/video-player/components/button"
 import { MediaProvider } from "@/registry/default/blocks/video-player/lib/media-kit"
+import { useAsset } from "@/registry/default/hooks/use-asset"
+import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
 import { PlaybackSourceController } from "@/registry/default/hooks/use-playback-source"
 import { CaptionsContainer } from "@/registry/default/ui/captions"
+import { ErrorScreen } from "@/registry/default/ui/error-screen"
 import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 import { Media } from "@/registry/default/ui/media"
@@ -77,6 +84,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
         />
         <RootContainer className={cn("m-auto w-full", className)} ref={ref}>
           <Layout.PlayerContainer>
+            <PlayerErrorScreen />
             <FallbackPoster>
               <LimeplayLogo />
             </FallbackPoster>
@@ -87,6 +95,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
               as="video"
               className="size-full object-cover"
             />
+            {children}
             <Layout.ControlsOverlayContainer />
             <Layout.ControlsContainer className="pb-6">
               <CaptionsContainer />
@@ -94,10 +103,31 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
             </Layout.ControlsContainer>
           </Layout.PlayerContainer>
         </RootContainer>
-        {children}
       </MediaProvider>
     )
   }
 )
 
 VideoPlayer.displayName = "VideoPlayer"
+
+function PlayerErrorScreen() {
+  const error = usePlaybackStore((s) => s.error)
+  const status = usePlaybackStore((s) => s.status)
+  const { currentItem, loadAsset } = useAsset<VideoPlayerAsset>()
+
+  const retryStream = React.useCallback(() => {
+    if (!currentItem) return
+    void loadAsset(currentItem.properties)
+  }, [currentItem, loadAsset])
+
+  if (status !== "error") return null
+
+  return (
+    <ErrorScreen className="rounded-lg" error={error}>
+      <Button onClick={retryStream} size="sm">
+        <RotateCwIcon />
+        Retry
+      </Button>
+    </ErrorScreen>
+  )
+}
