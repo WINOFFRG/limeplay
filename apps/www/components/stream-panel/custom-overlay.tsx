@@ -24,14 +24,18 @@ export function CustomOverlay({
   placement,
   show,
 }: CustomOverlayProps) {
-  const store = useStreamPanelStore()
+  const customSrc = useStreamPanelStore((s) => s.customSrc)
+  const customConfig = useStreamPanelStore((s) => s.customConfig)
+  const setCustomSrc = useStreamPanelStore((s) => s.setCustomSrc)
+  const setCustomConfig = useStreamPanelStore((s) => s.setCustomConfig)
+  const saveStream = useStreamPanelStore((s) => s.saveStream)
   const [urlError, setUrlError] = useState(false)
   const [configError, setConfigError] = useState(false)
   const [showSave, setShowSave] = useState(false)
   const [saveName, setSaveName] = useState("")
 
   const isValidUrl = React.useMemo(() => {
-    const src = store.customSrc.trim()
+    const src = customSrc.trim()
     if (!src) return false
     try {
       const url = new URL(src)
@@ -39,10 +43,10 @@ export function CustomOverlay({
     } catch {
       return false
     }
-  }, [store.customSrc])
+  }, [customSrc])
 
   const isValidConfig = React.useMemo(() => {
-    const config = store.customConfig.trim()
+    const config = customConfig.trim()
     if (!config) return true
     try {
       JSON.parse(config)
@@ -50,13 +54,13 @@ export function CustomOverlay({
     } catch {
       return false
     }
-  }, [store.customConfig])
+  }, [customConfig])
 
   const canLoad = isValidUrl && isValidConfig
   const canSave = canLoad && saveName.trim().length > 0
 
   const handleUrlChange = (value: string) => {
-    store.setCustomSrc(value)
+    setCustomSrc(value)
     if (value.trim()) {
       try {
         const url = new URL(value.trim())
@@ -70,7 +74,7 @@ export function CustomOverlay({
   }
 
   const handleConfigChange = (value: string) => {
-    store.setCustomConfig(value)
+    setCustomConfig(value)
     if (value.trim()) {
       try {
         JSON.parse(value.trim())
@@ -88,7 +92,7 @@ export function CustomOverlay({
     try {
       const parsed = JSON.parse(pasted)
       e.preventDefault()
-      store.setCustomConfig(JSON.stringify(parsed, null, 2))
+      setCustomConfig(JSON.stringify(parsed, null, 2))
       setConfigError(false)
     } catch {
       // not valid JSON, let default paste happen
@@ -97,15 +101,15 @@ export function CustomOverlay({
 
   const handleLoad = () => {
     if (!canLoad) return
-    onLoad(store.customSrc.trim(), store.customConfig.trim() || undefined)
+    onLoad(customSrc.trim(), customConfig.trim() || undefined)
   }
 
   const handleSave = () => {
     if (!canSave) return
-    store.saveStream({
-      config: store.customConfig.trim() || undefined,
+    saveStream({
+      config: customConfig.trim() || undefined,
       name: saveName.trim(),
-      src: store.customSrc.trim(),
+      src: customSrc.trim(),
     })
     setSaveName("")
     setShowSave(false)
@@ -137,7 +141,7 @@ export function CustomOverlay({
             id="custom-stream-url"
             onChange={(e) => handleUrlChange(e.target.value)}
             placeholder="https://example.com/stream.m3u8"
-            value={store.customSrc}
+            value={customSrc}
           />
           {urlError && (
             <p className="text-sm text-destructive">
@@ -172,7 +176,7 @@ export function CustomOverlay({
             onChange={(e) => handleConfigChange(e.target.value)}
             onPaste={handleConfigPaste}
             placeholder={'{\n  "drm": {\n    "servers": {}\n  }\n}'}
-            value={store.customConfig}
+            value={customConfig}
           />
           {configError && (
             <p className="text-sm text-destructive">Invalid JSON format</p>

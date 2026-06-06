@@ -2,27 +2,15 @@
 
 import { domAnimation, LazyMotion, m } from "motion/react"
 import { usePathname, useRouter } from "next/navigation"
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react"
+import React, { useCallback, useLayoutEffect, useState } from "react"
 
 import { StreamPanelProvider } from "@/components/stream-panel"
 import { useThemeToggle } from "@/components/theme-toggle"
+import { cn } from "@/lib/utils"
 
 import { BlockToolbar } from "./block-toolbar"
 
 const EXPANDED_QUERY_PARAM = "expanded"
-
-type PreviewRect = {
-  height: number | string
-  left: number | string
-  top: number
-  width: number
-}
 
 export function BlockPreviewWithToolbar({
   children,
@@ -33,7 +21,10 @@ export function BlockPreviewWithToolbar({
 }) {
   const pathname = usePathname()
   const router = useRouter()
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(() => {
+    if (typeof window === "undefined") return false
+    return getExpandedFromUrl()
+  })
   const { isDark, toggleTheme } = useThemeToggle({
     blur: false,
     start: "top-right",
@@ -41,33 +32,6 @@ export function BlockPreviewWithToolbar({
   })
   const theme = isDark ? "dark" : "light"
   const [reloadKey, setReloadKey] = useState(0)
-  const panelRef = useRef<HTMLDivElement>(null)
-  const [panelRect, setPanelRect] = useState<PreviewRect>({
-    height: "100%",
-    left: "100%",
-    top: 0,
-    width: 0,
-  })
-
-  const handlePanelRef = useCallback((node: HTMLDivElement | null) => {
-    panelRef.current = node
-    if (node) setPanelRect(getElementRect(node))
-  }, [])
-
-  useEffect(() => {
-    if (!panelRef.current) return
-    const update = () => {
-      if (!panelRef.current) return
-      setPanelRect(getElementRect(panelRef.current))
-    }
-    const ro = new ResizeObserver(update)
-    ro.observe(panelRef.current)
-    window.addEventListener("resize", update)
-    return () => {
-      ro.disconnect()
-      window.removeEventListener("resize", update)
-    }
-  }, [])
 
   const updateExpandedQuery = useCallback(
     (nextExpanded: boolean) => {
@@ -98,15 +62,6 @@ export function BlockPreviewWithToolbar({
     setReloadKey((k) => k + 1)
   }, [])
 
-  const expandedInset = 16
-  const [windowSize, setWindowSize] = useState(getWindowSize)
-
-  useEffect(() => {
-    const update = () => setWindowSize(getWindowSize())
-    window.addEventListener("resize", update)
-    return () => window.removeEventListener("resize", update)
-  }, [])
-
   useLayoutEffect(() => {
     setExpanded(getExpandedFromUrl())
   }, [pathname])
@@ -121,27 +76,20 @@ export function BlockPreviewWithToolbar({
     }
   }, [expanded])
 
-  const collapsedStyle = {
-    height: panelRect.height,
-    left: panelRect.left,
-    top: panelRect.top,
-    width: panelRect.width,
-  }
-
-  const expandedStyle = {
-    height: windowSize.height - expandedInset * 2,
-    left: expandedInset,
-    top: expandedInset,
-    width: windowSize.width - expandedInset * 2,
-  }
-
   return (
     <StreamPanelProvider>
-      <div className="absolute inset-0" ref={handlePanelRef} />
       <LazyMotion features={domAnimation}>
         <m.div
-          animate={expanded ? expandedStyle : collapsedStyle}
-          className="fixed z-40 overflow-hidden bg-transparent p-4"
+          animate={{ opacity: 1, scale: 1 }}
+          className={cn(
+            "z-40 overflow-hidden p-4",
+            expanded
+              ? `
+                fixed inset-0 bg-background
+                lg:inset-4
+              `
+              : "absolute inset-0 bg-transparent"
+          )}
           initial={false}
           transition={{ damping: 35, stiffness: 300, type: "spring" }}
         >
@@ -170,24 +118,9 @@ export function BlockPreviewWithToolbar({
   )
 }
 
-function getElementRect(element: HTMLElement): PreviewRect {
-  const rect = element.getBoundingClientRect()
-  return {
-    height: rect.height,
-    left: rect.left,
-    top: rect.top,
-    width: rect.width,
-  }
-}
-
 function getExpandedFromUrl() {
   return (
     new URLSearchParams(window.location.search).get(EXPANDED_QUERY_PARAM) ===
     "true"
   )
-}
-
-function getWindowSize() {
-  if (typeof window === "undefined") return { height: 0, width: 0 }
-  return { height: window.innerHeight, width: window.innerWidth }
 }

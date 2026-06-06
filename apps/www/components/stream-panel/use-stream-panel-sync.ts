@@ -7,6 +7,7 @@ import type { PlaybackStore } from "@/registry/default/hooks/use-playback"
 
 import {
   addBlenderCaptions,
+  APPLE_MUSIC_CHARTS_PLAYLIST_ID,
   type BlenderStreamResponse,
   fetchBlenderStream,
   fetchPlaylistPresetAssets,
@@ -264,14 +265,9 @@ export function useStreamPanelSync({
       return
     }
 
-    const defaultPreset = getDefaultPresetForType(playerType)
-    if (!defaultPreset) return
+    const defaultSelection = getDefaultSelectionForType(playerType)
+    if (!defaultSelection) return
 
-    const defaultSelection: StreamPanelSelection = {
-      id: defaultPreset.id,
-      index: 0,
-      kind: "stream",
-    }
     setContentSelection(playerType, defaultSelection)
     restoreContentSelection(defaultSelection)
   }, [
@@ -356,6 +352,27 @@ function getDefaultPresetForType(
   }
 
   return presets[0]
+}
+
+function getDefaultSelectionForType(
+  playerType: StreamPanelPlayerType
+): StreamPanelSelection | undefined {
+  if (playerType === "audio") {
+    return {
+      id: APPLE_MUSIC_CHARTS_PLAYLIST_ID,
+      index: 0,
+      kind: "playlist",
+    }
+  }
+
+  const defaultPreset = getDefaultPresetForType(playerType)
+  if (!defaultPreset) return undefined
+
+  return {
+    id: defaultPreset.id,
+    index: 0,
+    kind: "stream",
+  }
 }
 
 function normalizePlaylistIndex(index: number | undefined, itemCount: number) {
