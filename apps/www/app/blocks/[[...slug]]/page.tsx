@@ -58,6 +58,16 @@ export default async function BlockPage(props: BlockPageProps) {
         tree={blocksSource.getPageTree()}
       >
         <main className="relative min-h-screen bg-background">
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                document.documentElement.dataset.blockPreviewExpanded =
+                  new URLSearchParams(window.location.search).get("expanded") === "true"
+                    ? "true"
+                    : "false";
+              `,
+            }}
+          />
           <div className="flex size-full">
             <div
               className={`
@@ -82,7 +92,15 @@ export default async function BlockPage(props: BlockPageProps) {
               `}
             >
               <ResizablePanelGroup orientation="horizontal">
-                <ResizablePanel defaultSize={"35%"} minSize={"30%"}>
+                <ResizablePanel
+                  className={`
+                    overflow-hidden opacity-100 transition-[opacity,filter,transform] duration-300 ease-out
+                    in-data-[block-preview-expanded=true]:pointer-events-none in-data-[block-preview-expanded=true]:-translate-x-2
+                    in-data-[block-preview-expanded=true]:opacity-0 in-data-[block-preview-expanded=true]:blur-sm
+                  `}
+                  defaultSize={"35%"}
+                  minSize={"30%"}
+                >
                   <div className="relative h-full overflow-hidden bg-transparent">
                     <BlockTopBar title={page.data.title} />
                     <div
@@ -98,7 +116,6 @@ export default async function BlockPage(props: BlockPageProps) {
                         WebkitBackdropFilter: "blur(2px)",
                         WebkitMaskImage:
                           "linear-gradient(to top, black 50%, transparent 100%)",
-                        willChange: "backdrop-filter",
                       }}
                     />
 
@@ -112,7 +129,13 @@ export default async function BlockPage(props: BlockPageProps) {
                   </div>
                 </ResizablePanel>
 
-                <ResizableHandle className="z-20" withHandle />
+                <ResizableHandle
+                  className={`
+                    z-20 opacity-100 transition-opacity duration-300 ease-out
+                    in-data-[block-preview-expanded=true]:pointer-events-none in-data-[block-preview-expanded=true]:opacity-0
+                  `}
+                  withHandle
+                />
 
                 <ResizablePanel
                   className="relative"

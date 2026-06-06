@@ -1,24 +1,30 @@
 "use client"
 
-import { AnimatePresence, motion } from "motion/react"
+import { AnimatePresence, m } from "motion/react"
 import React, { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { useDocsDialStore } from "@/lib/docs-dial-store"
+import { useStreamPanelStore } from "@/lib/docs-dial-store"
 import { cn } from "@/lib/utils"
 
-import { OverlayShell } from "./overlay-shell"
+import { OverlayShell, type OverlayShellPlacement } from "./overlay-shell"
 
 interface CustomOverlayProps {
   onBack: () => void
   onLoad: (src: string, config?: string) => void
+  placement?: OverlayShellPlacement
   show: boolean
 }
 
-export function CustomOverlay({ onBack, onLoad, show }: CustomOverlayProps) {
-  const store = useDocsDialStore()
+export function CustomOverlay({
+  onBack,
+  onLoad,
+  placement,
+  show,
+}: CustomOverlayProps) {
+  const store = useStreamPanelStore()
   const [urlError, setUrlError] = useState(false)
   const [configError, setConfigError] = useState(false)
   const [showSave, setShowSave] = useState(false)
@@ -106,20 +112,29 @@ export function CustomOverlay({ onBack, onLoad, show }: CustomOverlayProps) {
   }
 
   return (
-    <OverlayShell onBack={onBack} show={show} title="Custom Stream">
+    <OverlayShell
+      onBack={onBack}
+      placement={placement}
+      show={show}
+      title="Custom Stream"
+    >
       <div
         className={cn(
           "no-scrollbar flex-1 overflow-y-auto",
-          "flex flex-col gap-3 p-3"
+          "flex flex-col gap-3 p-2 pt-1"
         )}
       >
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-muted-foreground">
+        <div className="flex flex-col gap-1.5 px-2.5 py-1.5">
+          <label
+            className="px-0.5 text-[10px] leading-none font-semibold tracking-[0.16em] text-muted-foreground/70 uppercase"
+            htmlFor="custom-stream-url"
+          >
             Playback URL
           </label>
           <Input
             aria-invalid={urlError}
-            className="h-8 text-sm"
+            className="h-9 rounded-2xl text-sm"
+            id="custom-stream-url"
             onChange={(e) => handleUrlChange(e.target.value)}
             placeholder="https://example.com/stream.m3u8"
             value={store.customSrc}
@@ -130,14 +145,17 @@ export function CustomOverlay({ onBack, onLoad, show }: CustomOverlayProps) {
             </p>
           )}
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 px-2.5 py-1.5">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-muted-foreground">
+            <label
+              className="px-0.5 text-[10px] leading-none font-semibold tracking-[0.16em] text-muted-foreground/70 uppercase"
+              htmlFor="custom-stream-config"
+            >
               Shaka Config (optional)
             </label>
             <a
               className={`
-                text-sm text-muted-foreground underline-offset-2
+                text-xs font-medium text-muted-foreground underline-offset-2
                 hover:underline
               `}
               href="https://shaka-player-demo.appspot.com/docs/api/shaka.extern.html#.PlayerConfiguration"
@@ -149,7 +167,8 @@ export function CustomOverlay({ onBack, onLoad, show }: CustomOverlayProps) {
           </div>
           <Textarea
             aria-invalid={configError}
-            className="min-h-24 resize-none font-mono text-sm"
+            className="min-h-24 resize-none rounded-2xl font-mono text-sm"
+            id="custom-stream-config"
             onChange={(e) => handleConfigChange(e.target.value)}
             onPaste={handleConfigPaste}
             placeholder={'{\n  "drm": {\n    "servers": {}\n  }\n}'}
@@ -162,23 +181,27 @@ export function CustomOverlay({ onBack, onLoad, show }: CustomOverlayProps) {
 
         <AnimatePresence>
           {showSave && (
-            <motion.div
+            <m.div
               animate={{ height: "auto", opacity: 1 }}
               className="flex flex-col gap-1.5 overflow-hidden"
               exit={{ height: 0, opacity: 0 }}
               initial={{ height: 0, opacity: 0 }}
               transition={{ bounce: 0, duration: 0.2, type: "spring" }}
             >
-              <label className="text-sm font-medium text-muted-foreground">
+              <label
+                className="px-0.5 text-[10px] leading-none font-semibold tracking-[0.16em] text-muted-foreground/70 uppercase"
+                htmlFor="custom-stream-name"
+              >
                 Stream Name
               </label>
               <Input
-                className="h-8 text-sm"
+                className="h-9 rounded-2xl text-sm"
+                id="custom-stream-name"
                 onChange={(e) => setSaveName(e.target.value)}
                 placeholder="My custom stream"
                 value={saveName}
               />
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 
@@ -186,7 +209,7 @@ export function CustomOverlay({ onBack, onLoad, show }: CustomOverlayProps) {
           {showSave ? (
             <>
               <Button
-                className="h-8 flex-1 text-sm"
+                className="h-9 flex-1 rounded-2xl text-sm"
                 disabled={!canSave}
                 onClick={handleSave}
                 size="sm"
@@ -194,7 +217,7 @@ export function CustomOverlay({ onBack, onLoad, show }: CustomOverlayProps) {
                 Save
               </Button>
               <Button
-                className="h-8 text-sm"
+                className="h-9 rounded-2xl text-sm"
                 onClick={() => {
                   setShowSave(false)
                   setSaveName("")
@@ -208,7 +231,7 @@ export function CustomOverlay({ onBack, onLoad, show }: CustomOverlayProps) {
           ) : (
             <>
               <Button
-                className="h-8 flex-1 text-sm"
+                className="h-9 flex-1 rounded-2xl text-sm"
                 disabled={!canLoad}
                 onClick={handleLoad}
                 size="sm"
@@ -216,7 +239,7 @@ export function CustomOverlay({ onBack, onLoad, show }: CustomOverlayProps) {
                 Load Stream
               </Button>
               <Button
-                className="h-8 text-sm"
+                className="h-9 rounded-2xl text-sm"
                 disabled={!canLoad}
                 onClick={() => setShowSave(true)}
                 size="sm"
