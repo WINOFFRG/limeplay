@@ -12,6 +12,9 @@ import {
 } from "@/components/ui/resizable"
 
 const DESKTOP_QUERY = "(min-width: 1024px)"
+const STACKED_QUERY = "(min-width: 768px)"
+
+type BlockPageLayout = "desktop" | "mobile" | "stacked"
 
 type BlockPageShellProps = {
   info: ReactNode
@@ -20,10 +23,28 @@ type BlockPageShellProps = {
 }
 
 export function BlockPageShell({ info, preview, title }: BlockPageShellProps) {
-  const isDesktop = useIsDesktop()
+  const layout = useBlockPageLayout()
 
-  if (!isDesktop) {
-    return <div className="w-full">{info}</div>
+  if (layout === "mobile") {
+    return (
+      <div className="w-full">
+        <div className="relative h-[min(70svh,32rem)] min-h-88 w-full overflow-hidden bg-muted">
+          {preview}
+        </div>
+        {info}
+      </div>
+    )
+  }
+
+  if (layout === "stacked") {
+    return (
+      <div className="w-full">
+        <div className="relative h-[clamp(26rem,70svh,44rem)] min-h-0 w-full overflow-hidden bg-muted">
+          {preview}
+        </div>
+        {info}
+      </div>
+    )
   }
 
   return (
@@ -82,25 +103,38 @@ export function BlockPageShell({ info, preview, title }: BlockPageShellProps) {
   )
 }
 
-function getDesktopSnapshot() {
-  return window.matchMedia(DESKTOP_QUERY).matches
+function getBlockPageLayoutSnapshot(): BlockPageLayout {
+  if (window.matchMedia(DESKTOP_QUERY).matches) return "desktop"
+  if (window.matchMedia(STACKED_QUERY).matches) return "stacked"
+
+  return "mobile"
 }
 
-function getServerDesktopSnapshot() {
-  return false
+function getServerBlockPageLayoutSnapshot(): BlockPageLayout {
+  return "mobile"
 }
 
-function subscribeToDesktopChange(onStoreChange: () => void) {
-  const mediaQueryList = window.matchMedia(DESKTOP_QUERY)
-  mediaQueryList.addEventListener("change", onStoreChange)
+function subscribeToBlockPageLayoutChange(onStoreChange: () => void) {
+  const mediaQueryLists = [
+    window.matchMedia(DESKTOP_QUERY),
+    window.matchMedia(STACKED_QUERY),
+  ]
 
-  return () => mediaQueryList.removeEventListener("change", onStoreChange)
+  mediaQueryLists.forEach((mediaQueryList) => {
+    mediaQueryList.addEventListener("change", onStoreChange)
+  })
+
+  return () => {
+    mediaQueryLists.forEach((mediaQueryList) => {
+      mediaQueryList.removeEventListener("change", onStoreChange)
+    })
+  }
 }
 
-function useIsDesktop() {
+function useBlockPageLayout() {
   return useSyncExternalStore(
-    subscribeToDesktopChange,
-    getDesktopSnapshot,
-    getServerDesktopSnapshot
+    subscribeToBlockPageLayoutChange,
+    getBlockPageLayoutSnapshot,
+    getServerBlockPageLayoutSnapshot
   )
 }

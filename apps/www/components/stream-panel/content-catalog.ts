@@ -67,12 +67,6 @@ interface AppleMusicChartItem {
   url?: string
 }
 
-interface AppleMusicChartsResponse {
-  items: AppleMusicChartItem[]
-  nextPage?: number
-  page: number
-}
-
 interface BlenderPlaylistItem {
   description?: string
   duration?: number
@@ -104,9 +98,39 @@ const BLENDER_OPEN_FILMS_PLAYLIST_ID = "blender-open-films"
 const BLENDER_API_BASE_URL = "https://limeplay.winoffrg.workers.dev/api/blender"
 const APPLE_MUSIC_API_BASE_URL =
   "https://limeplay.winoffrg.workers.dev/api/catalog/am"
+const APPLE_MUSIC_CHARTS_TIMEOUT_MS = 10_000
 const BLENDER_STREAM_TIMEOUT_MS = 10_000
 const DEFAULT_APPLE_MUSIC_LOCALE = "en-US"
 const DEFAULT_APPLE_MUSIC_STOREFRONT = "us"
+
+const AppleMusicArtworkSchema = z.object({
+  bgColor: z.string().optional(),
+  height: z.number().optional(),
+  templateUrl: z.string().optional(),
+  textColor1: z.string().optional(),
+  textColor2: z.string().optional(),
+  textColor3: z.string().optional(),
+  textColor4: z.string().optional(),
+  url: z.string().optional(),
+  width: z.number().optional(),
+})
+
+const AppleMusicChartItemSchema = z.object({
+  albumName: z.string().optional(),
+  artistName: z.string().optional(),
+  artwork: AppleMusicArtworkSchema.optional(),
+  durationMs: z.number().optional(),
+  id: z.string(),
+  previewUrl: z.string().optional(),
+  title: z.string(),
+  url: z.string().optional(),
+})
+
+const AppleMusicChartsResponseSchema = z.object({
+  items: z.array(AppleMusicChartItemSchema),
+  nextPage: z.number().optional(),
+  page: z.number(),
+})
 
 const BlenderOpenFilmImagesSchema = z.object({
   backdrop: z.string().optional(),
@@ -253,13 +277,18 @@ async function fetchAppleMusicChartAssets(
   signal?: AbortSignal
 ): Promise<AppleMusicChartAsset[]> {
   const { locale, storefront } = getAppleMusicLocaleHeaders()
+  const combinedSignal = createTimeoutSignal(
+    signal,
+    APPLE_MUSIC_CHARTS_TIMEOUT_MS
+  )
   const response = await fetch(`${APPLE_MUSIC_API_BASE_URL}/charts?page=1`, {
     headers: {
       "x-locale": locale,
       "x-storefront": storefront,
     },
-    signal,
+    signal: combinedSignal,
   })
+  throwIfAborted(combinedSignal)
 
   if (!response.ok) {
     throw new Error(
@@ -267,8 +296,15 @@ async function fetchAppleMusicChartAssets(
     )
   }
 
-  const chart = (await response.json()) as AppleMusicChartsResponse
-  return chart.items
+  const responseJson: unknown = await response.json()
+  throwIfAborted(combinedSignal)
+
+  const chart = AppleMusicChartsResponseSchema.safeParse(responseJson)
+  if (!chart.success) {
+    throw new Error(`Invalid Apple Music charts response: ${chart.error}`)
+  }
+
+  return chart.data.items
     .filter((item) => Boolean(item.previewUrl))
     .map(toAppleMusicChartAsset)
 }
@@ -318,6 +354,12 @@ function normalizeLocale(locale: string | undefined): string {
   }
 }
 
+function throwIfAborted(signal?: AbortSignal): void {
+  if (!signal?.aborted) return
+
+  throw new DOMException("Aborted", "AbortError")
+}
+
 function toAppleMusicChartAsset(
   item: AppleMusicChartItem
 ): AppleMusicChartAsset {
@@ -326,7 +368,6 @@ function toAppleMusicChartAsset(
     artistName: item.artistName,
     description: item.albumName,
     duration: item.durationMs,
-    genre: item.artistName,
     id: item.id,
     poster: item.artwork?.url,
     source: "apple-music-chart",

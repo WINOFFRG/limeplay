@@ -124,10 +124,7 @@ export function useStreamPanelSync({
         })
       },
       onLoadError: (_asset, error) => {
-        playbackApi.setState(({ playback }) => {
-          playback.status = "error"
-          playback.error = error
-        })
+        playbackApi.getState().playback.setError(error)
         return "stop"
       },
     }),
@@ -163,12 +160,11 @@ export function useStreamPanelSync({
       if (config) {
         const parseResult = safeParseJson(config)
         if (!parseResult.ok) {
-          playbackApi.setState(({ playback }) => {
-            playback.status = "error"
-            playback.error = new Error(
-              "Invalid JSON config: " + parseResult.error
+          playbackApi
+            .getState()
+            .playback.setError(
+              new Error("Invalid JSON config: " + parseResult.error)
             )
-          })
           return null
         }
         parsedConfig = parseResult.value
@@ -212,10 +208,7 @@ export function useStreamPanelSync({
           if (error instanceof DOMException && error.name === "AbortError")
             return
 
-          playbackApi.setState(({ playback }) => {
-            playback.status = "error"
-            playback.error = error
-          })
+          playbackApi.getState().playback.setError(error)
         })
     },
     [loadPlaylist, playbackApi, playerType, setContentSelection]

@@ -52,32 +52,32 @@ export default async function BlockPage(props: BlockPageProps) {
   const preview = <PreviewComponent />
 
   return (
-    <div className="w-full">
-      <DocsLayout
-        sidebar={{
-          enabled: false,
-        }}
-        tree={blocksSource.getPageTree()}
-      >
-        <main className="relative min-h-svh overflow-x-hidden bg-background">
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
+    <DocsLayout
+      nav={{
+        enabled: false,
+      }}
+      searchToggle={{
+        enabled: false,
+      }}
+      sidebar={{
+        enabled: false,
+      }}
+      tree={blocksSource.getPageTree()}
+    >
+      <main className="relative min-h-svh overflow-x-hidden bg-background">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
                 document.documentElement.dataset.blockPreviewExpanded =
                   new URLSearchParams(window.location.search).get("expanded") === "true"
                     ? "true"
                     : "false";
               `,
-            }}
-          />
-          <BlockPageShell
-            info={info}
-            preview={preview}
-            title={page.data.title}
-          />
-        </main>
-      </DocsLayout>
-    </div>
+          }}
+        />
+        <BlockPageShell info={info} preview={preview} title={page.data.title} />
+      </main>
+    </DocsLayout>
   )
 }
 

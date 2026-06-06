@@ -59,6 +59,7 @@ export interface PlaybackStore extends MediaEventSlice<PlaybackEvents> {
     play: () => Promise<void>
     readyState: MediaReadyState
     restart: () => void
+    setError: (error: unknown) => void
     setLoop: (loop: boolean) => void
     status: MediaStatus
     toggleLoop: () => void
@@ -68,7 +69,7 @@ export interface PlaybackStore extends MediaEventSlice<PlaybackEvents> {
 
 export function playbackFeature(): MediaFeature<PlaybackStore> {
   return {
-    createSlice: (set, get) => ({
+    createSlice: (set, get, _store, events) => ({
       [PLAYBACK_FEATURE_KEY]: {
         canPlay: false,
         canPlayThrough: false,
@@ -99,10 +100,7 @@ export function playbackFeature(): MediaFeature<PlaybackStore> {
             await media.play()
           } catch (error: unknown) {
             console.error("Error playing media", error)
-            set(({ media: mediaState, playback }) => {
-              playback.status = "error"
-              mediaState.idle = false
-            })
+            get().playback.setError(error)
             throw error
           }
         },
@@ -120,6 +118,40 @@ export function playbackFeature(): MediaFeature<PlaybackStore> {
             mediaState.idle = false
             playback.ended = false
           })
+        },
+        setError: (error) => {
+          const media = get().media.mediaElement
+          const prevStatus = get().playback.status
+
+          if (media && !media.paused) {
+            media.pause()
+          }
+
+          set(({ media: mediaState, playback }) => {
+            mediaState.idle = false
+            playback.error = error
+            playback.paused = true
+            playback.status = "error"
+
+            if (media) {
+              playback.canPlay =
+                media.readyState >= MediaReadyState.HAVE_FUTURE_DATA
+              playback.canPlayThrough =
+                media.readyState >= MediaReadyState.HAVE_ENOUGH_DATA
+              playback.ended = media.ended
+              playback.loop = media.loop
+              playback.networkState = media.networkState
+              playback.readyState = media.readyState as MediaReadyState
+            }
+          })
+
+          if (prevStatus === "buffering") {
+            events.emit("buffering", { isBuffering: false })
+          }
+
+          if (prevStatus !== "error") {
+            events.emit("statuschange", { prevStatus, status: "error" })
+          }
         },
         setLoop: (loop) => {
           const media = get().media.mediaElement
@@ -324,10 +356,7 @@ function PlaybackSetup() {
     }
 
     const errorHandler = () => {
-      store.setState(({ playback }) => {
-        playback.error = media.error
-        playback.status = "error"
-      })
+      store.getState().playback.setError(media.error)
     }
 
     on(media, "loadstart", loadStartHandler)
