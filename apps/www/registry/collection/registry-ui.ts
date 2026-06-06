@@ -12,7 +12,8 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "error-screen",
-    registryDependencies: ["media-provider"],
+    dependencies: ["shaka-player@^4"],
+    registryDependencies: ["media-provider", "item"],
     type: "registry:ui",
   },
   {
