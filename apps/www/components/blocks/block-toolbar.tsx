@@ -2,6 +2,7 @@
 
 import {
   CodeXmlIcon,
+  CogIcon,
   Maximize2Icon,
   Minimize2Icon,
   MoonIcon,
@@ -10,29 +11,32 @@ import {
 } from "lucide-react"
 import {
   AnimatePresence,
+  domAnimation,
   LayoutGroup,
-  motion,
+  LazyMotion,
+  m,
   useAnimationControls,
 } from "motion/react"
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react"
 
-import {
-  StreamPanel,
-  StreamPanelProvider,
-  useStreamPanel,
-} from "@/components/stream-panel"
+import { StreamPanel, useStreamPanel } from "@/components/stream-panel"
 import { useStreamPanelSync } from "@/components/stream-panel/use-stream-panel-sync"
-import { PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 
-const PILL_TRANSITION = { bounce: 0.2, duration: 0.5, type: "spring" } as const
+const PILL_TRANSITION = { bounce: 0, duration: 0.24, type: "spring" } as const
 const CONTENT_TRANSITION = {
   bounce: 0,
   duration: 0.6,
   type: "spring",
 } as const
-
-type ActivePanel = "settings" | null
+const PANEL_CONTENT_MAX_HEIGHT = 420
+const PANEL_CONTENT_MIN_HEIGHT = 168
 
 interface BlockToolbarProps {
   codeUrl?: string
@@ -48,17 +52,31 @@ export function BlockStreamSync({
 }: {
   playerType?: "audio" | "video"
 }) {
-  const { handleLoadStream } = useStreamPanelSync()
+  const { registerController } = useStreamPanel()
+  const { handleLoadStream, handlePlaylistPresetChange, handlePresetChange } =
+    useStreamPanelSync({ playerType })
 
-  return (
-    <StreamPanel
-      onLoadStream={handleLoadStream}
-      playerType={playerType}
-      position="bottom-right"
-      side="top"
-      variant="floating"
-    />
+  const controller = React.useMemo(
+    () => ({
+      onLoadStream: handleLoadStream,
+      onPlaylistChange: handlePlaylistPresetChange,
+      onPresetChange: handlePresetChange,
+      playerType,
+    }),
+    [
+      handleLoadStream,
+      handlePlaylistPresetChange,
+      handlePresetChange,
+      playerType,
+    ]
   )
+
+  useEffect(
+    () => registerController(controller),
+    [controller, registerController]
+  )
+
+  return null
 }
 
 export function BlockToolbar({
@@ -69,24 +87,105 @@ export function BlockToolbar({
   onThemeToggle,
   theme,
 }: BlockToolbarProps) {
-  const { handle } = useStreamPanel()
-  const [activePanel, setActivePanel] = useState<ActivePanel>(null)
+  const { controller, open, setOpen } = useStreamPanel()
   const rotateControls = useAnimationControls()
   const rotationRef = useRef(0)
   const contentRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const rootRef = useRef<HTMLDivElement>(null)
+  const rootResizeObserverRef = useRef<null | ResizeObserver>(null)
+  const toolbarResizeObserverRef = useRef<null | ResizeObserver>(null)
+  const toolbarRef = useRef<HTMLDivElement>(null)
+  const [availableHeight, setAvailableHeight] = useState(0)
   const [contentHeight, setContentHeight] = useState(0)
+  const [toolbarHeight, setToolbarHeight] = useState<null | number>(null)
 
-  useEffect(() => {
-    if (!contentRef.current) return
-    const ro = new ResizeObserver((entries) => {
+  const handleRootRef = useCallback((node: HTMLDivElement | null) => {
+    rootResizeObserverRef.current?.disconnect()
+    rootRef.current = node
+
+    if (!node) return
+
+    setAvailableHeight(node.getBoundingClientRect().height)
+
+    const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        setContentHeight(entry.contentRect.height)
+        setAvailableHeight(entry.contentRect.height)
       }
     })
-    ro.observe(contentRef.current)
-    return () => ro.disconnect()
-  }, [activePanel])
+    observer.observe(node)
+    rootResizeObserverRef.current = observer
+  }, [])
+
+  const handleToolbarRef = useCallback((node: HTMLDivElement | null) => {
+    toolbarResizeObserverRef.current?.disconnect()
+    toolbarRef.current = node
+
+    if (!node) return
+
+    setToolbarHeight(node.getBoundingClientRect().height)
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setToolbarHeight(entry.target.getBoundingClientRect().height)
+      }
+    })
+    observer.observe(node)
+    toolbarResizeObserverRef.current = observer
+  }, [])
+
+  const updateContentHeight = useCallback(() => {
+    if (!open || !contentRef.current) {
+      setContentHeight(0)
+      return
+    }
+    setContentHeight(getStreamPanelContentHeight(contentRef.current))
+  }, [open])
+
+  useLayoutEffect(() => {
+    if (!open || !contentRef.current) {
+      setContentHeight(0)
+      return
+    }
+
+    const root = contentRef.current
+    let frameId = 0
+    const scheduleResizeUpdate = () => {
+      cancelAnimationFrame(frameId)
+      frameId = requestAnimationFrame(updateContentHeight)
+    }
+    const resizeObserver = new ResizeObserver(scheduleResizeUpdate)
+    const observeTargets = () => {
+      resizeObserver.disconnect()
+      resizeObserver.observe(root)
+      root
+        .querySelectorAll<HTMLElement>(
+          `
+            [data-stream-panel-root],
+            [data-stream-panel-overlay],
+            [data-stream-panel-overlay-header],
+            [data-stream-panel-overlay-body]
+          `
+        )
+        .forEach((target) => resizeObserver.observe(target))
+      updateContentHeight()
+    }
+    const mutationObserver = new MutationObserver(observeTargets)
+
+    observeTargets()
+    mutationObserver.observe(root, {
+      attributeFilter: ["class", "data-stream-panel-overlay", "style"],
+      attributes: true,
+      childList: true,
+      subtree: true,
+    })
+
+    return () => {
+      cancelAnimationFrame(frameId)
+      mutationObserver.disconnect()
+      resizeObserver.disconnect()
+    }
+  }, [open, updateContentHeight])
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -98,14 +197,14 @@ export function BlockToolbar({
       )
         return
       if (containerRef.current && !containerRef.current.contains(target)) {
-        setActivePanel(null)
+        setOpen(false)
       }
     }
-    if (activePanel !== null) {
+    if (open) {
       document.addEventListener("mousedown", handleClickOutside)
       return () => document.removeEventListener("mousedown", handleClickOutside)
     }
-  }, [activePanel])
+  }, [open, setOpen])
 
   const handleRotateStart = useCallback(() => {
     rotationRef.current -= 20
@@ -124,9 +223,8 @@ export function BlockToolbar({
   }, [rotateControls])
 
   const handleSettingsToggle = useCallback(() => {
-    // No-op: PopoverTrigger opens the StreamPanel popover directly
-    setActivePanel(null)
-  }, [])
+    setOpen((value) => !value)
+  }, [setOpen])
 
   type ToolbarItem = {
     active: boolean
@@ -164,15 +262,15 @@ export function BlockToolbar({
       strokeWidth: 2.5,
       type: "action",
     },
-    // {
-    //   active: activePanel === "settings",
-    //   icon: Settings2Icon,
-    //   iconStyle: "fill-current size-4.5",
-    //   id: "settings",
-    //   label: "Settings",
-    //   strokeWidth: 1.5,
-    //   type: "tab",
-    // },
+    {
+      active: open,
+      icon: CogIcon,
+      iconStyle: "size-4.5 stroke-[2.5]",
+      id: "settings",
+      label: "Settings",
+      strokeWidth: 1.5,
+      type: "tab",
+    },
     ...(codeUrl
       ? [
           {
@@ -200,11 +298,30 @@ export function BlockToolbar({
     4 * Math.max(items.length - 1, 0) +
     (dividerIndex !== -1 ? 9 : 0)
   const pillWidth = baseWidth + labelWidths
+  const expandedPanelWidth = 296
+  const toolbarWidth = open
+    ? Math.max(pillWidth, expandedPanelWidth)
+    : pillWidth
 
-  const pillHeight =
-    activePanel === null ? 52 : contentHeight > 0 ? contentHeight + 52 : 52
+  const measuredToolbarHeight = toolbarHeight ?? 0
+  const availableContentHeight =
+    availableHeight > 0
+      ? Math.max(0, availableHeight - measuredToolbarHeight)
+      : PANEL_CONTENT_MAX_HEIGHT
+  const maxContentHeight = Math.min(
+    PANEL_CONTENT_MAX_HEIGHT,
+    availableContentHeight
+  )
+  const minContentHeight = Math.min(PANEL_CONTENT_MIN_HEIGHT, maxContentHeight)
+  const boundedContentHeight = open
+    ? Math.min(Math.max(contentHeight, minContentHeight), maxContentHeight)
+    : 0
+  const naturalPillHeight = measuredToolbarHeight + boundedContentHeight
+  const pillHeight = toolbarHeight === null ? "auto" : naturalPillHeight
 
   function handleItemClick(item: ToolbarItem) {
+    if (item.type !== "tab") setOpen(false)
+
     if (item.id === "refresh") {
       onReload()
       void handleRotateEnd()
@@ -223,68 +340,112 @@ export function BlockToolbar({
 
   return (
     <div
-      className="absolute top-4 left-1/2 z-20 flex -translate-x-1/2 flex-col items-end"
-      style={{ maxHeight: "calc(100% - 2rem)" }}
+      className="pointer-events-none absolute inset-y-4 left-1/2 z-20 flex -translate-x-1/2 flex-col items-end"
+      ref={handleRootRef}
     >
-      <div ref={containerRef}>
-        <LayoutGroup>
-          <motion.div
-            animate={{ height: pillHeight, width: pillWidth }}
-            className="relative overflow-hidden rounded-3xl bg-background"
-            initial={false}
-            transition={PILL_TRANSITION}
-          >
-            <div ref={contentRef} />
+      <div className="pointer-events-auto max-h-full" ref={containerRef}>
+        <LazyMotion features={domAnimation}>
+          <LayoutGroup>
+            <m.div
+              animate={{ height: pillHeight, width: toolbarWidth }}
+              className="relative flex flex-col overflow-hidden rounded-4xl bg-background shadow-2xl ring-1 shadow-background/35 ring-border/60"
+              initial={false}
+              transition={PILL_TRANSITION}
+            >
+              <div
+                className="w-full bg-background px-0 py-2"
+                ref={handleToolbarRef}
+              >
+                <div className="flex h-9 items-center justify-center gap-1">
+                  {items.map((item, index) => {
+                    const Icon = item.icon
+                    const isActive = item.active
+                    const sharedClassName = cn(
+                      "flex h-9 cursor-pointer items-center rounded-2xl text-sm font-medium transition-colors duration-300",
+                      isActive
+                        ? "bg-foreground/4 text-foreground"
+                        : `
+                          text-muted-foreground
+                          hover:bg-muted hover:text-foreground
+                        `,
+                      item.id === "code" && "hover:bg-accent/10"
+                    )
+                    const sharedAnimate = {
+                      gap: isActive ? ".5rem" : "0",
+                      paddingLeft: isActive ? "1rem" : ".5rem",
+                      paddingRight: isActive ? "1rem" : ".5rem",
+                    }
 
-            <div className="absolute bottom-0 w-full bg-background p-2">
-              <div className="flex h-9 items-center justify-center gap-1">
-                {items.map((item, index) => {
-                  const Icon = item.icon
-                  const isActive = item.active
-                  const sharedClassName = cn(
-                    "flex h-9 cursor-pointer items-center rounded-2xl text-sm font-medium transition-colors duration-300",
-                    isActive
-                      ? "bg-foreground/4 text-foreground"
-                      : `
-                        text-muted-foreground
-                        hover:bg-muted hover:text-foreground
-                      `,
-                    item.id === "code" && "hover:bg-accent/10"
-                  )
-                  const sharedAnimate = {
-                    gap: isActive ? ".5rem" : "0",
-                    paddingLeft: isActive ? "1rem" : ".5rem",
-                    paddingRight: isActive ? "1rem" : ".5rem",
-                  }
+                    if (item.id === "settings") {
+                      return (
+                        <span className="flex items-center gap-1" key={item.id}>
+                          {dividerIndex === index && (
+                            <div className="mx-0.5 h-5 w-px bg-border/60" />
+                          )}
+                          <m.button
+                            animate={sharedAnimate}
+                            className={sharedClassName}
+                            initial={false}
+                            onClick={handleSettingsToggle}
+                            transition={CONTENT_TRANSITION}
+                            type="button"
+                          >
+                            <m.span className="inline-flex">
+                              <Icon
+                                className={cn("size-4", item.iconStyle)}
+                                strokeWidth={item.strokeWidth}
+                              />
+                            </m.span>
+                            <AnimatePresence initial={false}>
+                              {isActive && (
+                                <m.span
+                                  animate={{ opacity: 1, width: "auto" }}
+                                  className="overflow-hidden text-sm font-medium tracking-tight whitespace-nowrap"
+                                  exit={{ opacity: 0, width: 0 }}
+                                  initial={{ opacity: 0, width: 0 }}
+                                  transition={CONTENT_TRANSITION}
+                                >
+                                  {item.label}
+                                </m.span>
+                              )}
+                            </AnimatePresence>
+                          </m.button>
+                        </span>
+                      )
+                    }
 
-                  if (item.id === "settings") {
                     return (
                       <span className="flex items-center gap-1" key={item.id}>
                         {dividerIndex === index && (
                           <div className="mx-0.5 h-5 w-px bg-border/60" />
                         )}
-                        <PopoverTrigger
-                          handle={handle}
-                          nativeButton={false}
-                          render={
-                            <motion.div
-                              animate={sharedAnimate}
-                              className={sharedClassName}
-                              initial={false}
-                              onClick={() => handleSettingsToggle()}
-                              transition={CONTENT_TRANSITION}
-                            />
+                        <m.button
+                          animate={sharedAnimate}
+                          className={sharedClassName}
+                          initial={false}
+                          onClick={() => handleItemClick(item)}
+                          onTapStart={
+                            item.id === "refresh"
+                              ? handleRotateStart
+                              : undefined
                           }
+                          transition={CONTENT_TRANSITION}
+                          type="button"
                         >
-                          <motion.span className="inline-flex">
+                          <m.span
+                            animate={
+                              item.id === "refresh" ? rotateControls : undefined
+                            }
+                            className="inline-flex"
+                          >
                             <Icon
                               className={cn("size-4", item.iconStyle)}
                               strokeWidth={item.strokeWidth}
                             />
-                          </motion.span>
+                          </m.span>
                           <AnimatePresence initial={false}>
                             {isActive && (
-                              <motion.span
+                              <m.span
                                 animate={{ opacity: 1, width: "auto" }}
                                 className="overflow-hidden text-sm font-medium tracking-tight whitespace-nowrap"
                                 exit={{ opacity: 0, width: 0 }}
@@ -292,65 +453,83 @@ export function BlockToolbar({
                                 transition={CONTENT_TRANSITION}
                               >
                                 {item.label}
-                              </motion.span>
+                              </m.span>
                             )}
                           </AnimatePresence>
-                        </PopoverTrigger>
+                        </m.button>
                       </span>
                     )
-                  }
-
-                  return (
-                    <span className="flex items-center gap-1" key={item.id}>
-                      {dividerIndex === index && (
-                        <div className="mx-0.5 h-5 w-px bg-border/60" />
-                      )}
-                      <motion.button
-                        animate={sharedAnimate}
-                        className={sharedClassName}
-                        initial={false}
-                        onClick={() => handleItemClick(item)}
-                        onTapStart={
-                          item.id === "refresh" ? handleRotateStart : undefined
-                        }
-                        transition={CONTENT_TRANSITION}
-                        type="button"
-                      >
-                        <motion.span
-                          animate={
-                            item.id === "refresh" ? rotateControls : undefined
-                          }
-                          className="inline-flex"
-                        >
-                          <Icon
-                            className={cn("size-4", item.iconStyle)}
-                            strokeWidth={item.strokeWidth}
-                          />
-                        </motion.span>
-                        <AnimatePresence initial={false}>
-                          {isActive && (
-                            <motion.span
-                              animate={{ opacity: 1, width: "auto" }}
-                              className="overflow-hidden text-sm font-medium tracking-tight whitespace-nowrap"
-                              exit={{ opacity: 0, width: 0 }}
-                              initial={{ opacity: 0, width: 0 }}
-                              transition={CONTENT_TRANSITION}
-                            >
-                              {item.label}
-                            </motion.span>
-                          )}
-                        </AnimatePresence>
-                      </motion.button>
-                    </span>
-                  )
-                })}
+                  })}
+                </div>
               </div>
-            </div>
-          </motion.div>
-        </LayoutGroup>
+
+              <AnimatePresence initial={false}>
+                {open && (
+                  <m.div
+                    animate={{ opacity: 1, y: 0 }}
+                    className="no-scrollbar min-h-0 min-w-[200px] flex-1 overflow-y-auto overscroll-contain"
+                    exit={{ opacity: 0, y: 4 }}
+                    initial={{ opacity: 0, y: 8 }}
+                    transition={CONTENT_TRANSITION}
+                  >
+                    <div className="px-2 pb-2" ref={contentRef}>
+                      {controller ? (
+                        <StreamPanel
+                          onLoadStream={controller.onLoadStream}
+                          onPlaylistChange={controller.onPlaylistChange}
+                          onPresetChange={controller.onPresetChange}
+                          playerType={controller.playerType}
+                          variant="children"
+                        />
+                      ) : (
+                        <div className="flex h-24 items-center justify-center text-sm text-muted-foreground">
+                          Player settings unavailable
+                        </div>
+                      )}
+                    </div>
+                  </m.div>
+                )}
+              </AnimatePresence>
+            </m.div>
+          </LayoutGroup>
+        </LazyMotion>
       </div>
     </div>
   )
 }
 
-export { StreamPanelProvider }
+function getBlockSpacing(element: HTMLElement, axis: "margin" | "padding") {
+  const style = getComputedStyle(element)
+  return parseFloat(style[`${axis}Top`]) + parseFloat(style[`${axis}Bottom`])
+}
+
+function getStreamPanelContentHeight(root: HTMLElement) {
+  const panelRoot = root.querySelector<HTMLElement>("[data-stream-panel-root]")
+  const wrapperSpacing = getBlockSpacing(root, "padding")
+  const panelSpacing = panelRoot ? getBlockSpacing(panelRoot, "margin") : 0
+  const activeOverlay = root.querySelector<HTMLElement>(
+    '[data-stream-panel-overlay="active"]'
+  )
+
+  if (!activeOverlay) {
+    return Math.ceil(
+      wrapperSpacing +
+        panelSpacing +
+        (panelRoot?.scrollHeight ?? root.scrollHeight)
+    )
+  }
+
+  const overlayHeader = activeOverlay.querySelector<HTMLElement>(
+    "[data-stream-panel-overlay-header]"
+  )
+  const overlayBody = activeOverlay.querySelector<HTMLElement>(
+    "[data-stream-panel-overlay-body]"
+  )
+  const headerHeight = overlayHeader
+    ? overlayHeader.getBoundingClientRect().height +
+      getBlockSpacing(overlayHeader, "margin")
+    : 0
+  const bodyHeight = overlayBody?.scrollHeight ?? activeOverlay.scrollHeight
+
+  return Math.ceil(wrapperSpacing + panelSpacing + headerHeight + bodyHeight)
+}

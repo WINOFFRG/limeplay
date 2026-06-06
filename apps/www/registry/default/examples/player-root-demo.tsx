@@ -239,7 +239,8 @@ export function PlayerLayoutDemo({
 }
 
 function DemoStreamSync({ children }: React.PropsWithChildren) {
-  const { handleLoadStream } = useStreamPanelSync()
+  const { handleLoadStream, handlePlaylistPresetChange, handlePresetChange } =
+    useStreamPanelSync({ playerType: "video" })
 
   return (
     <>
@@ -247,8 +248,10 @@ function DemoStreamSync({ children }: React.PropsWithChildren) {
       <StreamPanel
         align="end"
         onLoadStream={handleLoadStream}
+        onPlaylistChange={handlePlaylistPresetChange}
+        onPresetChange={handlePresetChange}
         playerType="video"
-        side="top"
+        side="right"
         variant="anchored"
       />
     </>

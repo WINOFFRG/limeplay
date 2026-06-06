@@ -4,6 +4,7 @@ const TARGET_BASE_PATH = "components/limeplay"
 
 export const ui: Registry["items"] = [
   {
+    dependencies: ["shaka-player@^4"],
     files: [
       {
         path: "ui/error-screen.tsx",
@@ -12,7 +13,7 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "error-screen",
-    registryDependencies: ["media-provider"],
+    registryDependencies: ["media-provider", "item"],
     type: "registry:ui",
   },
   {

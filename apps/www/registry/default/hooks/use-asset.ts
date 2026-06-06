@@ -287,7 +287,7 @@ export function assetFeature(): MediaFeature<
             asset.loadGeneration = generation
           })
 
-          media.pause()
+          get().playback.pause()
 
           try {
             const preloadManagers = get().player.preloadManagers as Map<
@@ -449,6 +449,7 @@ export function assetFeature(): MediaFeature<
                 asset.previousError = null
                 asset.retryCount = 0
               })
+              get().playback.setError(normalizedError)
               return false
             }
 
@@ -458,6 +459,8 @@ export function assetFeature(): MediaFeature<
                 asset.retryCount = 0
               })
               playlist.next()
+            } else {
+              get().playback.setError(normalizedError)
             }
             return false
           }

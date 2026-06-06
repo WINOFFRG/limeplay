@@ -45,6 +45,8 @@ export function Playlist() {
       )
   }, [queue, shuffle, shuffleOrder])
 
+  if (orderedItems.length < 2) return null
+
   const handleAssetSelect = async (assetId: string) => {
     await skipToId(assetId)
   }

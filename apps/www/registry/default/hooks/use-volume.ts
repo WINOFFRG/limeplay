@@ -35,6 +35,12 @@ export interface VolumeStore extends MediaEventSlice<VolumeEvents> {
 
 const BASE_RESET_VOLUME = 0.05
 
+type MediaElementAudioMetadata = HTMLMediaElement & {
+  audioTracks?: { length: number }
+  mozHasAudio?: boolean
+  webkitAudioDecodedByteCount?: number
+}
+
 export function useVolumeStore<TSelected>(
   selector: (state: VolumeStore["volume"]) => TSelected
 ): TSelected {
@@ -111,19 +117,56 @@ export function volumeFeature(): MediaFeature<VolumeStore> {
   }
 }
 
+function getNativeHasAudio(media: HTMLMediaElement): boolean | undefined {
+  const metadata = media as MediaElementAudioMetadata
+
+  if (metadata.audioTracks) {
+    return metadata.audioTracks.length > 0
+  }
+
+  if (typeof metadata.mozHasAudio === "boolean") {
+    return metadata.mozHasAudio
+  }
+
+  if (typeof metadata.webkitAudioDecodedByteCount === "number") {
+    return metadata.webkitAudioDecodedByteCount > 0
+  }
+
+  return undefined
+}
+
 function VolumeSetup() {
   const store = useMediaFeatureApi<VolumeStore>(VOLUME_FEATURE_KEY)
   const events = useMediaEvents<VolumeEvents>()
   const mediaElement = useMediaStore((state) => state.mediaElement)
   const playerInstance = usePlayerStore((state) => state.instance)
 
-  const getHasAudio = React.useCallback(() => {
-    if (!playerInstance) {
-      return true
-    }
+  const getHasAudio = React.useCallback(
+    (media: HTMLMediaElement) => {
+      if (media instanceof HTMLAudioElement) {
+        return true
+      }
 
-    return playerInstance.getAudioTracks().length > 0
-  }, [playerInstance])
+      if (!playerInstance) {
+        return true
+      }
+
+      if (playerInstance.getAudioTracks().length > 0) {
+        return true
+      }
+
+      if (playerInstance.isAudioOnly()) {
+        return true
+      }
+
+      if (playerInstance.isVideoOnly()) {
+        return false
+      }
+
+      return getNativeHasAudio(media) ?? true
+    },
+    [playerInstance]
+  )
 
   React.useEffect(() => {
     if (!mediaElement) return noop
@@ -145,21 +188,31 @@ function VolumeSetup() {
 
     const audioTracksChangedHandler = () => {
       store.setState(({ volume }) => {
-        volume.hasAudio = getHasAudio()
+        volume.hasAudio = getHasAudio(media)
       })
     }
 
     on(media, "volumechange", volumeHandler)
+    on(
+      media,
+      ["loadstart", "loadedmetadata", "loadeddata", "emptied"],
+      audioTracksChangedHandler
+    )
 
     volumeHandler()
+    audioTracksChangedHandler()
 
     if (playerInstance) {
       on(playerInstance, "trackschanged", audioTracksChangedHandler)
-      audioTracksChangedHandler()
     }
 
     return () => {
       off(media, "volumechange", volumeHandler)
+      off(
+        media,
+        ["loadstart", "loadedmetadata", "loadeddata", "emptied"],
+        audioTracksChangedHandler
+      )
       if (playerInstance) {
         off(playerInstance, "trackschanged", audioTracksChangedHandler)
       }
