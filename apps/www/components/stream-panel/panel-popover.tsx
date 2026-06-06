@@ -56,7 +56,15 @@ export function StreamPanel({
     if (!open) setOverlayStack([])
   }, [open])
 
-  const store = useStreamPanelStore()
+  const muted = useStreamPanelStore((s) => s.muted)
+  const autoplay = useStreamPanelStore((s) => s.autoplay)
+  const savedStreams = useStreamPanelStore((s) => s.savedStreams)
+  const contentSelection = useStreamPanelStore(
+    (s) => s.contentSelections[playerType]
+  )
+  const setMuted = useStreamPanelStore((s) => s.setMuted)
+  const setAutoplay = useStreamPanelStore((s) => s.setAutoplay)
+  const setContentSelection = useStreamPanelStore((s) => s.setContentSelection)
   const presets = getPresetsForType(playerType)
   const streamPresets = useMemo(
     () => presets.filter((preset) => preset.group !== "Live"),
@@ -70,7 +78,6 @@ export function StreamPanel({
     () => getPlaylistPresetsForType(playerType),
     [playerType]
   )
-  const contentSelection = store.contentSelections[playerType]
   const groupedStreamPresets = useMemo(
     () => groupPresets(streamPresets),
     [streamPresets]
@@ -103,7 +110,7 @@ export function StreamPanel({
     const preset = presets.find((p) => p.id === presetId)
     if (!preset) return
 
-    store.setContentSelection(playerType, { id: presetId, index: 0, kind })
+    setContentSelection(playerType, { id: presetId, index: 0, kind })
     onPresetChange?.(preset, kind)
   }
 
@@ -185,13 +192,10 @@ export function StreamPanel({
             Media Settings
           </FieldLabel>
 
-          <PanelToggleRow onValueChange={store.setMuted} value={store.muted}>
+          <PanelToggleRow onValueChange={setMuted} value={muted}>
             Muted
           </PanelToggleRow>
-          <PanelToggleRow
-            onValueChange={store.setAutoplay}
-            value={store.autoplay}
-          >
+          <PanelToggleRow onValueChange={setAutoplay} value={autoplay}>
             Autoplay
           </PanelToggleRow>
         </Field>
@@ -207,9 +211,9 @@ export function StreamPanel({
 
         <PanelActionRow
           detail={
-            store.savedStreams.length > 0
-              ? `${store.savedStreams.length} saved stream${
-                  store.savedStreams.length > 1 ? "s" : ""
+            savedStreams.length > 0
+              ? `${savedStreams.length} saved stream${
+                  savedStreams.length > 1 ? "s" : ""
                 }`
               : "Add a custom stream"
           }
@@ -254,7 +258,7 @@ export function StreamPanel({
           <PlaylistsOverlay
             onBack={() => openOverlay(STREAM_PANEL_OVERLAY.CONTENT)}
             onSelect={(playlist) => {
-              store.setContentSelection(playerType, {
+              setContentSelection(playerType, {
                 id: playlist.id,
                 index: 0,
                 kind: "playlist",

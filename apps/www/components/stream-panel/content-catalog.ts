@@ -1,7 +1,30 @@
 import type shaka from "shaka-player"
 
+import { z } from "zod"
+
 import type { StreamPanelPlayerType } from "@/components/stream-panel/use-stream-panel"
 import type { Asset } from "@/registry/default/hooks/use-asset"
+
+export interface AppleMusicArtwork {
+  bgColor?: string
+  height?: number
+  templateUrl?: string
+  textColor1?: string
+  textColor2?: string
+  textColor3?: string
+  textColor4?: string
+  url?: string
+  width?: number
+}
+
+export interface AppleMusicChartAsset extends Asset {
+  albumName?: string
+  artistName?: string
+  duration?: number
+  genre?: string
+  source: "apple-music-chart"
+  url?: string
+}
 
 export interface BlenderOpenFilmAsset extends Asset {
   duration?: number
@@ -33,6 +56,23 @@ export interface StreamPanelPlaylistPreset {
   type: StreamPanelPlayerType
 }
 
+interface AppleMusicChartItem {
+  albumName?: string
+  artistName?: string
+  artwork?: AppleMusicArtwork
+  durationMs?: number
+  id: string
+  previewUrl?: string
+  title: string
+  url?: string
+}
+
+interface AppleMusicChartsResponse {
+  items: AppleMusicChartItem[]
+  nextPage?: number
+  page: number
+}
+
 interface BlenderPlaylistItem {
   description?: string
   duration?: number
@@ -57,9 +97,48 @@ interface BlenderStreamCaption {
   url: string
 }
 
+export const APPLE_MUSIC_CHARTS_PLAYLIST_ID = "apple-music-charts"
+
 const BLENDER_OPEN_FILMS_PLAYLIST_ID = "blender-open-films"
 
 const BLENDER_API_BASE_URL = "https://limeplay.winoffrg.workers.dev/api/blender"
+const APPLE_MUSIC_API_BASE_URL =
+  "https://limeplay.winoffrg.workers.dev/api/catalog/am"
+const BLENDER_STREAM_TIMEOUT_MS = 10_000
+const DEFAULT_APPLE_MUSIC_LOCALE = "en-US"
+const DEFAULT_APPLE_MUSIC_STOREFRONT = "us"
+
+const BlenderOpenFilmImagesSchema = z.object({
+  backdrop: z.string().optional(),
+  logo: z.string().optional(),
+  poster: z.string().optional(),
+})
+
+const BlenderStreamCaptionSchema = z.object({
+  kind: z
+    .enum(["captions", "chapters", "descriptions", "metadata", "subtitles"])
+    .optional(),
+  label: z.string(),
+  language: z.string(),
+  mimeType: z.string().optional(),
+  url: z.string(),
+})
+
+const BlenderStreamResponseSchema = z.object({
+  captions: z.array(BlenderStreamCaptionSchema).optional(),
+  description: z.string().optional(),
+  duration: z.number().optional(),
+  id: z.string(),
+  images: BlenderOpenFilmImagesSchema.optional(),
+  links: z.record(z.string(), z.string().optional()).optional(),
+  playback: z.object({
+    hls: z.string(),
+    mimeType: z.string().optional(),
+  }),
+  subtitle: z.string().optional(),
+  title: z.string(),
+  year: z.number().optional(),
+})
 
 const STREAM_PANEL_PLAYLIST_PRESETS: StreamPanelPlaylistPreset[] = [
   {
@@ -69,6 +148,12 @@ const STREAM_PANEL_PLAYLIST_PRESETS: StreamPanelPlaylistPreset[] = [
     name: "Blender Open Films",
     type: "video",
   },
+  {
+    description: "Top songs from Apple Music for your region",
+    id: APPLE_MUSIC_CHARTS_PLAYLIST_ID,
+    name: "Apple Music Charts",
+    type: "audio",
+  },
 ]
 
 export async function addBlenderCaptions(
@@ -77,7 +162,7 @@ export async function addBlenderCaptions(
 ): Promise<void> {
   if (!stream.captions || stream.captions.length === 0) return
 
-  await Promise.all(
+  const captionResults = await Promise.allSettled(
     stream.captions.map((caption) =>
       player.addTextTrackAsync(
         caption.url,
@@ -89,31 +174,46 @@ export async function addBlenderCaptions(
       )
     )
   )
+
+  captionResults.forEach((result, index) => {
+    if (result.status === "fulfilled") return
+
+    const caption = stream.captions?.[index]
+    console.warn("Failed to add Blender caption track:", {
+      error: result.reason,
+      label: caption?.label,
+      url: caption?.url,
+    })
+  })
 }
 
 export async function fetchBlenderStream(
   assetId: string,
   signal?: AbortSignal
 ): Promise<BlenderStreamResponse> {
+  const combinedSignal = createTimeoutSignal(signal, BLENDER_STREAM_TIMEOUT_MS)
   const response = await fetch(`${BLENDER_API_BASE_URL}/stream/${assetId}`, {
-    signal,
+    signal: combinedSignal,
   })
 
   if (!response.ok) {
     throw new Error(`Failed to fetch Blender stream: ${response.statusText}`)
   }
 
-  return (await response.json()) as BlenderStreamResponse
+  return BlenderStreamResponseSchema.parse(await response.json())
 }
 
 export async function fetchPlaylistPresetAssets(
   playlistId: string,
   signal?: AbortSignal
 ): Promise<Asset[]> {
+  if (playlistId === APPLE_MUSIC_CHARTS_PLAYLIST_ID) {
+    return fetchAppleMusicChartAssets(signal)
+  }
+
   if (playlistId !== BLENDER_OPEN_FILMS_PLAYLIST_ID) {
     throw new Error(`Unknown playlist preset "${playlistId}".`)
   }
-
   const response = await fetch(`${BLENDER_API_BASE_URL}/playlist`, { signal })
   if (!response.ok) {
     throw new Error(`Failed to fetch Blender playlist: ${response.statusText}`)
@@ -136,6 +236,104 @@ export function isBlenderOpenFilmAsset(
   asset: Asset
 ): asset is BlenderOpenFilmAsset {
   return "source" in asset && asset.source === "blender-open-film"
+}
+
+function createTimeoutSignal(
+  signal: AbortSignal | undefined,
+  timeoutMs: number
+): AbortSignal | undefined {
+  if (typeof AbortSignal.timeout !== "function") return signal
+
+  const timeoutSignal = AbortSignal.timeout(timeoutMs)
+  if (!signal) return timeoutSignal
+  return AbortSignal.any([signal, timeoutSignal])
+}
+
+async function fetchAppleMusicChartAssets(
+  signal?: AbortSignal
+): Promise<AppleMusicChartAsset[]> {
+  const { locale, storefront } = getAppleMusicLocaleHeaders()
+  const response = await fetch(`${APPLE_MUSIC_API_BASE_URL}/charts?page=1`, {
+    headers: {
+      "x-locale": locale,
+      "x-storefront": storefront,
+    },
+    signal,
+  })
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch Apple Music charts: ${response.statusText}`
+    )
+  }
+
+  const chart = (await response.json()) as AppleMusicChartsResponse
+  return chart.items
+    .filter((item) => Boolean(item.previewUrl))
+    .map(toAppleMusicChartAsset)
+}
+
+function getAppleMusicLocaleHeaders(): { locale: string; storefront: string } {
+  const locale = getUserLocale()
+  const country = getLocaleCountry(locale)
+
+  return {
+    locale,
+    storefront: country?.toLowerCase() ?? DEFAULT_APPLE_MUSIC_STOREFRONT,
+  }
+}
+
+function getLocaleCountry(locale: string): string | undefined {
+  try {
+    const parsedLocale = new Intl.Locale(locale)
+    return parsedLocale.region ?? parsedLocale.maximize().region
+  } catch {
+    return locale.match(/[-_]([A-Za-z]{2})\b/)?.[1]?.toUpperCase()
+  }
+}
+
+function getUserLocale(): string {
+  const browserLocale =
+    typeof navigator === "undefined"
+      ? undefined
+      : (navigator.languages.find(Boolean) ?? navigator.language)
+
+  const resolvedLocale =
+    browserLocale ?? Intl.DateTimeFormat().resolvedOptions().locale
+
+  return normalizeLocale(resolvedLocale)
+}
+
+function normalizeLocale(locale: string | undefined): string {
+  if (!locale) return DEFAULT_APPLE_MUSIC_LOCALE
+
+  const normalizedLocale = locale.replaceAll("_", "-")
+  try {
+    return (
+      Intl.getCanonicalLocales(normalizedLocale)[0] ??
+      DEFAULT_APPLE_MUSIC_LOCALE
+    )
+  } catch {
+    return DEFAULT_APPLE_MUSIC_LOCALE
+  }
+}
+
+function toAppleMusicChartAsset(
+  item: AppleMusicChartItem
+): AppleMusicChartAsset {
+  return {
+    albumName: item.albumName,
+    artistName: item.artistName,
+    description: item.albumName,
+    duration: item.durationMs,
+    genre: item.artistName,
+    id: item.id,
+    poster: item.artwork?.url,
+    source: "apple-music-chart",
+    src: item.previewUrl,
+    title: item.title,
+    url: item.url,
+  }
 }
 
 function toBlenderOpenFilmAsset(
