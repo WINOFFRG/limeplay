@@ -1,6 +1,6 @@
 ---
 title: Video Player
-description: A polished video player with playlist support, captions, picture-in-picture, playback speed, preloading, and smooth overlay controls.
+description: A polished video player with playlist support, captions, picture-in-picture, playback speed, source loading, and smooth overlay controls.
 component: video-player
 preview: video-player
 registry: default
@@ -16,28 +16,20 @@ npx shadcn add @limeplay/video-player
 ## Usage
 
 ```tsx
-import {
-  VideoPlayer,
-  type VideoPlayerAsset,
-} from "@/components/limeplay/video-player/components/media-player"
+import { VideoPlayer } from "@/components/limeplay/video-player/components/media-player"
 
-const playlist: VideoPlayerAsset[] = [
-  {
-    id: "sing-2",
-    src: "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8",
-    title: "Sing 2 Trailer",
-  },
-]
+const src =
+  "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8"
 
 export function Player() {
-  return <VideoPlayer playlist={playlist} />
+  return <VideoPlayer mediaProps={{ src }} />
 }
 ```
 
 ## Features
 
-- Playlist queue with active item switching.
-- Asset preloading when users hover playlist items.
+- Single-source and playlist-backed loading APIs.
+- Playlist menu appears only when a multi-item queue is loaded.
 - Timeline scrubbing with buffered progress feedback.
 - Volume, mute, captions, playback rate, and picture-in-picture controls.
 - Shaka-backed playback for HLS, DASH, and DRM-capable streams.

@@ -1,9 +1,9 @@
 import type { ReactNode } from "react"
 
 import { AudioPlayerDemo } from "@/components/players/audio-player/demo-player"
-import { VIDEO_PLAYER_DEMO_ASSETS } from "@/components/players/video-player/demo-assets"
 import { VideoPlayer } from "@/registry/default/blocks/video-player/components/media-player"
 
+import { BlockStreamSync } from "./block-toolbar"
 import { BlockPreviewPane } from "./preview-background"
 import { BlockPreviewWithToolbar } from "./preview-pane"
 
@@ -17,7 +17,9 @@ const blockShowcaseRegistry = {
       <BlockPreviewWithToolbar>
         <div className="flex size-full items-end">
           <BlockPreviewPane>
-            <AudioPlayerDemo />
+            <AudioPlayerDemo>
+              <BlockStreamSync playerType="audio" />
+            </AudioPlayerDemo>
           </BlockPreviewPane>
         </div>
       </BlockPreviewWithToolbar>
@@ -28,7 +30,9 @@ const blockShowcaseRegistry = {
       <BlockPreviewWithToolbar>
         <div className="flex size-full">
           <BlockPreviewPane>
-            <VideoPlayer playlist={VIDEO_PLAYER_DEMO_ASSETS} />
+            <VideoPlayer>
+              <BlockStreamSync playerType="video" />
+            </VideoPlayer>
           </BlockPreviewPane>
         </div>
       </BlockPreviewWithToolbar>

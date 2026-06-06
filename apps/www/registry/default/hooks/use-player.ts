@@ -360,10 +360,7 @@ function PlayerSetup() {
       const detail = (event as CustomEvent).detail as shaka.util.Error
       if (isLoadInterrupted(detail)) return
 
-      store.setState(({ playback }) => {
-        playback.status = "error"
-        playback.error = detail
-      })
+      store.getState().playback.setError(detail)
       events.emit("playbackerror", { error: detail as unknown as Error })
     }
 

@@ -20,7 +20,7 @@ export function TimeLabels() {
 
 export function TimelineControl() {
   return (
-    <div className="group/timeline absolute -top-2 flex h-4 w-full items-center">
+    <div className="group/timeline absolute -top-2 flex h-4 w-full items-center pr-2">
       <TimelineSlider.Root
         className={cn(
           `
@@ -51,8 +51,8 @@ export function TimelineControl() {
 
         <TimelineSlider.Thumb
           className={`
-            top-auto! bottom-2 flex h-auto w-fit rounded-sm bg-background/90! px-2 py-1 text-xs text-foreground opacity-0 transition-opacity
-            duration-200
+            pointer-events-none top-auto! bottom-2 flex h-auto w-fit rounded-sm bg-background/90! px-2 py-1 text-xs text-foreground opacity-0
+            transition-opacity duration-200
             group-hover/timeline:opacity-100
           `}
           showWithHover
