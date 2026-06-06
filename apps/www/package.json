@@ -42,7 +42,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "fumadocs-core": "16.9.3",
-    "fumadocs-mdx": "15.0.11",
+    "fumadocs-mdx": "15.0.10",
     "fumadocs-typescript": "^5.2.6",
     "fumadocs-ui": "16.9.3",
     "hast-util-to-jsx-runtime": "^2.3.6",
