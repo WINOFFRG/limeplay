@@ -111,7 +111,7 @@ function getBlockPageLayoutSnapshot(): BlockPageLayout {
 }
 
 function getServerBlockPageLayoutSnapshot(): BlockPageLayout {
-  return "mobile"
+  return "desktop"
 }
 
 function subscribeToBlockPageLayoutChange(onStoreChange: () => void) {
