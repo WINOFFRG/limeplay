@@ -2,7 +2,7 @@ import type { StreamPanelPlaylistPreset } from "@/components/stream-panel/conten
 import type {
   StreamPanelContentKind,
   StreamPanelPlayerType,
-} from "@/lib/docs-dial-store"
+} from "@/components/stream-panel/use-stream-panel"
 import type { StreamPreset } from "@/lib/stream-presets"
 
 export const STREAM_PANEL_OVERLAY = {

@@ -1,6 +1,6 @@
 import type shaka from "shaka-player"
 
-import type { StreamPanelPlayerType } from "@/lib/docs-dial-store"
+import type { StreamPanelPlayerType } from "@/components/stream-panel/use-stream-panel"
 import type { Asset } from "@/registry/default/hooks/use-asset"
 
 export interface BlenderOpenFilmAsset extends Asset {

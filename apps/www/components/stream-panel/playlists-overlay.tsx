@@ -4,7 +4,7 @@ import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 import { CheckIcon } from "lucide-react"
 
 import type { StreamPanelPlaylistPreset } from "@/components/stream-panel/content-catalog"
-import type { StreamPanelSelection } from "@/lib/docs-dial-store"
+import type { StreamPanelSelection } from "@/components/stream-panel/use-stream-panel"
 
 import { cn } from "@/lib/utils"
 
@@ -50,7 +50,9 @@ export function PlaylistsOverlay({
           ) : (
             <MenuPrimitive.RadioGroup
               onValueChange={(playlistId) => {
-                const playlist = playlists.find((item) => item.id === playlistId)
+                const playlist = playlists.find(
+                  (item) => item.id === playlistId
+                )
                 if (playlist) onSelect(playlist)
               }}
               value={selection?.kind === "playlist" ? selection.id : ""}
@@ -65,7 +67,7 @@ export function PlaylistsOverlay({
                     <MenuPrimitive.RadioItem
                       className={cn(
                         `
-                          relative flex w-full items-center gap-3 rounded-[18px] p-2.5 text-sm outline-hidden
+                          relative flex w-full items-center gap-3 rounded-lg p-2.5 text-sm outline-hidden
                           transition-[background-color,color,transform] select-none
                           hover:bg-foreground/4
                           focus:bg-foreground/4

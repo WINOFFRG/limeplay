@@ -1,21 +1,20 @@
 "use client"
 
+import type { ComponentType, SVGProps } from "react"
+
+import { IconSatellite1 } from "@central-icons-react/round-filled-radius-0-stroke-1/IconSatellite1"
+import { IconVideoClip } from "@central-icons-react/round-filled-radius-0-stroke-1/IconVideoClip"
+import { IconVideos } from "@central-icons-react/round-filled-radius-0-stroke-1/IconVideos"
 import { ChevronRightIcon } from "lucide-react"
 
 import type {
   StreamPanelContentKind,
   StreamPanelPlayerType,
-} from "@/lib/docs-dial-store"
+} from "@/components/stream-panel/use-stream-panel"
 
 import { cn } from "@/lib/utils"
 
 import { Separator } from "../ui/separator"
-import {
-  FilmIcon,
-  type IconProps,
-  RadarIcon,
-  VideoPlaylistIcon,
-} from "./icons"
 import { OverlayShell, type OverlayShellPlacement } from "./overlay-shell"
 
 interface ContentOverviewOverlayProps {
@@ -29,27 +28,33 @@ interface ContentOverviewOverlayProps {
   streamCount: number
 }
 
+type IconComponent = ComponentType<
+  SVGProps<SVGSVGElement> & {
+    size?: number | string
+  }
+>
+
 const rows: {
   description: string
-  Icon: React.ComponentType<IconProps>
+  Icon: IconComponent
   kind: StreamPanelContentKind
   label: string
 }[] = [
   {
     description: "Adaptive and progressive test content",
-    Icon: FilmIcon,
+    Icon: IconVideoClip,
     kind: "stream",
     label: "Streams",
   },
   {
     description: "Curated multi-item queues",
-    Icon: VideoPlaylistIcon,
+    Icon: IconVideos,
     kind: "playlist",
     label: "Playlists",
   },
   {
     description: "Time-based live manifests",
-    Icon: RadarIcon,
+    Icon: IconSatellite1,
     kind: "live",
     label: "Live",
   },
@@ -123,10 +128,12 @@ export function ContentOverviewOverlay({
                     {row.description}
                   </span>
                 </span>
-                <ChevronRightIcon className="
-                  size-3.5 shrink-0 text-muted-foreground transition-transform
-                  group-hover:translate-x-0.5
-                " />
+                <ChevronRightIcon
+                  className="
+                    size-3.5 shrink-0 text-muted-foreground transition-transform
+                    group-hover:translate-x-0.5
+                  "
+                />
               </button>
             )
           })}

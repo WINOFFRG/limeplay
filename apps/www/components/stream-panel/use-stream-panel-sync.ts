@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef } from "react"
 
-import type { StreamPreset } from "@/lib/stream-presets"
 import type { Asset, UseAssetOptions } from "@/registry/default/hooks/use-asset"
 import type { PlaybackStore } from "@/registry/default/hooks/use-playback"
 
@@ -17,13 +16,19 @@ import {
 import {
   type StreamPanelContentKind,
   type StreamPanelPlayerType,
+  type StreamPanelSelection,
   useStreamPanelStore,
-} from "@/lib/docs-dial-store"
+  useStreamPanelStoreHydrated,
+} from "@/components/stream-panel/use-stream-panel"
+import { getPresetsForType, type StreamPreset } from "@/lib/stream-presets"
 import { useAsset } from "@/registry/default/hooks/use-asset"
 import { useMediaStore } from "@/registry/default/hooks/use-media"
 import { PLAYBACK_FEATURE_KEY } from "@/registry/default/hooks/use-playback"
+import { usePlayerStore } from "@/registry/default/hooks/use-player"
 import { useVolumeStore } from "@/registry/default/hooks/use-volume"
 import { useMediaFeatureApi } from "@/registry/default/ui/media-provider"
+
+const DEFAULT_VIDEO_PRESET_ID = "mux-big-buck-bunny"
 
 export function useStreamPanelSync({
   playerType = "video",
@@ -32,19 +37,25 @@ export function useStreamPanelSync({
 } = {}) {
   const playbackApi = useMediaFeatureApi<PlaybackStore>(PLAYBACK_FEATURE_KEY)
   const mediaElement = useMediaStore((state) => state.mediaElement)
+  const player = usePlayerStore((state) => state.instance)
 
   const volume = useStreamPanelStore((s) => s.volume)
   const muted = useStreamPanelStore((s) => s.muted)
   const autoplay = useStreamPanelStore((s) => s.autoplay)
+  const contentSelection = useStreamPanelStore(
+    (s) => s.contentSelections[playerType]
+  )
+  const storeHydrated = useStreamPanelStoreHydrated()
   const setContentSelection = useStreamPanelStore((s) => s.setContentSelection)
-  const setPresetId = useStreamPanelStore((s) => s.setPresetId)
 
   const setVolume = useVolumeStore((s) => s.setVolume)
   const setMuted = useVolumeStore((s) => s.setMuted)
   const playlistAbortRef = useRef<AbortController | null>(null)
-  const blenderStreamCacheRef = useRef<Map<string, BlenderStreamResponse> | null>(
-    null
-  )
+  const restoredSelectionRef = useRef(false)
+  const blenderStreamCacheRef = useRef<Map<
+    string,
+    BlenderStreamResponse
+  > | null>(null)
   if (blenderStreamCacheRef.current === null) {
     blenderStreamCacheRef.current = new Map()
   }
@@ -100,6 +111,17 @@ export function useStreamPanelSync({
           })
         },
       },
+      onAssetChange: (event) => {
+        const selection =
+          useStreamPanelStore.getState().contentSelections[playerType]
+        if (!selection || selection.kind !== "playlist") return
+        if (selection.index === event.currentIndex) return
+
+        setContentSelection(playerType, {
+          ...selection,
+          index: event.currentIndex,
+        })
+      },
       onLoadError: (_asset, error) => {
         playbackApi.setState(({ playback }) => {
           playback.status = "error"
@@ -108,7 +130,7 @@ export function useStreamPanelSync({
         return "stop"
       },
     }),
-    [blenderStreamCache, playbackApi]
+    [blenderStreamCache, playbackApi, playerType, setContentSelection]
   )
 
   const { loadPlaylist } = useAsset(assetOptions)
@@ -134,30 +156,56 @@ export function useStreamPanelSync({
 
   useEffect(() => abortPlaylistRequest, [abortPlaylistRequest])
 
-  const handlePresetChange = useCallback(
-    (preset: StreamPreset, kind: StreamPanelContentKind = "stream") => {
-      setPresetId(preset.id)
-      setContentSelection(playerType, { id: preset.id, kind })
-      loadPlaylist([preset as unknown as Asset])
+  const loadCustomStream = useCallback(
+    (src: string, config?: string, id = `custom-${Date.now()}`) => {
+      let parsedConfig: Record<string, unknown> | undefined
+      if (config) {
+        const parseResult = safeParseJson(config)
+        if (!parseResult.ok) {
+          playbackApi.setState(({ playback }) => {
+            playback.status = "error"
+            playback.error = new Error(
+              "Invalid JSON config: " + parseResult.error
+            )
+          })
+          return null
+        }
+        parsedConfig = parseResult.value
+      }
+
+      const asset: StreamPreset = {
+        config: parsedConfig,
+        features: [],
+        format: "progressive",
+        group: "Special",
+        id,
+        name: "Custom Stream",
+        src,
+        type: playerType,
+      }
+      loadPlaylist([asset as unknown as Asset])
+      return asset
     },
-    [loadPlaylist, playerType, setContentSelection, setPresetId]
+    [loadPlaylist, playbackApi, playerType]
   )
 
-  const handlePlaylistPresetChange = useCallback(
-    (playlist: StreamPanelPlaylistPreset) => {
+  const loadPlaylistPreset = useCallback(
+    (playlistId: string, startIndex = 0) => {
       playlistAbortRef.current?.abort()
       const abortController = new AbortController()
       playlistAbortRef.current = abortController
 
-      void fetchPlaylistPresetAssets(playlist.id, abortController.signal)
+      void fetchPlaylistPresetAssets(playlistId, abortController.signal)
         .then((assets) => {
           if (abortController.signal.aborted) return
 
+          const index = normalizePlaylistIndex(startIndex, assets.length)
           setContentSelection(playerType, {
-            id: playlist.id,
+            id: playlistId,
+            index,
             kind: "playlist",
           })
-          loadPlaylist(assets)
+          loadPlaylist(assets, index)
         })
         .catch((error: unknown) => {
           if (error instanceof DOMException && error.name === "AbortError")
@@ -172,36 +220,101 @@ export function useStreamPanelSync({
     [loadPlaylist, playbackApi, playerType, setContentSelection]
   )
 
+  const restoreContentSelection = useCallback(
+    (selection: StreamPanelSelection) => {
+      if (selection.kind === "playlist") {
+        loadPlaylistPreset(selection.id, selection.index)
+        return
+      }
+
+      const preset = getPresetsForType(playerType).find(
+        (item) => item.id === selection.id
+      )
+      if (preset) {
+        abortPlaylistRequest()
+        loadPlaylist([preset as unknown as Asset])
+        return
+      }
+
+      if (!selection.src) return
+      abortPlaylistRequest()
+      loadCustomStream(selection.src, selection.config, selection.id)
+    },
+    [
+      abortPlaylistRequest,
+      loadCustomStream,
+      loadPlaylist,
+      loadPlaylistPreset,
+      playerType,
+    ]
+  )
+
+  useEffect(() => {
+    if (
+      !storeHydrated ||
+      !mediaElement ||
+      !player ||
+      restoredSelectionRef.current
+    )
+      return
+
+    restoredSelectionRef.current = true
+    if (contentSelection) {
+      restoreContentSelection(contentSelection)
+      return
+    }
+
+    const defaultPreset = getDefaultPresetForType(playerType)
+    if (!defaultPreset) return
+
+    const defaultSelection: StreamPanelSelection = {
+      id: defaultPreset.id,
+      index: 0,
+      kind: "stream",
+    }
+    setContentSelection(playerType, defaultSelection)
+    restoreContentSelection(defaultSelection)
+  }, [
+    contentSelection,
+    mediaElement,
+    player,
+    playerType,
+    restoreContentSelection,
+    setContentSelection,
+    storeHydrated,
+  ])
+
+  const handlePresetChange = useCallback(
+    (preset: StreamPreset, kind: StreamPanelContentKind = "stream") => {
+      abortPlaylistRequest()
+      setContentSelection(playerType, { id: preset.id, index: 0, kind })
+      loadPlaylist([preset as unknown as Asset])
+    },
+    [abortPlaylistRequest, loadPlaylist, playerType, setContentSelection]
+  )
+
+  const handlePlaylistPresetChange = useCallback(
+    (playlist: StreamPanelPlaylistPreset) => {
+      loadPlaylistPreset(playlist.id)
+    },
+    [loadPlaylistPreset]
+  )
+
   const handleLoadStream = useCallback(
     (src: string, config?: string) => {
-      let parsedConfig: Record<string, unknown> | undefined
-      if (config) {
-        const parseResult = safeParseJson(config)
-        if (!parseResult.ok) {
-          playbackApi.setState(({ playback }) => {
-            playback.status = "error"
-            playback.error = new Error(
-              "Invalid JSON config: " + parseResult.error
-            )
-          })
-          return
-        }
-        parsedConfig = parseResult.value
-      }
-      const asset: StreamPreset = {
-        config: parsedConfig,
-        features: [],
-        format: "progressive",
-        group: "Special",
-        id: `custom-${Date.now()}`,
-        name: "Custom Stream",
+      abortPlaylistRequest()
+      const asset = loadCustomStream(src, config)
+      if (!asset) return
+
+      setContentSelection(playerType, {
+        config,
+        id: asset.id,
+        index: 0,
+        kind: "stream",
         src,
-        type: playerType,
-      }
-      setContentSelection(playerType, { id: asset.id, kind: "stream" })
-      loadPlaylist([asset as unknown as Asset])
+      })
     },
-    [loadPlaylist, playbackApi, playerType, setContentSelection]
+    [abortPlaylistRequest, loadCustomStream, playerType, setContentSelection]
   )
 
   return {
@@ -229,6 +342,26 @@ async function getBlenderStream(
   }
 
   return stream
+}
+
+function getDefaultPresetForType(
+  playerType: StreamPanelPlayerType
+): StreamPreset | undefined {
+  const presets = getPresetsForType(playerType)
+  if (playerType === "video") {
+    return (
+      presets.find((preset) => preset.id === DEFAULT_VIDEO_PRESET_ID) ??
+      presets[0]
+    )
+  }
+
+  return presets[0]
+}
+
+function normalizePlaylistIndex(index: number | undefined, itemCount: number) {
+  if (typeof index !== "number" || !Number.isInteger(index) || itemCount <= 0)
+    return 0
+  return Math.min(Math.max(index, 0), itemCount - 1)
 }
 
 function safeParseJson(

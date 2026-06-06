@@ -2,10 +2,14 @@
 
 import { PlusIcon, XIcon } from "lucide-react"
 
-import { type SavedStream, useStreamPanelStore } from "@/lib/docs-dial-store"
+import {
+  type SavedStream,
+  useStreamPanelStore,
+} from "@/components/stream-panel/use-stream-panel"
 import { cn } from "@/lib/utils"
 
 import { Button } from "../ui/button"
+import { Separator } from "../ui/separator"
 import { OverlayShell, type OverlayShellPlacement } from "./overlay-shell"
 
 interface SavedOverlayProps {
@@ -35,42 +39,13 @@ export function SavedOverlay({
       title="Saved Streams"
     >
       <div className="no-scrollbar flex-1 overflow-y-auto p-2 pt-1">
-        <button
-          className={`
-            group relative flex w-full items-center gap-3 rounded-[18px] px-2.5 py-2 text-sm outline-hidden
-            transition-[background-color,color,transform] select-none
-            hover:bg-foreground/4
-            focus-visible:bg-foreground/4
-            active:scale-[0.985]
-          `}
-          onClick={onAddCustom}
-          type="button"
-        >
-          <span
-            className="
-              flex size-7 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition-colors
-              group-hover:text-foreground
-            "
-          >
-            <PlusIcon className="size-4" />
-          </span>
-          <span className="min-w-0 flex-1 text-left">
-            <span className="block truncate font-medium tracking-tight">
-              Add Custom
-            </span>
-            <span className="block truncate text-xs text-muted-foreground">
-              Paste a manifest URL
-            </span>
-          </span>
-        </button>
-
         {savedStreams.map((stream) => (
           <div
             className={cn(
               "group",
               `
-                relative flex w-full items-center gap-2 rounded-[18px] px-2.5 py-2 text-sm outline-hidden
-                transition-[background-color,color,transform] select-none
+                relative flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm outline-hidden transition-[background-color,color,transform]
+                select-none
                 hover:bg-foreground/4
                 focus:bg-foreground/4
                 active:scale-[0.985]
@@ -89,7 +64,7 @@ export function SavedOverlay({
             <Button
               aria-label={`Remove ${stream.name}`}
               className="
-                size-7 rounded-xl text-muted-foreground
+                size-7 rounded-lg text-muted-foreground
                 hover:bg-foreground/4 hover:text-foreground
               "
               onClick={() => removeSavedStream(stream.id)}
@@ -100,6 +75,35 @@ export function SavedOverlay({
             </Button>
           </div>
         ))}
+        <Separator className="my-2 h-px" />
+        <button
+          className={`
+            group relative flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-sm outline-hidden transition-[background-color,color,transform]
+            select-none
+            hover:bg-foreground/4
+            focus-visible:bg-foreground/4
+            active:scale-[0.985]
+          `}
+          onClick={onAddCustom}
+          type="button"
+        >
+          <span
+            className="
+              flex size-7 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors
+              group-hover:text-foreground
+            "
+          >
+            <PlusIcon className="size-4" />
+          </span>
+          <span className="min-w-0 flex-1 text-left">
+            <span className="block truncate font-medium tracking-tight">
+              Add Custom
+            </span>
+            <span className="block truncate text-xs text-muted-foreground">
+              Paste a manifest URL
+            </span>
+          </span>
+        </button>
       </div>
     </OverlayShell>
   )

@@ -6,6 +6,10 @@ import { useEffect, useState } from "react"
 
 import type { AudioPlayerAsset } from "@/registry/default/blocks/audio-player/components/media-player"
 
+import {
+  useStreamPanelStore,
+  useStreamPanelStoreHydrated,
+} from "@/components/stream-panel/use-stream-panel"
 import { AudioPlayer } from "@/registry/default/blocks/audio-player/components/media-player"
 
 import {
@@ -23,6 +27,10 @@ export function AudioPlayerDemo({
   playlistId = AUDIO_PLAYER_DEMO_PLAYLIST_ID,
 }: AudioPlayerDemoProps) {
   const [playlist, setPlaylist] = useState<AudioPlayerAsset[]>([])
+  const storeHydrated = useStreamPanelStoreHydrated()
+  const hasPersistedAudioSelection = useStreamPanelStore((s) =>
+    Boolean(s.contentSelections.audio)
+  )
 
   useEffect(() => {
     const abortController = new AbortController()
@@ -43,5 +51,12 @@ export function AudioPlayerDemo({
     }
   }, [playlistId])
 
-  return <AudioPlayer playlist={playlist}>{children}</AudioPlayer>
+  return (
+    <AudioPlayer
+      autoLoad={storeHydrated ? !hasPersistedAudioSelection : false}
+      playlist={playlist}
+    >
+      {children}
+    </AudioPlayer>
+  )
 }

@@ -48,7 +48,10 @@ export function OverlayShell({
       <m.div
         animate={{ x: placement === "idle" ? "100%" : "0%" }}
         className={cn(
-          "absolute inset-0 flex flex-col bg-background",
+          "flex max-h-[inherit] min-h-0 flex-col rounded-lg bg-background",
+          visiblePlacement === "active"
+            ? "relative"
+            : "absolute inset-0 h-full",
           visiblePlacement === "active" ? "z-20" : "z-10"
         )}
         data-stream-panel-overlay={placement}
@@ -67,12 +70,12 @@ export function OverlayShell({
         }}
       >
         <div
-          className="flex min-h-10 items-center gap-2 rounded-[22px] px-1"
+          className="flex min-h-10 items-center gap-2 rounded-lg px-1"
           data-stream-panel-overlay-header=""
         >
           <Button
             className={`
-              rounded-xl
+              rounded-lg
               hover:bg-foreground/4 hover:text-foreground
               focus-visible:bg-foreground/4 focus-visible:text-foreground
               active:scale-[0.97]
@@ -95,7 +98,10 @@ export function OverlayShell({
           </span>
         </div>
 
-        <div className="min-h-0" data-stream-panel-overlay-body="">
+        <div
+          className="flex max-h-[calc(var(--stream-panel-max-height,100dvh)-2.5rem)] min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain"
+          data-stream-panel-overlay-body=""
+        >
           {children}
         </div>
       </m.div>
