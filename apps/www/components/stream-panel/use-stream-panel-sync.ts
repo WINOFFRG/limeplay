@@ -4,43 +4,114 @@ import { useCallback, useEffect, useMemo, useRef } from "react"
 
 import type { StreamPreset } from "@/lib/stream-presets"
 import type { Asset, UseAssetOptions } from "@/registry/default/hooks/use-asset"
+import type { PlaybackStore } from "@/registry/default/hooks/use-playback"
 
-import { useDocsDialStore } from "@/lib/docs-dial-store"
-import { getPresetById } from "@/lib/stream-presets"
+import {
+  addBlenderCaptions,
+  type BlenderStreamResponse,
+  fetchBlenderStream,
+  fetchPlaylistPresetAssets,
+  isBlenderOpenFilmAsset,
+  type StreamPanelPlaylistPreset,
+} from "@/components/stream-panel/content-catalog"
+import {
+  type StreamPanelContentKind,
+  type StreamPanelPlayerType,
+  useStreamPanelStore,
+} from "@/lib/docs-dial-store"
 import { useAsset } from "@/registry/default/hooks/use-asset"
+import { useMediaStore } from "@/registry/default/hooks/use-media"
+import { PLAYBACK_FEATURE_KEY } from "@/registry/default/hooks/use-playback"
 import { useVolumeStore } from "@/registry/default/hooks/use-volume"
-import { useMediaApi, useMediaStore } from "@/registry/default/internal/media"
+import { useMediaFeatureApi } from "@/registry/default/ui/media-provider"
 
-export function useStreamPanelSync() {
-  const store = useMediaApi()
-  const mediaElement = useMediaStore((state) => state.media.mediaElement)
-  const player = useMediaStore((state) => state.player.instance)
+export function useStreamPanelSync({
+  playerType = "video",
+}: {
+  playerType?: StreamPanelPlayerType
+} = {}) {
+  const playbackApi = useMediaFeatureApi<PlaybackStore>(PLAYBACK_FEATURE_KEY)
+  const mediaElement = useMediaStore((state) => state.mediaElement)
 
-  const volume = useDocsDialStore((s) => s.volume)
-  const muted = useDocsDialStore((s) => s.muted)
-  const autoplay = useDocsDialStore((s) => s.autoplay)
-  const presetId = useDocsDialStore((s) => s.presetId)
+  const volume = useStreamPanelStore((s) => s.volume)
+  const muted = useStreamPanelStore((s) => s.muted)
+  const autoplay = useStreamPanelStore((s) => s.autoplay)
+  const setContentSelection = useStreamPanelStore((s) => s.setContentSelection)
+  const setPresetId = useStreamPanelStore((s) => s.setPresetId)
 
   const setVolume = useVolumeStore((s) => s.setVolume)
   const setMuted = useVolumeStore((s) => s.setMuted)
+  const playlistAbortRef = useRef<AbortController | null>(null)
+  const blenderStreamCacheRef = useRef<Map<string, BlenderStreamResponse> | null>(
+    null
+  )
+  if (blenderStreamCacheRef.current === null) {
+    blenderStreamCacheRef.current = new Map()
+  }
+  const blenderStreamCache = blenderStreamCacheRef.current
 
   const assetOptions = useMemo<UseAssetOptions<Asset>>(
     () => ({
+      getAssetId: (asset) => asset.id ?? asset.src,
+      loader: {
+        load: async (context) => {
+          if (!isBlenderOpenFilmAsset(context.asset)) {
+            await context.loadDefault()
+            return
+          }
+          if (context.signal.aborted) return
+
+          const stream = await getBlenderStream(
+            context.asset.id,
+            context.signal,
+            blenderStreamCache
+          )
+          context.signal.throwIfAborted()
+
+          await context.loadDefault(
+            context.preloadManager ?? {
+              config: context.asset.config,
+              src: stream.playback.hls,
+            }
+          )
+
+          try {
+            await addBlenderCaptions(context.player, stream)
+          } catch (error) {
+            console.error("Failed to add Blender captions:", error)
+          }
+        },
+        preload: async (context) => {
+          if (!isBlenderOpenFilmAsset(context.asset)) {
+            return context.preloadDefault()
+          }
+          if (context.signal.aborted) return null
+
+          const stream = await getBlenderStream(
+            context.asset.id,
+            context.signal,
+            blenderStreamCache
+          )
+          context.signal.throwIfAborted()
+
+          return context.preloadDefault({
+            config: context.asset.config,
+            src: stream.playback.hls,
+          })
+        },
+      },
       onLoadError: (_asset, error) => {
-        store.setState(({ playback }) => {
+        playbackApi.setState(({ playback }) => {
           playback.status = "error"
           playback.error = error
         })
         return "stop"
       },
     }),
-    [store]
+    [blenderStreamCache, playbackApi]
   )
 
   const { loadPlaylist } = useAsset(assetOptions)
-
-  const prevPresetId = useRef(presetId)
-  const initialLoadDone = useRef(false)
 
   useEffect(() => {
     if (!mediaElement) return
@@ -57,24 +128,48 @@ export function useStreamPanelSync() {
     mediaElement.autoplay = autoplay
   }, [autoplay, mediaElement])
 
-  useEffect(() => {
-    if (!player || !mediaElement) return
-    if (presetId === prevPresetId.current && initialLoadDone.current) return
+  const abortPlaylistRequest = useCallback(() => {
+    playlistAbortRef.current?.abort()
+  }, [])
 
-    initialLoadDone.current = true
-    prevPresetId.current = presetId
-
-    const preset = getPresetById(presetId)
-    if (preset) {
-      loadPlaylist([preset as unknown as Asset])
-    }
-  }, [presetId, player, mediaElement, loadPlaylist])
+  useEffect(() => abortPlaylistRequest, [abortPlaylistRequest])
 
   const handlePresetChange = useCallback(
-    (preset: StreamPreset) => {
+    (preset: StreamPreset, kind: StreamPanelContentKind = "stream") => {
+      setPresetId(preset.id)
+      setContentSelection(playerType, { id: preset.id, kind })
       loadPlaylist([preset as unknown as Asset])
     },
-    [loadPlaylist]
+    [loadPlaylist, playerType, setContentSelection, setPresetId]
+  )
+
+  const handlePlaylistPresetChange = useCallback(
+    (playlist: StreamPanelPlaylistPreset) => {
+      playlistAbortRef.current?.abort()
+      const abortController = new AbortController()
+      playlistAbortRef.current = abortController
+
+      void fetchPlaylistPresetAssets(playlist.id, abortController.signal)
+        .then((assets) => {
+          if (abortController.signal.aborted) return
+
+          setContentSelection(playerType, {
+            id: playlist.id,
+            kind: "playlist",
+          })
+          loadPlaylist(assets)
+        })
+        .catch((error: unknown) => {
+          if (error instanceof DOMException && error.name === "AbortError")
+            return
+
+          playbackApi.setState(({ playback }) => {
+            playback.status = "error"
+            playback.error = error
+          })
+        })
+    },
+    [loadPlaylist, playbackApi, playerType, setContentSelection]
   )
 
   const handleLoadStream = useCallback(
@@ -83,7 +178,7 @@ export function useStreamPanelSync() {
       if (config) {
         const parseResult = safeParseJson(config)
         if (!parseResult.ok) {
-          store.setState(({ playback }) => {
+          playbackApi.setState(({ playback }) => {
             playback.status = "error"
             playback.error = new Error(
               "Invalid JSON config: " + parseResult.error
@@ -101,17 +196,39 @@ export function useStreamPanelSync() {
         id: `custom-${Date.now()}`,
         name: "Custom Stream",
         src,
-        type: "video",
+        type: playerType,
       }
+      setContentSelection(playerType, { id: asset.id, kind: "stream" })
       loadPlaylist([asset as unknown as Asset])
     },
-    [loadPlaylist, store]
+    [loadPlaylist, playbackApi, playerType, setContentSelection]
   )
 
   return {
     handleLoadStream,
+    handlePlaylistPresetChange,
     handlePresetChange,
   }
+}
+
+async function getBlenderStream(
+  assetId: string | undefined,
+  signal: AbortSignal,
+  cache: Map<string, BlenderStreamResponse>
+): Promise<BlenderStreamResponse> {
+  if (!assetId) {
+    throw new Error("Blender playlist asset is missing an id.")
+  }
+
+  const cached = cache.get(assetId)
+  if (cached) return cached
+
+  const stream = await fetchBlenderStream(assetId, signal)
+  if (!signal.aborted) {
+    cache.set(assetId, stream)
+  }
+
+  return stream
 }
 
 function safeParseJson(

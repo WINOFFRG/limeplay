@@ -12,8 +12,6 @@ import { useOrientation } from "@/hooks/use-orientation"
 import { cn } from "@/lib/utils"
 import { VideoPlayer } from "@/registry/default/blocks/video-player/components/media-player"
 
-import { VIDEO_PLAYER_DEMO_ASSETS } from "./demo-assets"
-
 export function VideoPlayerContainer() {
   const isMobile = useIsMobile()
   const { isPortrait } = useOrientation()
@@ -40,7 +38,6 @@ export function VideoPlayerContainer() {
           autoPlay: false,
           muted: true,
         }}
-        playlist={VIDEO_PLAYER_DEMO_ASSETS}
         ref={playerRef}
       />
     </>

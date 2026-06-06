@@ -1,294 +1,390 @@
 "use client"
 
-import { ChevronRight, PlusIcon, XIcon } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import React, { useMemo, useState } from "react"
 
+import type { StreamPanelContentKind } from "@/lib/docs-dial-store"
+
+import { getPlaylistPresetsForType } from "@/components/stream-panel/content-catalog"
 import { Field, FieldLabel } from "@/components/ui/field"
-import {
-  Popover,
-  PopoverClose,
-  PopoverContent,
-  PopoverTitle,
-} from "@/components/ui/popover"
+import { Popover, PopoverContent } from "@/components/ui/popover"
+import { Separator } from "@/components/ui/separator"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { useDocsDialStore } from "@/lib/docs-dial-store"
+import { useStreamPanelStore } from "@/lib/docs-dial-store"
 import { getPresetsForType, type StreamPreset } from "@/lib/stream-presets"
 import { cn } from "@/lib/utils"
 
+import type { OverlayShellPlacement } from "./overlay-shell"
+
+import { ContentOverviewOverlay } from "./content-overview-overlay"
 import { CustomOverlay } from "./custom-overlay"
+import { type IconProps, PencilEdit, StackTemplate } from "./icons"
+import {
+  type PanelPosition,
+  STREAM_PANEL_CONTENT_OVERLAYS,
+  STREAM_PANEL_EMPTY_CONTENT_LABEL,
+  STREAM_PANEL_ORIGIN_CLASSES,
+  STREAM_PANEL_OVERLAY,
+  STREAM_PANEL_POSITION_CLASSES,
+  type StreamPanelOverlay,
+  type StreamPanelProps,
+} from "./panel-popover.config"
+import { PlaylistsOverlay } from "./playlists-overlay"
 import { PresetsOverlay } from "./presets-overlay"
 import { useStreamPanel } from "./provider"
 import { SavedOverlay } from "./saved-overlay"
 
-export type PanelPosition =
-  | "bottom-left"
-  | "bottom-right"
-  | "top-left"
-  | "top-right"
-
-type ActiveOverlay = "custom" | "none" | "presets" | "saved"
-
-interface StreamPanelProps {
-  align?: "center" | "end" | "start"
-  onLoadStream?: (src: string, config?: string) => void
-  onPresetChange?: (preset: StreamPreset) => void
-  playerType?: "audio" | "video"
-  position?: PanelPosition
-  side?: "bottom" | "left" | "right" | "top"
-  variant?: "anchored" | "floating"
-}
-
-const positionClasses: Record<PanelPosition, string> = {
-  "bottom-left": "bottom-4 left-4",
-  "bottom-right": "bottom-10 right-4",
-  "top-left": "top-4 left-4",
-  "top-right": "top-4 right-4",
-}
-
-const originMap: Record<PanelPosition, string> = {
-  "bottom-left": "origin-bottom-left",
-  "bottom-right": "origin-bottom-right",
-  "top-left": "origin-top-left",
-  "top-right": "origin-top-right",
-}
+export type { PanelPosition, StreamPanelProps }
 
 export function StreamPanel({
   align = "center",
   onLoadStream,
+  onPlaylistChange,
   onPresetChange,
   playerType = "video",
   position = "bottom-right",
   side = "bottom",
   variant = "floating",
 }: StreamPanelProps) {
-  const { handle, onOpenChange, open } = useStreamPanel()
-  const [activeOverlay, setActiveOverlay] = useState<ActiveOverlay>("none")
+  const { handle, onOpenChange, open, setOpen } = useStreamPanel()
+  const [overlayStack, setOverlayStack] = useState<StreamPanelOverlay[]>([])
 
   React.useEffect(() => {
-    if (!open) setActiveOverlay("none")
+    if (!open) setOverlayStack([])
   }, [open])
 
-  const store = useDocsDialStore()
+  const store = useStreamPanelStore()
   const presets = getPresetsForType(playerType)
-
-  const groupedPresets = useMemo(() => {
-    const groups: Partial<Record<string, StreamPreset[]>> = {}
-    for (const preset of presets) {
-      const group = preset.group
-      if (!groups[group]) groups[group] = []
-      groups[group].push(preset)
-    }
-    return groups as Record<string, StreamPreset[]>
-  }, [presets])
-
-  const selectedPresetName = useMemo(
-    () =>
-      presets.find((preset) => preset.id === store.presetId)?.name ??
-      "Select a stream",
-    [presets, store.presetId]
+  const streamPresets = useMemo(
+    () => presets.filter((preset) => preset.group !== "Live"),
+    [presets]
+  )
+  const livePresets = useMemo(
+    () => presets.filter((preset) => preset.group === "Live"),
+    [presets]
+  )
+  const playlistPresets = useMemo(
+    () => getPlaylistPresetsForType(playerType),
+    [playerType]
+  )
+  const contentSelection = store.contentSelections[playerType]
+  const groupedStreamPresets = useMemo(
+    () => groupPresets(streamPresets),
+    [streamPresets]
+  )
+  const groupedLivePresets = useMemo(
+    () => groupPresets(livePresets),
+    [livePresets]
   )
 
-  const handlePresetChange = (presetId: string) => {
-    store.setPresetId(presetId)
+  const selectedContentName = useMemo(() => {
+    if (!contentSelection) return STREAM_PANEL_EMPTY_CONTENT_LABEL
+
+    if (contentSelection.kind === "playlist") {
+      return (
+        playlistPresets.find((playlist) => playlist.id === contentSelection.id)
+          ?.name ?? STREAM_PANEL_EMPTY_CONTENT_LABEL
+      )
+    }
+
+    return (
+      presets.find((preset) => preset.id === contentSelection.id)?.name ??
+      STREAM_PANEL_EMPTY_CONTENT_LABEL
+    )
+  }, [contentSelection, playlistPresets, presets])
+
+  const handlePresetChange = (
+    presetId: string,
+    kind: Extract<StreamPanelContentKind, "live" | "stream">
+  ) => {
     const preset = presets.find((p) => p.id === presetId)
-    if (preset) onPresetChange?.(preset)
+    if (!preset) return
+
+    store.setPresetId(presetId)
+    store.setContentSelection(playerType, { id: presetId, kind })
+    onPresetChange?.(preset, kind)
   }
 
   const handleLoadCustom = (src: string, config?: string) => {
     onLoadStream?.(src, config)
-    setActiveOverlay("none")
+    closeOverlays()
   }
 
   const handleLoadSaved = (stream: { config?: string; src: string }) => {
     onLoadStream?.(stream.src, stream.config)
-    setActiveOverlay("none")
+    closeOverlays()
   }
+
+  const activeOverlay =
+    overlayStack.length > 0
+      ? overlayStack[overlayStack.length - 1]
+      : STREAM_PANEL_OVERLAY.NONE
+
+  const openOverlay = (overlay: StreamPanelOverlay) => {
+    if (overlay === STREAM_PANEL_OVERLAY.NONE) {
+      setOverlayStack([])
+      return
+    }
+
+    setOverlayStack((currentStack) => {
+      const existingIndex = currentStack.indexOf(overlay)
+      if (existingIndex !== -1) return currentStack.slice(0, existingIndex + 1)
+      return [...currentStack, overlay]
+    })
+  }
+
+  const closeOverlays = () => {
+    setOverlayStack([])
+  }
+
+  const getOverlayPlacement = (
+    overlay: StreamPanelOverlay
+  ): OverlayShellPlacement => {
+    const overlayIndex = overlayStack.indexOf(overlay)
+    if (overlayIndex === -1) return "idle"
+    return overlayIndex === overlayStack.length - 1 ? "active" : "covered"
+  }
+
+  const presetOverlays = [
+    {
+      groupedPresets: groupedStreamPresets,
+      kind: "stream",
+      overlay: STREAM_PANEL_OVERLAY.STREAMS,
+      title: "Streams",
+    },
+    {
+      groupedPresets: groupedLivePresets,
+      kind: "live",
+      overlay: STREAM_PANEL_OVERLAY.LIVE,
+      title: "Live",
+    },
+  ] satisfies {
+    groupedPresets: Record<string, StreamPreset[]>
+    kind: Extract<StreamPanelContentKind, "live" | "stream">
+    overlay: StreamPanelOverlay
+    title: string
+  }[]
+
+  const content = (
+    <div
+      className="relative mt-2 flex min-h-0 w-full flex-col gap-2 overflow-visible"
+      data-stream-panel-root=""
+    >
+      <Field className="gap-0">
+        <FieldLabel className="mx-2 text-[10px] text-muted-foreground/70 uppercase">
+          Media Settings
+        </FieldLabel>
+
+        <PanelToggleRow onValueChange={store.setMuted} value={store.muted}>
+          Muted
+        </PanelToggleRow>
+        <PanelToggleRow
+          onValueChange={store.setAutoplay}
+          value={store.autoplay}
+        >
+          Autoplay
+        </PanelToggleRow>
+      </Field>
+
+      <Separator className="h-px bg-border/45" />
+
+      <PanelActionRow
+        detail={selectedContentName}
+        Icon={StackTemplate}
+        label="Presets"
+        onClick={() => openOverlay(STREAM_PANEL_OVERLAY.CONTENT)}
+      />
+
+      <PanelActionRow
+        detail={
+          store.savedStreams.length > 0
+            ? `${store.savedStreams.length} saved stream${
+                store.savedStreams.length > 1 ? "s" : ""
+              }`
+            : "Add a custom stream"
+        }
+        Icon={PencilEdit}
+        label="Saved Streams"
+        onClick={() => openOverlay(STREAM_PANEL_OVERLAY.SAVED)}
+      />
+
+      {presetOverlays.map((presetOverlay) => (
+        <PresetsOverlay
+          groupedPresets={presetOverlay.groupedPresets}
+          key={presetOverlay.overlay}
+          onBack={() => openOverlay(STREAM_PANEL_OVERLAY.CONTENT)}
+          onSelect={(presetId) => {
+            handlePresetChange(presetId, presetOverlay.kind)
+            closeOverlays()
+            setOpen(false)
+          }}
+          placement={getOverlayPlacement(presetOverlay.overlay)}
+          selectedPresetId={
+            contentSelection?.kind === presetOverlay.kind
+              ? contentSelection.id
+              : undefined
+          }
+          show={activeOverlay === presetOverlay.overlay}
+          title={presetOverlay.title}
+        />
+      ))}
+
+      <PlaylistsOverlay
+        onBack={() => openOverlay(STREAM_PANEL_OVERLAY.CONTENT)}
+        onSelect={(playlist) => {
+          store.setContentSelection(playerType, {
+            id: playlist.id,
+            kind: "playlist",
+          })
+          onPlaylistChange?.(playlist)
+          closeOverlays()
+          setOpen(false)
+        }}
+        placement={getOverlayPlacement(STREAM_PANEL_OVERLAY.PLAYLISTS)}
+        playlists={playlistPresets}
+        selection={contentSelection}
+        show={activeOverlay === STREAM_PANEL_OVERLAY.PLAYLISTS}
+      />
+
+      <ContentOverviewOverlay
+        liveCount={livePresets.length}
+        onBack={closeOverlays}
+        onSelect={(kind) => {
+          openOverlay(STREAM_PANEL_CONTENT_OVERLAYS[kind])
+        }}
+        placement={getOverlayPlacement(STREAM_PANEL_OVERLAY.CONTENT)}
+        playerType={playerType}
+        playlistCount={playlistPresets.length}
+        show={activeOverlay === STREAM_PANEL_OVERLAY.CONTENT}
+        streamCount={streamPresets.length}
+      />
+
+      <SavedOverlay
+        onAddCustom={() => openOverlay(STREAM_PANEL_OVERLAY.CUSTOM)}
+        onBack={closeOverlays}
+        onSelect={handleLoadSaved}
+        placement={getOverlayPlacement(STREAM_PANEL_OVERLAY.SAVED)}
+        show={activeOverlay === STREAM_PANEL_OVERLAY.SAVED}
+      />
+
+      <CustomOverlay
+        onBack={() => openOverlay(STREAM_PANEL_OVERLAY.SAVED)}
+        onLoad={handleLoadCustom}
+        placement={getOverlayPlacement(STREAM_PANEL_OVERLAY.CUSTOM)}
+        show={activeOverlay === STREAM_PANEL_OVERLAY.CUSTOM}
+      />
+    </div>
+  )
+
+  if (variant === "children") return content
 
   return (
     <Popover handle={handle} onOpenChange={onOpenChange} open={open}>
       <PopoverContent
         align={align}
         className={cn(
-          `
-            relative min-h-96 gap-4 overflow-hidden rounded-[20px] border border-border/60 bg-popover/90 tracking-wide text-popover-foreground
-            backdrop-blur-lg
-          `,
-          variant === "floating" && originMap[position],
-          variant === "floating" && positionClasses[position]
+          `dark relative w-72 gap-2 overflow-hidden rounded-3xl bg-background/95 p-2 text-foreground shadow-2xl shadow-background/40 backdrop-blur-xl`,
+          variant === "floating" && STREAM_PANEL_ORIGIN_CLASSES[position],
+          variant === "floating" && STREAM_PANEL_POSITION_CLASSES[position]
         )}
         positionMethod={variant === "floating" ? "fixed" : undefined}
         side={side}
       >
-        <div className="flex items-center justify-between">
-          <PopoverTitle className="m-0! text-[13px] font-semibold tracking-[0.01em]">
-            Configuration
-          </PopoverTitle>
-          <PopoverClose
-            className={`
-              flex size-6 items-center justify-center rounded-md text-muted-foreground transition-[colors,transform]
-              hover:bg-muted hover:text-foreground
-              active:scale-[0.97]
-            `}
-          >
-            <XIcon className="size-4" />
-          </PopoverClose>
-        </div>
-
-        <Field className="gap-2.5">
-          <FieldLabel
-            className={`
-              flex items-center gap-2 px-1 text-[10px] leading-none font-semibold tracking-[0.18em] text-muted-foreground/70 uppercase
-              after:h-px after:flex-1 after:bg-border/60 after:content-['']
-            `}
-          >
-            Media
-          </FieldLabel>
-          <div className="flex flex-col gap-1">
-            {/* <PanelSlider
-              label="Volume"
-              max={100}
-              min={0}
-              onChange={store.setVolume}
-              value={store.volume}
-            /> */}
-
-            <div className="flex h-11 items-center justify-between rounded-xl border border-border/50 bg-muted/40 px-3.5 text-sm">
-              <span className="text-muted-foreground">Muted</span>
-              <ToggleGroup
-                className="gap-0"
-                onValueChange={(v) => {
-                  if (v) store.setMuted(v === "on")
-                }}
-                size="sm"
-                type="single"
-                value={store.muted ? "on" : "off"}
-              >
-                <ToggleGroupItem size="sm" value="off">
-                  Off
-                </ToggleGroupItem>
-                <ToggleGroupItem size="sm" value="on">
-                  On
-                </ToggleGroupItem>
-              </ToggleGroup>
-            </div>
-
-            <div className="flex h-11 items-center justify-between rounded-xl border border-border/50 bg-muted/40 px-3.5 text-sm">
-              <span className="text-muted-foreground">Autoplay</span>
-              <ToggleGroup
-                onValueChange={(v) => {
-                  if (v) store.setAutoplay(v === "on")
-                }}
-                size="sm"
-                type="single"
-                value={store.autoplay ? "on" : "off"}
-              >
-                <ToggleGroupItem size="sm" value="off">
-                  Off
-                </ToggleGroupItem>
-                <ToggleGroupItem size="sm" value="on">
-                  On
-                </ToggleGroupItem>
-              </ToggleGroup>
-            </div>
-          </div>
-        </Field>
-
-        <Field className="gap-2.5 pt-1">
-          <FieldLabel
-            className={`
-              flex items-center gap-2 px-1 text-[10px] leading-none font-semibold tracking-[0.18em] text-muted-foreground/70 uppercase
-              after:h-px after:flex-1 after:bg-border/60 after:content-['']
-            `}
-          >
-            Presets
-          </FieldLabel>
-          <button
-            className={`
-              flex h-11 w-full items-center justify-between rounded-xl border border-border/50 bg-muted/40 px-3.5 text-left text-sm text-foreground
-              outline-hidden transition-[colors,transform,border-color]
-              hover:border-border/70 hover:bg-accent/60 hover:text-accent-foreground
-              focus-visible:border-border/70 focus-visible:bg-accent/60 focus-visible:text-accent-foreground
-              active:scale-[0.985]
-            `}
-            onClick={() => setActiveOverlay("presets")}
-            type="button"
-          >
-            <span className="text-sm text-muted-foreground">
-              {selectedPresetName}
-            </span>
-            <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
-          </button>
-        </Field>
-
-        <Field className="gap-2.5 pt-1">
-          <FieldLabel
-            className={`
-              flex items-center gap-2 px-1 text-[10px] leading-none font-semibold tracking-[0.18em] text-muted-foreground/70 uppercase
-              after:h-px after:flex-1 after:bg-border/60 after:content-['']
-            `}
-          >
-            Custom Stream
-          </FieldLabel>
-          <div className="flex flex-col gap-1">
-            {store.savedStreams.length > 0 && (
-              <button
-                className={`
-                  flex h-11 w-full items-center justify-between rounded-xl border border-border/50 bg-muted/40 px-3.5 text-left text-sm
-                  text-foreground outline-hidden transition-[colors,transform,border-color]
-                  hover:border-border/70 hover:bg-accent/60 hover:text-accent-foreground
-                  focus-visible:border-border/70 focus-visible:bg-accent/60 focus-visible:text-accent-foreground
-                  active:scale-[0.985]
-                `}
-                onClick={() => setActiveOverlay("saved")}
-                type="button"
-              >
-                <span className="text-sm text-muted-foreground">
-                  {`${store.savedStreams.length} saved stream${
-                    store.savedStreams.length > 1 ? "s" : ""
-                  }`}
-                </span>
-                <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
-              </button>
-            )}
-            <button
-              className={`
-                flex h-11 w-full items-center justify-between rounded-xl border border-border/50 bg-muted/40 px-3.5 text-left text-sm text-foreground
-                outline-hidden transition-[colors,transform,border-color]
-                hover:border-border/70 hover:bg-accent/60 hover:text-accent-foreground
-                focus-visible:border-border/70 focus-visible:bg-accent/60 focus-visible:text-accent-foreground
-                active:scale-[0.985]
-              `}
-              onClick={() => setActiveOverlay("custom")}
-              type="button"
-            >
-              <span className="text-sm text-muted-foreground">Add Custom</span>
-              <PlusIcon className="size-3.5 shrink-0 text-muted-foreground" />
-            </button>
-          </div>
-        </Field>
-
-        <PresetsOverlay
-          groupedPresets={groupedPresets}
-          onBack={() => setActiveOverlay("none")}
-          onSelect={(presetId) => {
-            handlePresetChange(presetId)
-            setActiveOverlay("none")
-          }}
-          show={activeOverlay === "presets"}
-        />
-
-        <SavedOverlay
-          onBack={() => setActiveOverlay("none")}
-          onSelect={handleLoadSaved}
-          show={activeOverlay === "saved"}
-        />
-
-        <CustomOverlay
-          onBack={() => setActiveOverlay("none")}
-          onLoad={handleLoadCustom}
-          show={activeOverlay === "custom"}
-        />
+        {content}
       </PopoverContent>
     </Popover>
+  )
+}
+
+function groupPresets(presets: StreamPreset[]): Record<string, StreamPreset[]> {
+  const groups: Partial<Record<string, StreamPreset[]>> = {}
+  for (const preset of presets) {
+    const group = preset.group
+    if (!groups[group]) groups[group] = []
+    groups[group].push(preset)
+  }
+  return groups as Record<string, StreamPreset[]>
+}
+
+function PanelActionRow({
+  detail,
+  Icon,
+  label,
+  onClick,
+}: {
+  detail?: string
+  Icon?: React.ComponentType<IconProps>
+  label: string
+  onClick: () => void
+}) {
+  return (
+    <button
+      className={`
+        group flex min-h-11 w-full items-center gap-3 rounded-lg px-2.5 text-left text-sm text-foreground outline-hidden
+        transition-[background-color,color,transform]
+        hover:bg-foreground/4
+        focus-visible:bg-foreground/4
+        active:scale-[0.985]
+      `}
+      onClick={onClick}
+      type="button"
+    >
+      {Icon ? (
+        <span
+          className="
+            flex size-7 shrink-0 items-center justify-center text-muted-foreground transition-colors
+            group-hover:text-foreground
+          "
+        >
+          <Icon aria-hidden="true" className="size-5" />
+        </span>
+      ) : null}
+      <span className="min-w-0 flex-1">
+        <span className="block truncate font-medium tracking-tight">
+          {label}
+        </span>
+        {detail ? (
+          <span className="block truncate text-xs text-muted-foreground">
+            {detail}
+          </span>
+        ) : null}
+      </span>
+      <ChevronRight
+        className="
+          size-3.5 shrink-0 text-muted-foreground transition-transform
+          group-hover:translate-x-0.5
+        "
+      />
+    </button>
+  )
+}
+
+function PanelToggleRow({
+  children,
+  onValueChange,
+  value,
+}: {
+  children: React.ReactNode
+  onValueChange: (value: boolean) => void
+  value: boolean
+}) {
+  return (
+    <div className="flex h-10 items-center justify-between px-2.5 text-sm">
+      <span className="font-medium text-foreground/85">{children}</span>
+      <ToggleGroup
+        onValueChange={(v) => {
+          if (v) onValueChange(v === "on")
+        }}
+        type="single"
+        value={value ? "on" : "off"}
+      >
+        <ToggleGroupItem className="h-7 rounded-lg px-3 text-xs" value="off">
+          Off
+        </ToggleGroupItem>
+        <ToggleGroupItem className="h-7 rounded-lg px-3 text-xs" value="on">
+          On
+        </ToggleGroupItem>
+      </ToggleGroup>
+    </div>
   )
 }

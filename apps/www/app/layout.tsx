@@ -7,6 +7,7 @@ import { UserJotProvider } from "@userjot/next"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Inter } from "next/font/google"
+import Head from "next/head"
 
 import { JsonLd } from "@/components/json-ld"
 import { PRODUCT_DESCRIPTION, PRODUCT_NAME } from "@/lib/constants"
@@ -72,9 +73,9 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html className={inter.className} lang="en" suppressHydrationWarning>
-      <head>
+      <Head>
         <UserJotProvider projectId="cmjs634l4043b15ldylgedgwi" />
-      </head>
+      </Head>
       <body className="antialiased">
         <JsonLd />
         {children}

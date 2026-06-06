@@ -1,5 +1,7 @@
 "use client"
 
+import type { ReactNode } from "react"
+
 import { useEffect, useState } from "react"
 
 import type { AudioPlayerAsset } from "@/registry/default/blocks/audio-player/components/media-player"
@@ -12,10 +14,12 @@ import {
 } from "./demo"
 
 export interface AudioPlayerDemoProps {
+  children?: ReactNode
   playlistId?: string
 }
 
 export function AudioPlayerDemo({
+  children,
   playlistId = AUDIO_PLAYER_DEMO_PLAYLIST_ID,
 }: AudioPlayerDemoProps) {
   const [playlist, setPlaylist] = useState<AudioPlayerAsset[]>([])
@@ -39,5 +43,5 @@ export function AudioPlayerDemo({
     }
   }, [playlistId])
 
-  return <AudioPlayer playlist={playlist} />
+  return <AudioPlayer playlist={playlist}>{children}</AudioPlayer>
 }
