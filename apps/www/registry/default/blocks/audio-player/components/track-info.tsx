@@ -26,7 +26,7 @@ export function TrackInfo() {
           />
         </div>
       ) : (
-          <LimeplayLogo className="size-10" />
+        <LimeplayLogo className="size-10" />
       )}
       <div className="min-w-0 flex-1">
         <div className="truncate text-sm/snug font-medium text-secondary-foreground">
