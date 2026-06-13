@@ -34,6 +34,7 @@ createMediaKit({
 
 ```tsx
 import { useAsset, type Asset } from "@/hooks/limeplay/use-asset"
+import { usePlaylist } from "@/hooks/limeplay/use-playlist"
 
 interface VideoAsset extends Asset {
   playbackUrl: string
@@ -41,17 +42,26 @@ interface VideoAsset extends Asset {
 }
 
 export function PlaylistController({ assets }: { assets: VideoAsset[] }) {
-  const { currentItem, loadPlaylist, next, previous } = useAsset<VideoAsset>({
-    getAssetId: (asset) => asset.slug,
-    resolveSource: ({ asset }) => ({
-      config: asset.config,
-      src: asset.playbackUrl,
-    }),
-  })
+  const { currentItem, loadSource } = useAsset<VideoAsset>()
+  const { next, previous } = usePlaylist<VideoAsset>()
 
   return (
     <div>
-      <button onClick={() => loadPlaylist(assets)}>Load playlist</button>
+      <button
+        onClick={() =>
+          loadSource(assets, {
+            loading: {
+              getAssetId: (asset) => asset.slug,
+              resolveSource: ({ asset }) => ({
+                config: asset.config,
+                src: asset.playbackUrl,
+              }),
+            },
+          })
+        }
+      >
+        Load playlist
+      </button>
       <button onClick={previous}>Previous</button>
       <button onClick={next}>Next</button>
       <span>{currentItem?.properties.title}</span>
@@ -60,7 +70,17 @@ export function PlaylistController({ assets }: { assets: VideoAsset[] }) {
 }
 ```
 
-Use `loadAsset` for a single item and `loadPlaylist` for a queue. When a playlist advances, `useAsset` loads the active item and can preload the next item.
+Use `loadSource` for the public source contract: a URL string, one asset, or an asset array. Use `loadAsset` and `loadPlaylist` when you are building lower-level controls that already know which asset or queue should be loaded.
+
+`useAsset()` does not accept options. Loading configuration is session-local and belongs to `loadSource`, `loadPlaylist`, or the `loading` prop on a block. The latest explicit load session wins.
+
+`sourceType` reports the active loading mode as `"asset"`, `"playlist"`, or `null` before a source has been selected. Use it to render mode-specific controls:
+
+```tsx
+const { sourceType } = useAsset()
+
+const showPlaylistControls = sourceType === "playlist"
+```
 
 ### Asset Interface
 
@@ -80,20 +100,75 @@ If `id` is omitted, `useAsset` derives one from `getAssetId` or `src`. Assets wi
 Use `resolveSource` when the playable source is not stored directly on `asset.src`.
 
 ```tsx
-useAsset({
-  resolveSource: async ({ asset, operation, signal }) => {
-    const response = await fetch(`/api/assets/${asset.id}/source`, { signal })
-    const source = await response.json()
+const { loadSource } = useAsset()
 
-    return {
-      config: source.config,
-      src: source.url,
-    }
+loadSource(
+  { id: "movie-123", title: "Movie" },
+  {
+    loading: {
+      resolveSource: async ({ asset, signal }) => {
+        const response = await fetch(`/api/assets/${asset.id}/source`, {
+          signal,
+        })
+        const source = await response.json()
+
+        return {
+          config: source.config,
+          src: source.url,
+        }
+      },
+    },
+  }
+)
+```
+
+`resolveSource` is used by the default load and preload paths. Use `loader.load` or `loader.preload` when loading and preloading need different behavior.
+
+### Recovery
+
+Use `recover.loadError` and `recover.playbackError` to decide how Limeplay should recover from failures.
+
+```tsx
+import { AssetRecoveryAction, useAsset } from "@/hooks/limeplay/use-asset"
+
+const { loadSource } = useAsset()
+
+loadSource(playlist, {
+  loading: {
+    maxRetries: 2,
+    recover: {
+      loadError: (_asset, _error, { hasNext, retryCount }) => {
+        if (retryCount < 2) return AssetRecoveryAction.Retry
+        return hasNext ? AssetRecoveryAction.Skip : AssetRecoveryAction.Stop
+      },
+      playbackError: async (_asset, _error, { currentTime }) => ({
+        action: AssetRecoveryAction.Reload,
+        startTime: currentTime,
+      }),
+    },
   },
 })
 ```
 
-`operation` is `"load"` or `"preload"`, so source endpoints can avoid expensive work during preloading when needed.
+Lifecycle notifications are media events, not `UseAssetOptions` callbacks.
+
+```tsx
+import { useEffect } from "react"
+
+import { useMediaEvents } from "@/components/limeplay/media-provider"
+
+export function AssetEventsLogger() {
+  const events = useMediaEvents()
+
+  useEffect(() => {
+    return events.on("assetloaderror", ({ asset, error }) => {
+      console.error("Asset failed", asset.id, error)
+    })
+  }, [events])
+
+  return null
+}
+```
 
 ### Options
 
@@ -111,7 +186,7 @@ useAsset({
 
 ## Store
 
-`assetFeature` adds a store slice that tracks active options, load cancellation, retry state, and preload cancellation.
+`assetFeature` adds a store slice that tracks the active load session, source type, load cancellation, retry state, and preload cancellation.
 
 ### State
 
@@ -129,11 +204,11 @@ useAsset({
 
 ## Events
 
-`useAsset` listens to player and playlist events instead of exposing a separate event emitter.
+`useAsset` emits asset lifecycle events through the shared media event emitter.
 
 <AutoTypeTable
   path="./registry/default/hooks/use-asset.ts"
-  name="UseAssetEvents"
+  name="AssetEvents"
 />
 
-`useAsset` orchestrates `usePlayer` and `usePlaylist`. It owns load cancellation, playlist-driven loading, preloading, auto-advance on playback end, and error recovery.
+`useAsset` orchestrates `usePlayer` and `usePlaylist`. It owns load cancellation, playlist-driven loading, preloading, auto-advance on playback end, and error recovery. Queue mutation methods still live on [`usePlaylist`](/docs/hooks/use-playlist).

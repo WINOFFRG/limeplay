@@ -13,7 +13,6 @@ import { cn } from "@/lib/utils"
 import {
   type AudioPlayerAsset,
   getAudioAssetMetadata,
-  useAudioSource,
 } from "@/registry/default/blocks/audio-player/components/audio-source"
 import { Button } from "@/registry/default/blocks/audio-player/components/button"
 import { usePlayerStore } from "@/registry/default/hooks/use-player"
@@ -34,7 +33,6 @@ export function Playlist() {
   const skipToId = usePlaylistStore((state) => state.skipToId)
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const { items } = useAudioSource()
   const orderedItems = useMemo(() => {
     if (!shuffle || shuffleOrder.length === 0) return queue
 
@@ -45,21 +43,14 @@ export function Playlist() {
       )
   }, [queue, shuffle, shuffleOrder])
 
-  const displayAssets = useMemo(() => {
-    if (orderedItems.length > 0)
-      return orderedItems.map((item) => ({
+  const displayAssets = useMemo(
+    () =>
+      orderedItems.map((item) => ({
         asset: item.properties,
         id: item.id,
-      }))
-    return items.map((asset, index) => ({
-      asset,
-      id:
-        asset.id ??
-        asset.src ??
-        asset.playbackUrls?.primary ??
-        `asset:${index}`,
-    }))
-  }, [orderedItems, items])
+      })),
+    [orderedItems]
+  )
 
   const handleAssetSelect = useCallback(
     (assetId: string) => {

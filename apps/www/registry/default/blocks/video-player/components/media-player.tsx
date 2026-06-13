@@ -5,8 +5,7 @@ import React from "react"
 
 import type {
   Asset,
-  GetAssetId,
-  ResolveSource,
+  PlayerSource,
   UseAssetOptions,
 } from "@/registry/default/hooks/use-asset"
 
@@ -32,55 +31,45 @@ export interface VideoPlayerAsset extends Asset {
 }
 
 export interface VideoPlayerProps {
-  asset?: VideoPlayerAsset
-  assetOptions?: Omit<
-    UseAssetOptions<VideoPlayerAsset>,
-    "getAssetId" | "resolveSource"
-  >
+  autoLoad?: boolean
   children?: React.ReactNode
   className?: string
   debug?: boolean
-  getAssetId?: GetAssetId<VideoPlayerAsset>
   initialIndex?: number
+  loading?: UseAssetOptions<VideoPlayerAsset>
   /**
    * Props to pass to the underlying video element.
    */
-  mediaProps?: Omit<
-    React.VideoHTMLAttributes<HTMLVideoElement>,
-    "as" | "className"
-  >
-  playlist?: VideoPlayerAsset[]
-  resolveSource?: ResolveSource<VideoPlayerAsset>
+  mediaProps?: Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "as" | "src">
+  source?: PlayerSource<VideoPlayerAsset>
+  sourceKey?: string
 }
 
 export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
   (
     {
-      asset,
-      assetOptions,
+      autoLoad,
       children,
       className,
       debug,
-      getAssetId,
       initialIndex,
+      loading,
       mediaProps,
-      playlist,
-      resolveSource,
+      source,
+      sourceKey,
     },
     ref
   ) => {
-    const { src: mediaSrc, ...safeMediaProps } = mediaProps ?? {}
+    const { className: mediaClassName, ...safeMediaProps } = mediaProps ?? {}
 
     return (
       <MediaProvider debug={debug}>
         <PlaybackSourceController
-          asset={asset}
-          assetOptions={assetOptions}
-          getAssetId={getAssetId}
+          autoLoad={autoLoad}
           initialIndex={initialIndex}
-          mediaSrc={typeof mediaSrc === "string" ? mediaSrc : undefined}
-          playlist={playlist}
-          resolveSource={resolveSource}
+          loading={loading}
+          source={source}
+          sourceKey={sourceKey}
         />
         <RootContainer className={cn("m-auto w-full", className)} ref={ref}>
           <Layout.PlayerContainer>
@@ -93,7 +82,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
                 typeof Media
               >)}
               as="video"
-              className="size-full object-cover"
+              className={cn("size-full object-cover", mediaClassName)}
             />
             {children}
             <Layout.ControlsOverlayContainer />

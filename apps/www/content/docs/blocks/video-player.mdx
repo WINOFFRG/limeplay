@@ -13,7 +13,7 @@ status: free
 npx shadcn add @limeplay/video-player
 ```
 
-## Usage
+## Minimal Usage
 
 ```tsx
 import { VideoPlayer } from "@/components/limeplay/video-player/components/media-player"
@@ -22,8 +22,68 @@ const src =
   "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8"
 
 export function Player() {
-  return <VideoPlayer mediaProps={{ src }} />
+  return <VideoPlayer source={src} />
 }
+```
+
+Use `source` for media loading. Use `mediaProps` only for native video attributes.
+
+```tsx
+<VideoPlayer
+  source={src}
+  mediaProps={{ autoPlay: true, muted: true, playsInline: true }}
+/>
+```
+
+## Playlist Usage
+
+Pass an array to `source` when the player should manage a queue.
+
+```tsx
+import {
+  VideoPlayer,
+  type VideoPlayerAsset,
+} from "@/components/limeplay/video-player/components/media-player"
+
+const playlist: VideoPlayerAsset[] = [
+  {
+    id: "episode-1",
+    poster: "/posters/episode-1.jpg",
+    src: "https://example.com/episode-1.mpd",
+    title: "Episode 1",
+  },
+  {
+    id: "episode-2",
+    poster: "/posters/episode-2.jpg",
+    src: "https://example.com/episode-2.mpd",
+    title: "Episode 2",
+  },
+]
+
+export function Player() {
+  return <VideoPlayer initialIndex={0} source={playlist} />
+}
+```
+
+## Custom Loading
+
+Use `loading.resolveSource` when your app needs signed URLs, token refresh, or source lookup before Shaka loads the asset.
+
+```tsx
+<VideoPlayer
+  source={{ id: "movie-123", title: "Movie" }}
+  loading={{
+    resolveSource: async ({ asset, signal }) => {
+      const response = await fetch(`/api/assets/${asset.id}/source`, { signal })
+      const source = await response.json()
+
+      return {
+        config: source.config,
+        src: source.url,
+      }
+    },
+  }}
+/>
 ```
 
 ## Features
@@ -33,12 +93,14 @@ export function Player() {
 - Timeline scrubbing with buffered progress feedback.
 - Volume, mute, captions, playback rate, and picture-in-picture controls.
 - Shaka-backed playback for HLS, DASH, and DRM-capable streams.
+- Shared `source` and `loading` contract used by all source-driven blocks.
 
 ## Notes
 
 - `VideoPlayer` renders a video element internally. You do not need an `as` prop.
 - Pass `mediaProps` for native video options like `muted`, `playsInline`, or `autoPlay`.
-- Use `resolveSource` when your app needs signed URLs, token refresh, or custom asset loading.
+- Do not pass `mediaProps.src`; pass `source` instead.
+- For the full block loading model, see [Usage](/docs/usage).
 
 ## API Reference
 

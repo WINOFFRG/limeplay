@@ -4,41 +4,51 @@ import * as React from "react"
 
 import type {
   Asset,
-  GetAssetId,
-  ResolveSource,
+  PlayerSource,
   UseAssetOptions,
 } from "@/registry/default/hooks/use-asset"
 
+import { AssetRecoveryAction } from "@/registry/default/hooks/use-asset"
 import { PlaybackSourceController } from "@/registry/default/hooks/use-playback-source"
 
+export interface AudioAssetDisplayMetadata {
+  poster?: string
+  subtitle?: string
+  title: string
+}
+
 export interface AudioPlayerAsset extends Asset {
+  albumName?: string
+  artistName?: string
+  artwork?: {
+    templateUrl?: string
+    url?: string
+  }
   description?: string
   duration?: number
+  features?: string[]
   genre?: string
+  group?: string
+  images?: {
+    backdrop?: string
+    poster?: string
+  }
+  name?: string
   playbackUrls?: PlaybackUrls
   poster?: string
   releaseYear?: number | string
+  subtitle?: string
   title?: string
   year?: number | string
 }
 
-export interface AudioSourceContextValue {
-  items: AudioPlayerAsset[]
-}
-
 export interface AudioSourceProviderProps {
-  asset?: AudioPlayerAsset
-  assetOptions?: Omit<
-    UseAssetOptions<AudioPlayerAsset>,
-    "getAssetId" | "resolveSource"
-  >
   autoLoad?: boolean
   children?: React.ReactNode
-  getAssetId?: GetAssetId<AudioPlayerAsset>
   initialIndex?: number
-  mediaSrc?: string
-  playlist?: AudioPlayerAsset[]
-  resolveSource?: ResolveSource<AudioPlayerAsset>
+  loading?: UseAssetOptions<AudioPlayerAsset>
+  source?: PlayerSource<AudioPlayerAsset>
+  sourceKey?: string
 }
 
 export interface PlaybackUrls {
@@ -46,125 +56,134 @@ export interface PlaybackUrls {
   secondary?: string
 }
 
-const AudioSourceContext = React.createContext<AudioSourceContextValue | null>(
-  null
-)
-
 interface RawPlaybackResponse {
   expires_at: string
   url: string
 }
 
 export function AudioSourceProvider({
-  asset,
-  assetOptions,
   autoLoad = true,
   children,
-  getAssetId,
   initialIndex,
-  mediaSrc,
-  playlist,
-  resolveSource,
+  loading,
+  source,
+  sourceKey,
 }: AudioSourceProviderProps) {
-  const items = React.useMemo(() => {
-    if (playlist) return playlist
-    if (asset) return [asset]
-    return []
-  }, [asset, playlist])
-
-  const resolvedAssetOptions = React.useMemo<UseAssetOptions<AudioPlayerAsset>>(
+  const resolvedLoading = React.useMemo<UseAssetOptions<AudioPlayerAsset>>(
     () => ({
-      onLoadError: (_asset: AudioPlayerAsset, _error: unknown, { hasNext }) => {
-        return hasNext ? "skip" : "stop"
+      ...loading,
+      getAssetId: (asset, context) =>
+        loading?.getAssetId?.(asset, context) ??
+        asset.id ??
+        asset.src ??
+        asset.playbackUrls?.primary,
+      recover: {
+        loadError: (_asset: AudioPlayerAsset, _error: unknown, { hasNext }) => {
+          return hasNext ? AssetRecoveryAction.Skip : AssetRecoveryAction.Stop
+        },
+        playbackError: async (
+          _asset: AudioPlayerAsset,
+          error: Error,
+          { currentTime }: { currentTime: number }
+        ) => {
+          if (isNetworkError(error)) {
+            return {
+              action: AssetRecoveryAction.Reload,
+              startTime: currentTime,
+            }
+          }
+
+          return { action: AssetRecoveryAction.Skip }
+        },
+        ...loading?.recover,
       },
-      onPlaybackError: async (
-        _asset: AudioPlayerAsset,
-        error: Error,
-        { currentTime }: { currentTime: number }
-      ): Promise<
-        | { action: "reload"; startTime?: number }
-        | { action: "skip" }
-        | { action: "stop" }
-      > => {
-        if (isNetworkError(error)) {
-          return { action: "reload", startTime: currentTime }
+      resolveSource: async (context) => {
+        if (loading?.resolveSource) return loading.resolveSource(context)
+
+        const { asset, signal } = context
+        if (asset.src) {
+          return {
+            config: asset.config,
+            src: asset.src,
+          }
         }
 
-        return { action: "skip" }
-      },
-      ...assetOptions,
-    }),
-    [assetOptions]
-  )
-  const resolvedGetAssetId = React.useCallback<GetAssetId<AudioPlayerAsset>>(
-    (asset, context) =>
-      getAssetId?.(asset, context) ??
-      asset.id ??
-      asset.src ??
-      asset.playbackUrls?.primary,
-    [getAssetId]
-  )
-  const resolvedSource = React.useCallback<ResolveSource<AudioPlayerAsset>>(
-    async (context) => {
-      if (resolveSource) return resolveSource(context)
+        if (!asset.playbackUrls?.primary) {
+          throw new Error(
+            "AudioPlayerAsset requires src or playbackUrls.primary"
+          )
+        }
 
-      const { asset, signal } = context
-      if (asset.src) {
+        const src = await fetchPlaybackUrl(asset.playbackUrls.primary, signal)
+        if (signal.aborted) {
+          throw new DOMException(
+            "Playback source request aborted",
+            "AbortError"
+          )
+        }
+
         return {
           config: asset.config,
-          src: asset.src,
+          src,
         }
-      }
-
-      if (!asset.playbackUrls?.primary) {
-        throw new Error("AudioPlayerAsset requires src or playbackUrls.primary")
-      }
-
-      const src = await fetchPlaybackUrl(asset.playbackUrls.primary, signal)
-      if (signal.aborted) {
-        throw new DOMException("Playback source request aborted", "AbortError")
-      }
-
-      return {
-        config: asset.config,
-        src,
-      }
-    },
-    [resolveSource]
-  )
-
-  const value = React.useMemo(
-    () => ({
-      items,
+      },
     }),
-    [items]
+    [loading]
   )
 
   return (
-    <AudioSourceContext.Provider value={value}>
+    <>
       <PlaybackSourceController
-        asset={asset}
-        assetOptions={resolvedAssetOptions}
         autoLoad={autoLoad}
-        getAssetId={resolvedGetAssetId}
         initialIndex={initialIndex}
-        mediaSrc={mediaSrc}
-        playlist={playlist}
-        resolveSource={resolvedSource}
+        loading={resolvedLoading}
+        source={source}
+        sourceKey={sourceKey}
       />
       {children}
-    </AudioSourceContext.Provider>
+    </>
   )
 }
 
-export function useAudioSource() {
-  const context = React.useContext(AudioSourceContext)
-
-  if (!context) {
-    throw new Error("Missing AudioSourceProvider")
+export function getAudioAssetMetadata(
+  asset: AudioPlayerAsset | null | undefined,
+  fallbackTitle = "Unknown Title"
+): AudioAssetDisplayMetadata {
+  if (!asset) {
+    return {
+      title: fallbackTitle,
+    }
   }
 
-  return context
+  const releaseYear = asset.releaseYear ?? asset.year
+  const artistAlbum = joinDisplayParts([asset.artistName, asset.albumName])
+  const genreYear = joinDisplayParts([asset.genre, releaseYear])
+  const streamLabel = getStreamLabel(asset)
+
+  return {
+    poster:
+      firstNonEmpty(
+        asset.poster,
+        getArtworkUrl(asset.artwork),
+        asset.images?.poster,
+        asset.images?.backdrop
+      ) ?? undefined,
+    subtitle:
+      firstNonEmpty(
+        artistAlbum,
+        genreYear,
+        asset.subtitle,
+        streamLabel,
+        asset.description
+      ) ?? undefined,
+    title:
+      firstNonEmpty(
+        asset.title,
+        asset.name,
+        asset.albumName,
+        asset.description
+      ) ?? fallbackTitle,
+  }
 }
 
 async function fetchPlaybackUrl(
@@ -183,6 +202,39 @@ async function fetchPlaybackUrl(
   return data.url
 }
 
+function firstNonEmpty(
+  ...values: (null | number | string | undefined)[]
+): string | undefined {
+  for (const value of values) {
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return String(value)
+    }
+
+    if (typeof value !== "string") continue
+
+    const trimmed = value.trim()
+    if (trimmed) return trimmed
+  }
+
+  return undefined
+}
+
+function getArtworkUrl(
+  artwork: AudioPlayerAsset["artwork"]
+): string | undefined {
+  const url = firstNonEmpty(artwork?.url, artwork?.templateUrl)
+  if (!url) return undefined
+
+  return url
+    .replaceAll("{w}", "80")
+    .replaceAll("{h}", "80")
+    .replaceAll("{f}", "jpg")
+}
+
+function getStreamLabel(asset: AudioPlayerAsset): string | undefined {
+  return joinDisplayParts([asset.group, ...(asset.features ?? [])])
+}
+
 function isNetworkError(error: unknown) {
   return (
     error &&
@@ -190,4 +242,14 @@ function isNetworkError(error: unknown) {
     "category" in error &&
     (error as { category: number }).category === 1
   )
+}
+
+function joinDisplayParts(
+  values: (null | number | string | undefined)[]
+): string | undefined {
+  const parts = values
+    .map((value) => firstNonEmpty(value))
+    .filter((value): value is string => Boolean(value))
+
+  return parts.length > 0 ? parts.join(" • ") : undefined
 }

@@ -1,11 +1,10 @@
 import type { BaseLayoutProps, LinkItemType } from "fumadocs-ui/layouts/shared"
 
-import {
-  BlueprintIcon,
-  QuestionIcon,
-  SparkleIcon,
-} from "@phosphor-icons/react/dist/ssr"
-import { RssIcon } from "lucide-react"
+import { IconBlocks } from "@central-icons-react/round-filled-radius-0-stroke-1/IconBlocks"
+import { IconBook } from "@central-icons-react/round-filled-radius-0-stroke-1/IconBook"
+import { IconBuildingBlocks } from "@central-icons-react/round-filled-radius-0-stroke-1/IconBuildingBlocks"
+import { IconNewspaper2 } from "@central-icons-react/round-filled-radius-0-stroke-1/IconNewspaper2"
+import { IconRocket } from "@central-icons-react/round-filled-radius-0-stroke-1/IconRocket"
 import Image from "next/image"
 
 import { Icons } from "@/components/icons"
@@ -33,28 +32,34 @@ const COMMON_LINKS: LinkItemType[] = [
 export const baseOptions: BaseLayoutProps = {
   links: [
     {
-      icon: <SparkleIcon />,
+      icon: <IconRocket />,
       text: "Quick Start",
       type: "main",
       url: "/docs/quick-start",
     },
     {
-      icon: <QuestionIcon />,
+      icon: <IconBook />,
       text: "Introduction",
       type: "main",
       url: "/docs/introduction",
     },
     {
-      icon: <BlueprintIcon />,
+      icon: <IconNewspaper2 />,
+      text: "Usage",
+      type: "main",
+      url: "/docs/usage",
+    },
+    {
+      icon: <IconBlocks />,
+      text: "Blocks",
+      type: "main",
+      url: "/blocks/video-player",
+    },
+    {
+      icon: <IconBuildingBlocks />,
       text: "Concepts",
       type: "main",
       url: "/docs/concepts",
-    },
-    {
-      icon: <RssIcon />,
-      text: "Events",
-      type: "main",
-      url: "/docs/events",
     },
     ...COMMON_LINKS,
   ],

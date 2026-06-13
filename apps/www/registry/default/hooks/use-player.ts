@@ -32,9 +32,9 @@ export const PLAYER_FEATURE_KEY = "player"
 
 export interface PlayerEvents {
   bufferingchange: { isBuffering: boolean }
-  playbackerror: { error: Error }
+  playbackerror: { currentTime: number; error: Error }
   playererror: { error: Error }
-  playerready: { player: shaka.Player }
+  playerready: void
 }
 
 export interface PlayerStore extends MediaEventSlice<PlayerEvents> {
@@ -276,7 +276,7 @@ function PlayerSetup() {
         mediaElement.player = playerInstance.current
         window.shaka = shakaLib as unknown as Window["shaka"]
 
-        events.emit("playerready", { player: localPlayer })
+        events.emit("playerready")
       } catch (error) {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- mutated by cleanup closure during await
         if (aborted) {
@@ -359,9 +359,14 @@ function PlayerSetup() {
     const errorHandler = (event: Event) => {
       const detail = (event as CustomEvent).detail as shaka.util.Error
       if (isLoadInterrupted(detail)) return
+      const media = store.getState().media.mediaElement
+      const currentTime = media?.currentTime ?? 0
 
       store.getState().playback.setError(detail)
-      events.emit("playbackerror", { error: detail as unknown as Error })
+      events.emit("playbackerror", {
+        currentTime,
+        error: detail as unknown as Error,
+      })
     }
 
     player.addEventListener("error", errorHandler)
@@ -374,7 +379,7 @@ function PlayerSetup() {
       player.removeEventListener("error", errorHandler)
       clearBufferingTimeout()
     }
-  }, [mediaElement, player, store])
+  }, [events, mediaElement, player, store])
 
   return null
 }
