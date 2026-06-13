@@ -3,9 +3,7 @@ import { PictureInPictureControl } from "@/registry/default/blocks/video-player/
 import { PlaybackRateControl } from "@/registry/default/blocks/video-player/components/playback-rate-control"
 import { PlaybackStateControl } from "@/registry/default/blocks/video-player/components/playback-state-control"
 import { Playlist } from "@/registry/default/blocks/video-player/components/playlist"
-import {
-  PlaylistNextControl,
-} from "@/registry/default/blocks/video-player/components/playlist-navigation-controls"
+import { PlaylistNextControl } from "@/registry/default/blocks/video-player/components/playlist-navigation-controls"
 import { TimelineSliderControl } from "@/registry/default/blocks/video-player/components/timeline-slider-control"
 import { VolumeGroupControl } from "@/registry/default/blocks/video-player/components/volume-group-control"
 import * as Layout from "@/registry/default/ui/player-layout"
