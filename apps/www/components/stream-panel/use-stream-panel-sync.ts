@@ -13,6 +13,7 @@ import {
   addBlenderCaptions,
   APPLE_MUSIC_CHARTS_PLAYLIST_ID,
   type BlenderStreamResponse,
+  fetchAppleMusicChartAssetsPage,
   fetchBlenderStream,
   fetchPlaylistPresetAssets,
   isBlenderOpenFilmAsset,
@@ -33,6 +34,10 @@ import {
 import { useMediaStore } from "@/registry/default/hooks/use-media"
 import { PLAYBACK_FEATURE_KEY } from "@/registry/default/hooks/use-playback"
 import { usePlayerStore } from "@/registry/default/hooks/use-player"
+import {
+  PLAYLIST_FEATURE_KEY,
+  type PlaylistStore,
+} from "@/registry/default/hooks/use-playlist"
 import { useVolumeStore } from "@/registry/default/hooks/use-volume"
 import {
   useMediaEvents,
@@ -40,6 +45,12 @@ import {
 } from "@/registry/default/ui/media-provider"
 
 const DEFAULT_VIDEO_PRESET_ID = "mux-big-buck-bunny"
+const APPLE_MUSIC_LOAD_MORE_THRESHOLD = 5
+
+interface AppleMusicPaginationState {
+  loadingPage?: number
+  nextPage?: number
+}
 
 export function useStreamPanelSync({
   playerType = "video",
@@ -47,6 +58,7 @@ export function useStreamPanelSync({
   playerType?: StreamPanelPlayerType
 } = {}) {
   const playbackApi = useMediaFeatureApi<PlaybackStore>(PLAYBACK_FEATURE_KEY)
+  const playlistApi = useMediaFeatureApi<PlaylistStore>(PLAYLIST_FEATURE_KEY)
   const events = useMediaEvents<AssetEvents>()
   const mediaElement = useMediaStore((state) => state.mediaElement)
   const player = usePlayerStore((state) => state.instance)
@@ -62,6 +74,7 @@ export function useStreamPanelSync({
 
   const setVolume = useVolumeStore((s) => s.setVolume)
   const setMuted = useVolumeStore((s) => s.setMuted)
+  const appleMusicPaginationRef = useRef<AppleMusicPaginationState>({})
   const playlistAbortRef = useRef<AbortController | null>(null)
   const restoredSelectionRef = useRef(false)
   const blenderStreamCacheRef = useRef<Map<
@@ -138,19 +151,88 @@ export function useStreamPanelSync({
 
   const { loadSource } = useAsset<Asset>()
 
+  const appendNextAppleMusicChartPage = useCallback(
+    (currentIndex: number) => {
+      const pagination = appleMusicPaginationRef.current
+      if (!pagination.nextPage || pagination.loadingPage) return
+
+      const playlist = playlistApi.getState().playlist
+      const remainingItems = playlist.queue.length - currentIndex - 1
+      if (remainingItems >= APPLE_MUSIC_LOAD_MORE_THRESHOLD) return
+
+      const page = pagination.nextPage
+      const abortController = playlistAbortRef.current
+      appleMusicPaginationRef.current = {
+        ...pagination,
+        loadingPage: page,
+      }
+
+      void fetchAppleMusicChartAssetsPage(page, abortController?.signal)
+        .then(({ assets, nextPage }) => {
+          if (abortController?.signal.aborted) return
+
+          const selection =
+            useStreamPanelStore.getState().contentSelections[playerType]
+          if (
+            !selection ||
+            selection.kind !== "playlist" ||
+            selection.id !== APPLE_MUSIC_CHARTS_PLAYLIST_ID
+          ) {
+            return
+          }
+
+          const existingIds = new Set(
+            playlistApi.getState().playlist.queue.map((item) => item.id)
+          )
+          const newItems = assets
+            .filter((asset) => asset.id && !existingIds.has(asset.id))
+            .map((asset) => ({
+              id: asset.id!,
+              properties: asset,
+            }))
+
+          if (newItems.length > 0) {
+            playlistApi.getState().playlist.append(newItems)
+          }
+
+          appleMusicPaginationRef.current = {
+            nextPage,
+          }
+        })
+        .catch((error: unknown) => {
+          if (error instanceof DOMException && error.name === "AbortError")
+            return
+
+          playbackApi.getState().playback.setError(error)
+          appleMusicPaginationRef.current = {
+            nextPage: page,
+          }
+        })
+    },
+    [playbackApi, playerType, playlistApi]
+  )
+
   useEffect(() => {
     return events.on("assetchange", (event) => {
       const selection =
         useStreamPanelStore.getState().contentSelections[playerType]
       if (!selection || selection.kind !== "playlist") return
-      if (selection.index === event.currentIndex) return
 
-      setContentSelection(playerType, {
-        ...selection,
-        index: event.currentIndex,
-      })
+      if (selection.index !== event.currentIndex) {
+        setContentSelection(playerType, {
+          ...selection,
+          index: event.currentIndex,
+        })
+      }
+
+      if (
+        playerType === "audio" &&
+        selection.id === APPLE_MUSIC_CHARTS_PLAYLIST_ID
+      ) {
+        appendNextAppleMusicChartPage(event.currentIndex)
+      }
     })
-  }, [events, playerType, setContentSelection])
+  }, [appendNextAppleMusicChartPage, events, playerType, setContentSelection])
 
   useEffect(() => {
     if (!mediaElement) return
@@ -168,6 +250,7 @@ export function useStreamPanelSync({
   }, [autoplay, mediaElement])
 
   const abortPlaylistRequest = useCallback(() => {
+    appleMusicPaginationRef.current = {}
     playlistAbortRef.current?.abort()
   }, [])
 
@@ -207,15 +290,36 @@ export function useStreamPanelSync({
 
   const loadPlaylistPreset = useCallback(
     (playlistId: string, startIndex = 0) => {
+      appleMusicPaginationRef.current = {}
       playlistAbortRef.current?.abort()
       const abortController = new AbortController()
       playlistAbortRef.current = abortController
 
-      void fetchPlaylistPresetAssets(playlistId, abortController.signal)
+      const playlistRequest =
+        playlistId === APPLE_MUSIC_CHARTS_PLAYLIST_ID
+          ? fetchAppleMusicChartAssetsPage(1, abortController.signal).then(
+              ({ assets, nextPage }) => {
+                appleMusicPaginationRef.current = {
+                  nextPage,
+                }
+                return assets
+              }
+            )
+          : fetchPlaylistPresetAssets(playlistId, abortController.signal).then(
+              (assets) => {
+                appleMusicPaginationRef.current = {}
+                return assets
+              }
+            )
+
+      void playlistRequest
         .then((assets) => {
           if (abortController.signal.aborted) return
 
-          const index = normalizePlaylistIndex(startIndex, assets.length)
+          const index = normalizePlaylistIndex(
+            playlistId === APPLE_MUSIC_CHARTS_PLAYLIST_ID ? 0 : startIndex,
+            assets.length
+          )
           setContentSelection(playerType, {
             id: playlistId,
             index,
@@ -225,6 +329,10 @@ export function useStreamPanelSync({
             initialIndex: index,
             loading: assetOptions,
           })
+
+          if (playlistId === APPLE_MUSIC_CHARTS_PLAYLIST_ID) {
+            appendNextAppleMusicChartPage(index)
+          }
         })
         .catch((error: unknown) => {
           if (error instanceof DOMException && error.name === "AbortError")
@@ -233,7 +341,14 @@ export function useStreamPanelSync({
           playbackApi.getState().playback.setError(error)
         })
     },
-    [assetOptions, loadSource, playbackApi, playerType, setContentSelection]
+    [
+      appendNextAppleMusicChartPage,
+      assetOptions,
+      loadSource,
+      playbackApi,
+      playerType,
+      setContentSelection,
+    ]
   )
 
   const restoreContentSelection = useCallback(

@@ -51,12 +51,10 @@ export function BlockPreviewWithToolbar({
   )
 
   const handleExpandToggle = useCallback(() => {
-    setExpanded((currentExpanded) => {
-      const nextExpanded = !currentExpanded
-      updateExpandedQuery(nextExpanded)
-      return nextExpanded
-    })
-  }, [updateExpandedQuery])
+    const nextExpanded = !expanded
+    setExpanded(nextExpanded)
+    updateExpandedQuery(nextExpanded)
+  }, [expanded, updateExpandedQuery])
 
   const handleReload = useCallback(() => {
     setReloadKey((k) => k + 1)
