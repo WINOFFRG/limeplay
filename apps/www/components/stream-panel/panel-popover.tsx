@@ -412,10 +412,12 @@ function PanelToggleRow({
       <span className="font-medium text-foreground/85">{children}</span>
       <ToggleGroup
         onValueChange={(v) => {
-          if (v) onValueChange(v === "on")
+          const nextValue = v[0]
+          if (!nextValue) return
+
+          onValueChange(nextValue === "on")
         }}
-        type="single"
-        value={value ? "on" : "off"}
+        value={value ? ["on"] : ["off"]}
       >
         <ToggleGroupItem className="h-7 rounded-lg px-3 text-xs" value="off">
           Off

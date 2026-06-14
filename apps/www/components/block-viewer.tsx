@@ -342,14 +342,16 @@ function BlockViewerToolbar() {
               gap-1
               *:data-[slot=toggle-group-item]:size-6! *:data-[slot=toggle-group-item]:rounded-sm!
             `}
-            defaultValue="100"
+            defaultValue={["100"]}
             onValueChange={(value) => {
+              const nextValue = value[0]
+              if (!nextValue) return
+
               setView("preview")
               if (resizablePanelRef?.current) {
-                resizablePanelRef.current.resize(parseInt(value))
+                resizablePanelRef.current.resize(parseInt(nextValue))
               }
             }}
-            type="single"
           >
             <ToggleGroupItem title="Desktop" value="100">
               <Monitor className="size-3.5" />
