@@ -15,15 +15,21 @@ import {
 
 export function ActionControls() {
   const [value, setValue] = React.useState<string>("")
+  const toggleGroupProps = {
+    onValueChange: (next: string | string[]) => {
+      setValue(Array.isArray(next) ? (next[0] ?? "") : next)
+    },
+    spacing: 2,
+    type: "single" as const,
+    value,
+  }
 
   return (
     <div className="flex items-center gap-1">
       <ToggleGroup
-        onValueChange={(next: string[]) => {
-          setValue(next[0] ?? "")
-        }}
-        spacing={2}
-        value={value ? [value] : []}
+        {...(toggleGroupProps as unknown as React.ComponentProps<
+          typeof ToggleGroup
+        >)}
       >
         <ToggleGroupItem
           aria-label="Dislike"

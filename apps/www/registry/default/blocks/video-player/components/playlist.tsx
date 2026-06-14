@@ -24,7 +24,6 @@ export function Playlist() {
     (state) =>
       state.currentItem as null | { id: string; properties: VideoPlayerAsset }
   )
-  const containerRef = usePlayerStore((state) => state.containerRef)
   const preloadAsset = useAssetStore((state) => state.preloadAsset) as (
     asset: VideoPlayerAsset
   ) => Promise<void>
@@ -69,8 +68,6 @@ export function Playlist() {
         align="end"
         alignOffset={-12}
         className="dark w-sm border border-border p-2"
-        collisionBoundary={containerRef ?? undefined}
-        collisionPadding={20}
         side="top"
         sideOffset={24}
       >
