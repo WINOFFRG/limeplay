@@ -1,6 +1,7 @@
 "use client"
 
 import { composeRefs } from "@radix-ui/react-compose-refs"
+import { Slot } from "@radix-ui/react-slot"
 import React from "react"
 
 import { cn } from "@/lib/utils"
@@ -9,6 +10,7 @@ import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
 import { usePlayerStore } from "@/registry/default/hooks/use-player"
 
 export interface RootContainerProps extends React.ComponentPropsWithoutRef<"div"> {
+  asChild?: boolean
   /**
    * Aspect ratio for the player root. Pass false for players that should size
    * from their content, such as compact audio controls.
@@ -28,7 +30,7 @@ export interface RootContainerProps extends React.ComponentPropsWithoutRef<"div"
 
 export type RootContainerPropsDocs = Pick<
   RootContainerProps,
-  "aspectRatio" | "height" | "width"
+  "asChild" | "aspectRatio" | "height" | "width"
 >
 
 export const RootContainer = React.forwardRef<
@@ -36,10 +38,17 @@ export const RootContainer = React.forwardRef<
   RootContainerProps
 >((props, forwardedRef) => {
   const {
+    asChild = false,
     aspectRatio: aspectRatioProp,
     children,
     className,
     height = 1080,
+    onBlur,
+    onFocus,
+    onPointerEnter,
+    onPointerLeave,
+    onPointerMove,
+    onPointerUp,
     style,
     width = 1920,
     ...etc
@@ -55,9 +64,10 @@ export const RootContainer = React.forwardRef<
     () => resolveAspectRatio(aspectRatioProp, width, height),
     [aspectRatioProp, height, width]
   )
+  const Component = asChild ? Slot : "div"
 
   return (
-    <div
+    <Component
       aria-label="Media player"
       className={cn(
         `
@@ -70,36 +80,36 @@ export const RootContainer = React.forwardRef<
       data-idle={debug || forceIdle ? "false" : idle}
       data-layout-type="root-container"
       data-status={status}
-      onBlur={() => {
+      onBlur={composeEventHandlers(onBlur, () => {
         if (!forceIdle) {
           setIdle(true)
         }
-      }}
-      onFocus={() => {
+      })}
+      onFocus={composeEventHandlers(onFocus, () => {
         if (!forceIdle) {
           setIdle(false)
         }
-      }}
-      onPointerEnter={() => {
+      })}
+      onPointerEnter={composeEventHandlers(onPointerEnter, () => {
         if (!forceIdle) {
           setIdle(false)
         }
-      }}
-      onPointerLeave={() => {
+      })}
+      onPointerLeave={composeEventHandlers(onPointerLeave, () => {
         if (!forceIdle) {
           setIdle(true)
         }
-      }}
-      onPointerMove={() => {
+      })}
+      onPointerMove={composeEventHandlers(onPointerMove, () => {
         if (!forceIdle) {
           setIdle(false)
         }
-      }}
-      onPointerUp={() => {
+      })}
+      onPointerUp={composeEventHandlers(onPointerUp, () => {
         if (!forceIdle) {
           setIdle(false)
         }
-      }}
+      })}
       ref={composeRefs(forwardedRef, setPlayerContainerRef)}
       role="region"
       style={{
@@ -111,7 +121,7 @@ export const RootContainer = React.forwardRef<
       {...etc}
     >
       {children}
-    </div>
+    </Component>
   )
 })
 
@@ -126,6 +136,16 @@ function calculateAspectRatio(width?: number, height?: number) {
     const aspectWidth = width / divisor
     const aspectHeight = height / divisor
     return `${aspectWidth}:${aspectHeight}`
+  }
+}
+
+function composeEventHandlers<E extends React.SyntheticEvent>(
+  consumerHandler: ((event: E) => void) | undefined,
+  internalHandler: (event: E) => void
+) {
+  return (event: E) => {
+    internalHandler(event)
+    consumerHandler?.(event)
   }
 }
 

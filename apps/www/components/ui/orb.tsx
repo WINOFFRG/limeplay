@@ -71,6 +71,10 @@ function clamp01(n: number) {
   return Math.min(1, Math.max(0, n))
 }
 
+function normalizeSmoothingFactor(factor: number, delta: number) {
+  return 1 - Math.pow(1 - factor, delta * 60)
+}
+
 function Scene({
   agentState,
   colors,
@@ -209,17 +213,22 @@ function Scene({
       }
     }
 
-    curInRef.current += (targetIn - curInRef.current) * 0.2
-    curOutRef.current += (targetOut - curOutRef.current) * 0.2
+    const volumeSmoothing = normalizeSmoothingFactor(0.2, delta)
+    const speedSmoothing = normalizeSmoothingFactor(0.12, delta)
+    const colorSmoothing = normalizeSmoothingFactor(0.08, delta)
+
+    curInRef.current += (targetIn - curInRef.current) * volumeSmoothing
+    curOutRef.current += (targetOut - curOutRef.current) * volumeSmoothing
 
     const targetSpeed = 0.1 + (1 - Math.pow(curOutRef.current - 1, 2)) * 0.9
-    animSpeedRef.current += (targetSpeed - animSpeedRef.current) * 0.12
+    animSpeedRef.current +=
+      (targetSpeed - animSpeedRef.current) * speedSmoothing
 
     u.uAnimation.value += delta * animSpeedRef.current
     u.uInputVolume.value = curInRef.current
     u.uOutputVolume.value = curOutRef.current
-    u.uColor1.value.lerp(targetColor1Ref.current, 0.08)
-    u.uColor2.value.lerp(targetColor2Ref.current, 0.08)
+    u.uColor1.value.lerp(targetColor1Ref.current, colorSmoothing)
+    u.uColor2.value.lerp(targetColor2Ref.current, colorSmoothing)
   })
 
   useEffect(() => {
