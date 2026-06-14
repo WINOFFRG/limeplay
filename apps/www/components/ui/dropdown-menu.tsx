@@ -55,13 +55,22 @@ function DropdownMenuContent({
   align = "start",
   alignOffset = 0,
   className,
+  collisionAvoidance,
+  collisionBoundary,
+  collisionPadding,
   side = "bottom",
   sideOffset = 4,
   ...props
 }: MenuPrimitive.Popup.Props &
   Pick<
     MenuPrimitive.Positioner.Props,
-    "align" | "alignOffset" | "side" | "sideOffset"
+    | "align"
+    | "alignOffset"
+    | "collisionAvoidance"
+    | "collisionBoundary"
+    | "collisionPadding"
+    | "side"
+    | "sideOffset"
   >) {
   return (
     <MenuPrimitive.Portal>
@@ -69,6 +78,9 @@ function DropdownMenuContent({
         align={align}
         alignOffset={alignOffset}
         className="isolate z-50 outline-none"
+        collisionAvoidance={collisionAvoidance}
+        collisionBoundary={collisionBoundary}
+        collisionPadding={collisionPadding}
         side={side}
         sideOffset={sideOffset}
       >

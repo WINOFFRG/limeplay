@@ -6,6 +6,8 @@ import type {
   ReactNode,
 } from "react"
 
+import React from "react"
+
 import type {
   AudioPlayerAsset,
   AudioSourceProviderProps,
@@ -18,6 +20,7 @@ import { PlayerControls } from "@/registry/default/blocks/audio-player/component
 import { TimelineControl } from "@/registry/default/blocks/audio-player/components/fixed-timeline-control"
 import { MediaProvider } from "@/registry/default/blocks/audio-player/lib/media-kit"
 import { Media } from "@/registry/default/ui/media"
+import { RootContainer } from "@/registry/default/ui/root-container"
 
 import styles from "../audio-player.module.css"
 
@@ -38,45 +41,55 @@ export interface AudioPlayerProps {
   sourceKey?: string
 }
 
-export function AudioPlayer({
-  autoLoad,
-  children,
-  className,
-  debug,
-  initialIndex,
-  loading,
-  mediaProps,
-  source,
-  sourceKey,
-}: AudioPlayerProps = {}) {
-  const { className: mediaClassName, ...safeMediaProps } = mediaProps ?? {}
+export const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
+  (
+    {
+      autoLoad,
+      children,
+      className,
+      debug,
+      initialIndex,
+      loading,
+      mediaProps,
+      source,
+      sourceKey,
+    },
+    ref
+  ) => {
+    const { className: mediaClassName, ...safeMediaProps } = mediaProps ?? {}
 
-  return (
-    <MediaProvider debug={debug}>
-      <AudioSourceProvider
-        autoLoad={autoLoad}
-        initialIndex={initialIndex}
-        loading={loading}
-        source={source}
-        sourceKey={sourceKey}
-      >
-        <div
-          className={cn(
-            styles.dark,
-            "relative z-50 h-18 w-full border-t border-border bg-background",
-            className
-          )}
+    return (
+      <MediaProvider debug={debug}>
+        <AudioSourceProvider
+          autoLoad={autoLoad}
+          initialIndex={initialIndex}
+          loading={loading}
+          source={source}
+          sourceKey={sourceKey}
         >
-          <Media
-            {...(safeMediaProps as ComponentPropsWithoutRef<typeof Media>)}
-            as="audio"
-            className={mediaClassName}
-          />
-          <TimelineControl />
-          <PlayerControls />
-        </div>
-        {children}
-      </AudioSourceProvider>
-    </MediaProvider>
-  )
-}
+          <RootContainer
+            aria-label="Audio player"
+            aspectRatio={false}
+            className={cn(
+              styles.dark,
+              "relative z-50 h-18 w-full border-t border-border bg-background",
+              className
+            )}
+            ref={ref}
+          >
+            <Media
+              {...(safeMediaProps as ComponentPropsWithoutRef<typeof Media>)}
+              as="audio"
+              className={mediaClassName}
+            />
+            <TimelineControl />
+            <PlayerControls />
+          </RootContainer>
+          {children}
+        </AudioSourceProvider>
+      </MediaProvider>
+    )
+  }
+)
+
+AudioPlayer.displayName = "AudioPlayer"

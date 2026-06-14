@@ -26,6 +26,11 @@ export interface AppleMusicChartAsset extends Asset {
   url?: string
 }
 
+export interface AppleMusicChartPage {
+  assets: AppleMusicChartAsset[]
+  nextPage?: number
+}
+
 export interface BlenderOpenFilmAsset extends Asset {
   duration?: number
   images?: BlenderOpenFilmImages
@@ -211,6 +216,31 @@ export async function addBlenderCaptions(
   })
 }
 
+export async function fetchAppleMusicChartAssetsPage(
+  page: number,
+  signal?: AbortSignal
+): Promise<AppleMusicChartPage> {
+  const { locale, storefront } = getAppleMusicLocaleHeaders()
+  const combinedSignal = createTimeoutSignal(
+    signal,
+    APPLE_MUSIC_CHARTS_TIMEOUT_MS
+  )
+
+  const chart = await fetchAppleMusicChartPage({
+    locale,
+    page,
+    signal: combinedSignal,
+    storefront,
+  })
+
+  return {
+    assets: chart.items
+      .filter((item) => Boolean(item.previewUrl))
+      .map(toAppleMusicChartAsset),
+    nextPage: chart.nextPage,
+  }
+}
+
 export async function fetchBlenderStream(
   assetId: string,
   signal?: AbortSignal
@@ -232,7 +262,7 @@ export async function fetchPlaylistPresetAssets(
   signal?: AbortSignal
 ): Promise<Asset[]> {
   if (playlistId === APPLE_MUSIC_CHARTS_PLAYLIST_ID) {
-    return fetchAppleMusicChartAssets(signal)
+    return (await fetchAppleMusicChartAssetsPage(1, signal)).assets
   }
 
   if (playlistId !== BLENDER_OPEN_FILMS_PLAYLIST_ID) {
@@ -273,40 +303,46 @@ function createTimeoutSignal(
   return AbortSignal.any([signal, timeoutSignal])
 }
 
-async function fetchAppleMusicChartAssets(
+async function fetchAppleMusicChartPage({
+  locale,
+  page,
+  signal,
+  storefront,
+}: {
+  locale: string
+  page: number
   signal?: AbortSignal
-): Promise<AppleMusicChartAsset[]> {
-  const { locale, storefront } = getAppleMusicLocaleHeaders()
-  const combinedSignal = createTimeoutSignal(
-    signal,
-    APPLE_MUSIC_CHARTS_TIMEOUT_MS
+  storefront: string
+}) {
+  const response = await fetch(
+    `${APPLE_MUSIC_API_BASE_URL}/charts?page=${page}`,
+    {
+      headers: {
+        "x-locale": locale,
+        "x-storefront": storefront,
+      },
+      signal,
+    }
   )
-  const response = await fetch(`${APPLE_MUSIC_API_BASE_URL}/charts?page=1`, {
-    headers: {
-      "x-locale": locale,
-      "x-storefront": storefront,
-    },
-    signal: combinedSignal,
-  })
-  throwIfAborted(combinedSignal)
+  throwIfAborted(signal)
 
   if (!response.ok) {
     throw new Error(
-      `Failed to fetch Apple Music charts: ${response.statusText}`
+      `Failed to fetch Apple Music charts page ${page}: ${response.statusText}`
     )
   }
 
   const responseJson: unknown = await response.json()
-  throwIfAborted(combinedSignal)
+  throwIfAborted(signal)
 
   const chart = AppleMusicChartsResponseSchema.safeParse(responseJson)
   if (!chart.success) {
-    throw new Error(`Invalid Apple Music charts response: ${chart.error}`)
+    throw new Error(
+      `Invalid Apple Music charts page ${page} response: ${chart.error}`
+    )
   }
 
-  return chart.data.items
-    .filter((item) => Boolean(item.previewUrl))
-    .map(toAppleMusicChartAsset)
+  return chart.data
 }
 
 function getAppleMusicLocaleHeaders(): { locale: string; storefront: string } {

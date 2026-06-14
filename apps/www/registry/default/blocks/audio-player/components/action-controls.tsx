@@ -15,7 +15,6 @@ import {
 
 export function ActionControls() {
   const [value, setValue] = React.useState<string>("")
-
   const toggleGroupProps = {
     onValueChange: (next: string | string[]) => {
       setValue(Array.isArray(next) ? (next[0] ?? "") : next)

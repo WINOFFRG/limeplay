@@ -202,6 +202,7 @@ export const blocks: Registry["items"] = [
     registryDependencies: [
       "media-provider",
       "media",
+      "root-container",
       "timeline-control",
       "timeline-labels",
       "mute-control",

@@ -3,6 +3,7 @@
 import {
   CodeXmlIcon,
   CogIcon,
+  type LucideIcon,
   Maximize2Icon,
   Minimize2Icon,
   MoonIcon,
@@ -228,7 +229,7 @@ export function BlockToolbar({
 
   type ToolbarItem = {
     active: boolean
-    icon: React.ElementType
+    icon: LucideIcon
     iconStyle?: string
     id: string
     label: string
