@@ -214,6 +214,7 @@ export const blocks: Registry["items"] = [
       "use-asset",
       "use-media",
       "use-playback-source",
+      "limeplay-logo",
       "utils",
     ],
     title: "Audio Player",

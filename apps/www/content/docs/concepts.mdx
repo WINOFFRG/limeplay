@@ -43,7 +43,7 @@ Read state with selectors so components only re-render for the fields they use.
 
 ```tsx
 const paused = usePlaybackStore((state) => state.paused)
-const volume = useVolumeStore((state) => state.volume)
+const volume = useVolumeStore((state) => state.level)
 ```
 
 For imperative code, use the media API returned by your kit.

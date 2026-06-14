@@ -89,6 +89,7 @@ export function useStreamPanelSync({
             context.signal,
             blenderStreamCache
           )
+          // DEV: The selected asset may change while the Blender stream URL is resolving.
           context.signal.throwIfAborted()
 
           await context.loadDefault(
@@ -97,6 +98,8 @@ export function useStreamPanelSync({
               src: stream.playback.hls,
             }
           )
+          // DEV: loadDefault is async; avoid adding captions to a superseded player load.
+          context.signal.throwIfAborted()
 
           try {
             await addBlenderCaptions(context.player, stream)

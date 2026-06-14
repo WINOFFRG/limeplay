@@ -31,7 +31,7 @@ export function RepeatControl({
 }: {
   variant?: RepeatControlVariant
 }) {
-  const { setRepeatMode } = usePlaylist()
+  const setRepeatMode = usePlaylistStore((state) => state.setRepeatMode)
   const repeatMode = usePlaylistStore((state) => state.repeatMode)
   const modes = REPEAT_MODES[variant]
   const normalizedRepeatMode = useMemo(

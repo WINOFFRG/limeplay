@@ -28,3 +28,4 @@ export const media = createMediaKit({
 })
 
 export const MediaProvider = media.MediaProvider
+export const useMediaEvents = media.useMediaEvents

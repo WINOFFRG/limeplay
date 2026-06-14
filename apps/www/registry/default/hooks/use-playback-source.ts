@@ -80,13 +80,21 @@ export function usePlaybackSource<TAsset extends Asset>(
       ? AssetSourceType.Playlist
       : AssetSourceType.Asset
   }, [source])
+  const requestKey = useMemo(
+    () => `${resolvedSourceKey}::${sourceType}::${initialIndex}`,
+    [initialIndex, resolvedSourceKey, sourceType]
+  )
+
+  useEffect(() => {
+    loadedSourceKeyRef.current = null
+  }, [requestKey])
 
   useEffect(() => {
     if (!autoLoad || !player || source === undefined || assets.length === 0)
       return
 
-    if (loadedSourceKeyRef.current === resolvedSourceKey) return
-    loadedSourceKeyRef.current = resolvedSourceKey
+    if (loadedSourceKeyRef.current === requestKey) return
+    loadedSourceKeyRef.current = requestKey
 
     loadSource(source, {
       initialIndex,
@@ -100,6 +108,7 @@ export function usePlaybackSource<TAsset extends Asset>(
     initialIndex,
     loadSource,
     player,
+    requestKey,
     resolvedSourceKey,
     source,
     sourceKey,

@@ -259,6 +259,7 @@ interface CustomVideoAsset extends Asset {
 
 interface CustomVideoPlayerProps {
   autoLoad?: boolean
+  initialIndex?: number
   loading?: UseAssetOptions<CustomVideoAsset>
   mediaProps?: Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "as" | "src">
   source?: PlayerSource<CustomVideoAsset>
@@ -267,6 +268,7 @@ interface CustomVideoPlayerProps {
 
 export function CustomVideoPlayer({
   autoLoad,
+  initialIndex,
   loading,
   mediaProps,
   source,
@@ -276,6 +278,7 @@ export function CustomVideoPlayer({
     <MediaProvider>
       <PlaybackSourceController
         autoLoad={autoLoad}
+        initialIndex={initialIndex}
         loading={loading}
         source={source}
         sourceKey={sourceKey}

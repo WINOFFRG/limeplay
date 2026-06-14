@@ -607,11 +607,8 @@ export function assetFeature(): MediaFeature<
         },
         loadGeneration: 0,
         loadPlaylist: (assets, startIndex = 0, sourceType, options) => {
-          const resolvedSourceType = getSourceTypeForItems(assets, sourceType)
-          const activeSession = createAssetSession(
-            resolvedSourceType ?? AssetSourceType.Asset,
-            options
-          )
+          const resolvedSourceType = sourceType ?? AssetSourceType.Playlist
+          const activeSession = createAssetSession(resolvedSourceType, options)
           const normalizedAssets = normalizeAssets(
             assets,
             activeSession.loading
@@ -629,10 +626,16 @@ export function assetFeature(): MediaFeature<
         },
         loadSource: (source, options) => {
           const assets = normalizePlayerSource(source)
+          const sourceType =
+            options?.sourceType ??
+            (Array.isArray(source)
+              ? AssetSourceType.Playlist
+              : (getSourceTypeForItems(assets) ?? AssetSourceType.Asset))
+
           get().asset.loadPlaylist(
             assets,
             options?.initialIndex,
-            options?.sourceType,
+            sourceType,
             options
           )
         },
@@ -922,11 +925,22 @@ function AssetSetup() {
 
     const offPlaybackError = events.on("playbackerror", (payload) => {
       void (async () => {
-        const { currentItem } = api.getState().playlist
-        const options = api.getState().asset.activeSession?.loading as
+        const state = api.getState()
+        const { currentItem } = state.playlist
+        const sessionId = state.asset.activeSession?.id
+        const options = state.asset.activeSession?.loading as
           | undefined
           | UseAssetOptions<Asset>
         if (!currentItem) return
+        const currentItemId = currentItem.id
+
+        const getFreshCurrentItem = () => {
+          const freshState = api.getState()
+          if (freshState.asset.activeSession?.id !== sessionId) return null
+          if (freshState.playlist.currentItem?.id !== currentItemId) return null
+
+          return freshState.playlist.currentItem
+        }
 
         const mediaElement = api.getState().media.mediaElement
         try {
@@ -942,10 +956,12 @@ function AssetSetup() {
             : {
                 action: AssetRecoveryAction.Reload,
               }
+          const freshCurrentItem = getFreshCurrentItem()
+          if (!freshCurrentItem) return
 
           if (decision.action === AssetRecoveryAction.Reload) {
             const assetToLoad = (decision.asset ??
-              currentItem.properties) as unknown as Asset
+              freshCurrentItem.properties) as unknown as Asset
             const startTime = decision.startTime ?? currentTime
             api.setState(({ asset }) => {
               asset.previousError = payload.error
