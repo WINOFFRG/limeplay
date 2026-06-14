@@ -82,12 +82,10 @@ function AnimatedIcon({
   return (
     <AnimatePresence initial={false} mode="popLayout">
       <motion.span
-        // animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
-        // className="flex items-center justify-center"
-        // exit={{ filter: "blur(4px)", opacity: 0, scale: 0.25 }}
-        // initial={{ filter: "blur(4px)", opacity: 0, scale: 0.25 }}
+        animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
+        exit={{ filter: "blur(4px)", opacity: 0, scale: 0.25 }}
+        initial={{ filter: "blur(4px)", opacity: 0, scale: 0.25 }}
         key={id}
-        layout
         transition={{ bounce: 0, duration: 0.3, type: "spring" }}
       >
         {children}

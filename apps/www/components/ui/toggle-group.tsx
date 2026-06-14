@@ -1,7 +1,8 @@
 "use client"
 
+import { Toggle as TogglePrimitive } from "@base-ui/react/toggle"
+import { ToggleGroup as ToggleGroupPrimitive } from "@base-ui/react/toggle-group"
 import { type VariantProps } from "class-variance-authority"
-import { ToggleGroup as ToggleGroupPrimitive } from "radix-ui"
 import * as React from "react"
 
 import { toggleVariants } from "@/components/ui/toggle"
@@ -24,12 +25,12 @@ function ToggleGroup({
   spacing = 0,
   variant,
   ...props
-}: React.ComponentProps<typeof ToggleGroupPrimitive.Root> &
+}: React.ComponentProps<typeof ToggleGroupPrimitive> &
   VariantProps<typeof toggleVariants> & {
     spacing?: number
   }) {
   return (
-    <ToggleGroupPrimitive.Root
+    <ToggleGroupPrimitive
       className={cn(
         `
           group/toggle-group flex w-fit items-center gap-[--spacing(var(--gap))] rounded-md
@@ -47,7 +48,7 @@ function ToggleGroup({
       <ToggleGroupContext.Provider value={{ size, spacing, variant }}>
         {children}
       </ToggleGroupContext.Provider>
-    </ToggleGroupPrimitive.Root>
+    </ToggleGroupPrimitive>
   )
 }
 
@@ -57,12 +58,12 @@ function ToggleGroupItem({
   size,
   variant,
   ...props
-}: React.ComponentProps<typeof ToggleGroupPrimitive.Item> &
+}: React.ComponentProps<typeof TogglePrimitive> &
   VariantProps<typeof toggleVariants>) {
   const context = React.useContext(ToggleGroupContext)
 
   return (
-    <ToggleGroupPrimitive.Item
+    <TogglePrimitive
       className={cn(
         toggleVariants({
           size: context.size || size,
@@ -89,7 +90,7 @@ function ToggleGroupItem({
       {...props}
     >
       {children}
-    </ToggleGroupPrimitive.Item>
+    </TogglePrimitive>
   )
 }
 

@@ -367,13 +367,12 @@ function TrackRow({
               className={cn(
                 "size-4 text-white drop-shadow-sm transition-[opacity,transform] duration-150 ease-out",
                 isActive
-                  ? "opacity-100"
+                  ? "scale-100 opacity-100"
                   : `
-                    opacity-0
+                    scale-50 opacity-0
                     group-hover/track:scale-100 group-hover/track:opacity-100
                   `
               )}
-              style={{ transform: isActive ? undefined : "scale(0.5)" }}
               weight="fill"
             />
           </div>
