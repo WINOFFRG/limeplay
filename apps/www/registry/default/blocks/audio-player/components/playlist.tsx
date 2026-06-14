@@ -46,6 +46,7 @@ export function Playlist() {
   const queue = usePlaylistStore(
     (state) => state.queue as { id: string; properties: AudioPlayerAsset }[]
   )
+  const repeatMode = usePlaylistStore((state) => state.repeatMode)
   const shuffle = usePlaylistStore((state) => state.shuffle)
   const shuffleOrder = usePlaylistStore((state) => state.shuffleOrder)
   const skipToId = usePlaylistStore((state) => state.skipToId)
@@ -100,8 +101,16 @@ export function Playlist() {
   const nextDisplayAssets = useMemo(() => {
     if (!currentItem) return displayAssets
     if (currentDisplayIndex === -1) return displayAssets
+
+    if (repeatMode === "all" && displayAssets.length > 1) {
+      return [
+        ...displayAssets.slice(currentDisplayIndex + 1),
+        ...displayAssets.slice(0, currentDisplayIndex),
+      ]
+    }
+
     return displayAssets.slice(currentDisplayIndex + 1)
-  }, [currentDisplayIndex, currentItem, displayAssets])
+  }, [currentDisplayIndex, currentItem, displayAssets, repeatMode])
 
   const playlistName = useMemo(
     () => getPlaylistName(currentItem?.properties, queue),
