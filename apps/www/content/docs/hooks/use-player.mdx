@@ -1,6 +1,6 @@
 ---
 title: use-player
-description: Feature for Shaka Player initialization, asset loading, and preloading.
+description: Low-level feature for Shaka Player initialization and manual load/preload control.
 ---
 
 ## Installation
@@ -42,7 +42,7 @@ const containerRef = usePlayerStore((s) => s.containerRef)
 
 ## usePlayer Hook
 
-The `usePlayer` hook provides methods to load and preload assets:
+The `usePlayer` hook provides low-level methods to load and preload assets. Prefer [`useAsset`](/docs/hooks/use-asset) or block `source` props for most application code because they include playlist state, cancellation, preloading lifecycle, and recovery policies.
 
 ```tsx
 import { usePlayer } from "@/hooks/limeplay/use-player"
@@ -78,9 +78,9 @@ const { load, preload, player } = usePlayer({
 
 | Event             | Payload           | When                     |
 | ----------------- | ----------------- | ------------------------ |
-| `playerready`     | `{ player }`      | Shaka Player initialized |
+| `playerready`     | `void`            | Shaka Player initialized |
 | `playererror`     | `{ error }`       | Player-level error       |
-| `playbackerror`   | `Error`           | Playback error           |
+| `playbackerror`   | `{ error, currentTime }` | Playback error    |
 | `bufferingchange` | `{ isBuffering }` | Buffering state changes  |
 
 ### Debug Mode

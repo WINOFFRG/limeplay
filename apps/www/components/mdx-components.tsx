@@ -8,6 +8,7 @@ import * as TabsComponents from "fumadocs-ui/components/tabs"
 import defaultComponents from "fumadocs-ui/mdx"
 
 import { ComponentPreview } from "@/components/component-preview"
+import { Mermaid } from "@/components/mdx/mermaid"
 
 const generator = createGenerator()
 
@@ -21,6 +22,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     Attribution,
     ComponentPreview,
     License,
+    Mermaid,
     pre: ({ ref: _ref, ...props }: React.ComponentPropsWithRef<typeof Pre>) => (
       <CodeBlock {...props} keepBackground>
         <Pre>{props.children}</Pre>

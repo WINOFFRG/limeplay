@@ -1,0 +1,292 @@
+---
+title: Usage
+description: How to use Limeplay blocks, source loading, and asset orchestration.
+---
+
+Limeplay blocks are ready-to-use players built on the same asset loading contract. Pass playable content through `source`, pass native media attributes through `mediaProps`, and customize loading behavior through `loading`.
+
+## Start with a Block
+
+Install a block and render it with a source.
+
+```npm
+npx shadcn add @limeplay/video-player
+```
+
+```tsx title="components/player.tsx"
+import { VideoPlayer } from "@/components/limeplay/video-player/components/media-player"
+
+export function Player() {
+  return (
+    <VideoPlayer
+      source="https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd"
+      mediaProps={{ autoPlay: true, muted: true, playsInline: true }}
+    />
+  )
+}
+```
+
+For playlist-style blocks, pass an array of assets to the same `source` prop.
+
+```tsx title="components/audio-player.tsx"
+import {
+  AudioPlayer,
+  type AudioPlayerAsset,
+} from "@/components/limeplay/audio-player/components/media-player"
+
+const tracks: AudioPlayerAsset[] = [
+  {
+    id: "soundhelix-1",
+    poster: "https://placehold.co/160x160/png",
+    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    title: "SoundHelix Song 1",
+  },
+]
+
+export function Player() {
+  return <AudioPlayer source={tracks} />
+}
+```
+
+Do not pass `src` through `mediaProps`. Blocks reserve the native media element for Limeplay and Shaka Player. Use `source` for media loading and `mediaProps` for native options such as `autoPlay`, `muted`, `loop`, `controls`, `playsInline`, and `className`.
+
+## Block Props
+
+Every source-driven block should expose the same loading props.
+
+| Prop | Purpose |
+| --- | --- |
+| `source` | A source string, one asset object, or an array of asset objects. |
+| `loading` | Source resolution, custom load/preload handlers, recovery policies, and asset ID rules. |
+| `sourceKey` | Stable key for dynamic sources when object identity changes between renders. |
+| `autoLoad` | Whether the block loads `source` automatically after the Shaka player is ready. Defaults to `true`. |
+| `initialIndex` | Initial item index when `source` is a playlist. |
+| `mediaProps` | Native media attributes except `src` and `as`. |
+| `children` | Optional custom UI rendered inside or alongside the block, depending on the block. |
+
+## Opinionated and Unopinionated APIs
+
+Limeplay has two source-loading layers.
+
+| Layer | Use it when | What it does |
+| --- | --- | --- |
+| Opinionated blocks and `usePlaybackSource` | You are building reusable player blocks. | Normalizes `source`, waits for the player, deduplicates loads with `sourceKey`, and calls `useAsset().loadSource(...)`. |
+| Unopinionated `useAsset` | You need app-specific orchestration. | Gives direct access to `loadSource`, `loadAsset`, `loadPlaylist`, `preloadAsset`, queue read state, and recovery behavior. |
+
+Blocks should usually wrap `PlaybackSourceController` from `use-playback-source`. App code that needs imperative control can call `useAsset` directly inside the same `MediaProvider` tree.
+
+```tsx title="components/source-controller.tsx"
+import { PlaybackSourceController } from "@/hooks/limeplay/use-playback-source"
+
+export function SourceController({ src }: { src: string }) {
+  return <PlaybackSourceController source={src} />
+}
+```
+
+```tsx title="components/custom-actions.tsx"
+import { useAsset } from "@/hooks/limeplay/use-asset"
+
+export function CustomActions() {
+  const { currentItem, loadSource, preloadNext } = useAsset()
+
+  return (
+    <div>
+      <button onClick={() => loadSource("/trailers/main.mpd")}>Load</button>
+      <button onClick={() => void preloadNext()}>Preload next</button>
+      <span>{currentItem?.properties.title}</span>
+    </div>
+  )
+}
+```
+
+Use `usePlayer` directly only when you want to bypass asset, playlist, preload, and recovery orchestration and call Shaka Player yourself.
+
+## Source Shapes
+
+`source` accepts three shapes.
+
+```tsx
+<VideoPlayer source="https://example.com/stream.mpd" />
+```
+
+```tsx
+<VideoPlayer
+  source={{
+    id: "feature-film",
+    poster: "/poster.jpg",
+    src: "https://example.com/stream.m3u8",
+    title: "Feature Film",
+  }}
+/>
+```
+
+```tsx
+<VideoPlayer
+  initialIndex={1}
+  source={[
+    { id: "episode-1", src: "https://example.com/episode-1.mpd" },
+    { id: "episode-2", src: "https://example.com/episode-2.mpd" },
+  ]}
+/>
+```
+
+Assets can omit `src` when `loading.resolveSource` or `loading.loader.load` provides the playable URL.
+
+## Default Loaders
+
+The default loader covers the common path for HLS, DASH, progressive media, Shaka config, playlists, and recovery.
+
+| Capability | Default behavior |
+| --- | --- |
+| Single URL | A string source becomes `{ src }` and is loaded with `player.load(src)`. |
+| Asset URL | `asset.src` is loaded with Shaka Player. |
+| Shaka config | `asset.config` and resolved source config are applied before loading. |
+| Source resolution | `loading.resolveSource` can return a URL or `{ src, config }`. |
+| Preloaded source | If a preload manager exists for the asset ID, loading consumes it. |
+| Playlist | Arrays are normalized into the playlist queue and the active item is loaded. |
+| Asset IDs | IDs come from `asset.id`, then `loading.getAssetId`, then a hash of `asset.src`. |
+| Cancellation | Starting a new load aborts the previous load session. |
+| Load errors | By default, Limeplay skips to the next playlist item when one exists; otherwise it sets playback error state. |
+| Playback errors | By default, Limeplay reloads the current asset from the current playback time. |
+| Ended | Limeplay advances to the next playlist item when one exists. |
+
+Use `loading` when the default loader needs app-specific behavior.
+
+```tsx
+<VideoPlayer
+  source={{ id: "movie-123", title: "Movie" }}
+  loading={{
+    resolveSource: async ({ asset, signal }) => {
+      const response = await fetch(`/api/assets/${asset.id}/source`, { signal })
+      const source = await response.json()
+
+      return {
+        config: source.config,
+        src: source.url,
+      }
+    },
+  }}
+/>
+```
+
+Use `loading.loader` only when you need to fully control Shaka loading or preloading. Call `loadDefault` or `preloadDefault` to reuse Limeplay's built-in behavior after your custom work.
+
+```tsx
+<VideoPlayer
+  source={{ id: "protected", src: "https://example.com/manifest.mpd" }}
+  loading={{
+    loader: {
+      load: async ({ asset, loadDefault, player, signal }) => {
+        if (signal.aborted) return
+
+        player.configure({
+          drm: {
+            servers: {
+              "com.widevine.alpha": "/api/license/widevine",
+            },
+          },
+        })
+
+        await loadDefault(asset.src)
+      },
+    },
+  }}
+/>
+```
+
+## Recovery Policies
+
+Recovery policies decide what Limeplay should do after failures. Notifications belong to media events, not `loading` callbacks.
+
+```tsx
+import { AssetRecoveryAction } from "@/hooks/limeplay/use-asset"
+
+<VideoPlayer
+  source={playlist}
+  loading={{
+    maxRetries: 2,
+    recover: {
+      loadError: (_asset, _error, { hasNext, retryCount }) => {
+        if (retryCount < 2) return AssetRecoveryAction.Retry
+        return hasNext ? AssetRecoveryAction.Skip : AssetRecoveryAction.Stop
+      },
+      playbackError: async (_asset, _error, { currentTime }) => ({
+        action: AssetRecoveryAction.Reload,
+        startTime: currentTime,
+      }),
+    },
+  }}
+/>
+```
+
+Subscribe to asset lifecycle events with `useMediaEvents` from your media kit.
+
+```tsx
+import { useEffect } from "react"
+
+import { useMediaEvents } from "@/components/limeplay/video-player/lib/media-kit"
+
+export function AssetLogger() {
+  const events = useMediaEvents()
+
+  useEffect(() => {
+    return events.on("assetloaded", ({ asset }) => {
+      console.info("Loaded", asset.title ?? asset.id)
+    })
+  }, [events])
+
+  return null
+}
+```
+
+## Building New Blocks
+
+When you build a new block, keep the public loading API consistent with the existing blocks.
+
+```tsx title="components/custom-video-player.tsx"
+"use client"
+
+import type React from "react"
+import type { Asset, PlayerSource, UseAssetOptions } from "@/hooks/limeplay/use-asset"
+
+import { MediaProvider } from "@/components/limeplay/custom-video-player/lib/media-kit"
+import { PlaybackSourceController } from "@/hooks/limeplay/use-playback-source"
+import { Media } from "@/components/limeplay/media"
+
+interface CustomVideoAsset extends Asset {
+  title?: string
+}
+
+interface CustomVideoPlayerProps {
+  autoLoad?: boolean
+  initialIndex?: number
+  loading?: UseAssetOptions<CustomVideoAsset>
+  mediaProps?: Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "as" | "src">
+  source?: PlayerSource<CustomVideoAsset>
+  sourceKey?: string
+}
+
+export function CustomVideoPlayer({
+  autoLoad,
+  initialIndex,
+  loading,
+  mediaProps,
+  source,
+  sourceKey,
+}: CustomVideoPlayerProps) {
+  return (
+    <MediaProvider>
+      <PlaybackSourceController
+        autoLoad={autoLoad}
+        initialIndex={initialIndex}
+        loading={loading}
+        source={source}
+        sourceKey={sourceKey}
+      />
+      <Media {...mediaProps} as="video" />
+    </MediaProvider>
+  )
+}
+```
+
+This keeps future blocks predictable: consumers learn one `source` and `loading` contract, while block authors can still add block-specific UI props.

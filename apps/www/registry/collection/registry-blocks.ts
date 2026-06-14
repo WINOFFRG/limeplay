@@ -57,6 +57,10 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
+        path: `${VIDEO_PLAYER_SRC_URL}/components/playlist-navigation-controls.tsx`,
+        type: "registry:component",
+      },
+      {
         path: `${VIDEO_PLAYER_SRC_URL}/components/captions-state-control.tsx`,
         type: "registry:component",
       },
@@ -214,6 +218,7 @@ export const blocks: Registry["items"] = [
       "use-asset",
       "use-media",
       "use-playback-source",
+      "limeplay-logo",
       "utils",
     ],
     title: "Audio Player",

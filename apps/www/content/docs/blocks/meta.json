@@ -1,5 +1,6 @@
 {
   "title": "Blocks",
-  "description": "Headless showcase pages for registry blocks.",
+  "description": "Ready-to-use player blocks with shared source loading APIs.",
+  "pages": ["video-player", "audio-player"],
   "defaultOpen": true
 }

@@ -16,7 +16,11 @@ import { RECOMMENDED_PLAYER_BUFFERING_THROTTLE_MS } from "@/registry/default/hoo
 import { usePlaylist } from "@/registry/default/hooks/use-playlist"
 import { PlaybackControl } from "@/registry/default/ui/playback-control"
 
-export function PlaybackControls() {
+export function PlaybackControls({
+  showNavigation = true,
+}: {
+  showNavigation?: boolean
+}) {
   const status = usePlaybackStore((state) => state.status)
   const { hasNext, hasPrevious, next, previous } = usePlaylist()
 
@@ -29,13 +33,15 @@ export function PlaybackControls() {
 
   return (
     <div className="flex items-center gap-1">
-      <Button
-        aria-label="Previous track"
-        disabled={!hasPrevious}
-        onClick={previous}
-      >
-        <PreviousIcon aria-hidden="true" />
-      </Button>
+      {showNavigation ? (
+        <Button
+          aria-label="Previous track"
+          disabled={!hasPrevious}
+          onClick={previous}
+        >
+          <PreviousIcon aria-hidden="true" />
+        </Button>
+      ) : null}
 
       <PlaybackControl asChild>
         <Button aria-label={isPlaying ? "Pause" : "Play"} size="xl">
@@ -57,9 +63,11 @@ export function PlaybackControls() {
         </Button>
       </PlaybackControl>
 
-      <Button aria-label="Next track" disabled={!hasNext} onClick={next}>
-        <NextIcon aria-hidden="true" />
-      </Button>
+      {showNavigation ? (
+        <Button aria-label="Next track" disabled={!hasNext} onClick={next}>
+          <NextIcon aria-hidden="true" />
+        </Button>
+      ) : null}
     </div>
   )
 }
