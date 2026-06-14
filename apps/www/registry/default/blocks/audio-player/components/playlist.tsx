@@ -19,21 +19,7 @@ import { usePlayerStore } from "@/registry/default/hooks/use-player"
 import { usePlaylistStore } from "@/registry/default/hooks/use-playlist"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 
-const PLAYLIST_PLAYER_GAP = 8
-const PLAYLIST_TRIGGER_FALLBACK_OFFSET = 24
-
-interface MenuOffsetData {
-  align: "center" | "end" | "start"
-  anchor: {
-    height: number
-    width: number
-  }
-  positioner: {
-    height: number
-    width: number
-  }
-  side: "bottom" | "inline-end" | "inline-start" | "left" | "right" | "top"
-}
+const PLAYLIST_SIDE_OFFSET = 24
 
 export function Playlist() {
   const [open, setOpen] = useState(false)
@@ -41,7 +27,6 @@ export function Playlist() {
     (state) =>
       state.currentItem as null | { id: string; properties: AudioPlayerAsset }
   )
-  const playerContainerRef = usePlayerStore((state) => state.containerRef)
   const preloadManagers = usePlayerStore((state) => state.preloadManagers)
   const queue = usePlaylistStore(
     (state) => state.queue as { id: string; properties: AudioPlayerAsset }[]
@@ -124,23 +109,6 @@ export function Playlist() {
     [skipToId]
   )
 
-  const getPlaylistSideOffset = useCallback(
-    ({ anchor }: MenuOffsetData) => {
-      if (!playerContainerRef) return PLAYLIST_TRIGGER_FALLBACK_OFFSET
-
-      const playerHeight = playerContainerRef.getBoundingClientRect().height
-      if (playerHeight <= 0) return PLAYLIST_TRIGGER_FALLBACK_OFFSET
-
-      const triggerTopWithinPlayer = Math.max(
-        (playerHeight - anchor.height) / 2,
-        0
-      )
-
-      return triggerTopWithinPlayer + PLAYLIST_PLAYER_GAP
-    },
-    [playerContainerRef]
-  )
-
   return (
     <DropdownMenu onOpenChange={setOpen} open={open}>
       <Button aria-label="Open Playlist" asChild>
@@ -154,7 +122,7 @@ export function Playlist() {
         alignOffset={-8}
         className="dark w-92 rounded-xl border border-border bg-popover p-0 shadow-xl ring-0 shadow-black/25"
         side="top"
-        sideOffset={getPlaylistSideOffset}
+        sideOffset={PLAYLIST_SIDE_OFFSET}
       >
         <div className="flex items-center justify-between px-4 pt-4 pb-5">
           <h2 className="text-lg leading-none font-semibold tracking-normal text-foreground">
