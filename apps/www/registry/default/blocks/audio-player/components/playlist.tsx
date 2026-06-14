@@ -4,18 +4,20 @@ import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react"
 import { Volume2Icon } from "lucide-react"
 import { useCallback, useMemo, useRef } from "react"
 
-import type { AudioPlayerAsset } from "@/registry/default/blocks/audio-player/components/audio-source"
-
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
-import { useAudioSource } from "@/registry/default/blocks/audio-player/components/audio-source"
+import {
+  type AudioPlayerAsset,
+  getAudioAssetMetadata,
+} from "@/registry/default/blocks/audio-player/components/audio-source"
 import { Button } from "@/registry/default/blocks/audio-player/components/button"
 import { usePlayerStore } from "@/registry/default/hooks/use-player"
 import { usePlaylistStore } from "@/registry/default/hooks/use-playlist"
+import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 
 export function Playlist() {
   const currentItem = usePlaylistStore(
@@ -31,7 +33,6 @@ export function Playlist() {
   const skipToId = usePlaylistStore((state) => state.skipToId)
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const { items } = useAudioSource()
   const orderedItems = useMemo(() => {
     if (!shuffle || shuffleOrder.length === 0) return queue
 
@@ -42,21 +43,14 @@ export function Playlist() {
       )
   }, [queue, shuffle, shuffleOrder])
 
-  const displayAssets = useMemo(() => {
-    if (orderedItems.length > 0)
-      return orderedItems.map((item) => ({
+  const displayAssets = useMemo(
+    () =>
+      orderedItems.map((item) => ({
         asset: item.properties,
         id: item.id,
-      }))
-    return items.map((asset, index) => ({
-      asset,
-      id:
-        asset.id ??
-        asset.src ??
-        asset.playbackUrls?.primary ??
-        `asset:${index}`,
-    }))
-  }, [orderedItems, items])
+      })),
+    [orderedItems]
+  )
 
   const handleAssetSelect = useCallback(
     (assetId: string) => {
@@ -161,6 +155,8 @@ function TrackRow({
   preloaded: boolean
   setSize: number
 }) {
+  const metadata = getAudioAssetMetadata(asset, "Untitled track")
+
   return (
     <Button
       aria-posinset={index + 1}
@@ -176,12 +172,20 @@ function TrackRow({
       onClick={onSelect}
     >
       <div className="relative size-10 shrink-0 overflow-hidden rounded-sm bg-white/4 outline-1 -outline-offset-1 outline-white/10">
-        {asset.poster && (
+        {metadata.poster && (
           <img
             alt=""
             className="absolute inset-0 size-full object-cover"
-            src={asset.poster}
+            src={metadata.poster}
           />
+        )}
+        {!metadata.poster && (
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 flex items-center justify-center text-white/35"
+          >
+            <LimeplayLogo className="size-5" />
+          </div>
         )}
         <div
           className={cn(
@@ -225,15 +229,15 @@ function TrackRow({
                 `
             )}
           >
-            {asset.title ?? "Untitled track"}
+            {metadata.title}
           </p>
           {preloaded && !isActive && (
             <span className="size-1.5 shrink-0 rounded-full bg-white/30" />
           )}
         </div>
-        {asset.genre && (
+        {metadata.subtitle && (
           <p className="mt-0.5 truncate text-[11px] text-white/40">
-            {asset.genre}
+            {metadata.subtitle}
           </p>
         )}
       </div>

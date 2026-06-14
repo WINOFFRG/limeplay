@@ -13,7 +13,7 @@ status: free
 npx shadcn add @limeplay/audio-player
 ```
 
-## Usage
+## Minimal Usage
 
 ```tsx
 import {
@@ -32,8 +32,51 @@ const playlist: AudioPlayerAsset[] = [
 ]
 
 export function Player() {
-  return <AudioPlayer playlist={playlist} />
+  return <AudioPlayer source={playlist} />
 }
+```
+
+Use `source` for media loading. Use `mediaProps` only for native audio attributes.
+
+```tsx
+<AudioPlayer
+  source={playlist}
+  mediaProps={{ autoPlay: true, loop: false }}
+/>
+```
+
+## Single Track Usage
+
+Pass one asset object when you do not need a queue.
+
+```tsx
+<AudioPlayer
+  source={{
+    artistName: "SoundHelix",
+    id: "soundhelix-1",
+    poster: "https://placehold.co/160x160/png",
+    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    title: "SoundHelix Song 1",
+  }}
+/>
+```
+
+## Custom Loading
+
+The audio block includes an opinionated default resolver for `src` and `playbackUrls.primary`. Use `loading.resolveSource` when your app needs signed URLs, token refresh, or a different URL shape.
+
+```tsx
+<AudioPlayer
+  source={{ id: "track-123", title: "Track" }}
+  loading={{
+    resolveSource: async ({ asset, signal }) => {
+      const response = await fetch(`/api/tracks/${asset.id}/source`, { signal })
+      const source = await response.json()
+
+      return source.url
+    },
+  }}
+/>
 ```
 
 ## Features
@@ -43,12 +86,14 @@ export function Player() {
 - Previous, play/pause, next, volume, mute, repeat, and shuffle controls.
 - Playback URL resolution for direct `src` values or `playbackUrls.primary` endpoints.
 - Automatic skip/reload behavior for recoverable load and playback failures.
+- Shared `source` and `loading` contract used by all source-driven blocks.
 
 ## Notes
 
 - `AudioPlayer` does not ship with bundled tracks. Pass a playlist from your app.
 - Use `duration` in milliseconds when you want stable duration labels before metadata loads.
-- Use `resolveSource` for signed audio URLs, token refresh, or custom playback URL APIs.
+- Do not pass `mediaProps.src`; pass `source` instead.
+- For the full block loading model, see [Usage](/docs/usage).
 
 ## API Reference
 

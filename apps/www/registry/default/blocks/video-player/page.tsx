@@ -6,7 +6,7 @@ const src =
 export default function Page() {
   return (
     <section className="flex h-dvh w-dvw bg-black">
-      <VideoPlayer mediaProps={{ src }} />
+      <VideoPlayer source={src} />
     </section>
   )
 }

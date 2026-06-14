@@ -2,7 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useRef } from "react"
 
-import type { Asset, UseAssetOptions } from "@/registry/default/hooks/use-asset"
+import type {
+  Asset,
+  AssetEvents,
+  UseAssetOptions,
+} from "@/registry/default/hooks/use-asset"
 import type { PlaybackStore } from "@/registry/default/hooks/use-playback"
 
 import {
@@ -22,12 +26,18 @@ import {
   useStreamPanelStoreHydrated,
 } from "@/components/stream-panel/use-stream-panel"
 import { getPresetsForType, type StreamPreset } from "@/lib/stream-presets"
-import { useAsset } from "@/registry/default/hooks/use-asset"
+import {
+  AssetRecoveryAction,
+  useAsset,
+} from "@/registry/default/hooks/use-asset"
 import { useMediaStore } from "@/registry/default/hooks/use-media"
 import { PLAYBACK_FEATURE_KEY } from "@/registry/default/hooks/use-playback"
 import { usePlayerStore } from "@/registry/default/hooks/use-player"
 import { useVolumeStore } from "@/registry/default/hooks/use-volume"
-import { useMediaFeatureApi } from "@/registry/default/ui/media-provider"
+import {
+  useMediaEvents,
+  useMediaFeatureApi,
+} from "@/registry/default/ui/media-provider"
 
 const DEFAULT_VIDEO_PRESET_ID = "mux-big-buck-bunny"
 
@@ -37,6 +47,7 @@ export function useStreamPanelSync({
   playerType?: StreamPanelPlayerType
 } = {}) {
   const playbackApi = useMediaFeatureApi<PlaybackStore>(PLAYBACK_FEATURE_KEY)
+  const events = useMediaEvents<AssetEvents>()
   const mediaElement = useMediaStore((state) => state.mediaElement)
   const player = usePlayerStore((state) => state.instance)
 
@@ -78,6 +89,7 @@ export function useStreamPanelSync({
             context.signal,
             blenderStreamCache
           )
+          // DEV: The selected asset may change while the Blender stream URL is resolving.
           context.signal.throwIfAborted()
 
           await context.loadDefault(
@@ -86,6 +98,8 @@ export function useStreamPanelSync({
               src: stream.playback.hls,
             }
           )
+          // DEV: loadDefault is async; avoid adding captions to a superseded player load.
+          context.signal.throwIfAborted()
 
           try {
             await addBlenderCaptions(context.player, stream)
@@ -112,26 +126,31 @@ export function useStreamPanelSync({
           })
         },
       },
-      onAssetChange: (event) => {
-        const selection =
-          useStreamPanelStore.getState().contentSelections[playerType]
-        if (!selection || selection.kind !== "playlist") return
-        if (selection.index === event.currentIndex) return
-
-        setContentSelection(playerType, {
-          ...selection,
-          index: event.currentIndex,
-        })
-      },
-      onLoadError: (_asset, error) => {
-        playbackApi.getState().playback.setError(error)
-        return "stop"
+      recover: {
+        loadError: (_asset, error) => {
+          playbackApi.getState().playback.setError(error)
+          return AssetRecoveryAction.Stop
+        },
       },
     }),
-    [blenderStreamCache, playbackApi, playerType, setContentSelection]
+    [blenderStreamCache, playbackApi]
   )
 
-  const { loadPlaylist } = useAsset(assetOptions)
+  const { loadSource } = useAsset<Asset>()
+
+  useEffect(() => {
+    return events.on("assetchange", (event) => {
+      const selection =
+        useStreamPanelStore.getState().contentSelections[playerType]
+      if (!selection || selection.kind !== "playlist") return
+      if (selection.index === event.currentIndex) return
+
+      setContentSelection(playerType, {
+        ...selection,
+        index: event.currentIndex,
+      })
+    })
+  }, [events, playerType, setContentSelection])
 
   useEffect(() => {
     if (!mediaElement) return
@@ -180,10 +199,10 @@ export function useStreamPanelSync({
         src,
         type: playerType,
       }
-      loadPlaylist([asset as unknown as Asset])
+      loadSource(asset as unknown as Asset, { loading: assetOptions })
       return asset
     },
-    [loadPlaylist, playbackApi, playerType]
+    [assetOptions, loadSource, playbackApi, playerType]
   )
 
   const loadPlaylistPreset = useCallback(
@@ -202,7 +221,10 @@ export function useStreamPanelSync({
             index,
             kind: "playlist",
           })
-          loadPlaylist(assets, index)
+          loadSource(assets, {
+            initialIndex: index,
+            loading: assetOptions,
+          })
         })
         .catch((error: unknown) => {
           if (error instanceof DOMException && error.name === "AbortError")
@@ -211,7 +233,7 @@ export function useStreamPanelSync({
           playbackApi.getState().playback.setError(error)
         })
     },
-    [loadPlaylist, playbackApi, playerType, setContentSelection]
+    [assetOptions, loadSource, playbackApi, playerType, setContentSelection]
   )
 
   const restoreContentSelection = useCallback(
@@ -226,7 +248,7 @@ export function useStreamPanelSync({
       )
       if (preset) {
         abortPlaylistRequest()
-        loadPlaylist([preset as unknown as Asset])
+        loadSource(preset as unknown as Asset, { loading: assetOptions })
         return
       }
 
@@ -237,7 +259,8 @@ export function useStreamPanelSync({
     [
       abortPlaylistRequest,
       loadCustomStream,
-      loadPlaylist,
+      assetOptions,
+      loadSource,
       loadPlaylistPreset,
       playerType,
     ]
@@ -277,9 +300,15 @@ export function useStreamPanelSync({
     (preset: StreamPreset, kind: StreamPanelContentKind = "stream") => {
       abortPlaylistRequest()
       setContentSelection(playerType, { id: preset.id, index: 0, kind })
-      loadPlaylist([preset as unknown as Asset])
+      loadSource(preset as unknown as Asset, { loading: assetOptions })
     },
-    [abortPlaylistRequest, loadPlaylist, playerType, setContentSelection]
+    [
+      abortPlaylistRequest,
+      assetOptions,
+      loadSource,
+      playerType,
+      setContentSelection,
+    ]
   )
 
   const handlePlaylistPresetChange = useCallback(

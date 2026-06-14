@@ -24,53 +24,41 @@ import styles from "../audio-player.module.css"
 export type { AudioPlayerAsset, PlaybackUrls }
 
 export interface AudioPlayerProps {
-  asset?: AudioSourceProviderProps["asset"]
-  assetOptions?: AudioSourceProviderProps["assetOptions"]
   autoLoad?: boolean
-  autoPlay?: boolean
   children?: ReactNode
   className?: string
   debug?: boolean
-  getAssetId?: AudioSourceProviderProps["getAssetId"]
   initialIndex?: number
+  loading?: AudioSourceProviderProps["loading"]
   /**
    * Props to pass to the underlying audio element.
    */
-  mediaProps?: Omit<
-    AudioHTMLAttributes<HTMLAudioElement>,
-    "as" | "autoPlay" | "className"
-  >
-  playlist?: AudioPlayerAsset[]
-  resolveSource?: AudioSourceProviderProps["resolveSource"]
+  mediaProps?: Omit<AudioHTMLAttributes<HTMLAudioElement>, "as" | "src">
+  source?: AudioSourceProviderProps["source"]
+  sourceKey?: string
 }
 
 export function AudioPlayer({
-  asset,
-  assetOptions,
   autoLoad,
-  autoPlay = false,
   children,
   className,
   debug,
-  getAssetId,
   initialIndex,
+  loading,
   mediaProps,
-  playlist,
-  resolveSource,
+  source,
+  sourceKey,
 }: AudioPlayerProps = {}) {
-  const { src: mediaSrc, ...safeMediaProps } = mediaProps ?? {}
+  const { className: mediaClassName, ...safeMediaProps } = mediaProps ?? {}
 
   return (
     <MediaProvider debug={debug}>
       <AudioSourceProvider
-        asset={asset}
-        assetOptions={assetOptions}
         autoLoad={autoLoad}
-        getAssetId={getAssetId}
         initialIndex={initialIndex}
-        mediaSrc={typeof mediaSrc === "string" ? mediaSrc : undefined}
-        playlist={playlist}
-        resolveSource={resolveSource}
+        loading={loading}
+        source={source}
+        sourceKey={sourceKey}
       >
         <div
           className={cn(
@@ -82,7 +70,7 @@ export function AudioPlayer({
           <Media
             {...(safeMediaProps as ComponentPropsWithoutRef<typeof Media>)}
             as="audio"
-            autoPlay={autoPlay}
+            className={mediaClassName}
           />
           <TimelineControl />
           <PlayerControls />

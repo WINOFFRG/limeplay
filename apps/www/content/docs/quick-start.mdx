@@ -23,7 +23,7 @@ The fastest path — install a complete, ready-to-use player:
 npx shadcn add @limeplay/video-player
 ```
 
-This gives you a full-featured video player with playback controls, volume, timeline, captions, and more. Customize it from your `components/` directory.
+This gives you a full-featured video player with playback controls, volume, timeline, captions, and more. Customize it from your `components/` directory. For more details, see the [video player documentation](/blocks/video-player).
 
 ## Option B: Build from Scratch
 
@@ -35,7 +35,7 @@ This gives you a full-featured video player with playback controls, volume, time
 Install the core provider and the features you need:
 
 ```npm
-npx shadcn add @limeplay/media-provider @limeplay/use-playback @limeplay/use-volume @limeplay/use-timeline @limeplay/use-player
+npx shadcn add @limeplay/media-provider @limeplay/use-player @limeplay/use-playback @limeplay/use-volume @limeplay/use-timeline @limeplay/use-playlist @limeplay/use-asset @limeplay/use-playback-source
 ```
 
 Create a `lib/media.ts` file that composes your features:
@@ -44,8 +44,10 @@ Create a `lib/media.ts` file that composes your features:
 "use client"
 
 import { mediaFeature } from "@/hooks/limeplay/use-media"
+import { assetFeature } from "@/hooks/limeplay/use-asset"
 import { playerFeature } from "@/hooks/limeplay/use-player"
 import { playbackFeature } from "@/hooks/limeplay/use-playback"
+import { playlistFeature } from "@/hooks/limeplay/use-playlist"
 import { volumeFeature } from "@/hooks/limeplay/use-volume"
 import { timelineFeature } from "@/hooks/limeplay/use-timeline"
 import { createMediaKit } from "@/components/limeplay/media-provider"
@@ -55,6 +57,8 @@ export const media = createMediaKit({
     mediaFeature(),
     playerFeature(),
     playbackFeature(),
+    playlistFeature(),
+    assetFeature(),
     volumeFeature(),
     timelineFeature(),
   ] as const,
@@ -87,10 +91,12 @@ import { PlaybackControl } from "@/components/limeplay/playback-control"
 import * as Volume from "@/components/limeplay/volume-control"
 import * as Timeline from "@/components/limeplay/timeline-control"
 import * as Layout from "@/components/limeplay/player-layout"
+import { PlaybackSourceController } from "@/hooks/limeplay/use-playback-source"
 
-export function MediaPlayer() {
+export function MediaPlayer({ src }: { src: string }) {
   return (
     <MediaProvider>
+      <PlaybackSourceController source={src} />
       <Layout.PlayerContainer>
         <Media as="video" />
         <Layout.ControlsContainer>
@@ -115,32 +121,9 @@ export function MediaPlayer() {
 </Step>
 <Step>
 
-### Load content
+### Render with content
 
-Pass a source to your player. The simplest approach is loading via [`usePlayer`](/docs/hooks/use-player) inside your `MediaPlayer`:
-
-```tsx title="components/media-player.tsx"
-"use client"
-
-import { usePlayer } from "@/hooks/limeplay/use-player"
-import { useMediaEvents } from "@/lib/media"
-// ... other imports from Step 3
-
-export function MediaPlayer({ src }: { src: string }) {
-  const { player } = usePlayer()
-  const events = useMediaEvents()
-
-  React.useEffect(() => {
-    return events.on("playerready", ({ player }) => {
-      player.load(src)
-    })
-  }, [events, src])
-
-  return <MediaProvider>{/* ... same layout as Step 3 */}</MediaProvider>
-}
-```
-
-Then render it with a source:
+Render your player with a source. `PlaybackSourceController` passes this source through [`useAsset`](/docs/hooks/use-asset), so the same pattern works for URLs, asset objects, and playlists.
 
 ```tsx title="app/page.tsx"
 import { MediaPlayer } from "@/components/media-player"
@@ -152,7 +135,7 @@ export default function Page() {
 }
 ```
 
-For playlist management, error handling, and preloading, see [`useAsset`](/docs/hooks/use-asset).
+For blocks, custom loading, playlists, error recovery, and preloading, see [Usage](/docs/usage).
 
 </Step>
 </Steps>

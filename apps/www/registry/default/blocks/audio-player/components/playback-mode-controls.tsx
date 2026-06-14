@@ -1,6 +1,9 @@
 "use client"
 
 import { AnimatePresence, motion } from "motion/react"
+import { useEffect, useMemo } from "react"
+
+import type { RepeatMode } from "@/registry/default/hooks/use-playlist"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/default/blocks/audio-player/components/button"
@@ -16,19 +19,46 @@ import {
   usePlaylistStore,
 } from "@/registry/default/hooks/use-playlist"
 
-export function RepeatControl() {
-  const { cycleRepeatMode } = usePlaylist()
+type RepeatControlVariant = "asset" | "playlist"
+
+const REPEAT_MODES: Record<RepeatControlVariant, RepeatMode[]> = {
+  asset: ["off", "one"],
+  playlist: ["off", "all", "one"],
+}
+
+export function RepeatControl({
+  variant = "playlist",
+}: {
+  variant?: RepeatControlVariant
+}) {
+  const setRepeatMode = usePlaylistStore((state) => state.setRepeatMode)
   const repeatMode = usePlaylistStore((state) => state.repeatMode)
-  const isActive = repeatMode !== "off"
+  const modes = REPEAT_MODES[variant]
+  const normalizedRepeatMode = useMemo(
+    () => normalizeRepeatMode(repeatMode, modes),
+    [modes, repeatMode]
+  )
+  const isActive = normalizedRepeatMode !== "off"
+
+  useEffect(() => {
+    if (repeatMode === normalizedRepeatMode) return
+    setRepeatMode(normalizedRepeatMode)
+  }, [normalizedRepeatMode, repeatMode, setRepeatMode])
+
+  const handleCycleRepeatMode = () => {
+    const modeIndex = modes.indexOf(normalizedRepeatMode)
+    const nextMode = modes[(modeIndex + 1) % modes.length] ?? "off"
+    setRepeatMode(nextMode)
+  }
 
   return (
     <Button
-      aria-label={`Repeat: ${repeatMode}`}
+      aria-label={`Repeat: ${normalizedRepeatMode}`}
       aria-pressed={isActive}
       className={cn({
         "text-secondary": !isActive,
       })}
-      onClick={cycleRepeatMode}
+      onClick={handleCycleRepeatMode}
     >
       <AnimatePresence initial={false} mode="popLayout">
         <motion.span
@@ -36,12 +66,12 @@ export function RepeatControl() {
           className="flex items-center justify-center"
           exit={{ filter: "blur(4px)", opacity: 0, scale: 0.25 }}
           initial={{ filter: "blur(4px)", opacity: 0, scale: 0.25 }}
-          key={repeatMode}
+          key={normalizedRepeatMode}
           transition={{ bounce: 0, duration: 0.3, type: "spring" }}
         >
-          {repeatMode === "one" ? (
+          {normalizedRepeatMode === "one" ? (
             <RepeatOneIcon aria-hidden="true" />
-          ) : repeatMode === "off" ? (
+          ) : normalizedRepeatMode === "off" ? (
             <RepeatIcon aria-hidden="true" />
           ) : (
             <RepeatAllIcon aria-hidden="true" />
@@ -87,4 +117,13 @@ export function ShuffleControl() {
       </AnimatePresence>
     </Button>
   )
+}
+
+function normalizeRepeatMode(
+  mode: RepeatMode,
+  modes: RepeatMode[]
+): RepeatMode {
+  if (modes.includes(mode)) return mode
+  if (mode === "all" && modes.includes("one")) return "one"
+  return modes[0] ?? "off"
 }

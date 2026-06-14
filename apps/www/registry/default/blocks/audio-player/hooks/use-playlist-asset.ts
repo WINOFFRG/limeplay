@@ -6,7 +6,6 @@ import type {
 } from "@/registry/default/blocks/audio-player/components/audio-source"
 import type { UseAssetReturn } from "@/registry/default/hooks/use-asset"
 
-import { useAudioSource } from "@/registry/default/blocks/audio-player/components/audio-source"
 import { useAsset } from "@/registry/default/hooks/use-asset"
 
 export type { PlaybackUrls }
@@ -19,10 +18,10 @@ export interface UsePlaylistAssetReturn extends UseAssetReturn<PlaylistAsset> {
 
 export function usePlaylistAsset(): UsePlaylistAssetReturn {
   const asset = useAsset<PlaylistAsset>()
-  const source = useAudioSource()
+  const items = asset.orderedItems.map((item) => item.properties)
 
   return {
     ...asset,
-    items: source.items,
+    items,
   }
 }

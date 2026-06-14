@@ -28,9 +28,8 @@ export function AudioPlayerDemo({
 }: AudioPlayerDemoProps) {
   const [playlist, setPlaylist] = useState<AudioPlayerAsset[]>([])
   const storeHydrated = useStreamPanelStoreHydrated()
-  const hasPersistedAudioSelection = useStreamPanelStore((s) =>
-    Boolean(s.contentSelections.audio)
-  )
+  const audioSelection = useStreamPanelStore((s) => s.contentSelections.audio)
+  const hasPersistedAudioSelection = Boolean(audioSelection)
 
   useEffect(() => {
     const abortController = new AbortController()
@@ -54,7 +53,7 @@ export function AudioPlayerDemo({
   return (
     <AudioPlayer
       autoLoad={storeHydrated ? !hasPersistedAudioSelection : false}
-      playlist={playlist}
+      source={playlist}
     >
       {children}
     </AudioPlayer>
