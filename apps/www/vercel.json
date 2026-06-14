@@ -7,6 +7,11 @@
       "permanent": true
     },
     {
+      "source": "/blocks",
+      "destination": "/blocks/video-player",
+      "permanent": false
+    },
+    {
       "source": "/blocks/linear-player",
       "destination": "/blocks/video-player",
       "permanent": true

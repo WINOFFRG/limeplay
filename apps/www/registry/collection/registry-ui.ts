@@ -276,6 +276,7 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
   },
   {
+    dependencies: ["@radix-ui/react-compose-refs", "@radix-ui/react-slot"],
     files: [
       {
         path: "ui/root-container.tsx",
@@ -284,7 +285,12 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "root-container",
-    registryDependencies: ["media-provider", "use-media", "use-playback"],
+    registryDependencies: [
+      "media-provider",
+      "use-media",
+      "use-playback",
+      "use-player",
+    ],
     type: "registry:ui",
   },
   {

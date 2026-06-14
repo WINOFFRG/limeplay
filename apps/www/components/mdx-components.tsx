@@ -4,22 +4,28 @@ import type { ReactNode } from "react"
 import { createGenerator } from "fumadocs-typescript"
 import { AutoTypeTable } from "fumadocs-typescript/ui"
 import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock"
-import * as TabsComponents from "fumadocs-ui/components/tabs"
+import {
+  Tab,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "fumadocs-ui/components/tabs"
 import defaultComponents from "fumadocs-ui/mdx"
 
 import { ComponentPreview } from "@/components/component-preview"
 import { Mermaid } from "@/components/mdx/mermaid"
 
 const generator = createGenerator()
+const fumadocsComponents = defaultComponents as MDXComponents
 
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
-    ...defaultComponents,
-    AutoTypeTable: (props) => (
+    ...fumadocsComponents,
+    Attribution,
+    AutoTypeTable: (props: React.ComponentProps<typeof AutoTypeTable>) => (
       <AutoTypeTable {...props} generator={generator} />
     ),
-    ...TabsComponents,
-    Attribution,
     ComponentPreview,
     License,
     Mermaid,
@@ -28,8 +34,13 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
         <Pre>{props.children}</Pre>
       </CodeBlock>
     ),
+    Tab,
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
     ...components,
-  }
+  } as unknown as MDXComponents
 }
 
 function Attribution({
