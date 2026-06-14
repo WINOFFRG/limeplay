@@ -1,9 +1,9 @@
 "use client"
 
-import { IconVoiceHigh } from "@central-icons-react/round-filled-radius-0-stroke-1/IconVoiceHigh"
 import { ListMusicIcon, SquareArrowOutUpRightIcon } from "lucide-react"
 import { motion } from "motion/react"
 import Link from "next/link"
+import { useCallback, useEffect, useState } from "react"
 
 import {
   StreamPanel,
@@ -12,7 +12,9 @@ import {
 } from "@/components/stream-panel"
 import { useStreamPanelSync } from "@/components/stream-panel/use-stream-panel-sync"
 import { Button } from "@/components/ui/button"
+import { type AgentState, Orb } from "@/components/ui/orb"
 import { PopoverTrigger } from "@/components/ui/popover"
+import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
 
 import { AudioPlayerDemo } from "./demo-player"
 
@@ -22,6 +24,30 @@ export function AudioPlayerHover() {
       <AudioPlayerHoverContent />
     </StreamPanelProvider>
   )
+}
+
+function AudioHoverOrbSync({
+  onAgentStateChange,
+}: {
+  onAgentStateChange: (agentState: AgentState) => void
+}) {
+  const status = usePlaybackStore((state) => state.status)
+
+  useEffect(() => {
+    if (status === "playing") {
+      onAgentStateChange("talking")
+      return
+    }
+
+    if (status === "buffering" || status === "loading") {
+      onAgentStateChange("thinking")
+      return
+    }
+
+    onAgentStateChange(null)
+  }, [onAgentStateChange, status])
+
+  return null
 }
 
 function AudioHoverStreamPanel() {
@@ -56,6 +82,13 @@ function AudioHoverStreamTrigger() {
 
 function AudioPlayerHoverContent() {
   const { open } = useStreamPanel()
+  const [orbAgentState, setOrbAgentState] = useState<AgentState>(null)
+  const isAudioActive =
+    orbAgentState === "talking" || orbAgentState === "thinking"
+
+  const handleAgentStateChange = useCallback((agentState: AgentState) => {
+    setOrbAgentState(agentState)
+  }, [])
 
   return (
     <motion.div
@@ -80,7 +113,17 @@ function AudioPlayerHoverContent() {
       >
         <div className="flex h-14 w-fit flex-row items-center gap-3 rounded-t-3xl bg-black px-4">
           <div className="flex w-full items-center justify-center gap-1">
-            <IconVoiceHigh className="size-8 text-white" />
+            <span aria-hidden="true" className="relative size-9 shrink-0">
+              <Orb
+                agentState={orbAgentState}
+                className="relative size-full"
+                colors={["#ED0040", "#F42A8B"]}
+                manualInput={isAudioActive ? 0.55 : 0}
+                manualOutput={isAudioActive ? 0.85 : 0}
+                seed={1528}
+                volumeMode="manual"
+              />
+            </span>
             <span className="text-3xl font-semibold tracking-tight text-white">
               Audio
             </span>
@@ -99,6 +142,7 @@ function AudioPlayerHoverContent() {
         </div>
       </motion.div>
       <AudioPlayerDemo>
+        <AudioHoverOrbSync onAgentStateChange={handleAgentStateChange} />
         <AudioHoverStreamPanel />
       </AudioPlayerDemo>
     </motion.div>
