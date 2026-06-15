@@ -10,6 +10,7 @@ import type {
 } from "@/registry/default/hooks/use-asset"
 
 import { cn } from "@/lib/utils"
+import { AssetMetadataOverlay } from "@/registry/default/blocks/video-player/components/asset-metadata-overlay"
 import { BottomControls } from "@/registry/default/blocks/video-player/components/bottom-controls"
 import { Button } from "@/registry/default/blocks/video-player/components/button"
 import { MediaProvider } from "@/registry/default/blocks/video-player/lib/media-kit"
@@ -22,19 +23,25 @@ import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 import { Media } from "@/registry/default/ui/media"
 import * as Layout from "@/registry/default/ui/player-layout"
-import { RootContainer } from "@/registry/default/ui/root-container"
+import {
+  RootContainer,
+  type RootContainerProps,
+} from "@/registry/default/ui/root-container"
 
 export interface VideoPlayerAsset extends Asset {
   description?: string
   poster?: string
   title?: string
+  year?: string
 }
 
 export interface VideoPlayerProps {
   autoLoad?: boolean
   children?: React.ReactNode
   className?: string
+  controlsHideDelay?: RootContainerProps["controlsHideDelay"]
   debug?: boolean
+  hideCursorOnIdle?: RootContainerProps["hideCursorOnIdle"]
   initialIndex?: number
   loading?: UseAssetOptions<VideoPlayerAsset>
   /**
@@ -51,7 +58,9 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
       autoLoad,
       children,
       className,
+      controlsHideDelay,
       debug,
+      hideCursorOnIdle,
       initialIndex,
       loading,
       mediaProps,
@@ -71,7 +80,12 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
           source={source}
           sourceKey={sourceKey}
         />
-        <RootContainer className={cn("m-auto w-full", className)} ref={ref}>
+        <RootContainer
+          className={cn("m-auto w-full", className)}
+          controlsHideDelay={controlsHideDelay}
+          hideCursorOnIdle={hideCursorOnIdle}
+          ref={ref}
+        >
           <Layout.PlayerContainer>
             <PlayerErrorScreen />
             <FallbackPoster>
@@ -87,6 +101,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
             {children}
             <Layout.ControlsOverlayContainer />
             <Layout.ControlsContainer className="pb-6">
+              <AssetMetadataOverlay />
               <CaptionsContainer />
               <BottomControls />
             </Layout.ControlsContainer>

@@ -3,7 +3,7 @@
 import type { RefObject } from "react"
 
 import { ChevronDownIcon, MonitorPlayIcon, RotateCwIcon } from "lucide-react"
-import { useRef } from "react"
+import { useMemo, useRef } from "react"
 import { useFullscreen, useToggle } from "react-use"
 
 import {
@@ -27,6 +27,10 @@ export function VideoPlayerContainer() {
   const { isPortrait } = useOrientation()
   const isMobilePortrait = isMobile && isPortrait
   const playerRef = useRef<HTMLDivElement>(null)
+  const controlsVisibility = useVideoPlayerControlsVisibility({
+    disabled: isMobilePortrait,
+    isMobile,
+  })
 
   return (
     <StreamPanelProvider>
@@ -50,6 +54,7 @@ export function VideoPlayerContainer() {
             muted: true,
           }}
           ref={playerRef}
+          {...controlsVisibility}
         >
           <HomeVideoStreamSelector />
         </VideoPlayer>
@@ -166,5 +171,21 @@ function useSelectedStreamName() {
   return (
     getPresetsForType("video").find((preset) => preset.id === selection.id)
       ?.name ?? "Custom Stream"
+  )
+}
+
+function useVideoPlayerControlsVisibility({
+  disabled,
+  isMobile,
+}: {
+  disabled: boolean
+  isMobile: boolean
+}) {
+  return useMemo(
+    () => ({
+      controlsHideDelay: disabled ? 0 : 1800,
+      hideCursorOnIdle: !disabled && !isMobile,
+    }),
+    [disabled, isMobile]
   )
 }
