@@ -36,11 +36,10 @@ export interface StreamPreset {
   format: "dash" | "hls" | "progressive"
   group: StreamGroup
   id: string
-  name: string
   poster?: string
   src: string
   thumbnail?: string
-  title?: string
+  title: string
   type: "audio" | "video"
 }
 
@@ -53,9 +52,9 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "hls",
     group: "HLS",
     id: "mux-big-buck-bunny",
-    name: "Big Buck Bunny",
     poster: "https://files.vidstack.io/sprite-fight/poster.webp",
     src: "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8",
+    title: "Big Buck Bunny",
     type: "video",
   },
   {
@@ -72,8 +71,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "hls",
     group: "HLS",
     id: "apple-advanced-hls",
-    name: "Apple Advanced Stream",
     src: "https://devstreaming-cdn.apple.com/videos/streaming/examples/adv_dv_atmos/main.m3u8",
+    title: "Apple Advanced Stream",
     type: "video",
   },
   {
@@ -82,8 +81,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "hls",
     group: "HLS",
     id: "apple-bipbop-hls",
-    name: "Apple Bipbop",
     src: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8",
+    title: "Apple Bipbop",
     type: "video",
   },
   {
@@ -92,8 +91,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "hls",
     group: "HLS",
     id: "shaka-bbb-dark-truths-hls",
-    name: "Dark Truths",
     src: "https://storage.googleapis.com/shaka-demo-assets/bbb-dark-truths-hls/hls.m3u8",
+    title: "Dark Truths",
     type: "video",
   },
 
@@ -105,8 +104,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "DASH",
     id: "shaka-angel-one-dash",
-    name: "Angel One",
     src: "https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd",
+    title: "Angel One",
     type: "video",
   },
   {
@@ -115,8 +114,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "DASH",
     id: "shaka-sintel-4k",
-    name: "Sintel 4K",
     src: "https://storage.googleapis.com/shaka-demo-assets/sintel/dash.mpd",
+    title: "Sintel 4K",
     type: "video",
   },
   {
@@ -125,10 +124,10 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "DASH",
     id: "bitmovin-dash",
-    name: "Art of Motion",
     src: "https://cdn.bitmovin.com/content/assets/art-of-motion-dash-hls-progressive/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd",
     thumbnail:
       "https://cdn.bitmovin.com/content/assets/art-of-motion-dash-hls-progressive/thumbnails/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.vtt",
+    title: "Art of Motion",
     type: "video",
   },
   {
@@ -137,8 +136,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "DASH",
     id: "shaka-tears-surround",
-    name: "Tears of Steel",
     src: "https://storage.googleapis.com/shaka-demo-assets/tos-surround/dash.mpd",
+    title: "Tears of Steel",
     type: "video",
   },
 
@@ -150,8 +149,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "Live",
     id: "dash-if-live",
-    name: "DASH-IF Live Sim",
     src: "https://livesim2.dashif.org/livesim2/utc_head/testpic_2s/Manifest.mpd",
+    title: "DASH-IF Live Sim",
     type: "video",
   },
   {
@@ -160,8 +159,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "Live",
     id: "shaka-live-dash",
-    name: "Shaka Player History",
     src: "https://storage.googleapis.com/shaka-live-assets/player-source.mpd",
+    title: "Shaka Player History",
     type: "video",
   },
   {
@@ -170,8 +169,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "hls",
     group: "Live",
     id: "shaka-live-hls",
-    name: "Shaka Player History (HLS)",
     src: "https://storage.googleapis.com/shaka-live-assets/player-source.m3u8",
+    title: "Shaka Player History (HLS)",
     type: "video",
   },
   {
@@ -180,8 +179,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "Live",
     id: "dash-if-ll-live",
-    name: "Low Latency DASH",
     src: "https://livesim2.dashif.org/livesim2/chunkdur_1/ato_7/testpic4_8s/Manifest300.mpd",
+    title: "Low Latency DASH",
     type: "video",
   },
 
@@ -200,8 +199,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "DRM",
     id: "shaka-angel-widevine",
-    name: "Angel One",
     src: "https://storage.googleapis.com/shaka-demo-assets/angel-one-widevine/dash.mpd",
+    title: "Angel One",
     type: "video",
   },
   {
@@ -218,8 +217,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "DRM",
     id: "shaka-angel-clearkey",
-    name: "Angel One",
     src: "https://storage.googleapis.com/shaka-demo-assets/angel-one-clearkey/dash.mpd",
+    title: "Angel One",
     type: "video",
   },
   {
@@ -235,8 +234,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "hls",
     group: "DRM",
     id: "shaka-angel-hls-widevine",
-    name: "Angel One (HLS)",
     src: "https://storage.googleapis.com/shaka-demo-assets/angel-one-widevine-hls/hls.m3u8",
+    title: "Angel One (HLS)",
     type: "video",
   },
   {
@@ -258,8 +257,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "DRM",
     id: "shaka-sintel-widevine",
-    name: "Sintel 4K",
     src: "https://storage.googleapis.com/shaka-demo-assets/sintel-widevine/dash.mpd",
+    title: "Sintel 4K",
     type: "video",
   },
   {
@@ -268,8 +267,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "hls",
     group: "DRM",
     id: "bitmovin-hls-aes128",
-    name: "Art of Motion",
     src: "https://cdn.bitmovin.com/content/assets/art-of-motion_drm/m3u8s/11331.m3u8",
+    title: "Art of Motion",
     type: "video",
   },
 
@@ -281,8 +280,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "Audio",
     id: "shaka-dig-uke",
-    name: "Dig the Uke",
     src: "https://storage.googleapis.com/shaka-demo-assets/dig-the-uke-clear/dash.mpd",
+    title: "Dig the Uke",
     type: "audio",
   },
   {
@@ -291,8 +290,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "hls",
     group: "Audio",
     id: "apple-hls-audio-aac",
-    name: "HLS Audio (AAC)",
     src: "https://storage.googleapis.com/shaka-demo-assets/raw-hls-audio-only/manifest.m3u8",
+    title: "HLS Audio (AAC)",
     type: "audio",
   },
 
@@ -304,8 +303,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "progressive",
     group: "Progressive",
     id: "mp4-bunny-progressive",
-    name: "Big Buck Bunny",
     src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    title: "Big Buck Bunny",
     type: "video",
   },
   {
@@ -314,8 +313,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "progressive",
     group: "Progressive",
     id: "mp4-elephants-dream",
-    name: "Elephants Dream",
     src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    title: "Elephants Dream",
     type: "video",
   },
 
@@ -327,8 +326,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "Special",
     id: "shaka-sintel-trick",
-    name: "Sintel",
     src: "https://storage.googleapis.com/shaka-demo-assets/sintel-trickplay/dash.mpd",
+    title: "Sintel",
     type: "video",
   },
   {
@@ -337,8 +336,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "Special",
     id: "dash-if-thumbnails",
-    name: "Big Buck Bunny",
     src: "https://dash.akamaized.net/akamai/bbb_30fps/bbb_with_tiled_thumbnails.mpd",
+    title: "Big Buck Bunny",
     type: "video",
   },
   {
@@ -347,8 +346,8 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "dash",
     group: "Special",
     id: "bitmovin-vr",
-    name: "VR Playhouse",
     src: "https://cdn.bitmovin.com/content/assets/playhouse-vr/mpds/105560.mpd",
+    title: "VR Playhouse",
     type: "video",
   },
 ]

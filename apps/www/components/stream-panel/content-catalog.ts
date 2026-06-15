@@ -42,6 +42,7 @@ export interface BlenderOpenFilmImages {
   backdrop?: string
   logo?: string
   poster?: string
+  thumbnail?: string
 }
 
 export interface BlenderStreamResponse extends BlenderPlaylistItem {
@@ -421,7 +422,7 @@ function toBlenderOpenFilmAsset(
     duration: item.duration,
     id: item.id,
     images: item.images,
-    poster: item.images?.backdrop ?? item.images?.poster,
+    poster: item.images?.thumbnail ?? item.images?.poster,
     source: "blender-open-film",
     subtitle: item.subtitle,
     title: item.title,
