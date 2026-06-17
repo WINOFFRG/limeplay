@@ -170,7 +170,7 @@ function useSelectedStreamName() {
 
   return (
     getPresetsForType("video").find((preset) => preset.id === selection.id)
-      ?.name ?? "Custom Stream"
+      ?.title ?? "Custom Stream"
   )
 }
 

@@ -25,6 +25,10 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
+        path: `${VIDEO_PLAYER_SRC_URL}/components/asset-metadata-overlay.tsx`,
+        type: "registry:component",
+      },
+      {
         path: `${VIDEO_PLAYER_SRC_URL}/components/volume-state-control.tsx`,
         type: "registry:component",
       },
