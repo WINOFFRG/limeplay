@@ -142,6 +142,7 @@ const BlenderOpenFilmImagesSchema = z.object({
   backdrop: z.string().optional(),
   logo: z.string().optional(),
   poster: z.string().optional(),
+  thumbnail: z.string().optional(),
 })
 
 const BlenderStreamCaptionSchema = z.object({

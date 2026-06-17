@@ -149,7 +149,15 @@ export const RootContainer = React.forwardRef<
       data-idle={debug || forceIdle ? "false" : idle}
       data-layout-type="root-container"
       data-status={status}
-      onBlur={composeEventHandlers(onBlur, () => {
+      onBlur={composeEventHandlers(onBlur, (event) => {
+        const relatedTarget = event.relatedTarget
+        if (
+          relatedTarget instanceof Node &&
+          event.currentTarget.contains(relatedTarget)
+        ) {
+          return
+        }
+
         hideControls()
       })}
       onFocus={composeEventHandlers(onFocus, () => {
@@ -201,8 +209,8 @@ function composeEventHandlers<E extends React.SyntheticEvent>(
   internalHandler: (event: E) => void
 ) {
   return (event: E) => {
-    internalHandler(event)
     consumerHandler?.(event)
+    internalHandler(event)
   }
 }
 
