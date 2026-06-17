@@ -55,7 +55,10 @@ export function Playlist() {
     await skipToId(assetId)
   }
 
-  const dropdownCollisionProps = {
+  const dropdownCollisionProps: Pick<
+    ComponentProps<typeof DropdownMenuContent>,
+    "collisionBoundary" | "collisionPadding"
+  > = {
     collisionBoundary: containerRef ?? undefined,
     collisionPadding: 12,
   }
@@ -73,9 +76,7 @@ export function Playlist() {
         className="dark w-sm border border-border p-2"
         side="top"
         sideOffset={24}
-        {...(dropdownCollisionProps as unknown as ComponentProps<
-          typeof DropdownMenuContent
-        >)}
+        {...dropdownCollisionProps}
       >
         <DropdownMenuGroup>
           <DropdownMenuLabel>Playlist</DropdownMenuLabel>
@@ -127,7 +128,7 @@ export function Playlist() {
                         )}
                         <span
                           className="ml-auto shrink-0 text-[11px] text-muted-foreground tabular-nums"
-                          title={String(asset.year)}
+                          title={asset.year}
                         >
                           {asset.year}
                         </span>

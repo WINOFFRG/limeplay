@@ -98,7 +98,7 @@ export function StreamPanel({
     }
 
     return (
-      presets.find((preset) => preset.id === contentSelection.id)?.name ??
+      presets.find((preset) => preset.id === contentSelection.id)?.title ??
       STREAM_PANEL_EMPTY_CONTENT_LABEL
     )
   }, [contentSelection, playlistPresets, presets])
