@@ -210,7 +210,9 @@ function composeEventHandlers<E extends React.SyntheticEvent>(
 ) {
   return (event: E) => {
     consumerHandler?.(event)
-    internalHandler(event)
+    if (!event.defaultPrevented) {
+      internalHandler(event)
+    }
   }
 }
 

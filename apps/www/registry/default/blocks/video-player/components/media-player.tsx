@@ -23,10 +23,7 @@ import { FallbackPoster } from "@/registry/default/ui/fallback-poster"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 import { Media } from "@/registry/default/ui/media"
 import * as Layout from "@/registry/default/ui/player-layout"
-import {
-  RootContainer,
-  type RootContainerProps,
-} from "@/registry/default/ui/root-container"
+import { RootContainer } from "@/registry/default/ui/root-container"
 
 export interface VideoPlayerAsset extends Asset {
   description?: string
@@ -39,9 +36,9 @@ export interface VideoPlayerProps {
   autoLoad?: boolean
   children?: React.ReactNode
   className?: string
-  controlsHideDelay?: RootContainerProps["controlsHideDelay"]
+  controlsHideDelay?: number
   debug?: boolean
-  hideCursorOnIdle?: RootContainerProps["hideCursorOnIdle"]
+  hideCursorOnIdle?: boolean
   initialIndex?: number
   loading?: UseAssetOptions<VideoPlayerAsset>
   /**
