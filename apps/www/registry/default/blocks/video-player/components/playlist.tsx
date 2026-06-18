@@ -1,7 +1,7 @@
 "use client"
 
 import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react"
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 
 import type { VideoPlayerAsset } from "@/registry/default/blocks/video-player/components/media-player"
 
@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/registry/default/blocks/video-player/components/button"
-import { useAssetStore } from "@/registry/default/hooks/use-asset"
+import { useMediaStore } from "@/registry/default/hooks/use-media"
 import { usePlayerStore } from "@/registry/default/hooks/use-player"
 import { usePlaylistStore } from "@/registry/default/hooks/use-playlist"
 
@@ -24,10 +24,8 @@ export function Playlist() {
     (state) =>
       state.currentItem as null | { id: string; properties: VideoPlayerAsset }
   )
-  const preloadAsset = useAssetStore((state) => state.preloadAsset) as (
-    asset: VideoPlayerAsset
-  ) => Promise<void>
-  const preloadManagers = usePlayerStore((state) => state.preloadManagers)
+  const containerRef = usePlayerStore((state) => state.containerRef)
+  const setForceIdle = useMediaStore((state) => state.setForceIdle)
   const queue = usePlaylistStore(
     (state) => state.queue as { id: string; properties: VideoPlayerAsset }[]
   )
@@ -45,20 +43,28 @@ export function Playlist() {
       )
   }, [queue, shuffle, shuffleOrder])
 
+  useEffect(() => {
+    return () => {
+      setForceIdle(false)
+    }
+  }, [setForceIdle])
+
   if (orderedItems.length < 2) return null
 
   const handleAssetSelect = async (assetId: string) => {
     await skipToId(assetId)
   }
 
-  const handleAssetHover = async (assetId: string, asset: VideoPlayerAsset) => {
-    if (!preloadManagers.has(assetId) && currentItem?.id !== assetId) {
-      await preloadAsset(asset)
-    }
+  const dropdownCollisionProps: {
+    collisionBoundary?: Element
+    collisionPadding?: number
+  } = {
+    collisionBoundary: containerRef ?? undefined,
+    collisionPadding: 12,
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu onOpenChange={setForceIdle}>
       <Button aria-label="Open Playlist" asChild size="icon" variant="glass">
         <DropdownMenuTrigger>
           <CardsThreeIcon weight="fill" />
@@ -70,20 +76,21 @@ export function Playlist() {
         className="dark w-sm border border-border p-2"
         side="top"
         sideOffset={24}
+        {...dropdownCollisionProps}
       >
         <DropdownMenuGroup>
           <DropdownMenuLabel>Playlist</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <div className="space-y-2">
+          <div className="space-y-1">
             {orderedItems.map((item) => {
               const asset = item.properties
               const isCurrentAsset = currentItem?.id === item.id
-              const isAssetPreloaded = preloadManagers.has(item.id)
 
               return (
                 <DropdownMenuItem
                   className={`
-                    dark p-0 transition-colors
+                    dark cursor-pointer rounded-md p-0 transition-colors
+                    focus:bg-accent/50 focus:outline-none
                     ${
                       isCurrentAsset
                         ? "border-primary/20 bg-primary/10"
@@ -92,13 +99,13 @@ export function Playlist() {
                   `}
                   key={item.id}
                   onClick={() => handleAssetSelect(item.id)}
-                  onMouseEnter={() => handleAssetHover(item.id, asset)}
                 >
                   <div className="flex w-full items-center gap-3 p-2">
                     <div className="relative aspect-video w-20 shrink-0 overflow-hidden rounded-sm">
                       <img
                         alt={asset.title ?? "Playlist item poster"}
                         className="object-cover"
+                        loading="lazy"
                         sizes="80px"
                         src={asset.poster}
                       />
@@ -110,21 +117,24 @@ export function Playlist() {
                           />
                         </div>
                       )}
-                      {isAssetPreloaded && !isCurrentAsset && (
-                        <div className="absolute top-1 right-1 size-2 rounded-full bg-green-500" />
-                      )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <div className="truncate text-sm font-medium">
+                      <div className="flex w-full items-center gap-2">
+                        <div className="min-w-0 flex-1 truncate text-sm font-medium">
                           {asset.title}
                         </div>
                         {isCurrentAsset && (
-                          <div className="flex size-2 rounded-full bg-primary" />
+                          <div className="size-2 shrink-0 rounded-full bg-primary" />
                         )}
+                        <span
+                          className="ml-auto shrink-0 text-[11px] text-muted-foreground tabular-nums"
+                          title={asset.year}
+                        >
+                          {asset.year}
+                        </span>
                       </div>
                       {asset.description && (
-                        <div className="line-clamp-2 text-xs text-muted-foreground">
+                        <div className="line-clamp-2 text-[11px] text-muted-foreground">
                           {asset.description}
                         </div>
                       )}

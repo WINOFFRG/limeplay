@@ -278,8 +278,8 @@ export function useStreamPanelSync({
         format: "progressive",
         group: "Special",
         id,
-        name: "Custom Stream",
         src,
+        title: "Custom Stream",
         type: playerType,
       }
       loadSource(asset as unknown as Asset, { loading: assetOptions })
