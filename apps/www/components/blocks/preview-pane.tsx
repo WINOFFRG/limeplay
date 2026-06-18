@@ -2,7 +2,7 @@
 
 import { domAnimation, LazyMotion, m } from "motion/react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import React, { useCallback, useLayoutEffect, useState } from "react"
+import React, { useCallback, useLayoutEffect, useRef, useState } from "react"
 
 import { StreamPanelProvider } from "@/components/stream-panel"
 import { useThemeToggle } from "@/components/theme-toggle"
@@ -25,6 +25,7 @@ export function BlockPreviewWithToolbar({
   const [expanded, setExpanded] = useState(() => {
     return searchParams.get(EXPANDED_QUERY_PARAM) === "true"
   })
+  const expandedRef = useRef(expanded)
   const { isDark, toggleTheme } = useThemeToggle({
     blur: false,
     start: "top-right",
@@ -51,11 +52,10 @@ export function BlockPreviewWithToolbar({
   )
 
   const handleExpandToggle = useCallback(() => {
-    setExpanded((previousExpanded) => {
-      const nextExpanded = !previousExpanded
-      updateExpandedQuery(nextExpanded)
-      return nextExpanded
-    })
+    const nextExpanded = !expandedRef.current
+    expandedRef.current = nextExpanded
+    setExpanded(nextExpanded)
+    updateExpandedQuery(nextExpanded)
   }, [updateExpandedQuery])
 
   const handleReload = useCallback(() => {
@@ -63,7 +63,9 @@ export function BlockPreviewWithToolbar({
   }, [])
 
   useLayoutEffect(() => {
-    setExpanded(searchParams.get(EXPANDED_QUERY_PARAM) === "true")
+    const nextExpanded = searchParams.get(EXPANDED_QUERY_PARAM) === "true"
+    expandedRef.current = nextExpanded
+    setExpanded(nextExpanded)
   }, [pathname, searchParams])
 
   // DEV: This controls the left doc section to be hidden when preview is expanded

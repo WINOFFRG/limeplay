@@ -138,7 +138,7 @@ export function PresetsOverlay({
                       >
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 pr-5">
-                            <span className="truncate">{preset.name}</span>
+                            <span className="truncate">{preset.title}</span>
                           </div>
                           {preset.description ? (
                             <span className="mt-1 block truncate text-[11px] text-muted-foreground">
