@@ -1,7 +1,7 @@
 "use client"
 
 import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react"
-import { type ComponentProps, useEffect, useMemo } from "react"
+import { useEffect, useMemo } from "react"
 
 import type { VideoPlayerAsset } from "@/registry/default/blocks/video-player/components/media-player"
 
@@ -55,10 +55,10 @@ export function Playlist() {
     await skipToId(assetId)
   }
 
-  const dropdownCollisionProps: Pick<
-    ComponentProps<typeof DropdownMenuContent>,
-    "collisionBoundary" | "collisionPadding"
-  > = {
+  const dropdownCollisionProps: {
+    collisionBoundary?: Element
+    collisionPadding?: number
+  } = {
     collisionBoundary: containerRef ?? undefined,
     collisionPadding: 12,
   }
