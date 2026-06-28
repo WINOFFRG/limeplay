@@ -5,12 +5,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:root {
-  --page-padding-inline: 1rem;
-  --page-padding: max(env(safe-area-inset-left), var(--page-padding-inline))
-    max(env(safe-area-inset-right), var(--page-padding-inline));
-}
-
 @theme inline {
   --animate-blur-fade-slide-in: blur-fade-slide-in 0.6s ease-out forwards;
   --padding-page: var(--page-padding);

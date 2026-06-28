@@ -19,9 +19,9 @@ export default function RootLayout({
       )}
       <main
         className={`
-            light w-dvw scrollbar-gutter-auto overscroll-contain bg-linear-to-br from-white to-neutral-200
-            md:scrollbar-gutter-stable
-          `}
+          light w-dvw scrollbar-gutter-auto overscroll-contain bg-linear-to-br from-white to-neutral-200
+          md:scrollbar-gutter-stable
+        `}
       >
         <VideoBackground />
         <Header />

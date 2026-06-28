@@ -1,6 +1,5 @@
-@import "tailwindcss";
-
 :root {
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --lp-timeline-track-height: 4px;
   --lp-timeline-track-height-active: 7px;
 
@@ -35,14 +34,14 @@
     hsla(0, 0%, 0%, 0.526) 64.7%, hsla(0, 0%, 0%, 0.585) 71%,
     hsla(0, 0%, 0%, 0.636) 77.5%, hsla(0, 0%, 0%, 0.675) 84.5%,
     hsla(0, 0%, 0%, 0.701) 91.9%, hsla(0, 0%, 0%, 0.71) 100%;
-}
 
-@theme inline {
-  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --background-image-lp-controls-fade-top: var(
-    --background-image-lp-controls-fade-top
+  --background-image-lp-controls-fade-bottom: linear-gradient(
+    to bottom,
+    var(--lp-controls-fade-stops)
   );
-  --background-image-lp-controls-fade-bottom: var(
-    --background-image-lp-controls-fade-bottom
+
+  --background-image-lp-controls-fade-top: linear-gradient(
+    to top,
+    var(--lp-controls-fade-stops)
   );
 }
