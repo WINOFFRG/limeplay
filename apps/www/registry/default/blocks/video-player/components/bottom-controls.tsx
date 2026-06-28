@@ -20,7 +20,7 @@ export function BottomControls({ className }: BottomControlsProps) {
     >
       <div
         className="
-          ease-out-quad grid grid-cols-[1fr_auto] items-center gap-1 transition-all duration-300
+          grid grid-cols-[1fr_auto] items-center gap-1 transition-all duration-300 ease-out-quad
           @3xl/root:grid-cols-[1fr_3fr_1fr] @3xl/root:gap-2
         "
       >
