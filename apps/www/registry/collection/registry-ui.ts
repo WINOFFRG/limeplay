@@ -42,29 +42,6 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
   },
   {
-    css: {
-      "@utility -focus-area-x-*": {
-        "--x": "--value(number) * -1",
-      },
-      "@utility -focus-area-y-*": {
-        "--y": "--value(number) * -1",
-      },
-      "@utility focus-area": {
-        "&:before": {
-          content: '""',
-          inset: "calc(var(--y) * 1px) calc(var(--x) * 1px)",
-          position: "absolute",
-        },
-
-        position: "relative",
-      },
-      "@utility focus-area-x-*": {
-        "--x": "--value(number)",
-      },
-      "@utility focus-area-y-*": {
-        "--y": "--value(number)",
-      },
-    },
     cssVars: {
       dark: {
         "lp-accent": "oklch(0.97 0 0)",

@@ -9,13 +9,13 @@ import React, {
   useState,
 } from "react"
 
-import type { StreamPanelPlaylistPreset } from "@/components/stream-panel/content-catalog"
 import type { StreamPanelPlayerType } from "@/components/stream-panel/use-stream-panel"
+import type { CatalogPlaylistPreset } from "@/lib/catalogs"
 import type { StreamPreset } from "@/lib/stream-presets"
 
 export interface StreamPanelController {
   onLoadStream?: (src: string, config?: string) => void
-  onPlaylistChange?: (playlist: StreamPanelPlaylistPreset) => void
+  onPlaylistChange?: (playlist: CatalogPlaylistPreset) => void
   onPresetChange?: (preset: StreamPreset, kind?: "live" | "stream") => void
   playerType: StreamPanelPlayerType
 }

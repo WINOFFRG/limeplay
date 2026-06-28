@@ -3,7 +3,7 @@
 import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react"
 import { useEffect, useMemo } from "react"
 
-import type { VideoPlayerAsset } from "@/registry/default/blocks/video-player/components/media-player"
+import type { VideoPlayerAsset } from "@/registry/default/blocks/video-player/player"
 
 import {
   DropdownMenu,

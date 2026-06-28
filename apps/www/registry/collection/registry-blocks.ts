@@ -16,16 +16,24 @@ export const blocks: Registry["items"] = [
     description: "Modern seamless flat video player",
     files: [
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/page.tsx`,
-        target: "app/player/page.tsx",
-        type: "registry:page",
-      },
-      {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/media-player.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/player.tsx`,
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/asset-metadata-overlay.tsx`,
+        path: `${VIDEO_PLAYER_SRC_URL}/styles.css`,
+        target: "components/video-player/styles.css",
+        type: "registry:style",
+      },
+      {
+        path: `${VIDEO_PLAYER_SRC_URL}/components/player-root-container.tsx`,
+        type: "registry:component",
+      },
+      {
+        path: `${VIDEO_PLAYER_SRC_URL}/components/player-error-screen.tsx`,
+        type: "registry:component",
+      },
+      {
+        path: `${VIDEO_PLAYER_SRC_URL}/components/top-overlay-container.tsx`,
         type: "registry:component",
       },
       {
@@ -89,11 +97,13 @@ export const blocks: Registry["items"] = [
     meta: {
       iframeHeight: "750px",
       props: {
-        src: "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8",
+        source:
+          "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8",
       },
     },
     name: "video-player",
     registryDependencies: [
+      "https://bazza.dev/r/hit-area",
       "dropdown-menu",
       "player-layout",
       "media",
@@ -122,6 +132,7 @@ export const blocks: Registry["items"] = [
       "use-playlist",
       "use-asset",
       "use-media",
+      "use-controls-visibility",
       "use-playback-source",
     ],
     type: "registry:block",
@@ -138,12 +149,12 @@ export const blocks: Registry["items"] = [
     description: "Compact audio player with playlist support",
     files: [
       {
-        path: "blocks/audio-player/lib/media-kit.ts",
-        type: "registry:lib",
+        path: "blocks/audio-player/player.tsx",
+        type: "registry:component",
       },
       {
-        path: "blocks/audio-player/components/media-player.tsx",
-        type: "registry:component",
+        path: "blocks/audio-player/lib/media-kit.ts",
+        type: "registry:lib",
       },
       {
         path: "blocks/audio-player/components/audio-source.tsx",
@@ -194,8 +205,8 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
-        path: "blocks/audio-player/audio-player.module.css",
-        target: "components/audio-player/audio-player.module.css",
+        path: "blocks/audio-player/styles.css",
+        target: "components/audio-player/styles.css",
         type: "registry:style",
       },
     ],
@@ -204,6 +215,7 @@ export const blocks: Registry["items"] = [
     },
     name: "audio-player",
     registryDependencies: [
+      "https://bazza.dev/r/hit-area",
       "media-provider",
       "media",
       "root-container",

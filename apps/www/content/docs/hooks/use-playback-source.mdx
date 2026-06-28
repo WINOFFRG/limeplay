@@ -29,10 +29,10 @@ export function SourceController({ src }: { src?: string }) {
 For typed assets, pass one asset or an asset array to `source`, then pass source resolution and recovery policies through `loading`.
 
 ```tsx
-import type { Asset } from "@/hooks/limeplay/use-asset"
+import type { TAsset } from "@/hooks/limeplay/use-asset"
 import { PlaybackSourceController } from "@/hooks/limeplay/use-playback-source"
 
-interface VideoAsset extends Asset {
+interface VideoAsset extends TAsset {
   playbackUrl: string
   slug: string
 }
@@ -83,12 +83,12 @@ export const media = createMediaKit({
 ```
 
 ```tsx
-import type { Asset } from "@/hooks/limeplay/use-asset"
+import type { TAsset } from "@/hooks/limeplay/use-asset"
 import type { UsePlaybackSourceOptions } from "@/hooks/limeplay/use-playback-source"
 import { PlaybackSourceController } from "@/hooks/limeplay/use-playback-source"
 
-export function Source<TAsset extends Asset>(
-  props: UsePlaybackSourceOptions<TAsset>
+export function Source<TItem extends TAsset>(
+  props: UsePlaybackSourceOptions<TItem>
 ) {
   return <PlaybackSourceController {...props} />
 }

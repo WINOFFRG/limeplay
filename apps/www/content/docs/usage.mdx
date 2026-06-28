@@ -14,7 +14,7 @@ npx shadcn add @limeplay/video-player
 ```
 
 ```tsx title="components/player.tsx"
-import { VideoPlayer } from "@/components/limeplay/video-player/components/media-player"
+import { VideoPlayer } from "@/components/limeplay/video-player/player"
 
 export function Player() {
   return (
@@ -32,7 +32,7 @@ For playlist-style blocks, pass an array of assets to the same `source` prop.
 import {
   AudioPlayer,
   type AudioPlayerAsset,
-} from "@/components/limeplay/audio-player/components/media-player"
+} from "@/components/limeplay/audio-player/player"
 
 const tracks: AudioPlayerAsset[] = [
   {
@@ -247,13 +247,13 @@ When you build a new block, keep the public loading API consistent with the exis
 "use client"
 
 import type React from "react"
-import type { Asset, PlayerSource, UseAssetOptions } from "@/hooks/limeplay/use-asset"
+import type { PlayerSource, TAsset, UseAssetOptions } from "@/hooks/limeplay/use-asset"
 
 import { MediaProvider } from "@/components/limeplay/custom-video-player/lib/media-kit"
 import { PlaybackSourceController } from "@/hooks/limeplay/use-playback-source"
 import { Media } from "@/components/limeplay/media"
 
-interface CustomVideoAsset extends Asset {
+interface CustomVideoAsset extends TAsset {
   title?: string
 }
 

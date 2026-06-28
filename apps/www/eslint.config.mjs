@@ -1,8 +1,13 @@
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+
 import nextPlugin from "@next/eslint-plugin-next"
 import pluginBetterTailwindcss from "eslint-plugin-better-tailwindcss"
 import tseslint from "typescript-eslint"
 
 import { baseConfig } from "../../eslint.config.mjs"
+
+const appDir = path.dirname(fileURLToPath(import.meta.url))
 
 const eslintConfig = [
   {
@@ -26,16 +31,13 @@ const eslintConfig = [
       ],
       "better-tailwindcss/no-unknown-classes": [
         "error",
-        { ignore: ["dark", "shiki", "not-prose", "light"] },
+        { ignore: ["limeplay", "dark", "shiki", "not-prose", "light"] },
       ],
     },
     settings: {
       "better-tailwindcss": {
-        entryPoint: "app/global.css",
-        detectComponentClasses: true,
-      },
-      "better-tailwindcss": {
-        entryPoint: "app/docs/docs.css",
+        cwd: appDir,
+        entryPoint: "app/eslint.css",
         detectComponentClasses: true,
       },
     },

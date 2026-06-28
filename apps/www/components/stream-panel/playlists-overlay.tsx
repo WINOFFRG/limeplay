@@ -3,8 +3,8 @@
 import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 import { CheckIcon } from "lucide-react"
 
-import type { StreamPanelPlaylistPreset } from "@/components/stream-panel/content-catalog"
 import type { StreamPanelSelection } from "@/components/stream-panel/use-stream-panel"
+import type { CatalogPlaylistPreset } from "@/lib/catalogs"
 
 import { cn } from "@/lib/utils"
 
@@ -12,9 +12,9 @@ import { OverlayShell, type OverlayShellPlacement } from "./overlay-shell"
 
 interface PlaylistsOverlayProps {
   onBack: () => void
-  onSelect: (playlist: StreamPanelPlaylistPreset) => void
+  onSelect: (playlist: CatalogPlaylistPreset) => void
   placement?: OverlayShellPlacement
-  playlists: StreamPanelPlaylistPreset[]
+  playlists: CatalogPlaylistPreset[]
   selection?: StreamPanelSelection
   show: boolean
 }

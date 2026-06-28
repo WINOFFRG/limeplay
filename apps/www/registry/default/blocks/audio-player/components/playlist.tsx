@@ -4,16 +4,15 @@ import { CardsThreeIcon, PlayIcon } from "@phosphor-icons/react"
 import { XIcon } from "lucide-react"
 import { type ReactNode, useCallback, useMemo, useState } from "react"
 
+import type { AudioPlayerAsset } from "@/registry/default/blocks/audio-player/player"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
-import {
-  type AudioPlayerAsset,
-  getAudioAssetMetadata,
-} from "@/registry/default/blocks/audio-player/components/audio-source"
+import { getAudioAssetMetadata } from "@/registry/default/blocks/audio-player/components/audio-source"
 import { Button } from "@/registry/default/blocks/audio-player/components/button"
 import { usePlayerStore } from "@/registry/default/hooks/use-player"
 import { usePlaylistStore } from "@/registry/default/hooks/use-playlist"

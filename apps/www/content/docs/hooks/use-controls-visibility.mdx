@@ -1,0 +1,53 @@
+---
+title: use-controls-visibility
+description: Utility hook for auto-hiding player controls.
+---
+
+## Installation
+
+```npm
+npx shadcn add @limeplay/use-controls-visibility
+```
+
+<Callout>
+  Requires [`mediaFeature`](/docs/hooks/use-media) and
+  [`playbackFeature`](/docs/hooks/use-playback) registered in your
+  [`createMediaKit`](/docs/components/media-provider).
+</Callout>
+
+## Usage
+
+```tsx
+import {
+  CONTROLS_FORCE_VISIBLE_ATTRIBUTE,
+  useControlsVisibility,
+} from "@/hooks/limeplay/use-controls-visibility"
+
+export function PlayerShell() {
+  const controlsVisibility = useControlsVisibility()
+
+  return (
+    <div
+      {...controlsVisibility.rootProps}
+      className={controlsVisibility.className}
+    >
+      <video />
+
+      <div {...{ [CONTROLS_FORCE_VISIBLE_ATTRIBUTE]: "" }}>
+        <button>Play</button>
+      </div>
+    </div>
+  )
+}
+```
+
+`rootProps` should be spread on the player root. Add
+`CONTROLS_FORCE_VISIBLE_ATTRIBUTE` to any controls area that should keep controls
+visible while hovered or scrubbed.
+
+## API Reference
+
+<AutoTypeTable
+  path="./registry/default/hooks/use-controls-visibility.ts"
+  name="UseControlsVisibilityOptions"
+/>

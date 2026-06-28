@@ -9,12 +9,12 @@ import React, { useMemo, useState } from "react"
 
 import type { StreamPanelContentKind } from "@/components/stream-panel/use-stream-panel"
 
-import { getPlaylistPresetsForType } from "@/components/stream-panel/content-catalog"
 import { useStreamPanelStore } from "@/components/stream-panel/use-stream-panel"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Popover, PopoverContent } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { getPlaylistPresetsForType } from "@/lib/catalogs"
 import { getPresetsForType, type StreamPreset } from "@/lib/stream-presets"
 import { cn } from "@/lib/utils"
 

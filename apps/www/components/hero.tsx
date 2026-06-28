@@ -6,7 +6,7 @@ import { AnimatedGroup } from "@/components/ui/animated-group"
 
 export function Hero() {
   return (
-    <div className="flex flex-col">
+    <>
       <AnimatedGroup preset="blur-slide">
         <div
           className={`
@@ -75,9 +75,9 @@ export function Hero() {
           </div>
         </div>
       </AnimatedGroup>
-      <AnimatedGroup preset="fade">
+      <AnimatedGroup preset="blur-slide">
         <AnimatedButtons />
       </AnimatedGroup>
-    </div>
+    </>
   )
 }
