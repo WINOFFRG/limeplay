@@ -123,7 +123,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
             >
               <TopOverlayContainer
                 className="
-                  ease-out-quad px-[5%] pt-[clamp(0.75rem,7svh,2.5rem)] transition-all duration-300
+                  px-[5%] pt-[clamp(0.75rem,7svh,2.5rem)] transition-all duration-300 ease-out-quad
                   group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
                   group-data-[idle=true]/root:-translate-y-4 group-data-[idle=true]/root:opacity-0
                   group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100
@@ -140,7 +140,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
               />
               <BottomControls
                 className="
-                  ease-out-quad px-[5%] pb-[clamp(0.75rem,7svh,2.5rem)] transition-all duration-300
+                  px-[5%] pb-[clamp(0.75rem,7svh,2.5rem)] transition-all duration-300 ease-out-quad
                   group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
                   group-data-[idle=true]/root:translate-y-4 group-data-[idle=true]/root:opacity-0
                   group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100

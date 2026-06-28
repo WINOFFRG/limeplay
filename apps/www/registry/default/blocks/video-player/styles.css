@@ -1,5 +1,4 @@
 :root {
-  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --lp-timeline-track-height: 4px;
   --lp-timeline-track-height-active: 7px;
 
@@ -43,5 +42,15 @@
   --background-image-lp-controls-fade-top: linear-gradient(
     to top,
     var(--lp-controls-fade-stops)
+  );
+}
+
+@theme inline {
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --background-image-lp-controls-fade-top: var(
+    --background-image-lp-controls-fade-top
+  );
+  --background-image-lp-controls-fade-bottom: var(
+    --background-image-lp-controls-fade-bottom
   );
 }
