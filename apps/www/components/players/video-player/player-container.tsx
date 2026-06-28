@@ -22,7 +22,7 @@ export function VideoPlayerContainer() {
       <VideoPlayer
         className={cn(
           `
-            dark mx-auto mt-6 overflow-hidden
+            mx-auto mt-6 overflow-hidden
             sm:my-0 sm:w-full
             md:mx-0
           `

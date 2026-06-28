@@ -47,6 +47,10 @@ export interface VideoPlayerProps extends PlaybackSourceControllerProps<VideoPla
    * Props to pass to the underlying video element.
    */
   mediaProps?: Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "as" | "src">
+  /**
+   * @default dark
+   */
+  theme?: "dark" | "light"
 }
 
 export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
@@ -62,12 +66,17 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
       mediaProps,
       source,
       sourceKey,
+      theme = "dark",
     },
     ref
   ) {
     return (
       <MediaProvider debug={debug}>
-        <PlayerRootContainer className={className} layout={layout} ref={ref}>
+        <PlayerRootContainer
+          className={cn(className, theme === "dark" && "dark")}
+          layout={layout}
+          ref={ref}
+        >
           <PlaybackSourceController
             autoLoad={autoLoad}
             initialIndex={initialIndex}
@@ -114,7 +123,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
             >
               <TopOverlayContainer
                 className="
-                  px-[5%] pt-[clamp(0.75rem,7svh,2.5rem)] transition-all duration-300 ease-out-quad
+                  ease-out-quad px-[5%] pt-[clamp(0.75rem,7svh,2.5rem)] transition-all duration-300
                   group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
                   group-data-[idle=true]/root:-translate-y-4 group-data-[idle=true]/root:opacity-0
                   group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100
@@ -131,7 +140,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
               />
               <BottomControls
                 className="
-                  px-[5%] pb-[clamp(0.75rem,7svh,2.5rem)] transition-all duration-300 ease-out-quad
+                  ease-out-quad px-[5%] pb-[clamp(0.75rem,7svh,2.5rem)] transition-all duration-300
                   group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
                   group-data-[idle=true]/root:translate-y-4 group-data-[idle=true]/root:opacity-0
                   group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100
