@@ -15,7 +15,7 @@ export function PictureInPictureControl() {
     <PictureInPictureControlPrimitive asChild shortcut="P">
       <Button className="cursor-pointer" size="icon" variant="glass">
         <PictureInPictureIcon
-          weight={isPictureInPictureActive ? "fill" : "regular"}
+          weight={isPictureInPictureActive ? "fill" : "bold"}
         />
       </Button>
     </PictureInPictureControlPrimitive>

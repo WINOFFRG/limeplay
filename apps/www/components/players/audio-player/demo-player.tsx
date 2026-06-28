@@ -4,13 +4,13 @@ import type { ReactNode } from "react"
 
 import { useEffect, useState } from "react"
 
-import type { AudioPlayerAsset } from "@/registry/default/blocks/audio-player/components/media-player"
+import type { AudioPlayerAsset } from "@/registry/default/blocks/audio-player/player"
 
 import {
   useStreamPanelStore,
   useStreamPanelStoreHydrated,
 } from "@/components/stream-panel/use-stream-panel"
-import { AudioPlayer } from "@/registry/default/blocks/audio-player/components/media-player"
+import { AudioPlayer } from "@/registry/default/blocks/audio-player/player"
 
 import {
   AUDIO_PLAYER_DEMO_PLAYLIST_ID,

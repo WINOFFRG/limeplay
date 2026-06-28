@@ -3,7 +3,7 @@
 import type {
   AudioPlayerAsset,
   PlaybackUrls,
-} from "@/registry/default/blocks/audio-player/components/audio-source"
+} from "@/registry/default/blocks/audio-player/player"
 import type { UseAssetReturn } from "@/registry/default/hooks/use-asset"
 
 import { useAsset } from "@/registry/default/hooks/use-asset"

@@ -28,7 +28,7 @@ export function TimelineControl() {
             group-hover/timeline:data-[orientation=horizontal]:h-1
           `,
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
-          "focus-area -focus-area-x-0 -focus-area-y-12"
+          "hit-area-x-0 hit-area-y-[12px] hit-area"
         )}
       >
         <TimelineSlider.Track className={`overflow-hidden bg-[#383838]`}>

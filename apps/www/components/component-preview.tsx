@@ -8,10 +8,10 @@ import { TabsContent } from "@/components/ui/tabs"
 import { atomReader } from "@/hooks/use-config"
 import { cn } from "@/lib/utils"
 import { Index } from "@/registry/__index__"
-import { PlayerLayoutDemo } from "@/registry/default/examples/player-root-demo"
 
 import { CodeBlock as CustomCodeBlock } from "./codeblock"
 import { ComponentPreviewControl } from "./component-preview-control"
+import { PlayerLayoutDemo } from "./player-root-demo"
 import { PreviewTabComponent } from "./preview-tab-component"
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {

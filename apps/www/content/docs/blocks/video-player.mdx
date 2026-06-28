@@ -16,7 +16,7 @@ npx shadcn add @limeplay/video-player
 ## Minimal Usage
 
 ```tsx
-import { VideoPlayer } from "@/components/limeplay/video-player/components/media-player"
+import { VideoPlayer } from "@/components/limeplay/video-player/player"
 
 const src =
   "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8"
@@ -43,7 +43,7 @@ Pass an array to `source` when the player should manage a queue.
 import {
   VideoPlayer,
   type VideoPlayerAsset,
-} from "@/components/limeplay/video-player/components/media-player"
+} from "@/components/limeplay/video-player/player"
 
 const playlist: VideoPlayerAsset[] = [
   {
@@ -105,7 +105,7 @@ Use `loading.resolveSource` when your app needs signed URLs, token refresh, or s
 ## API Reference
 
 <AutoTypeTable
-  path="./registry/default/blocks/video-player/components/media-player.tsx"
+  path="./registry/default/blocks/video-player/player.tsx"
   name="VideoPlayerProps"
 />
 

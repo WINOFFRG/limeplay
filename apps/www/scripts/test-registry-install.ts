@@ -50,12 +50,12 @@ interface BlockConfig {
 const BLOCK_CONFIGS: Record<string, BlockConfig> = {
   "audio-player": {
     component: "AudioPlayer",
-    importPath: "components/audio-player/components/media-player",
+    importPath: "components/audio-player/player",
     url: "/r/audio-player.json",
   },
   "video-player": {
     component: "VideoPlayer",
-    importPath: "components/video-player/components/media-player",
+    importPath: "components/video-player/player",
     url: "/r/video-player.json",
   },
 }

@@ -20,8 +20,8 @@ export default function HeroButtons() {
     >
       <motion.div
         className={`
-          group relative flex h-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-foreground/15 font-mono text-foreground/70
-          focus-ring backdrop-blur-sm
+          group relative flex h-10 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-foreground/15 font-mono text-foreground/80
+          focus-ring backdrop-blur-xs
           md:h-12
         `}
         initial={{ padding: "0px 20px" }}
@@ -51,7 +51,7 @@ export default function HeroButtons() {
           `}
         >
           <span>{command.split("/")[0]}/</span>
-          <span className="flex items-center gap-2 opacity-40">
+          <span className="flex items-center gap-2 opacity-60">
             {command.split("/")[1]}
             <motion.span
               animate={{ opacity: 1, scale: 1 }}
