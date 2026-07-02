@@ -82,6 +82,6 @@ function composeEventHandlers<TEvent extends React.SyntheticEvent>(
 
   return (event: TEvent) => {
     userHandler(event)
-    internalHandler(event)
+    if (!event.defaultPrevented) internalHandler(event)
   }
 }
