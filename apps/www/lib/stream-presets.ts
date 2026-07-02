@@ -52,7 +52,6 @@ export const STREAM_PRESETS: StreamPreset[] = [
     format: "hls",
     group: "HLS",
     id: "mux-big-buck-bunny",
-    poster: "https://files.vidstack.io/sprite-fight/poster.webp",
     src: "https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU.m3u8",
     title: "Big Buck Bunny",
     type: "video",

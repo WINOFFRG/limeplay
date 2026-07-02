@@ -13,6 +13,7 @@
     "use-picture-in-picture",
     "use-captions",
     "use-seek",
+    "use-controls-visibility",
     "use-idle",
     "use-interval",
     "use-track-events"

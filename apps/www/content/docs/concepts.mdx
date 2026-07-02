@@ -96,7 +96,7 @@ Most Limeplay players follow this shape. Blocks package this structure for you; 
 <Mermaid
   chart="
 flowchart TD
-  Provider[MediaProvider<br/>Store, events, feature setup] --> Root[RootContainer<br/>Control visibility];
+  Provider[MediaProvider<br/>Store, events, feature setup] --> Root[RootContainer<br/>Root state attributes];
   Root --> Player[PlayerContainer<br/>Media layout];
   Player --> Media[Media<br/>video or audio element];
   Player --> Controls[ControlsContainer];

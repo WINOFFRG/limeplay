@@ -172,6 +172,7 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
           `
             block size-2 rounded-full bg-primary
             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50
+            has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-primary/50
             data-disabled:bg-primary/85
           `,
           className

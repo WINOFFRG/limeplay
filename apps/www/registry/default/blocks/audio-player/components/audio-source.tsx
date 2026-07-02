@@ -2,8 +2,8 @@
 
 import * as React from "react"
 
+import type { AudioPlayerAsset } from "@/registry/default/blocks/audio-player/player"
 import type {
-  Asset,
   PlayerSource,
   UseAssetOptions,
 } from "@/registry/default/hooks/use-asset"
@@ -17,31 +17,6 @@ export interface AudioAssetDisplayMetadata {
   title: string
 }
 
-export interface AudioPlayerAsset extends Asset {
-  albumName?: string
-  artistName?: string
-  artwork?: {
-    templateUrl?: string
-    url?: string
-  }
-  description?: string
-  duration?: number
-  features?: string[]
-  genre?: string
-  group?: string
-  images?: {
-    backdrop?: string
-    poster?: string
-  }
-  name?: string
-  playbackUrls?: PlaybackUrls
-  poster?: string
-  releaseYear?: number | string
-  subtitle?: string
-  title?: string
-  year?: number | string
-}
-
 export interface AudioSourceProviderProps {
   autoLoad?: boolean
   children?: React.ReactNode
@@ -49,11 +24,6 @@ export interface AudioSourceProviderProps {
   loading?: UseAssetOptions<AudioPlayerAsset>
   source?: PlayerSource<AudioPlayerAsset>
   sourceKey?: string
-}
-
-export interface PlaybackUrls {
-  primary: string
-  secondary?: string
 }
 
 interface RawPlaybackResponse {

@@ -24,7 +24,7 @@ export function ImmersiveScrollPlayer({
 
   const [initialWidthPx, _, finalWidthPx] = useMemo(() => {
     const fitByHeight = Math.round((vh * 16) / 9)
-    const fitWidth = Math.min(vw, fitByHeight) // contain: fit within viewport bounds
+    const fitWidth = Math.min(vw, fitByHeight)
     const initial = Math.min(1080, Math.max(320, Math.round(fitWidth * 0.6)))
     const mid = Math.min(1920, Math.round(fitWidth * 0.96))
     const final = fitWidth
@@ -56,9 +56,18 @@ export function ImmersiveScrollPlayer({
 
   if (isMobile) {
     return (
-      <div className="relative w-full" ref={containerRef}>
+      <motion.div
+        className="
+          relative w-full overflow-hidden
+          md:rounded-2xl
+        "
+        initial={{ opacity: 0, scale: 0.97, y: 12 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        viewport={{ amount: 0.3, once: true }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+      >
         {children}
-      </div>
+      </motion.div>
     )
   }
 
@@ -76,9 +85,7 @@ export function ImmersiveScrollPlayer({
         },
       }}
     >
-      <div
-        className={`sticky top-0 grid h-svh w-full snap-proximity snap-normal place-items-center overflow-hidden`}
-      >
+      <div className="sticky top-0 grid h-svh w-full snap-proximity snap-normal place-items-center overflow-hidden">
         <motion.div
           className="absolute inset-0 z-0"
           style={{ backgroundColor }}

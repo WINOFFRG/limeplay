@@ -18,6 +18,7 @@ export interface SeekControlProps extends React.ComponentProps<typeof Button> {
    * @example 10 for forward 10s, -10 for backward 10s
    */
   offset: number
+  render?: React.ReactElement
   shortcut?: string
 }
 
@@ -35,11 +36,12 @@ export const SeekControl = React.forwardRef<
     disabled: userDisabled,
     offset,
     onClick,
+    render,
     shortcut,
     ...restProps
   } = props
 
-  const Comp = asChild ? Slot : Button
+  const Comp = render ? Slot : asChild ? Slot : Button
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onClick?.(event)
@@ -67,7 +69,7 @@ export const SeekControl = React.forwardRef<
       onClick={handleClick}
       ref={forwardedRef}
     >
-      {children}
+      {render ? React.cloneElement(render, undefined, children) : children}
     </Comp>
   )
 })

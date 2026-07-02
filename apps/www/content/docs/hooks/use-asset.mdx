@@ -33,10 +33,10 @@ createMediaKit({
 ## Usage
 
 ```tsx
-import { useAsset, type Asset } from "@/hooks/limeplay/use-asset"
+import { useAsset, type TAsset } from "@/hooks/limeplay/use-asset"
 import { usePlaylist } from "@/hooks/limeplay/use-playlist"
 
-interface VideoAsset extends Asset {
+interface VideoAsset extends TAsset {
   playbackUrl: string
   slug: string
 }
@@ -82,16 +82,15 @@ const { sourceType } = useAsset()
 const showPlaylistControls = sourceType === "playlist"
 ```
 
-### Asset Interface
+### Base Asset Interface
 
-| Field         | Type                               | Required | Description                      |
-| ------------- | ---------------------------------- | -------- | -------------------------------- |
-| `id`          | `string`                           | No       | Stable identifier for the asset. |
-| `src`         | `string`                           | No       | Media source URL.                |
-| `config`      | `shaka.extern.PlayerConfiguration` | No       | Per-asset Shaka config.          |
-| `title`       | `string`                           | No       | Display title.                   |
-| `description` | `string`                           | No       | Description.                     |
-| `poster`      | `string`                           | No       | Poster image URL.                |
+| Field    | Type                               | Required | Description                      |
+| -------- | ---------------------------------- | -------- | -------------------------------- |
+| `id`     | `string`                           | No       | Stable identifier for the asset. |
+| `src`    | `string`                           | No       | Media source URL.                |
+| `config` | `shaka.extern.PlayerConfiguration` | No       | Per-asset Shaka config.          |
+
+`TAsset` is intentionally small. Blocks and apps should extend it with their own optional metadata, such as `title`, `description`, `poster`, or provider-specific fields.
 
 If `id` is omitted, `useAsset` derives one from `getAssetId` or `src`. Assets without `src` should provide `resolveSource`.
 
@@ -103,7 +102,7 @@ Use `resolveSource` when the playable source is not stored directly on `asset.sr
 const { loadSource } = useAsset()
 
 loadSource(
-  { id: "movie-123", title: "Movie" },
+  { id: "movie-123" },
   {
     loading: {
       resolveSource: async ({ asset, signal }) => {

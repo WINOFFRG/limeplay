@@ -25,7 +25,7 @@ npx shadcn add @limeplay/video-player
 Use it anywhere in your app:
 
 ```tsx
-import { VideoPlayer } from "@/components/limeplay/video-player/components/media-player"
+import { VideoPlayer } from "@/components/limeplay/video-player/player"
 
 export function Player() {
   return (

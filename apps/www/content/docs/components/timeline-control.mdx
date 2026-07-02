@@ -25,7 +25,7 @@ import { Duration, HoverTime } from "@/components/limeplay/timeline-labels"
 export function TimelineSliderControl() {
   return (
     <div className="relative w-full grow">
-      <TimelineSlider.Root className="h-1 rounded-full focus-area -focus-area-x-2 -focus-area-y-14">
+      <TimelineSlider.Root className="h-1 rounded-full hit-area hit-area-x-[2px] hit-area-y-[14px]">
         <TimelineSlider.Track className="overflow-hidden rounded-full">
           <TimelineSlider.Progress />
           <TimelineSlider.Buffered variant="combined" />

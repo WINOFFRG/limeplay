@@ -1,18 +1,9 @@
 "use client"
 
-import type {
-  AudioHTMLAttributes,
-  ComponentPropsWithoutRef,
-  ReactNode,
-} from "react"
-
 import React from "react"
 
-import type {
-  AudioPlayerAsset,
-  AudioSourceProviderProps,
-  PlaybackUrls,
-} from "@/registry/default/blocks/audio-player/components/audio-source"
+import type { TAsset } from "@/registry/default/hooks/use-asset"
+import type { PlaybackSourceControllerProps } from "@/registry/default/hooks/use-playback-source"
 
 import { cn } from "@/lib/utils"
 import { AudioSourceProvider } from "@/registry/default/blocks/audio-player/components/audio-source"
@@ -22,27 +13,54 @@ import { MediaProvider } from "@/registry/default/blocks/audio-player/lib/media-
 import { Media } from "@/registry/default/ui/media"
 import { RootContainer } from "@/registry/default/ui/root-container"
 
-import styles from "../audio-player.module.css"
+import "./styles.css"
 
-export type { AudioPlayerAsset, PlaybackUrls }
+export interface AudioPlayerAsset extends TAsset {
+  albumName?: string
+  artistName?: string
+  artwork?: {
+    templateUrl?: string
+    url?: string
+  }
+  description?: string
+  duration?: number
+  features?: string[]
+  genre?: string
+  group?: string
+  images?: {
+    backdrop?: string
+    poster?: string
+  }
+  name?: string
+  playbackUrls?: PlaybackUrls
+  poster?: string
+  releaseYear?: number | string
+  subtitle?: string
+  title?: string
+  year?: number | string
+}
 
-export interface AudioPlayerProps {
-  autoLoad?: boolean
-  children?: ReactNode
+export interface AudioPlayerProps extends PlaybackSourceControllerProps<AudioPlayerAsset> {
+  children?: React.ReactNode
   className?: string
   debug?: boolean
-  initialIndex?: number
-  loading?: AudioSourceProviderProps["loading"]
   /**
    * Props to pass to the underlying audio element.
    */
-  mediaProps?: Omit<AudioHTMLAttributes<HTMLAudioElement>, "as" | "src">
-  source?: AudioSourceProviderProps["source"]
-  sourceKey?: string
+  mediaProps?: Omit<React.AudioHTMLAttributes<HTMLAudioElement>, "as" | "src">
+  /**
+   * @default dark
+   */
+  theme?: "dark" | "light"
+}
+
+export interface PlaybackUrls {
+  primary: string
+  secondary?: string
 }
 
 export const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
-  (
+  function AudioPlayer(
     {
       autoLoad,
       children,
@@ -53,9 +71,10 @@ export const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
       mediaProps,
       source,
       sourceKey,
+      theme = "dark",
     },
     ref
-  ) => {
+  ) {
     const { className: mediaClassName, ...safeMediaProps } = mediaProps ?? {}
 
     return (
@@ -71,14 +90,17 @@ export const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
             aria-label="Audio player"
             aspectRatio={false}
             className={cn(
-              styles.dark,
-              "relative z-50 h-18 w-full border-t border-border bg-background",
+              "limeplay relative z-50 h-18 w-full border-t border-border bg-background",
+              theme === "dark" && "dark",
+              theme === "light" && "light",
               className
             )}
             ref={ref}
           >
             <Media
-              {...(safeMediaProps as ComponentPropsWithoutRef<typeof Media>)}
+              {...(safeMediaProps as React.ComponentPropsWithoutRef<
+                typeof Media
+              >)}
               as="audio"
               className={mediaClassName}
             />

@@ -56,7 +56,7 @@ export function RepeatControl({
       aria-label={`Repeat: ${normalizedRepeatMode}`}
       aria-pressed={isActive}
       className={cn({
-        "text-secondary": !isActive,
+        "text-muted-foreground": !isActive,
       })}
       onClick={handleCycleRepeatMode}
     >
@@ -95,7 +95,7 @@ export function ShuffleControl() {
       aria-label={shuffle ? "Shuffle on" : "Shuffle off"}
       aria-pressed={shuffle}
       className={cn({
-        "text-secondary": !shuffle,
+        "text-muted-foreground": !shuffle,
       })}
       onClick={handleToggleShuffle}
     >

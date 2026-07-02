@@ -1,0 +1,112 @@
+---
+title: use-controls-visibility
+description: Utility hook for auto-hiding player controls.
+---
+
+## Installation
+
+```npm
+npx shadcn add @limeplay/use-controls-visibility
+```
+
+<Callout>
+  Requires [`mediaFeature`](/docs/concepts) and
+  [`playbackFeature`](/docs/hooks/use-playback) registered in your
+  [`createMediaKit`](/docs/components/media-provider).
+</Callout>
+
+## Feature Registration
+
+`use-controls-visibility` is a utility hook, not a media feature. Register the
+store features it reads before using it inside a player tree:
+
+```tsx title="lib/media.ts"
+"use client"
+
+import { mediaFeature } from "@/hooks/limeplay/use-media"
+import { playbackFeature } from "@/hooks/limeplay/use-playback"
+import { createMediaKit } from "@/components/limeplay/media-provider"
+
+createMediaKit({
+  features: [mediaFeature(), playbackFeature()] as const,
+})
+```
+
+## Store
+
+`useControlsVisibility` does not create its own store slice. It reads state from
+`mediaFeature` and `playbackFeature`, then returns root props and a class name
+for the caller to apply.
+
+### State
+
+| Field       | Owner             | Description                                                 |
+| ----------- | ----------------- | ----------------------------------------------------------- |
+| `debug`     | `mediaFeature`    | Keeps controls visible while debug mode is enabled.         |
+| `forceIdle` | `mediaFeature`    | Prevents the hook from changing idle state when forced.     |
+| `idle`      | `mediaFeature`    | Drives whether controls and cursor can hide.                |
+| `status`    | `playbackFeature` | Keeps controls visible while buffering, paused, or errored. |
+
+### Actions
+
+| Method           | Owner          | Description                                  |
+| ---------------- | -------------- | -------------------------------------------- |
+| `setIdle(value)` | `mediaFeature` | Updates idle state after interaction timers. |
+
+## Usage
+
+```tsx
+import {
+  CONTROLS_FORCE_VISIBLE_ATTRIBUTE,
+  useControlsVisibility,
+} from "@/hooks/limeplay/use-controls-visibility"
+
+export function PlayerShell() {
+  const controlsVisibility = useControlsVisibility()
+
+  return (
+    <div
+      {...controlsVisibility.rootProps}
+      className={controlsVisibility.className}
+    >
+      <video />
+
+      <div {...{ [CONTROLS_FORCE_VISIBLE_ATTRIBUTE]: "" }}>
+        <button>Play</button>
+      </div>
+    </div>
+  )
+}
+```
+
+`rootProps` should be spread on the player root. Add
+`CONTROLS_FORCE_VISIBLE_ATTRIBUTE` to any controls area that should keep controls
+visible while hovered or scrubbed.
+
+## Events
+
+`useControlsVisibility` does not emit custom media events.
+
+| Event | Emitted by              | Description                       |
+| ----- | ----------------------- | --------------------------------- |
+| None  | `useControlsVisibility` | The hook only handles DOM events. |
+
+The returned `rootProps` attach pointer and focus handlers to update
+`mediaFeature` idle state.
+
+| DOM event      | When it is handled                         |
+| -------------- | ------------------------------------------ |
+| `blur`         | Hides controls after focus leaves the root |
+| `focus`        | Shows controls while focus is inside       |
+| `pointerenter` | Shows controls and may schedule auto-hide  |
+| `pointerleave` | Hides controls                             |
+| `pointermove`  | Shows controls and may schedule auto-hide  |
+| `pointerover`  | Keeps controls visible over forced areas   |
+| `pointerup`    | Shows controls and may schedule auto-hide  |
+
+## API Reference
+
+<AutoTypeTable
+  path="./registry/default/hooks/use-controls-visibility.ts"
+  name="UseControlsVisibilityOptions"
+/>

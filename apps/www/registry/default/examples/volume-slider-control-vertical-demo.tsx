@@ -5,7 +5,7 @@ export function VolumeSliderControlVerticalDemo() {
   return (
     <div className="my-4 flex h-fit flex-col items-center gap-1 rounded-md border pt-3">
       <VolumeSlider.Root
-        className="focus-area relative h-16 w-1 cursor-crosshair rounded-md -focus-area-x-12 -focus-area-y-2"
+        className="hit-area-x-[12px] hit-area-y-[2px] hit-area relative h-16 w-1 cursor-crosshair rounded-md"
         orientation="vertical"
       >
         <VolumeSlider.Track>

@@ -2,6 +2,7 @@ import { type Registry } from "shadcn/schema"
 
 export const lib: Registry["items"] = [
   {
+    dependencies: ["cnfast"],
     files: [
       {
         path: "lib/utils.ts",

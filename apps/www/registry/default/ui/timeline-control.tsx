@@ -85,7 +85,7 @@ export const Root = React.forwardRef<
             )
           : newTime
 
-        setHoveringTime(liveSeekTime)
+        setHoveringTime(newTime)
         setIsHovering(true)
 
         if (isPointerDown) {

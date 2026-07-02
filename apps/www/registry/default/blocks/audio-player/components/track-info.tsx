@@ -1,9 +1,8 @@
 "use client"
 
-import {
-  type AudioPlayerAsset,
-  getAudioAssetMetadata,
-} from "@/registry/default/blocks/audio-player/components/audio-source"
+import type { AudioPlayerAsset } from "@/registry/default/blocks/audio-player/player"
+
+import { getAudioAssetMetadata } from "@/registry/default/blocks/audio-player/components/audio-source"
 import { useAsset } from "@/registry/default/hooks/use-asset"
 import { LimeplayLogo } from "@/registry/default/ui/limeplay-logo"
 
@@ -14,7 +13,7 @@ export function TrackInfo() {
   const metadata = getAudioAssetMetadata(asset)
 
   return (
-    <div className="flex min-w-0 items-center gap-3">
+    <div className="flex max-w-sm min-w-0 items-center gap-3">
       {metadata.poster ? (
         <div className="relative size-10 shrink-0 overflow-hidden rounded-sm bg-secondary outline-1 -outline-offset-1 outline-white/10">
           <img
@@ -33,7 +32,7 @@ export function TrackInfo() {
           {metadata.title}
         </div>
         {metadata.subtitle && (
-          <div className="truncate text-xs/snug text-secondary">
+          <div className="truncate text-xs/snug text-secondary-foreground/80">
             {metadata.subtitle}
           </div>
         )}

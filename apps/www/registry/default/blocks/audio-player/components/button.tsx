@@ -21,7 +21,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           `
             inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full bg-transparent text-foreground
             transition-[color,background-color,scale] duration-150 ease-out
-            hover:bg-muted-foreground
+            hover:bg-muted
             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
             active:scale-[0.96]
             disabled:cursor-not-allowed disabled:opacity-50

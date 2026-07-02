@@ -1,8 +1,8 @@
-import type { StreamPanelPlaylistPreset } from "@/components/stream-panel/content-catalog"
 import type {
   StreamPanelContentKind,
   StreamPanelPlayerType,
 } from "@/components/stream-panel/use-stream-panel"
+import type { CatalogPlaylistPreset } from "@/lib/catalogs"
 import type { StreamPreset } from "@/lib/stream-presets"
 
 export const STREAM_PANEL_OVERLAY = {
@@ -45,7 +45,7 @@ export const STREAM_PANEL_EMPTY_CONTENT_LABEL = "Choose content"
 export interface StreamPanelProps {
   align?: "center" | "end" | "start"
   onLoadStream?: (src: string, config?: string) => void
-  onPlaylistChange?: (playlist: StreamPanelPlaylistPreset) => void
+  onPlaylistChange?: (playlist: CatalogPlaylistPreset) => void
   onPresetChange?: (
     preset: StreamPreset,
     kind?: Extract<StreamPanelContentKind, "live" | "stream">

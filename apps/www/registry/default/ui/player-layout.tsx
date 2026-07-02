@@ -15,7 +15,7 @@ export const PlayerContainer = React.forwardRef<
   return (
     <div
       className={cn(
-        "@container relative z-20 aspect-(--aspect-ratio) w-full overflow-hidden text-primary",
+        "@container/root relative z-20 aspect-(--aspect-ratio) w-full overflow-hidden text-primary",
         className
       )}
       data-layout-type="player-container"
@@ -40,7 +40,7 @@ export const ControlsContainer = React.forwardRef<
   return (
     <div
       className={cn(
-        "pointer-events-none absolute inset-0 isolate flex flex-col contain-strict",
+        "pointer-events-none absolute inset-0 isolate z-20 flex flex-col contain-strict",
         className
       )}
       data-layout-type="controls-container"
@@ -58,19 +58,25 @@ export interface ControlsBottomContainerProps extends ComponentPropsWithoutRef<"
   className?: string
 }
 
-export function ControlsOverlayContainer() {
+export interface ControlsOverlayContainerProps extends ComponentPropsWithoutRef<"div"> {
+  className?: string
+}
+
+export const ControlsOverlayContainer = React.forwardRef<
+  HTMLDivElement,
+  ControlsOverlayContainerProps
+>(({ className, ...props }, ref) => {
   return (
     <div
-      className={`
-        pointer-events-none absolute inset-0 bg-lp-controls-fade bg-size-[100%_45%] bg-bottom bg-no-repeat transition-opacity duration-300 ease-out
-        group-data-[idle=true]/root:opacity-0
-        group-data-[status=buffering]/root:opacity-100
-        group-data-[status=paused]/root:opacity-100
-      `}
+      className={cn("pointer-events-none absolute inset-0 z-20", className)}
       data-layout-type="controls-overlay-container"
+      ref={ref}
+      {...props}
     />
   )
-}
+})
+
+ControlsOverlayContainer.displayName = "ControlsOverlayContainer"
 
 export const ControlsBottomContainer = React.forwardRef<
   HTMLDivElement,
@@ -78,16 +84,7 @@ export const ControlsBottomContainer = React.forwardRef<
 >(({ children, className, ...props }, ref) => {
   return (
     <div
-      className={cn(
-        `
-          pointer-events-auto inset-x-0 mx-auto my-6 flex w-full items-end gap-2 px-[min(80px,10%)] transition-all duration-300 ease-out-quad
-          group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
-          group-data-[idle=true]/root:translate-y-4 group-data-[idle=true]/root:opacity-0
-          group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100
-          group-data-[status=paused]/root:translate-y-0 group-data-[status=paused]/root:opacity-100
-        `,
-        className
-      )}
+      className={cn("pointer-events-auto w-full", className)}
       data-layout-type="controls-bottom-container"
       ref={ref}
       {...props}
@@ -109,16 +106,7 @@ export const ControlsTopContainer = React.forwardRef<
 >(({ children, className, ...props }, ref) => {
   return (
     <div
-      className={cn(
-        `
-          pointer-events-auto absolute inset-x-0 top-8 mx-auto flex items-start gap-2 px-[min(80px,10%)] transition-all duration-300 ease-out-quad
-          group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
-          group-data-[idle=true]/root:-translate-y-4 group-data-[idle=true]/root:opacity-0
-          group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100
-          group-data-[status=paused]/root:translate-y-0 group-data-[status=paused]/root:opacity-100
-        `,
-        className
-      )}
+      className={cn("pointer-events-auto w-full", className)}
       data-layout-type="controls-top-container"
       ref={ref}
       {...props}

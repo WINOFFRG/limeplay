@@ -5,22 +5,27 @@ import React from "react"
 import * as Select from "@/components/ui/select"
 import * as PlaybackRate from "@/registry/default/ui/playback-rate"
 
+import { Button } from "./button"
+
 export function PlaybackRateControl() {
   return (
     <PlaybackRate.SelectRoot>
-      <Select.SelectTrigger
-        className={`
+      <Button
+        asChild
+        className="
           border-none bg-transparent shadow-none
           hover:bg-foreground/10
           dark:bg-transparent dark:shadow-none
-        `}
-        size="sm"
+        "
+        variant="glass"
       >
-        <Select.SelectValue />
-      </Select.SelectTrigger>
+        <Select.SelectTrigger>
+          <Select.SelectValue />
+        </Select.SelectTrigger>
+      </Button>
       <Select.SelectContent
         align="start"
-        className={`dark min-w-28 border border-border bg-background/85 backdrop-blur-lg`}
+        className={`min-w-28 border border-border backdrop-blur-lg`}
         side="top"
         sideOffset={12}
         {...({

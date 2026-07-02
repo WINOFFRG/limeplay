@@ -215,14 +215,19 @@ function TimelineSetup() {
 
     if (isLive) {
       const seekRange = player.seekRange()
+      const seekRangeSize = seekRange.end - seekRange.start
+
       liveLatency =
         mediaElement.currentTime === 0
           ? 0
           : seekRange.end - mediaElement.currentTime
 
-      liveLatency = toFixedNumber(clamp(liveLatency, 0, seekRange.end), 4)
-
-      const seekRangeSize = seekRange.end - seekRange.start
+      liveLatency = toFixedNumber(clamp(liveLatency, 0, seekRangeSize), 4)
+      currentTime = clamp(
+        mediaElement.currentTime - seekRange.start,
+        0,
+        seekRangeSize
+      )
       progress =
         seekRangeSize > 0
           ? 1 - (seekRange.end - mediaElement.currentTime) / seekRangeSize
