@@ -1,5 +1,3 @@
-import { Suspense } from "react"
-
 import { FeatureTrailSection } from "@/components/feature-trail-section"
 import { FeatureGrid } from "@/components/features"
 import { Hero } from "@/components/hero"
@@ -13,16 +11,7 @@ export default function Home() {
     <>
       <Hero />
       <ImmersiveScrollPlayer>
-        <Suspense
-          fallback={
-            <div
-              aria-hidden="true"
-              className="aspect-video w-full animate-pulse"
-            />
-          }
-        >
-          <VideoPlayerContainer />
-        </Suspense>
+        <VideoPlayerContainer />
       </ImmersiveScrollPlayer>
       <ScrollIndicator />
       <FeatureTrailSection>

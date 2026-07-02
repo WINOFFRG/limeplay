@@ -37,6 +37,18 @@ export const hooks: Registry["items"] = [
     type: "registry:hook",
   },
   {
+    files: [
+      {
+        path: "hooks/use-controls-visibility.ts",
+        target: `${TARGET_BASE_PATH}/use-controls-visibility.ts`,
+        type: "registry:hook",
+      },
+    ],
+    name: "use-controls-visibility",
+    registryDependencies: ["use-media", "use-playback", "media-provider"],
+    type: "registry:hook",
+  },
+  {
     dependencies: ["lodash.clamp"],
     devDependencies: ["@types/lodash.clamp"],
     files: [

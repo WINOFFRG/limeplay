@@ -3,22 +3,11 @@
 import { useCallback, useEffect, useMemo, useRef } from "react"
 
 import type {
-  Asset,
   AssetEvents,
   UseAssetOptions,
 } from "@/registry/default/hooks/use-asset"
 import type { PlaybackStore } from "@/registry/default/hooks/use-playback"
 
-import {
-  addBlenderCaptions,
-  APPLE_MUSIC_CHARTS_PLAYLIST_ID,
-  type BlenderStreamResponse,
-  fetchAppleMusicChartAssetsPage,
-  fetchBlenderStream,
-  fetchPlaylistPresetAssets,
-  isBlenderOpenFilmAsset,
-  type StreamPanelPlaylistPreset,
-} from "@/components/stream-panel/content-catalog"
 import {
   type StreamPanelContentKind,
   type StreamPanelPlayerType,
@@ -26,6 +15,19 @@ import {
   useStreamPanelStore,
   useStreamPanelStoreHydrated,
 } from "@/components/stream-panel/use-stream-panel"
+import {
+  addBlenderCaptions,
+  APPLE_MUSIC_CHARTS_PLAYLIST_ID,
+  type BlenderStreamResponse,
+  type CatalogPlayerAsset,
+  type CatalogPlaylistPreset,
+  fetchAppleMusicChartAssetsPage,
+  fetchBlenderStream,
+  fetchPlaylistPresetAssets,
+  isBlenderOpenFilmAsset,
+  mapCatalogAssetsToPlayerAssets,
+  mapStreamPresetToPlayerAsset,
+} from "@/lib/catalogs"
 import { getPresetsForType, type StreamPreset } from "@/lib/stream-presets"
 import {
   AssetRecoveryAction,
@@ -86,7 +88,7 @@ export function useStreamPanelSync({
   }
   const blenderStreamCache = blenderStreamCacheRef.current
 
-  const assetOptions = useMemo<UseAssetOptions<Asset>>(
+  const assetOptions = useMemo<UseAssetOptions<CatalogPlayerAsset>>(
     () => ({
       getAssetId: (asset) => asset.id ?? asset.src,
       loader: {
@@ -149,7 +151,7 @@ export function useStreamPanelSync({
     [blenderStreamCache, playbackApi]
   )
 
-  const { loadSource } = useAsset<Asset>()
+  const { loadSource } = useAsset<CatalogPlayerAsset>()
 
   const appendNextAppleMusicChartPage = useCallback(
     (currentIndex: number) => {
@@ -184,7 +186,8 @@ export function useStreamPanelSync({
           const existingIds = new Set(
             playlistApi.getState().playlist.queue.map((item) => item.id)
           )
-          const newItems = assets
+          const playerAssets = mapCatalogAssetsToPlayerAssets(assets)
+          const newItems = playerAssets
             .filter((asset) => asset.id && !existingIds.has(asset.id))
             .map((asset) => ({
               id: asset.id!,
@@ -282,7 +285,9 @@ export function useStreamPanelSync({
         title: "Custom Stream",
         type: playerType,
       }
-      loadSource(asset as unknown as Asset, { loading: assetOptions })
+      loadSource(mapStreamPresetToPlayerAsset(asset, "custom-stream"), {
+        loading: assetOptions,
+      })
       return asset
     },
     [assetOptions, loadSource, playbackApi, playerType]
@@ -316,16 +321,17 @@ export function useStreamPanelSync({
         .then((assets) => {
           if (abortController.signal.aborted) return
 
+          const playerAssets = mapCatalogAssetsToPlayerAssets(assets)
           const index = normalizePlaylistIndex(
             playlistId === APPLE_MUSIC_CHARTS_PLAYLIST_ID ? 0 : startIndex,
-            assets.length
+            playerAssets.length
           )
           setContentSelection(playerType, {
             id: playlistId,
             index,
             kind: "playlist",
           })
-          loadSource(assets, {
+          loadSource(playerAssets, {
             initialIndex: index,
             loading: assetOptions,
           })
@@ -363,7 +369,9 @@ export function useStreamPanelSync({
       )
       if (preset) {
         abortPlaylistRequest()
-        loadSource(preset as unknown as Asset, { loading: assetOptions })
+        loadSource(mapStreamPresetToPlayerAsset(preset), {
+          loading: assetOptions,
+        })
         return
       }
 
@@ -415,7 +423,9 @@ export function useStreamPanelSync({
     (preset: StreamPreset, kind: StreamPanelContentKind = "stream") => {
       abortPlaylistRequest()
       setContentSelection(playerType, { id: preset.id, index: 0, kind })
-      loadSource(preset as unknown as Asset, { loading: assetOptions })
+      loadSource(mapStreamPresetToPlayerAsset(preset), {
+        loading: assetOptions,
+      })
     },
     [
       abortPlaylistRequest,
@@ -427,7 +437,7 @@ export function useStreamPanelSync({
   )
 
   const handlePlaylistPresetChange = useCallback(
-    (playlist: StreamPanelPlaylistPreset) => {
+    (playlist: CatalogPlaylistPreset) => {
       loadPlaylistPreset(playlist.id)
     },
     [loadPlaylistPreset]

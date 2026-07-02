@@ -1,7 +1,7 @@
 import type {
   AudioPlayerAsset,
   PlaybackUrls,
-} from "@/registry/default/blocks/audio-player/components/media-player"
+} from "@/registry/default/blocks/audio-player/player"
 
 export const AUDIO_PLAYER_DEMO_PLAYLIST_ID = "324531068"
 

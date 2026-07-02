@@ -58,7 +58,7 @@ export const Remaining = React.forwardRef<
       ref={forwardedRef}
     >
       <span className="sr-only">Remaining</span>
-      <span aria-hidden>&minus;</span>
+      <span aria-hidden>&minus;&nbsp;</span>
       {formatTimestamp(duration - currentTime, duration > HOURS_IN_SECONDS)}
     </time>
   )

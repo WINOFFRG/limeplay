@@ -94,7 +94,7 @@ export function BlockPageShell({ info, preview, title }: BlockPageShellProps) {
         <ResizablePanel
           className="relative"
           defaultSize={"65%"}
-          minSize={"40%"}
+          minSize={"30%"}
         >
           {preview}
         </ResizablePanel>

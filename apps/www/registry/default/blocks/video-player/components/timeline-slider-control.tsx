@@ -14,19 +14,29 @@ import {
   Remaining,
 } from "@/registry/default/ui/timeline-labels"
 
+const LIVE_DELAY_VISIBLE_SEC = 3
+
 export function TimelineSliderControl() {
   const [showRemaining, setShowRemaining] = useState(false)
   const liveLatency = useTimelineStore((state) => state.liveLatency)
   const isLive = useTimelineStore((state) => state.isLive)
   const player = usePlayerStore((state) => state.instance)
+  const hasLiveLatency = liveLatency != null
+  const showGoToLive = hasLiveLatency && liveLatency >= LIVE_DELAY_VISIBLE_SEC
+  const showLiveBadge = hasLiveLatency && liveLatency < LIVE_DELAY_VISIBLE_SEC
 
   return (
-    <div className="my-auto flex grow items-center gap-3 select-none">
-      {!isLive && <Elapsed className="text-xs font-medium" />}
+    <div
+      className="
+        me-auto flex grow items-center gap-1.5 select-none
+        @3xl/root:gap-3
+      "
+    >
+      {!isLive && <Elapsed className="px-2 text-xs font-medium" />}
       <div className="group/timeline relative w-full grow">
         <TimelineSlider.Root
           className={`
-            group focus-area h-1 cursor-crosshair rounded-full transition-[height] duration-150 ease-out-quad -focus-area-x-2 -focus-area-y-14
+            group hit-area-x-[2px] hit-area-y-[14px] hit-area h-1 cursor-crosshair rounded-full transition-[height] duration-150 ease-in-out
             active:data-[orientation=horizontal]:h-(--lp-timeline-track-height-active)
           `}
         >
@@ -49,6 +59,7 @@ export function TimelineSliderControl() {
             `}
             showWithHover
           >
+            {isLive && <>&minus;</>}
             <HoverTime />
             {!isLive && (
               <>
@@ -60,48 +71,56 @@ export function TimelineSliderControl() {
         </TimelineSlider.Root>
       </div>
       {!isLive && (
-        <Button
+        <button
           aria-label={
             showRemaining ? "Show total duration" : "Show remaining time"
           }
           aria-pressed={showRemaining}
-          className={`
-            h-6 w-14 cursor-pointer
-            hover:bg-transparent
-            focus-visible:bg-transparent
-          `}
+          className="
+            inline-flex h-7 w-[6ch] cursor-pointer items-center justify-center rounded-sm
+            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/50 focus-visible:outline-solid
+          "
           onClick={() => {
             setShowRemaining(!showRemaining)
           }}
-          size="sm"
-          variant="glass"
+          tabIndex={0}
+          type="button"
         >
           {showRemaining ? (
             <Remaining className="text-xs font-medium" />
           ) : (
             <Duration className="text-xs font-medium" />
           )}
-        </Button>
+        </button>
       )}
-      {liveLatency && player && liveLatency > 1 && (
+      {isLive && (
         <>
-          <LiveLatency className="text-xs font-medium" />
-          <Button
-            aria-label="Go to live"
-            className="h-6 w-fit cursor-pointer"
-            onClick={() => void player.goToLive()}
-            size="icon"
-            variant="glass"
-          >
-            <span className="text-xs font-medium text-primary">Go to live</span>
-          </Button>
+          {showGoToLive && player && (
+            <>
+              <LiveLatency className="text-xs font-medium" />
+              <Button
+                aria-label="Go to live"
+                className="
+                  cursor-pointer px-2
+                  @md/root:px-2.5
+                  @3xl/root:px-3
+                "
+                onClick={() => void player.goToLive()}
+                size="sm"
+                variant="glass"
+              >
+                <span className="text-xs font-medium text-primary">
+                  Go to live
+                </span>
+              </Button>
+            </>
+          )}
+          {showLiveBadge && (
+            <div className="flex items-center rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold tracking-wide">
+              <span className="tracking-widest">LIVE</span>
+            </div>
+          )}
         </>
-      )}
-      {liveLatency && liveLatency <= 1 && (
-        <div className="flex items-center rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold tracking-wide">
-          <div className="mr-1 size-2 animate-caret-blink rounded-full bg-foreground" />
-          <span className="tracking-widest">LIVE</span>
-        </div>
       )}
     </div>
   )

@@ -27,7 +27,6 @@ import React, {
 } from "react"
 
 import { StreamPanel, useStreamPanel } from "@/components/stream-panel"
-import { useStreamPanelSync } from "@/components/stream-panel/use-stream-panel-sync"
 import { cn } from "@/lib/utils"
 
 const PILL_TRANSITION = { bounce: 0, duration: 0.24, type: "spring" } as const
@@ -46,38 +45,6 @@ interface BlockToolbarProps {
   onReload: () => void
   onThemeToggle: () => void
   theme: "dark" | "light"
-}
-
-export function BlockStreamSync({
-  playerType = "video",
-}: {
-  playerType?: "audio" | "video"
-}) {
-  const { registerController } = useStreamPanel()
-  const { handleLoadStream, handlePlaylistPresetChange, handlePresetChange } =
-    useStreamPanelSync({ playerType })
-
-  const controller = React.useMemo(
-    () => ({
-      onLoadStream: handleLoadStream,
-      onPlaylistChange: handlePlaylistPresetChange,
-      onPresetChange: handlePresetChange,
-      playerType,
-    }),
-    [
-      handleLoadStream,
-      handlePlaylistPresetChange,
-      handlePresetChange,
-      playerType,
-    ]
-  )
-
-  useEffect(
-    () => registerController(controller),
-    [controller, registerController]
-  )
-
-  return null
 }
 
 export function BlockToolbar({

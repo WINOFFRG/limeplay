@@ -2,27 +2,6 @@ import { type Registry } from "shadcn/schema"
 
 export const examples: Registry["items"] = [
   {
-    files: [
-      {
-        path: "examples/player-root-demo.tsx",
-        type: "registry:example",
-      },
-    ],
-    name: "player-root-demo",
-    registryDependencies: [
-      "player-layout",
-      "media-provider",
-      "media",
-      "error-screen",
-      "custom-demo-controls",
-      "limeplay-logo",
-      "fallback-poster",
-      "root-container",
-      "use-asset",
-    ],
-    type: "registry:example",
-  },
-  {
     dependencies: ["lucide-react"],
     files: [
       {
@@ -75,7 +54,11 @@ export const examples: Registry["items"] = [
       },
     ],
     name: "volume-slider-control-horizontal-demo",
-    registryDependencies: ["volume-control", "volume-state-control-demo"],
+    registryDependencies: [
+      "https://bazza.dev/r/hit-area",
+      "volume-control",
+      "volume-state-control-demo",
+    ],
     type: "registry:example",
   },
   {
@@ -86,7 +69,11 @@ export const examples: Registry["items"] = [
       },
     ],
     name: "volume-slider-control-vertical-demo",
-    registryDependencies: ["volume-control", "volume-state-control-demo"],
+    registryDependencies: [
+      "https://bazza.dev/r/hit-area",
+      "volume-control",
+      "volume-state-control-demo",
+    ],
     type: "registry:example",
   },
   {
@@ -109,6 +96,7 @@ export const examples: Registry["items"] = [
     ],
     name: "timeline-control-demo",
     registryDependencies: [
+      "https://bazza.dev/r/hit-area",
       "media-provider",
       "timeline-control",
       "timeline-labels",
@@ -124,6 +112,7 @@ export const examples: Registry["items"] = [
     ],
     name: "timeline-labels-demo",
     registryDependencies: [
+      "https://bazza.dev/r/hit-area",
       "media-provider",
       "timeline-control",
       "timeline-labels",

@@ -1,64 +1,40 @@
 "use client"
 
-import type { RefObject } from "react"
-
-import { ChevronDownIcon, MonitorPlayIcon, RotateCwIcon } from "lucide-react"
-import { useMemo, useRef } from "react"
-import { useFullscreen, useToggle } from "react-use"
+import { ChevronDownIcon, MonitorPlayIcon } from "lucide-react"
 
 import {
   StreamPanel,
   StreamPanelProvider,
   useStreamPanel,
 } from "@/components/stream-panel"
-import { getPlaylistPresetsForType } from "@/components/stream-panel/content-catalog"
 import { useStreamPanelStore } from "@/components/stream-panel/use-stream-panel"
 import { useStreamPanelSync } from "@/components/stream-panel/use-stream-panel-sync"
 import { Button } from "@/components/ui/button"
 import { PopoverTrigger } from "@/components/ui/popover"
-import { useIsMobile } from "@/hooks/use-mobile"
-import { useOrientation } from "@/hooks/use-orientation"
+import { getPlaylistPresetsForType } from "@/lib/catalogs"
 import { getPresetsForType } from "@/lib/stream-presets"
 import { cn } from "@/lib/utils"
-import { VideoPlayer } from "@/registry/default/blocks/video-player/components/media-player"
+import { VideoPlayer } from "@/registry/default/blocks/video-player/player"
 
 export function VideoPlayerContainer() {
-  const isMobile = useIsMobile()
-  const { isPortrait } = useOrientation()
-  const isMobilePortrait = isMobile && isPortrait
-  const playerRef = useRef<HTMLDivElement>(null)
-  const controlsVisibility = useVideoPlayerControlsVisibility({
-    disabled: isMobilePortrait,
-    isMobile,
-  })
-
   return (
     <StreamPanelProvider>
-      {isMobilePortrait && <RotateMessage playerRef={playerRef} />}
-      <div className="relative w-full">
-        <VideoPlayer
-          className={cn(
-            `
-              dark mx-auto mt-6 overflow-hidden
-              sm:mx-2 sm:my-0 sm:w-full
-              md:mx-0
-            `,
-            isMobilePortrait &&
-              `
-                bg-black/90
-                **:data-[layout-type='player-container']:hidden
-              `
-          )}
-          mediaProps={{
-            autoPlay: false,
-            muted: true,
-          }}
-          ref={playerRef}
-          {...controlsVisibility}
-        >
-          <HomeVideoStreamSelector />
-        </VideoPlayer>
-      </div>
+      <VideoPlayer
+        className={cn(
+          `
+            mx-auto mt-6 overflow-hidden
+            sm:my-0 sm:w-full
+            md:mx-0
+          `
+        )}
+        mediaProps={{
+          autoPlay: false,
+          muted: true,
+        }}
+        theme="dark"
+      >
+        <HomeVideoStreamSelector />
+      </VideoPlayer>
     </StreamPanelProvider>
   )
 }
@@ -73,22 +49,37 @@ function HomeVideoStreamSelector() {
     <>
       <div
         className={`
-          pointer-events-none absolute inset-x-0 top-4 z-30 flex justify-center px-4
-          sm:top-6
+          pointer-events-none absolute inset-x-0 top-3 z-30 flex justify-center px-3
+          @md/root:top-4 @md/root:px-4
+          @3xl/root:top-6
         `}
       >
         <Button
           asChild
           className={`
-            pointer-events-auto h-9 max-w-[min(20rem,calc(100vw-2rem))] rounded-full border border-white/12 bg-black/45 px-3 text-xs font-medium
+            pointer-events-auto h-8 max-w-[min(18rem,calc(100vw-1.5rem))] rounded-full border border-white/12 bg-black/45 px-2.5 text-xs font-medium
             text-white shadow-2xl shadow-black/35 backdrop-blur-xl
+            @md/root:h-9 @md/root:max-w-[min(20rem,calc(100vw-2rem))] @md/root:px-3
+            @3xl/root:h-10 @3xl/root:max-w-[min(24rem,calc(100vw-2rem))] @3xl/root:px-4 @3xl/root:text-sm
           `}
           variant="ghost"
         >
           <PopoverTrigger aria-label="Open stream selector" handle={handle}>
-            <MonitorPlayIcon className="size-3.5" />
+            <MonitorPlayIcon
+              className="
+                size-3
+                @md/root:size-3.5
+                @3xl/root:size-4
+              "
+            />
             <span className="truncate">{selectedStreamName}</span>
-            <ChevronDownIcon className="size-3.5 opacity-70" />
+            <ChevronDownIcon
+              className="
+                size-3 opacity-70
+                @md/root:size-3.5
+                @3xl/root:size-4
+              "
+            />
           </PopoverTrigger>
         </Button>
       </div>
@@ -103,56 +94,6 @@ function HomeVideoStreamSelector() {
         variant="anchored"
       />
     </>
-  )
-}
-
-function RotateMessage({
-  playerRef,
-}: {
-  playerRef: RefObject<HTMLDivElement | null>
-}) {
-  const [show, toggle] = useToggle(false)
-  useFullscreen(playerRef as RefObject<Element>, show, {
-    onClose: () => {
-      toggle(false)
-    },
-  })
-
-  const handleRotate = () => {
-    toggle(true)
-  }
-
-  return (
-    <div
-      className={`
-        absolute inset-0 z-50 flex items-center justify-center
-        md:hidden
-      `}
-    >
-      <div className={`mx-1 max-w-xs rounded-xl text-center`}>
-        <h3 className="mb-2 text-sm font-medium text-neutral-100">
-          Rotate to Landscape
-        </h3>
-
-        <p className="mb-4 text-xs/relaxed text-neutral-400">
-          For the best viewing experience, rotate your device to landscape mode.
-        </p>
-
-        <Button
-          className={`
-            w-full border-neutral-700 bg-neutral-800/50 text-neutral-200
-            hover:bg-neutral-700 hover:text-white
-            disabled:opacity-50
-          `}
-          onClick={handleRotate}
-          size="sm"
-          variant="outline"
-        >
-          <RotateCwIcon className={`mr-2 size-3`} />
-          Rotate
-        </Button>
-      </div>
-    </div>
   )
 }
 
@@ -171,21 +112,5 @@ function useSelectedStreamName() {
   return (
     getPresetsForType("video").find((preset) => preset.id === selection.id)
       ?.title ?? "Custom Stream"
-  )
-}
-
-function useVideoPlayerControlsVisibility({
-  disabled,
-  isMobile,
-}: {
-  disabled: boolean
-  isMobile: boolean
-}) {
-  return useMemo(
-    () => ({
-      controlsHideDelay: disabled ? 0 : 1800,
-      hideCursorOnIdle: !disabled && !isMobile,
-    }),
-    [disabled, isMobile]
   )
 }

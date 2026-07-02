@@ -46,7 +46,7 @@ export function VolumeControl() {
       <MuteControl asChild>
         <Button
           aria-label={muted ? "Unmute" : "Mute"}
-          className="relative text-secondary"
+          className="relative text-muted-foreground"
           title={muted ? "Unmute" : "Mute"}
         >
           <AnimatePresence initial={false} mode="popLayout">

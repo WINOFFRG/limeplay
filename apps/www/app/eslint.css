@@ -1,0 +1,5 @@
+@import "./global.css";
+@import "./docs/docs.css";
+@import "./blocks/blocks.css";
+@import "../registry/default/blocks/video-player/styles.css";
+@import "../registry/default/blocks/audio-player/styles.css";

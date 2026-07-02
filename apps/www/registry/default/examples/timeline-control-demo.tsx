@@ -18,7 +18,7 @@ export function TimelineControlDemo() {
       <Elapsed className="text-xs font-medium" />
       <div className="group/timeline relative w-full grow">
         <TimelineControlPrimitive.Root
-          className="group focus-area cursor-crosshair -focus-area-x-2 -focus-area-y-14"
+          className="group hit-area-x-[2px] hit-area-y-[14px] hit-area cursor-crosshair"
           orientation="horizontal"
         >
           <TimelineControlPrimitive.Track className="overflow-hidden">

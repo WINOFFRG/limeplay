@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useRef } from "react"
 
 import type {
-  Asset,
   GetAssetId,
   PlayerSource,
+  TAsset,
   UseAssetOptions,
 } from "@/registry/default/hooks/use-asset"
 
@@ -16,24 +16,32 @@ import {
 } from "@/registry/default/hooks/use-asset"
 import { usePlayerStore } from "@/registry/default/hooks/use-player"
 
-export interface UsePlaybackSourceOptions<TAsset extends Asset> {
+export interface PlaybackSourceControllerProps<TItem extends TAsset> {
   autoLoad?: boolean
   initialIndex?: number
-  loading?: UseAssetOptions<TAsset>
-  source?: PlayerSource<TAsset>
+  loading?: UseAssetOptions<TItem>
+  source?: PlayerSource<TItem>
   sourceKey?: string
 }
 
-export function PlaybackSourceController<TAsset extends Asset>(
-  props: UsePlaybackSourceOptions<TAsset>
+export function PlaybackSourceController<TItem extends TAsset>(
+  props: PlaybackSourceControllerProps<TItem>
 ) {
   usePlaybackSource(props)
 
   return null
 }
 
-export function usePlaybackSource<TAsset extends Asset>(
-  options: UsePlaybackSourceOptions<TAsset>
+function getSourceOrigin<TItem extends TAsset>(
+  source: PlayerSource<TItem> | undefined
+): Parameters<GetAssetId<TItem>>[1]["origin"] {
+  if (Array.isArray(source)) return AssetSourceOrigin.Playlist
+  if (typeof source === "string") return AssetSourceOrigin.MediaProps
+  return AssetSourceOrigin.Asset
+}
+
+function usePlaybackSource<TItem extends TAsset>(
+  options: PlaybackSourceControllerProps<TItem>
 ): void {
   const {
     autoLoad = true,
@@ -45,13 +53,13 @@ export function usePlaybackSource<TAsset extends Asset>(
 
   const assets = useMemo(() => {
     if (Array.isArray(source)) return [...source]
-    if (typeof source === "string") return [{ src: source } as TAsset]
+    if (typeof source === "string") return [{ src: source } as TItem]
     if (source) return [source]
 
     return []
   }, [source])
   const player = usePlayerStore((state) => state.instance)
-  const { loadSource } = useAsset<TAsset>()
+  const { loadSource } = useAsset<TItem>()
   const loadedSourceKeyRef = useRef<null | string>(null)
 
   useEffect(() => {
@@ -115,12 +123,4 @@ export function usePlaybackSource<TAsset extends Asset>(
     sourceType,
     loading,
   ])
-}
-
-function getSourceOrigin<TAsset extends Asset>(
-  source: PlayerSource<TAsset> | undefined
-): Parameters<GetAssetId<TAsset>>[1]["origin"] {
-  if (Array.isArray(source)) return AssetSourceOrigin.Playlist
-  if (typeof source === "string") return AssetSourceOrigin.MediaProps
-  return AssetSourceOrigin.Asset
 }
