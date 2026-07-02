@@ -92,6 +92,7 @@ export const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
             className={cn(
               "limeplay relative z-50 h-18 w-full border-t border-border bg-background",
               theme === "dark" && "dark",
+              theme === "light" && "light",
               className
             )}
             ref={ref}

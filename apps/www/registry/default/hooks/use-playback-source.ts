@@ -24,9 +24,6 @@ export interface PlaybackSourceControllerProps<TItem extends TAsset> {
   sourceKey?: string
 }
 
-export type UsePlaybackSourceOptions<TItem extends TAsset> =
-  PlaybackSourceControllerProps<TItem>
-
 export function PlaybackSourceController<TItem extends TAsset>(
   props: PlaybackSourceControllerProps<TItem>
 ) {
@@ -35,8 +32,16 @@ export function PlaybackSourceController<TItem extends TAsset>(
   return null
 }
 
-export function usePlaybackSource<TItem extends TAsset>(
-  options: UsePlaybackSourceOptions<TItem>
+function getSourceOrigin<TItem extends TAsset>(
+  source: PlayerSource<TItem> | undefined
+): Parameters<GetAssetId<TItem>>[1]["origin"] {
+  if (Array.isArray(source)) return AssetSourceOrigin.Playlist
+  if (typeof source === "string") return AssetSourceOrigin.MediaProps
+  return AssetSourceOrigin.Asset
+}
+
+function usePlaybackSource<TItem extends TAsset>(
+  options: PlaybackSourceControllerProps<TItem>
 ): void {
   const {
     autoLoad = true,
@@ -118,12 +123,4 @@ export function usePlaybackSource<TItem extends TAsset>(
     sourceType,
     loading,
   ])
-}
-
-function getSourceOrigin<TItem extends TAsset>(
-  source: PlayerSource<TItem> | undefined
-): Parameters<GetAssetId<TItem>>[1]["origin"] {
-  if (Array.isArray(source)) return AssetSourceOrigin.Playlist
-  if (typeof source === "string") return AssetSourceOrigin.MediaProps
-  return AssetSourceOrigin.Asset
 }

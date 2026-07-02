@@ -66,7 +66,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
       mediaProps,
       source,
       sourceKey,
-      theme = "dark",
+      theme = "auto",
     },
     ref
   ) {
@@ -98,7 +98,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
             {children}
             <Layout.ControlsOverlayContainer
               className="
-                bg-lp-controls-fade-top bg-size-[100%_80%] bg-top bg-no-repeat transition-opacity duration-300 ease-out
+                bg-linear-[to_top,var(--lp-controls-fade-stops)] bg-size-[100%_80%] bg-top bg-no-repeat transition-opacity duration-300 ease-out
                 group-data-[idle=true]/root:opacity-0
                 group-data-[status=buffering]/root:opacity-100
                 group-data-[status=error]/root:opacity-100
@@ -107,7 +107,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
             />
             <Layout.ControlsOverlayContainer
               className="
-                bg-lp-controls-fade-bottom bg-size-[100%_45%] bg-bottom bg-no-repeat transition-opacity duration-300 ease-out
+                bg-linear-[to_bottom,var(--lp-controls-fade-stops)] bg-size-[100%_45%] bg-bottom bg-no-repeat transition-opacity duration-300 ease-out
                 group-data-[idle=true]/root:opacity-0
                 group-data-[status=buffering]/root:opacity-100
                 group-data-[status=error]/root:opacity-100
@@ -123,7 +123,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
             >
               <TopOverlayContainer
                 className="
-                  px-[5%] pt-[clamp(0.75rem,7svh,2.5rem)] transition-all duration-300 ease-out-quad
+                  px-[5%] pt-[clamp(0.75rem,7svh,2.5rem)] transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
                   group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
                   group-data-[idle=true]/root:-translate-y-4 group-data-[idle=true]/root:opacity-0
                   group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100
@@ -140,7 +140,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
               />
               <BottomControls
                 className="
-                  px-[5%] pb-[clamp(0.75rem,7svh,2.5rem)] transition-all duration-300 ease-out-quad
+                  px-[5%] pb-[clamp(0.75rem,7svh,2.5rem)] transition-all duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
                   group-data-[idle=false]/root:translate-y-0 group-data-[idle=false]/root:opacity-100
                   group-data-[idle=true]/root:translate-y-4 group-data-[idle=true]/root:opacity-0
                   group-data-[status=buffering]/root:translate-y-0 group-data-[status=buffering]/root:opacity-100

@@ -31,7 +31,6 @@ export const PlayerRootContainer = React.forwardRef<
     <RootContainer
       aria-label="Video Player"
       {...rootProps}
-      {...controlsVisibility.rootProps}
       aspectRatio={layout === "fill" ? false : aspectRatio}
       className={cn(
         "m-auto max-h-full min-h-0",
@@ -39,9 +38,50 @@ export const PlayerRootContainer = React.forwardRef<
         controlsVisibility.className,
         className
       )}
+      onBlur={composeEventHandlers(
+        rootProps.onBlur,
+        controlsVisibility.rootProps.onBlur
+      )}
+      onFocus={composeEventHandlers(
+        rootProps.onFocus,
+        controlsVisibility.rootProps.onFocus
+      )}
+      onPointerEnter={composeEventHandlers(
+        rootProps.onPointerEnter,
+        controlsVisibility.rootProps.onPointerEnter
+      )}
+      onPointerLeave={composeEventHandlers(
+        rootProps.onPointerLeave,
+        controlsVisibility.rootProps.onPointerLeave
+      )}
+      onPointerMove={composeEventHandlers(
+        rootProps.onPointerMove,
+        controlsVisibility.rootProps.onPointerMove
+      )}
+      onPointerOver={composeEventHandlers(
+        rootProps.onPointerOver,
+        controlsVisibility.rootProps.onPointerOver
+      )}
+      onPointerUp={composeEventHandlers(
+        rootProps.onPointerUp,
+        controlsVisibility.rootProps.onPointerUp
+      )}
       ref={ref}
     />
   )
 })
 
 PlayerRootContainer.displayName = "PlayerRootContainer"
+
+function composeEventHandlers<TEvent extends React.SyntheticEvent>(
+  userHandler: ((event: TEvent) => void) | undefined,
+  internalHandler: ((event: TEvent) => void) | undefined
+) {
+  if (!userHandler) return internalHandler
+  if (!internalHandler) return userHandler
+
+  return (event: TEvent) => {
+    userHandler(event)
+    internalHandler(event)
+  }
+}

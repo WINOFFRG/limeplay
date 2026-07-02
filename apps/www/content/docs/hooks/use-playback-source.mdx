@@ -84,11 +84,11 @@ export const media = createMediaKit({
 
 ```tsx
 import type { TAsset } from "@/hooks/limeplay/use-asset"
-import type { UsePlaybackSourceOptions } from "@/hooks/limeplay/use-playback-source"
+import type { PlaybackSourceControllerProps } from "@/hooks/limeplay/use-playback-source"
 import { PlaybackSourceController } from "@/hooks/limeplay/use-playback-source"
 
 export function Source<TItem extends TAsset>(
-  props: UsePlaybackSourceOptions<TItem>
+  props: PlaybackSourceControllerProps<TItem>
 ) {
   return <PlaybackSourceController {...props} />
 }
@@ -96,31 +96,30 @@ export function Source<TItem extends TAsset>(
 
 ## Store
 
-| State | Owner | Description |
-| ----- | ----- | ----------- |
-| `source` | `UsePlaybackSourceOptions` | Source string, one asset, or asset array normalized by `PlaybackSourceController`. |
-| `sourceKey` | `UsePlaybackSourceOptions` | Optional stable key used to avoid duplicate playlist loads. |
-| `player` | `use-player` | The current Shaka player instance required before loading. |
+| State       | Owner                           | Description                                                                        |
+| ----------- | ------------------------------- | ---------------------------------------------------------------------------------- |
+| `source`    | `PlaybackSourceControllerProps` | Source string, one asset, or asset array normalized by `PlaybackSourceController`. |
+| `sourceKey` | `PlaybackSourceControllerProps` | Optional stable key used to avoid duplicate playlist loads.                        |
+| `player`    | `use-player`                    | The current Shaka player instance required before loading.                         |
 
 ## Actions
 
-| Action | Symbol | Description |
-| ------ | ------ | ----------- |
-| Load source | `PlaybackSourceController` | Mounts a controller that calls `usePlaybackSource`. |
-| Normalize options | `usePlaybackSource` | Converts a source string, one asset, or an asset array into a load session. |
+| Action      | Symbol                       | Description                                                                        |
+| ----------- | ---------------------------- | ---------------------------------------------------------------------------------- |
+| Load source | `PlaybackSourceController`   | Mounts a controller that normalizes source options into a load session.            |
 | Load source | `loadSource` from `useAsset` | Receives the source plus `loading`, `initialIndex`, `sourceKey`, and `sourceType`. |
 
 ## Events
 
-| Event | Emitted by | Description |
-| ----- | ---------- | ----------- |
-| `playlistchange` | `use-playlist` | Fired after the normalized source is loaded into the queue and the active item changes. |
-| `playerready` | `use-player` | The controller waits for a player instance before calling `loadSource`. |
-| None | `use-playback-source` | The hook itself does not emit custom events. |
+| Event            | Emitted by                 | Description                                                                             |
+| ---------------- | -------------------------- | --------------------------------------------------------------------------------------- |
+| `playlistchange` | `use-playlist`             | Fired after the normalized source is loaded into the queue and the active item changes. |
+| `playerready`    | `use-player`               | The controller waits for a player instance before calling `loadSource`.                 |
+| None             | `PlaybackSourceController` | The controller itself does not emit custom events.                                      |
 
 ## API Reference
 
 <AutoTypeTable
   path="./registry/default/hooks/use-playback-source.ts"
-  name="UsePlaybackSourceOptions"
+  name="PlaybackSourceControllerProps"
 />

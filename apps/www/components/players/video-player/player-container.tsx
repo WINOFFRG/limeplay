@@ -31,6 +31,7 @@ export function VideoPlayerContainer() {
           autoPlay: false,
           muted: true,
         }}
+        theme="dark"
       >
         <HomeVideoStreamSelector />
       </VideoPlayer>

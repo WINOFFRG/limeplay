@@ -17,6 +17,7 @@ export const blocks: Registry["items"] = [
     files: [
       {
         path: `${VIDEO_PLAYER_SRC_URL}/player.tsx`,
+        target: "components/video-player/player.tsx",
         type: "registry:component",
       },
       {
@@ -150,6 +151,7 @@ export const blocks: Registry["items"] = [
     files: [
       {
         path: "blocks/audio-player/player.tsx",
+        target: "components/audio-player/player.tsx",
         type: "registry:component",
       },
       {
