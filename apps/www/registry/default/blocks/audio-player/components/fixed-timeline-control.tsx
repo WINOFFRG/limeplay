@@ -10,7 +10,7 @@ import {
 
 export function TimeLabels() {
   return (
-    <div className="flex items-center gap-1 text-xs text-secondary">
+    <div className="flex items-center gap-1 text-xs text-muted-foreground">
       <Elapsed />
       <span>/</span>
       <Duration />

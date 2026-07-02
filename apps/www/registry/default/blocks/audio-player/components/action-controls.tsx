@@ -35,7 +35,7 @@ export function ActionControls() {
           aria-label="Dislike"
           className={`
             cursor-pointer rounded-full p-1.5
-            hover:bg-muted-foreground
+            hover:bg-muted
             data-[state=on]:bg-transparent
           `}
           value="dislike"
@@ -63,7 +63,7 @@ export function ActionControls() {
           aria-label="Like"
           className={`
             cursor-pointer rounded-full p-1.5
-            hover:bg-muted-foreground
+            hover:bg-muted
             data-[state=on]:bg-transparent
           `}
           value="like"

@@ -21,6 +21,9 @@ export function TimelineSliderControl() {
   const liveLatency = useTimelineStore((state) => state.liveLatency)
   const isLive = useTimelineStore((state) => state.isLive)
   const player = usePlayerStore((state) => state.instance)
+  const hasLiveLatency = liveLatency != null
+  const showGoToLive = hasLiveLatency && liveLatency >= LIVE_DELAY_VISIBLE_SEC
+  const showLiveBadge = hasLiveLatency && liveLatency < LIVE_DELAY_VISIBLE_SEC
 
   return (
     <div
@@ -92,7 +95,7 @@ export function TimelineSliderControl() {
       )}
       {isLive && (
         <>
-          {liveLatency && player && liveLatency >= LIVE_DELAY_VISIBLE_SEC && (
+          {showGoToLive && player && (
             <>
               <LiveLatency className="text-xs font-medium" />
               <Button
@@ -112,7 +115,7 @@ export function TimelineSliderControl() {
               </Button>
             </>
           )}
-          {liveLatency && liveLatency < LIVE_DELAY_VISIBLE_SEC && (
+          {showLiveBadge && (
             <div className="flex items-center rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold tracking-wide">
               <span className="tracking-widest">LIVE</span>
             </div>

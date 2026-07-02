@@ -84,11 +84,11 @@ const showPlaylistControls = sourceType === "playlist"
 
 ### Base Asset Interface
 
-| Field         | Type                               | Required | Description                      |
-| ------------- | ---------------------------------- | -------- | -------------------------------- |
-| `id`          | `string`                           | No       | Stable identifier for the asset. |
-| `src`         | `string`                           | No       | Media source URL.                |
-| `config`      | `shaka.extern.PlayerConfiguration` | No       | Per-asset Shaka config.          |
+| Field    | Type                               | Required | Description                      |
+| -------- | ---------------------------------- | -------- | -------------------------------- |
+| `id`     | `string`                           | No       | Stable identifier for the asset. |
+| `src`    | `string`                           | No       | Media source URL.                |
+| `config` | `shaka.extern.PlayerConfiguration` | No       | Per-asset Shaka config.          |
 
 `TAsset` is intentionally small. Blocks and apps should extend it with their own optional metadata, such as `title`, `description`, `poster`, or provider-specific fields.
 
@@ -102,7 +102,7 @@ Use `resolveSource` when the playable source is not stored directly on `asset.sr
 const { loadSource } = useAsset()
 
 loadSource(
-  { id: "movie-123", title: "Movie" },
+  { id: "movie-123" },
   {
     loading: {
       resolveSource: async ({ asset, signal }) => {

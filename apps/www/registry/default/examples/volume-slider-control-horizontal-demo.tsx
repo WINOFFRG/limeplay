@@ -6,7 +6,7 @@ export function VolumeSliderControlHorizontalDemo() {
     <div className="my-4 flex h-fit flex-row items-center gap-1 rounded-md border pe-3">
       <VolumeStateControlDemo />
       <VolumeSlider.Root
-        className="hit-area-x-[12px] hit-area-y-[2px] hit-area relative h-1 w-16 cursor-crosshair rounded-md"
+        className="hit-area-x-[12px] hit-area-y-[2px] relative h-1 w-16 cursor-crosshair rounded-md"
         orientation="horizontal"
       >
         <VolumeSlider.Track>

@@ -136,7 +136,10 @@ export async function addBlenderCaptions(
 export async function fetchBlenderOpenFilmAssets(
   signal?: AbortSignal
 ): Promise<BlenderOpenFilmAsset[]> {
-  const response = await fetch(`${BLENDER_API_BASE_URL}/playlist`, { signal })
+  const combinedSignal = createTimeoutSignal(signal, BLENDER_STREAM_TIMEOUT_MS)
+  const response = await fetch(`${BLENDER_API_BASE_URL}/playlist`, {
+    signal: combinedSignal,
+  })
   if (!response.ok) {
     throw new Error(`Failed to fetch Blender playlist: ${response.statusText}`)
   }

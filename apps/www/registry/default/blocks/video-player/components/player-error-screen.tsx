@@ -58,7 +58,7 @@ export function PlayerErrorScreen({
 
   return (
     <ErrorScreen className="z-10 rounded-lg" error={error}>
-      {currentItem && (
+      {(currentItem || source !== undefined) && (
         <Button onClick={retryStream} size="sm">
           <RotateCwIcon />
           Retry
