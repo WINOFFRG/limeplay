@@ -243,7 +243,7 @@ Buffered.displayName = "SliderBuffered"
 
 export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
   (props, ref) => {
-    const { className, position, showWithHover = false, ...etc } = props
+    const { className, position, showWithHover = false, style, ...etc } = props
     const hoveringTime = useTimelineStore((state) => state.hoveringTime)
     const duration = useTimelineStore((state) => state.duration)
     const currentTime = useTimelineStore((state) => state.currentTime)
@@ -266,7 +266,7 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
       <SliderPrimitive.Thumb
         className={cn(
           `
-            left-(--lp-timeline-thumb-position)! bg-primary
+            left-(--lp-timeline-thumb-left,var(--lp-timeline-thumb-position))! bg-primary
             data-disabled:bg-primary/85
           `,
           className
@@ -276,7 +276,8 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
         style={
           {
             "--lp-timeline-thumb-position": `${finalPosition}%`,
-          } as React.CSSProperties
+            ...style,
+          } as unknown as React.CSSProperties
         }
       />
     )

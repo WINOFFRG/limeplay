@@ -6,6 +6,7 @@ import type { PlaybackSourceControllerProps } from "@/registry/default/hooks/use
 
 import { cn } from "@/lib/utils"
 import { BottomControls } from "@/registry/default/blocks/video-player/components/bottom-controls"
+import { VideoMediaSessionController } from "@/registry/default/blocks/video-player/components/media-session-controller"
 import { PlayerErrorScreen } from "@/registry/default/blocks/video-player/components/player-error-screen"
 import {
   PlayerRootContainer,
@@ -84,6 +85,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
             source={source}
             sourceKey={sourceKey}
           />
+          <VideoMediaSessionController />
           <PlayerErrorScreen
             initialIndex={initialIndex}
             loading={loading}
@@ -159,6 +161,7 @@ export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(
 
 VideoPlayer.displayName = "VideoPlayer"
 
+// TODO: Fix this to FallbackPoster component with multisupport
 function CurrentAssetMedia({
   className,
   poster,
@@ -171,7 +174,7 @@ function CurrentAssetMedia({
     <Media
       {...(mediaProps as React.ComponentPropsWithoutRef<typeof Media>)}
       as="video"
-      className={cn("size-full object-contain", className)}
+      className={cn("size-full bg-black object-contain", className)}
       poster={poster ?? currentPoster}
     />
   )

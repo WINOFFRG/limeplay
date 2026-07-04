@@ -58,6 +58,10 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
+        path: `${VIDEO_PLAYER_SRC_URL}/components/media-session-controller.tsx`,
+        type: "registry:component",
+      },
+      {
         path: `${VIDEO_PLAYER_SRC_URL}/components/button.tsx`,
         type: "registry:component",
       },
@@ -133,6 +137,7 @@ export const blocks: Registry["items"] = [
       "use-playlist",
       "use-asset",
       "use-media",
+      "use-media-session",
       "use-controls-visibility",
       "use-playback-source",
     ],
@@ -187,6 +192,10 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
+        path: "blocks/audio-player/components/media-session-controller.tsx",
+        type: "registry:component",
+      },
+      {
         path: "blocks/audio-player/components/track-info.tsx",
         type: "registry:component",
       },
@@ -237,6 +246,7 @@ export const blocks: Registry["items"] = [
       "use-asset",
       "use-media",
       "use-playback-source",
+      "use-media-session",
       "limeplay-logo",
       "utils",
     ],

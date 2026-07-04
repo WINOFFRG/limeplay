@@ -1,0 +1,189 @@
+---
+title: use-media-session
+description: Utility hook for synchronizing browser Media Session metadata, playback state, position, and action handlers.
+---
+
+## Installation
+
+```npm
+npx shadcn add @limeplay/use-media-session
+```
+
+## Feature Registration
+
+`use-media-session` is a utility hook, not a media feature. It does not need to
+be registered in `createMediaKit`.
+
+Use it inside a client component that can read your current media state:
+
+```tsx title="components/player/media-session.tsx"
+"use client"
+
+import * as React from "react"
+
+import { useMediaSession } from "@/hooks/limeplay/use-media-session"
+
+export function MediaSessionController() {
+  const mediaSession = useMediaSession()
+
+  React.useEffect(() => {
+    mediaSession.setMetadata({
+      artist: "Creator",
+      artwork: [{ sizes: "512x512", src: "/poster.jpg" }],
+      title: "Current asset",
+    })
+
+    return () => mediaSession.clearMetadata()
+  }, [mediaSession])
+
+  return null
+}
+```
+
+## Store
+
+`useMediaSession` does not create a store slice. It wraps
+`navigator.mediaSession` and no-ops safely when the browser does not support the
+API.
+
+### State
+
+| Field       | Type      | Description                                            |
+| ----------- | --------- | ------------------------------------------------------ |
+| `supported` | `boolean` | Whether `navigator.mediaSession` is available.         |
+| Metadata    | Browser   | Stored on `navigator.mediaSession.metadata`.           |
+| Position    | Browser   | Stored through `navigator.mediaSession.setPositionState`. |
+
+### Actions
+
+| Method                               | Description                                                        |
+| ------------------------------------ | ------------------------------------------------------------------ |
+| `setMetadata(metadata)`              | Sets browser media metadata using `MediaMetadata`.                  |
+| `clearMetadata()`                    | Clears browser media metadata.                                     |
+| `setPlaybackState(state)`            | Sets browser playback state to `none`, `paused`, or `playing`.      |
+| `setPositionState(state)`            | Sets duration, playback rate, and position when values are valid.   |
+| `clearPositionState()`               | Clears browser position state.                                     |
+| `setActionHandler(action, handler)`  | Registers a browser media action handler and returns a cleanup.     |
+
+## Sync Hook
+
+Use `useMediaSessionSync` when a component can derive the current metadata,
+playback state, position, and handlers from existing player stores.
+
+```tsx title="components/player/media-session.tsx"
+import {
+  getMediaSessionPlaybackState,
+  getMediaSessionPositionState,
+  useMediaSessionActionHandlers,
+  useMediaSessionSync,
+} from "@/hooks/limeplay/use-media-session"
+
+interface Asset {
+  creator?: string
+  poster?: string
+  title?: string
+}
+
+interface CustomMediaSessionControllerProps {
+  asset: Asset | null
+  currentTime: number
+  duration: number
+  onPause: () => void
+  onPlay: () => Promise<void>
+  onSeek: (time: number) => void
+  playbackRate: number
+  status: string
+}
+
+function CustomMediaSessionController({
+  asset,
+  currentTime,
+  duration,
+  onPause,
+  onPlay,
+  onSeek,
+  playbackRate,
+  status,
+}: CustomMediaSessionControllerProps) {
+  const active = Boolean(asset)
+  const actions = useMediaSessionActionHandlers({
+    getCurrentTime: () => currentTime,
+    onPause,
+    onPlay,
+    onSeek,
+  })
+
+  useMediaSessionSync({
+    actions,
+    active,
+    metadata: asset
+      ? {
+          artist: asset.creator,
+          artwork: asset.poster ? [{ src: asset.poster }] : [],
+          title: asset.title,
+        }
+      : null,
+    playbackState: getMediaSessionPlaybackState({
+      active,
+      status,
+    }),
+    position: getMediaSessionPositionState({
+      active,
+      currentTime,
+      duration,
+      playbackRate,
+    }),
+  })
+
+  return null
+}
+```
+
+## Action Handlers
+
+`useMediaSessionActionHandlers` builds the common media action map used by the
+default blocks.
+
+| Action                        | Option                            | Description                                      |
+| ----------------------------- | --------------------------------- | ------------------------------------------------ |
+| `play`                        | `onPlay`                          | Starts playback.                                 |
+| `pause`                       | `onPause`                         | Pauses playback.                                 |
+| `seekto`                      | `onSeek`                          | Seeks to the requested absolute media time.      |
+| `seekbackward` / `seekforward` | `getCurrentTime`, `onSeek`        | Seeks relative to the current media time.        |
+| `nexttrack`                   | `canGoNext`, `onNextTrack`        | Moves to the next playlist item when available.  |
+| `previoustrack`               | `canGoPrevious`, `onPreviousTrack` | Moves to the previous playlist item when available. |
+| `enterpictureinpicture`       | `canEnterPictureInPicture`, `onEnterPictureInPicture` | Lets supported browsers request PiP from Media Session. |
+| `skipad`                      | `onSkipAd`                        | Handles ad-skip requests when provided.          |
+| `stop`                        | `onStop`                          | Handles stop requests when provided.             |
+
+## Events
+
+`use-media-session` does not emit Limeplay media events.
+
+| Event | Payload | When |
+| ----- | ------- | ---- |
+| None  | —       | Browser Media Session callbacks call the handlers you register. |
+
+## Browser Behavior
+
+Media Session support varies by browser and action. Unsupported browsers and
+unsupported actions no-op safely. The `enterpictureinpicture` action is mainly a
+browser integration hook for automatic or browser-initiated Picture-in-Picture;
+it is not guaranteed to appear as a visible operating-system media control.
+
+## API Reference
+
+<AutoTypeTable
+  path="./registry/default/hooks/use-media-session.ts"
+  name="UseMediaSessionReturn"
+/>
+
+<AutoTypeTable
+  path="./registry/default/hooks/use-media-session.ts"
+  name="UseMediaSessionSyncOptions"
+/>
+
+<AutoTypeTable
+  path="./registry/default/hooks/use-media-session.ts"
+  name="UseMediaSessionActionHandlersOptions"
+/>

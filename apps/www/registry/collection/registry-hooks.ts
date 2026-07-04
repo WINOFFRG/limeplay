@@ -17,6 +17,17 @@ export const hooks: Registry["items"] = [
     type: "registry:hook",
   },
   {
+    files: [
+      {
+        path: "hooks/use-media-session.ts",
+        target: `${TARGET_BASE_PATH}/use-media-session.ts`,
+        type: "registry:hook",
+      },
+    ],
+    name: "use-media-session",
+    type: "registry:hook",
+  },
+  {
     dependencies: ["lodash.clamp", "zustand"],
     devDependencies: ["@types/lodash.clamp"],
     files: [
