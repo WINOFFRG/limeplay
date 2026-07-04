@@ -42,10 +42,8 @@ export function TimelineControl() {
         <TimelineSlider.Thumb
           className={cn(
             "absolute top-1/2 size-0 -translate-y-1/2 rounded-full bg-rose-600!",
-            `
-              transition-[height,width]
-              group-hover/timeline:size-4
-            `
+            "transition-[height,width] duration-150 ease-in-out",
+            "group-hover/timeline:size-4"
           )}
         />
 
@@ -56,6 +54,12 @@ export function TimelineControl() {
             group-hover/timeline:opacity-100
           `}
           showWithHover
+          style={
+            {
+              "--lp-timeline-thumb-left":
+                "clamp(calc((5ch + 1rem) / 2), var(--lp-timeline-thumb-position), calc(100% - calc((5ch + 1rem) / 2)))",
+            } as unknown as React.CSSProperties
+          }
         >
           <HoverTime />
         </TimelineSlider.Thumb>

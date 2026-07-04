@@ -7,6 +7,7 @@ import { UserJotProvider } from "@userjot/next"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Inter } from "next/font/google"
+import Script from "next/script"
 
 import { JsonLd } from "@/components/json-ld"
 import {
@@ -90,6 +91,12 @@ export default function Layout({ children }: { children: ReactNode }) {
           type="text/markdown"
         />
         <UserJotProvider projectId="cmjs634l4043b15ldylgedgwi" />
+        {process.env.NODE_ENV === "development" && (
+          <Script
+            crossOrigin="anonymous"
+            src="//unpkg.com/react-scan/dist/auto.global.js"
+          />
+        )}
       </head>
       <body className="antialiased">
         <JsonLd />

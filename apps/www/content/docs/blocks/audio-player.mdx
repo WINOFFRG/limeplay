@@ -86,6 +86,7 @@ The audio block includes an opinionated default resolver for `src` and `playback
 - Previous, play/pause, next, volume, mute, repeat, and shuffle controls.
 - Playback URL resolution for direct `src` values or `playbackUrls.primary` endpoints.
 - Automatic skip/reload behavior for recoverable load and playback failures.
+- Browser Media Session metadata, playback state, position, and media-key handlers.
 - Shared `source` and `loading` contract used by all source-driven blocks.
 
 ## Notes
@@ -93,6 +94,7 @@ The audio block includes an opinionated default resolver for `src` and `playback
 - `AudioPlayer` does not ship with bundled tracks. Pass a playlist from your app.
 - Use `duration` in milliseconds when you want stable duration labels before metadata loads.
 - Do not pass `mediaProps.src`; pass `source` instead.
+- Media Session metadata is derived from the active track title, artist, album, and poster.
 - For the full block loading model, see [Usage](/docs/usage).
 
 ## API Reference

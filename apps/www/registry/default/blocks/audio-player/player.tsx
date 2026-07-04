@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { AudioSourceProvider } from "@/registry/default/blocks/audio-player/components/audio-source"
 import { PlayerControls } from "@/registry/default/blocks/audio-player/components/controls"
 import { TimelineControl } from "@/registry/default/blocks/audio-player/components/fixed-timeline-control"
+import { AudioMediaSessionController } from "@/registry/default/blocks/audio-player/components/media-session-controller"
 import { MediaProvider } from "@/registry/default/blocks/audio-player/lib/media-kit"
 import { Media } from "@/registry/default/ui/media"
 import { RootContainer } from "@/registry/default/ui/root-container"
@@ -86,6 +87,7 @@ export const AudioPlayer = React.forwardRef<HTMLDivElement, AudioPlayerProps>(
           source={source}
           sourceKey={sourceKey}
         >
+          <AudioMediaSessionController />
           <RootContainer
             aria-label="Audio player"
             aspectRatio={false}

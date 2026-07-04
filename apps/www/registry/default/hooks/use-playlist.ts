@@ -14,7 +14,6 @@ import type {
 
 import { useMediaStore } from "@/registry/default/hooks/use-media"
 import {
-  useMediaEvents,
   useMediaFeatureApi,
   useMediaFeatureStore,
 } from "@/registry/default/ui/media-provider"
@@ -62,6 +61,7 @@ export interface PlaylistStore extends MediaEventSlice<PlaylistEvents> {
     next: () => boolean
     playNext: <T>(items: PlaylistItemInput<T>[]) => void
     prepend: <T>(items: PlaylistItemInput<T>[]) => void
+    previous: () => boolean
     queue: PlaylistItem[]
     remove: (id: string) => void
     removeAt: (index: number) => void
@@ -380,6 +380,35 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
             p.shuffleOrder = newShuffleOrder
           })
         },
+        previous: () => {
+          const playlist = get().playlist as PlaylistStore["playlist"]
+          const previousIndex = playlist.getPreviousIndex()
+          if (previousIndex === -1 || previousIndex >= playlist.queue.length) {
+            return false
+          }
+
+          const previousItem = playlist.queue[previousIndex] as PlaylistItem
+          const previousHistory =
+            playlist.history.length > 0
+              ? playlist.history.slice(0, -1)
+              : playlist.history
+
+          set(({ playlist: p }) => {
+            p.currentIndex = previousIndex
+            p.currentItem = previousItem
+            p.history = previousHistory
+          })
+
+          emitPlaylistChange(
+            events.emit,
+            previousIndex,
+            previousItem,
+            playlist.currentIndex,
+            playlist.currentItem,
+            "previous"
+          )
+          return true
+        },
         queue: [],
         remove: (id) => {
           const playlist = get().playlist as PlaylistStore["playlist"]
@@ -566,7 +595,6 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
 
 export function usePlaylist<T>(): UsePlaylistReturn<T> {
   const api = useMediaFeatureApi<PlaylistStore>(PLAYLIST_FEATURE_KEY)
-  const events = useMediaEvents<PlaylistEvents>()
   const currentIndex = usePlaylistStore((state) => state.currentIndex)
   const queue = usePlaylistStore((state) => state.queue)
   const shuffle = usePlaylistStore((state) => state.shuffle)
@@ -586,6 +614,7 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
       next: playlist.next,
       playNext: playlist.playNext as UsePlaylistReturn<T>["playNext"],
       prepend: playlist.prepend as UsePlaylistReturn<T>["prepend"],
+      previous: playlist.previous,
       remove: playlist.remove,
       removeAt: playlist.removeAt,
       reorder: playlist.reorder,
@@ -638,34 +667,6 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
     (repeatMode === "all" && queue.length > 0) ||
     api.getState().playlist.getPreviousIndex() !== -1
 
-  const previous = React.useCallback(() => {
-    const prevIndex = api.getState().playlist.getPreviousIndex()
-    if (prevIndex === -1 || prevIndex >= queue.length) return false
-
-    const playlist = api.getState().playlist as PlaylistStore["playlist"]
-
-    if (playlist.history.length > 0) {
-      api.setState(({ playlist: p }) => {
-        p.history = playlist.history.slice(0, -1)
-      })
-    }
-
-    const targetItem = queue[prevIndex] as PlaylistItem
-    api.setState(({ playlist: p }) => {
-      p.currentIndex = prevIndex
-      p.currentItem = targetItem
-    })
-    emitPlaylistChange(
-      events.emit,
-      prevIndex,
-      targetItem,
-      playlist.currentIndex,
-      playlist.currentItem,
-      "previous"
-    )
-    return true
-  }, [api, events, queue])
-
   return {
     append: state.append,
     clear: state.clear,
@@ -683,7 +684,7 @@ export function usePlaylist<T>(): UsePlaylistReturn<T> {
     orderedItems,
     playNext: state.playNext,
     prepend: state.prepend,
-    previous,
+    previous: state.previous,
     previousItem,
     remove: state.remove,
     removeAt: state.removeAt,
