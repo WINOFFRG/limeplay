@@ -31,7 +31,7 @@ export function TimelineControl() {
           "hit-area-x-0 hit-area-y-[12px] hit-area"
         )}
       >
-        <TimelineSlider.Track className={`overflow-hidden bg-[#383838]`}>
+        <TimelineSlider.Track className={`overflow-hidden bg-foreground/20`}>
           <TimelineSlider.Buffered
             className="absolute h-full bg-[#4C4C4C]"
             variant="combined"

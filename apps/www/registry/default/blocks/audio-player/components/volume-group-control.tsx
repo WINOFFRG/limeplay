@@ -30,7 +30,7 @@ export function VolumeControl() {
           `
         )}
       >
-        <VolumeSlider.Track className="relative h-0.75 w-full overflow-hidden rounded-sm bg-secondary">
+        <VolumeSlider.Track className="relative h-0.75 w-full overflow-hidden rounded-sm bg-foreground/20">
           <VolumeSlider.Progress className="absolute h-full bg-foreground" />
         </VolumeSlider.Track>
         <VolumeSlider.Thumb

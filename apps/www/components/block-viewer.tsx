@@ -18,7 +18,6 @@ import {
 import Image from "next/image"
 import Link from "next/link"
 import * as React from "react"
-import { useCopyToClipboard } from "react-use"
 
 import type {
   createFileTreeForRegistryItemFiles,
@@ -53,6 +52,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
 import { cn } from "@/lib/utils"
 
 interface BlockViewerContext {
@@ -300,7 +300,8 @@ function BlockViewerProvider({
 function BlockViewerToolbar() {
   const { item, resizablePanelRef, setIframeKey, setView, view } =
     useBlockViewer()
-  const [isCopied, copyToClipboard] = useCopyToClipboard()
+  const { copyToClipboard, isCopied } = useCopyToClipboard()
+  const installCommand = getRegistryInstallCommand(item)
 
   return (
     <div
@@ -405,17 +406,17 @@ function BlockViewerToolbar() {
             hover:bg-accent hover:text-accent-foreground
           `}
           onClick={() => {
-            copyToClipboard(`npx shadcn@latest add @limeplay/${item.name}`)
+            copyToClipboard(installCommand)
           }}
           size="sm"
           variant="outline"
         >
-          {isCopied.value ? (
+          {isCopied ? (
             <Check className="size-3.5" />
           ) : (
             <Terminal className="size-3.5" />
           )}
-          <span>npx shadcn add {item.name}</span>
+          <span className="max-w-64 truncate">{installCommand}</span>
         </Button>
         <Separator className="mx-1 h-4!" orientation="vertical" />
         <OpenInV0Button
@@ -481,6 +482,14 @@ function BlockViewerView() {
       </div>
     </div>
   )
+}
+
+function getRegistryInstallCommand(item: RegistryItem) {
+  const itemName = item.categories?.includes("pro")
+    ? `"https://limeplay.winoffrg.dev/r/pro/${item.name}.json?token=<token>"`
+    : `@limeplay/${item.name}`
+
+  return `npx shadcn@latest add ${itemName}`
 }
 
 function Tree({ index, item }: { index: number; item: FileTree }) {

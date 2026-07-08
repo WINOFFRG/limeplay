@@ -171,7 +171,7 @@ function CurrentAssetMedia({
     <Media
       {...(mediaProps as React.ComponentPropsWithoutRef<typeof Media>)}
       as="video"
-      className={cn("size-full object-contain", className)}
+      className={cn("relative z-10 size-full object-contain", className)}
       poster={poster ?? currentPoster}
     />
   )

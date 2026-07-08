@@ -1,6 +1,11 @@
 {
   "title": "Blocks",
   "description": "Ready-to-use player blocks with shared source loading APIs.",
-  "pages": ["video-player", "audio-player"],
+  "pages": [
+    "video-player",
+    "ambient-player",
+    "immersive-player",
+    "audio-player"
+  ],
   "defaultOpen": true
 }

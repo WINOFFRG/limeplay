@@ -3,7 +3,7 @@
  *
  * Single-file registry build pipeline:
  *   1. Compile  → registry.json, registry-pro.json, registry/__index__.tsx
- *   2. shadcn build → public/r/ (free) and public/r/pro/ (pro)
+ *   2. shadcn build → public/r/ (free) and registry/.generated/pro/ (pro)
  *   3. Copy free → public/r/free/
  *   4. validate-registries.ts
  *
@@ -35,7 +35,11 @@ const STYLE = "default"
 const PRO_STYLE = "pro"
 const REGISTRY_HOST = process.env.REGISTRY_HOST ?? "http://localhost:3000"
 const BASE_URL = `${REGISTRY_HOST}/r`
-const PRO_BASE_URL = `${REGISTRY_HOST}/r/pro`
+const LIMEPLAY_REGISTRY_NAME = "@limeplay"
+const PUBLIC_OUTPUT_DIR = path.join(CWD, "public/r")
+const PRO_OUTPUT_DIR = path.join(CWD, "registry/.generated/pro")
+const PRO_RUNTIME_MODULE = path.join(CWD, "registry/__pro__.ts")
+const PUBLIC_PRO_OUTPUT_DIR = path.join(CWD, "public/r/pro")
 
 // ---------------------------------------------------------------------------
 // Maps
@@ -129,6 +133,7 @@ export const Index: Record<string, any> = {`
       index += `
     "${item.name}": {
       name: "${item.name}",
+      categories: ${JSON.stringify(item.categories)},
       description: "${item.description ?? ""}",
       type: "${item.type}",
       registryDependencies: ${JSON.stringify(item.registryDependencies)},
@@ -139,6 +144,7 @@ export const Index: Record<string, any> = {`
         return { default: mod.default || mod[exportName] }
       }),
       meta: ${JSON.stringify(item.meta)},
+      title: ${JSON.stringify(item.title)},
     },`
     }
 
@@ -161,6 +167,7 @@ async function compile() {
   console.log(`Using registry host: ${REGISTRY_HOST}`)
 
   const hasProRegistry = await proRegistryExists()
+  const proRegistryJsonPath = path.join(CWD, "registry-pro.json")
 
   // Split items by tier
   const freeItems = registryItems.filter((item) => !isProItem(item))
@@ -197,8 +204,10 @@ async function compile() {
     registriesToIndex.push({ registry: proRegistry, style: PRO_STYLE })
   } else if (proItems.length > 0) {
     console.log("Pro items defined but submodule missing – skipping pro build")
+    rimraf.sync(proRegistryJsonPath)
   } else {
     console.log("No pro items defined")
+    rimraf.sync(proRegistryJsonPath)
   }
 
   await buildRegistryIndex(registriesToIndex)
@@ -210,7 +219,7 @@ async function compile() {
 // ---------------------------------------------------------------------------
 
 async function copyFreeToExplicitDir() {
-  const srcDir = path.join(CWD, "public/r")
+  const srcDir = PUBLIC_OUTPUT_DIR
   const destDir = path.join(CWD, "public/r/free")
   await fs.mkdir(destDir, { recursive: true })
 
@@ -245,6 +254,19 @@ function createRegistry(
 // Build registry/__index__.tsx (React.lazy component lookup for docs site)
 // ---------------------------------------------------------------------------
 
+async function pathExists(filePath: string): Promise<boolean> {
+  try {
+    await fs.stat(filePath)
+    return true
+  } catch {
+    return false
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Pro registry detection
+// ---------------------------------------------------------------------------
+
 async function pipeline() {
   const start = Date.now()
   console.log("\n--- Registry build started ---\n")
@@ -253,17 +275,24 @@ async function pipeline() {
   await compile()
 
   // 2. shadcn build (free)
+  rimraf.sync(PUBLIC_OUTPUT_DIR)
   await run("bun x shadcn build registry.json --output public/r")
 
   // 3. Copy free → /r/free/
   await copyFreeToExplicitDir()
 
   // 4. shadcn build (pro) – only if registry-pro.json was generated
-  try {
-    await fs.stat(path.join(CWD, "registry-pro.json"))
-    await run("bun x shadcn build registry-pro.json --output public/r/pro")
-  } catch {
-    // No pro registry
+  if (await pathExists(path.join(CWD, "registry-pro.json"))) {
+    rimraf.sync(PUBLIC_PRO_OUTPUT_DIR)
+    rimraf.sync(PRO_OUTPUT_DIR)
+    await run(
+      "bun x shadcn build registry-pro.json --output registry/.generated/pro"
+    )
+    await writeProRuntimeModule(PRO_OUTPUT_DIR)
+  } else {
+    rimraf.sync(PUBLIC_PRO_OUTPUT_DIR)
+    rimraf.sync(PRO_OUTPUT_DIR)
+    await writeProRuntimeModule()
   }
 
   // 5. Validate
@@ -274,7 +303,7 @@ async function pipeline() {
 }
 
 // ---------------------------------------------------------------------------
-// Pro registry detection
+// Shell helper
 // ---------------------------------------------------------------------------
 
 function processItems(items: Registry["items"]): Registry["items"] {
@@ -304,10 +333,6 @@ function processItems(items: Registry["items"]): Registry["items"] {
   })
 }
 
-// ---------------------------------------------------------------------------
-// Shell helper
-// ---------------------------------------------------------------------------
-
 async function proRegistryExists(): Promise<boolean> {
   try {
     const proPath = path.join(CWD, "registry/pro")
@@ -333,16 +358,12 @@ function resolveRegistryDependency(dependency: string): string {
   if (registryItemsMap.has(dependency)) {
     const item = registryItemsMap.get(dependency)!
     if (isProItem(item)) {
-      return `${PRO_BASE_URL}/${dependency}.json`
+      return `${LIMEPLAY_REGISTRY_NAME}/pro/${dependency}`
     }
     return `${BASE_URL}/${dependency}.json`
   }
   return dependency
 }
-
-// ---------------------------------------------------------------------------
-// Compile step
-// ---------------------------------------------------------------------------
 
 function run(cmd: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -355,10 +376,6 @@ function run(cmd: string): Promise<void> {
     })
   })
 }
-
-// ---------------------------------------------------------------------------
-// Full pipeline
-// ---------------------------------------------------------------------------
 
 function startWatcher() {
   const dirs = [
@@ -399,6 +416,47 @@ function startWatcher() {
       // Directory may not exist (e.g. registry/pro without submodule)
     }
   }
+}
+
+// ---------------------------------------------------------------------------
+// Compile step
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Full pipeline
+// ---------------------------------------------------------------------------
+
+async function writeProRuntimeModule(outputDir?: string) {
+  const items: Record<string, unknown> = {}
+
+  if (outputDir) {
+    const entries = await fs.readdir(outputDir)
+    for (const entry of entries) {
+      if (!entry.endsWith(".json")) continue
+
+      const filePath = path.join(outputDir, entry)
+      const stat = await fs.stat(filePath)
+      if (!stat.isFile()) continue
+
+      const key = entry.replace(/\.json$/, "")
+      items[key] = JSON.parse(await fs.readFile(filePath, "utf-8"))
+    }
+  }
+
+  const moduleSource = `/* eslint-disable */
+// This file is autogenerated by scripts/registry-dev.mts
+// Do not edit this file directly.
+
+export const proRegistryItems: Record<string, unknown> = ${JSON.stringify(
+    items,
+    null,
+    2
+  )}
+`
+
+  await fs.mkdir(path.dirname(PRO_RUNTIME_MODULE), { recursive: true })
+  rimraf.sync(PRO_RUNTIME_MODULE)
+  await fs.writeFile(PRO_RUNTIME_MODULE, moduleSource)
 }
 
 // ---------------------------------------------------------------------------
