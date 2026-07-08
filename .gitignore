@@ -42,8 +42,11 @@ out
 build
 .source
 apps/www/public/r/*
+apps/www/registry/.generated/
 apps/www/registry.json
 apps/www/registry-pro.json
 apps/www/registry/__index__.tsx
+apps/www/registry/__pro__.ts
 
 .claude
+.wrangler

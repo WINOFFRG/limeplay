@@ -93,6 +93,34 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
   },
   {
+    categories: ["pro"],
+    dependencies: ["@radix-ui/react-compose-refs", "@radix-ui/react-slot"],
+    files: [
+      {
+        path: "ui/media-ambient.tsx",
+        target: `${TARGET_BASE_PATH}/media-ambient.tsx`,
+        type: "registry:ui",
+      },
+    ],
+    name: "media-ambient",
+    registryDependencies: ["media-provider", "use-media", "utils"],
+    type: "registry:ui",
+  },
+  {
+    categories: ["pro"],
+    dependencies: ["@radix-ui/react-compose-refs"],
+    files: [
+      {
+        path: "ui/media-glow.tsx",
+        target: `${TARGET_BASE_PATH}/media-glow.tsx`,
+        type: "registry:ui",
+      },
+    ],
+    name: "media-glow",
+    registryDependencies: ["media-provider", "use-media", "utils"],
+    type: "registry:ui",
+  },
+  {
     dependencies: ["@base-ui/react"],
     files: [
       {
