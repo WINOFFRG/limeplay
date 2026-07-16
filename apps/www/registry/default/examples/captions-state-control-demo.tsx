@@ -39,7 +39,6 @@ export function CaptionsStateControlDemo() {
       )
       .then(() => {
         player.selectTextTrack(player.getTextTracks()[0])
-        player.setTextTrackVisibility(true)
       })
       .catch((error: unknown) => {
         console.error("Error adding text track:", error)
