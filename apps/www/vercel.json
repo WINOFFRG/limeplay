@@ -50,14 +50,17 @@
       "source": "/r/pro/audio-player.json",
       "destination": "/r/audio-player.json",
       "permanent": true
-    },
-    {
-      "source": "/r/pro/:path*",
-      "destination": "/403",
-      "permanent": false
     }
   ],
   "rewrites": [
+    {
+      "source": "/api/r/pro/:path*",
+      "destination": "https://limeplay-api.winoffrg.workers.dev/api/r/pro/:path*"
+    },
+    {
+      "source": "/r/pro/:path*",
+      "destination": "https://limeplay-api.winoffrg.workers.dev/r/pro/:path*"
+    },
     {
       "source": "/docs/:path*",
       "destination": "/llms.mdx/:path*"

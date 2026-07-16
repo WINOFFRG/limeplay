@@ -3,9 +3,11 @@ import type {
   PlaybackUrls,
 } from "@/registry/default/blocks/audio-player/player"
 
+import { LIMEPLAY_API_BASE_URL } from "@/lib/constants"
+
 export const AUDIO_PLAYER_DEMO_PLAYLIST_ID = "324531068"
 
-const API_BASE_URL = "https://limeplay.winoffrg.workers.dev/api/playlist"
+const API_BASE_URL = `${LIMEPLAY_API_BASE_URL}/api/playlist`
 
 export interface AudioPlayerPlaylistApiResponse {
   cached_at: string

@@ -1,7 +1,5 @@
 import { type Registry } from "shadcn/schema"
 
-const VIDEO_PLAYER_SRC_URL = "blocks/video-player"
-
 export const blocks: Registry["items"] = [
   {
     author: "Rohan Gupta (@winoffrg)",
@@ -16,82 +14,82 @@ export const blocks: Registry["items"] = [
     description: "Modern seamless flat video player",
     files: [
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/player.tsx`,
+        path: "blocks/video-player/player.tsx",
         target: "components/video-player/player.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/styles.css`,
+        path: "blocks/video-player/styles.css",
         target: "components/video-player/styles.css",
         type: "registry:style",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/player-root-container.tsx`,
+        path: "blocks/video-player/components/player-root-container.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/player-error-screen.tsx`,
+        path: "blocks/video-player/components/player-error-screen.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/top-overlay-container.tsx`,
+        path: "blocks/video-player/components/top-overlay-container.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/volume-state-control.tsx`,
+        path: "blocks/video-player/components/volume-state-control.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/playback-state-control.tsx`,
+        path: "blocks/video-player/components/playback-state-control.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/volume-slider-control.tsx`,
+        path: "blocks/video-player/components/volume-slider-control.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/timeline-slider-control.tsx`,
+        path: "blocks/video-player/components/timeline-slider-control.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/bottom-controls.tsx`,
+        path: "blocks/video-player/components/bottom-controls.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/button.tsx`,
+        path: "blocks/video-player/components/button.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/lib/media-kit.ts`,
+        path: "blocks/video-player/lib/media-kit.ts",
         type: "registry:lib",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/playlist.tsx`,
+        path: "blocks/video-player/components/playlist.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/playlist-navigation-controls.tsx`,
+        path: "blocks/video-player/components/playlist-navigation-controls.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/captions-state-control.tsx`,
+        path: "blocks/video-player/components/captions-state-control.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/playback-rate-control.tsx`,
+        path: "blocks/video-player/components/playback-rate-control.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/ui/toggle.tsx`,
+        path: "blocks/video-player/ui/toggle.tsx",
         target: "components/ui/toggle.tsx",
         type: "registry:ui",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/volume-group-control.tsx`,
+        path: "blocks/video-player/components/volume-group-control.tsx",
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/components/pip-control.tsx`,
+        path: "blocks/video-player/components/pip-control.tsx",
         type: "registry:component",
       },
     ],
@@ -136,6 +134,52 @@ export const blocks: Registry["items"] = [
       "use-controls-visibility",
       "use-playback-source",
     ],
+    type: "registry:block",
+  },
+  {
+    author: "Rohan Gupta (@winoffrg)",
+    categories: ["pro"],
+    description: "Video player with YouTube-style ambient lighting",
+    files: [
+      {
+        path: "blocks/ambient-player/player.tsx",
+        target: "components/ambient-player/player.tsx",
+        type: "registry:component",
+      },
+    ],
+    meta: {
+      iframeHeight: "750px",
+      props: {
+        source:
+          "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8",
+      },
+    },
+    name: "ambient-player",
+    registryDependencies: ["video-player", "media-ambient"],
+    title: "Ambient Player",
+    type: "registry:block",
+  },
+  {
+    author: "Rohan Gupta (@winoffrg)",
+    categories: ["pro"],
+    description: "Video player with a live blurred frame glow",
+    files: [
+      {
+        path: "blocks/immersive-player/player.tsx",
+        target: "components/immersive-player/player.tsx",
+        type: "registry:component",
+      },
+    ],
+    meta: {
+      iframeHeight: "750px",
+      props: {
+        source:
+          "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8",
+      },
+    },
+    name: "immersive-player",
+    registryDependencies: ["video-player", "media-glow"],
+    title: "Immersive Player",
     type: "registry:block",
   },
   {
