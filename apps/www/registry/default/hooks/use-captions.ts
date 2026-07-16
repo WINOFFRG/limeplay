@@ -71,7 +71,7 @@ export function captionsFeature(): MediaFeature<
             }
           }
 
-          player.setTextTrackVisibility(!captions.visible)
+          player.selectTextTrack(null)
         },
         tracks: undefined,
         visible: false,
@@ -111,8 +111,16 @@ function CaptionsSetup() {
       .getTextTracks()
       .find((track: shaka.extern.TextTrack) => track.active)
 
+      console.log("Active track changed:", activeTrack)
+
     store.setState(({ captions }) => {
-      captions.activeTrack = activeTrack ?? null
+      if (activeTrack) {
+        captions.activeTrack = activeTrack
+        captions.visible = true
+      } else {
+        captions.activeTrack = null
+        captions.visible = false
+      }
     })
   }
 
@@ -123,16 +131,6 @@ function CaptionsSetup() {
 
     store.setState(({ captions }) => {
       captions.tracks = player.getTextTracks()
-    })
-  }
-
-  const onTextTrackVisibility = () => {
-    if (!player) {
-      return
-    }
-
-    store.setState(({ captions }) => {
-      captions.visible = player.isTextTrackVisible()
     })
   }
 
@@ -153,12 +151,10 @@ function CaptionsSetup() {
 
     on(player, "textchanged", onTextTrackChanged)
     on(player, ["trackschanged", "loading"], onTracksChanged)
-    on(player, "texttrackvisibility", onTextTrackVisibility)
 
     return () => {
       off(player, "textchanged", onTextTrackChanged)
       off(player, ["trackschanged", "loading"], onTracksChanged)
-      off(player, "texttrackvisibility", onTextTrackVisibility)
     }
   }, [canPlay, mediaElement, player])
 
