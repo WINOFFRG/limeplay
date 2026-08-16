@@ -7,10 +7,10 @@
     "url": "git+https://github.com/winoffrg/limeplay.git"
   },
   "devDependencies": {
-    "lefthook": "^2.1.2",
-    "prettier": "^3.8.3",
+    "lefthook": "^2.1.10",
+    "prettier": "^3.9.6",
     "typescript": "^6.0.3",
-    "turbo": "^2.9.14"
+    "turbo": "^2.10.9"
   },
   "license": "MIT",
   "packageManager": "bun@1.2.19",

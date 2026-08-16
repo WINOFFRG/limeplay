@@ -1,4 +1,7 @@
 {
   "title": "Documentation",
-  "pages": ["components", "hooks"]
+  "pages": [
+    "components",
+    "hooks"
+  ]
 }

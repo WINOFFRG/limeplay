@@ -9,12 +9,18 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Inter } from "next/font/google"
 
 import { JsonLd } from "@/components/json-ld"
-import { PRODUCT_DESCRIPTION, PRODUCT_NAME } from "@/lib/constants"
+import {
+  PRODUCT_DESCRIPTION,
+  PRODUCT_NAME,
+  PRODUCT_TITLE,
+  SITE_URL,
+} from "@/lib/constants"
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 })
+const bingSiteVerification = process.env.BING_SITE_VERIFICATION
 
 export const metadata: Metadata = {
   authors: [
@@ -24,22 +30,8 @@ export const metadata: Metadata = {
     },
   ],
   description: PRODUCT_DESCRIPTION,
-  keywords: [
-    "video player",
-    "video components",
-    "open source",
-    "limeplay",
-    "shaka player",
-    "React",
-    "TypeScript",
-    "Next.js",
-    "React",
-    "tailwind",
-    "media",
-    "ui",
-    "shadcn",
-  ],
   manifest: `/site.webmanifest`,
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     description: PRODUCT_DESCRIPTION,
     images: [
@@ -52,20 +44,38 @@ export const metadata: Metadata = {
     ],
     locale: "en_US",
     siteName: PRODUCT_NAME,
-    title: PRODUCT_NAME,
+    title: `${PRODUCT_TITLE} | ${PRODUCT_NAME}`,
     type: "website",
+    url: SITE_URL,
   },
-  robots: "index, follow",
+  robots: {
+    follow: true,
+    googleBot: {
+      follow: true,
+      index: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+    index: true,
+  },
   title: {
-    default: PRODUCT_NAME,
-    template: `%s | ${PRODUCT_NAME}`,
+    default: `${PRODUCT_TITLE} | ${PRODUCT_NAME}`,
+    template: `%s | Limeplay`,
   },
   twitter: {
     card: "summary_large_image",
     creator: "@winoffrg",
     description: PRODUCT_DESCRIPTION,
     images: [`/opengraph-image.png`],
-    title: PRODUCT_NAME,
+    title: `${PRODUCT_TITLE} | ${PRODUCT_NAME}`,
+  },
+  verification: {
+    other: bingSiteVerification
+      ? {
+          "msvalidate.01": bingSiteVerification,
+        }
+      : undefined,
   },
 }
 

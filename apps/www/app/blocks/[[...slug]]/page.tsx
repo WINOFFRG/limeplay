@@ -8,6 +8,7 @@ import { BlockPageShell } from "@/components/blocks/block-page-shell"
 import { getBlockShowcase } from "@/components/blocks/block-showcase"
 import { BlockInfoPane } from "@/components/blocks/info-pane"
 import { getMDXComponents } from "@/components/mdx-components"
+import { PageJsonLd } from "@/components/page-json-ld"
 import { blocksSource } from "@/lib/blocks-source"
 
 export const revalidate = false
@@ -28,6 +29,9 @@ export default async function BlockPage(props: BlockPageProps) {
   }
 
   const showcase = getBlockShowcase(page.data.preview)
+  const description =
+    page.data.description ??
+    `Install and customize the ${page.data.title} block for Limeplay.`
 
   const MDXContent = page.data.body
   const PreviewComponent = showcase.component
@@ -65,6 +69,17 @@ export default async function BlockPage(props: BlockPageProps) {
       tree={blocksSource.getPageTree()}
     >
       <main className="relative min-h-svh overflow-x-hidden bg-background">
+        {/* TODO: Point this breadcrumb to /blocks once the blocks index page exists. */}
+        <PageJsonLd
+          breadcrumbs={[
+            { name: "Home", path: "/" },
+            { name: "Blocks", path: "/blocks/video-player" },
+            { name: page.data.title, path: page.url },
+          ]}
+          description={description}
+          path={page.url}
+          title={`${page.data.title} Block`}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -96,9 +111,25 @@ export async function generateMetadata(
 
   if (!page) notFound()
 
+  const description =
+    page.data.description ??
+    `Install and customize the ${page.data.title} block for Limeplay.`
+
   return {
-    description: page.data.description,
+    alternates: {
+      canonical: page.url,
+    },
+    description,
+    openGraph: {
+      description,
+      title: `${page.data.title} Block`,
+      url: page.url,
+    },
     title: `${page.data.title} Block`,
+    twitter: {
+      description,
+      title: `${page.data.title} Block`,
+    },
   }
 }
 

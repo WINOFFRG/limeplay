@@ -9,7 +9,7 @@
     {
       "source": "/blocks",
       "destination": "/blocks/video-player",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/blocks/linear-player",
@@ -57,11 +57,60 @@
       "permanent": false
     }
   ],
-  "rewrites": [
+  "headers": [
     {
-      "source": "/docs/:path*",
-      "destination": "/llms.mdx/:path*"
+      "source": "/llms.txt",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, follow"
+        }
+      ]
+    },
+    {
+      "source": "/llms-full.txt",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, follow"
+        }
+      ]
+    },
+    {
+      "source": "/llms.mdx/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, follow"
+        }
+      ]
+    },
+    {
+      "source": "/indexnow-key.txt",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, nosnippet"
+        }
+      ]
+    },
+    {
+      "source": "/r/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/api/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     }
-  ],
-  "headers": []
+  ]
 }
