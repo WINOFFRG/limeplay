@@ -1,5 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "BING_SITE_VERIFICATION",
+    "INDEXNOW_ENDPOINT",
+    "INDEXNOW_KEY",
+    "INDEXNOW_SITE_URL"
+  ],
   "tasks": {
     "vercel:install": {
       "cache": false

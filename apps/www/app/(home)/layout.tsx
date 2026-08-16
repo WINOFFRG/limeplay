@@ -1,8 +1,32 @@
+import type { Metadata } from "next"
+
 import Script from "next/script"
 
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
 import { VideoBackground } from "@/components/video-background"
+import {
+  PRODUCT_DESCRIPTION,
+  PRODUCT_NAME,
+  PRODUCT_TITLE,
+  SITE_URL,
+} from "@/lib/constants"
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+  description: PRODUCT_DESCRIPTION,
+  openGraph: {
+    description: PRODUCT_DESCRIPTION,
+    title: `${PRODUCT_TITLE} | ${PRODUCT_NAME}`,
+    url: SITE_URL,
+  },
+  twitter: {
+    description: PRODUCT_DESCRIPTION,
+    title: `${PRODUCT_TITLE} | ${PRODUCT_NAME}`,
+  },
+}
 
 export default function RootLayout({
   children,

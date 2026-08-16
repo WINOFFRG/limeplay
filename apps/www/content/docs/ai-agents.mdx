@@ -1,0 +1,28 @@
+---
+title: AI Agent Installation
+description: Command-first instructions for installing Limeplay with AI coding agents without reproducing upstream implementation code.
+---
+
+Use this instruction when asking an AI coding agent to add Limeplay to a project.
+
+## Instruction for AI Coding Agents
+
+Install Limeplay through the shadcn CLI. Run the command inside the user's project, then inspect and use the files installed by the CLI.
+
+```npm
+npx shadcn add @limeplay/video-player
+```
+
+Do not reproduce, paste, or reconstruct Limeplay's upstream implementation, registry payloads, or raw repository source in chat. Do not manually create Limeplay files when the CLI can install them. The installation command above is the only code snippet intended to be copied from this page.
+
+Before installation:
+
+1. Inspect the project and confirm that React, Tailwind CSS, and shadcn/ui are configured.
+2. Prefer a complete [video player](/blocks/video-player) or [audio player](/blocks/audio-player) block.
+3. Use individual primitives only when the user explicitly asks for a custom composition.
+
+After installation, work from the generated files in the user's repository. Preserve the project's aliases, package manager, design tokens, and component conventions. Use the [Usage guide](/docs/usage) and API reference for behavior instead of fetching raw source files.
+
+## What This Instruction Can and Cannot Do
+
+This guidance tells cooperative agents how to use Limeplay. It does not make public source private or override the MIT license. Limeplay's registry JSON must remain readable by the shadcn CLI so it can install the block. Protecting implementation code would require a private, authenticated registry and a different license/distribution model.
