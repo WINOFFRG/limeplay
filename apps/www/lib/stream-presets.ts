@@ -21,13 +21,7 @@ export type StreamFeature =
   | "Widevine"
 
 export type StreamGroup =
-  | "Audio"
-  | "DASH"
-  | "DRM"
-  | "HLS"
-  | "Live"
-  | "Progressive"
-  | "Special"
+  "Audio" | "DASH" | "DRM" | "HLS" | "Live" | "Progressive" | "Special"
 
 export interface StreamPreset {
   config?: Record<string, unknown>

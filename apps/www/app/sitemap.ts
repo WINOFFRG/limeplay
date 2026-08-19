@@ -1,34 +1,24 @@
 import type { MetadataRoute } from "next"
 
-import { PROD_BASE_HOST } from "@/lib/constants"
+import { blocksSource } from "@/lib/blocks-source"
+import { SITE_URL } from "@/lib/constants"
 import { source } from "@/lib/source"
 
 export const dynamic = "force-static"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = PROD_BASE_HOST
+  const canonicalPaths = new Set<string>([
+    "/",
+    ...source
+      .getPages()
+      .filter((page) => page.slugs[0] !== "blocks")
+      .map((page) => page.url),
+    ...blocksSource.getPages().map((page) => page.url),
+  ])
 
-  const staticPages = [
-    {
-      changeFrequency: "weekly" as const,
-      lastModified: new Date(),
-      priority: 1,
-      url: baseUrl,
-    },
-    {
-      changeFrequency: "weekly" as const,
-      lastModified: new Date(),
-      priority: 1,
-      url: `${baseUrl}/docs`,
-    },
-  ]
-
-  const docsPages = source.getPages().map((page) => ({
-    changeFrequency: "weekly" as const,
-    lastModified: new Date(),
-    priority: 0.9,
-    url: `${baseUrl}${page.url}`,
-  }))
-
-  return [...staticPages, ...docsPages]
+  return [...canonicalPaths]
+    .sort((firstPath, secondPath) => firstPath.localeCompare(secondPath))
+    .map((path) => ({
+      url: path === "/" ? SITE_URL : new URL(path, SITE_URL).toString(),
+    }))
 }

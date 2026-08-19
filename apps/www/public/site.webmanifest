@@ -1,16 +1,14 @@
 {
   "name": "Limeplay",
-  "short_name": "winoffrg/limeplay",
+  "short_name": "Limeplay",
+  "description": "Open-source React video and audio player UI components.",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
-      "src": "/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/android-chrome-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "/product-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     }
   ],
   "theme_color": "#ffffff",
