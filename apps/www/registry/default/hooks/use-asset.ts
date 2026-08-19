@@ -190,9 +190,7 @@ export interface PlaybackSource {
 
 /** Public source input accepted by blocks and `loadSource`. */
 export type PlayerSource<TItem extends TAsset = TAsset> =
-  | readonly TItem[]
-  | string
-  | TItem
+  readonly TItem[] | string | TItem
 
 /** Lazily resolves a playable source for an asset. */
 export type ResolveSource<TItem extends TAsset = TAsset> = (
@@ -423,8 +421,7 @@ export function assetFeature(): MediaFeature<
           const media = get().media.mediaElement
           const session = get().asset.activeSession
           const options = session?.loading as
-            | undefined
-            | UseAssetOptions<TAsset>
+            undefined | UseAssetOptions<TAsset>
 
           if (sourceType) {
             set(({ asset }) => {
@@ -644,8 +641,7 @@ export function assetFeature(): MediaFeature<
           const player = get().player.instance as null | shaka.Player
           const session = get().asset.activeSession
           const options = session?.loading as
-            | undefined
-            | UseAssetOptions<TAsset>
+            undefined | UseAssetOptions<TAsset>
           if (!player) return
 
           const assetId = getNormalizedAssetId(asset, options, {
@@ -928,8 +924,7 @@ function AssetSetup() {
         const { currentItem } = state.playlist
         const sessionId = state.asset.activeSession?.id
         const options = state.asset.activeSession?.loading as
-          | undefined
-          | UseAssetOptions<TAsset>
+          undefined | UseAssetOptions<TAsset>
         if (!currentItem) return
         const currentItemId = currentItem.id
 

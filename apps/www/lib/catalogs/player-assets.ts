@@ -9,8 +9,7 @@ import type { CatalogAsset } from "@/lib/catalogs/playlists"
 import type { StreamPreset } from "@/lib/stream-presets"
 
 export type CatalogPlayerAsset =
-  | CatalogPlayerAudioAsset
-  | CatalogPlayerVideoAsset
+  CatalogPlayerAudioAsset | CatalogPlayerVideoAsset
 
 export interface CatalogPlayerAudioAsset {
   albumName?: string

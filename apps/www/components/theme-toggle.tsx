@@ -239,11 +239,7 @@ export type AnimationStart =
   | "top-left"
   | "top-right"
 export type AnimationVariant =
-  | "circle"
-  | "circle-blur"
-  | "gif"
-  | "polygon"
-  | "rectangle"
+  "circle" | "circle-blur" | "gif" | "polygon" | "rectangle"
 
 interface Animation {
   css: string
