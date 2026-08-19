@@ -1,7 +1,5 @@
 "use client"
 
-import type { ComponentType, SVGProps } from "react"
-
 import { IconSatellite1 } from "@central-icons-react/round-filled-radius-0-stroke-1/IconSatellite1"
 import { IconVideoClip } from "@central-icons-react/round-filled-radius-0-stroke-1/IconVideoClip"
 import { IconVideos } from "@central-icons-react/round-filled-radius-0-stroke-1/IconVideos"
@@ -28,11 +26,7 @@ interface ContentOverviewOverlayProps {
   streamCount: number
 }
 
-type IconComponent = ComponentType<
-  SVGProps<SVGSVGElement> & {
-    size?: number | string
-  }
->
+type IconComponent = typeof IconVideoClip
 
 const rows: {
   description: string
