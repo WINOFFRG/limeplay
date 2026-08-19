@@ -61,7 +61,7 @@ export const metadata: Metadata = {
   },
   title: {
     default: `${PRODUCT_TITLE} | ${PRODUCT_NAME}`,
-    template: `%s | Limeplay`,
+    template: `%s | ${PRODUCT_NAME}`,
   },
   twitter: {
     card: "summary_large_image",
