@@ -47,6 +47,7 @@
     "lodash.clamp": "^4.0.3",
     "lodash.throttle": "^4.1.1",
     "lucide-react": "^1.31.0",
+    "motion": "^13.1.0",
     "next": "^16.3.1",
     "next-themes": "^0.4.6",
     "radix-ui": "^1.6.7",
