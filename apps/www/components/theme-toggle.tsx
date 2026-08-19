@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 "use client"
 
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { useTheme } from "next-themes"
 import React, { useCallback, useEffect, useState } from "react"
 

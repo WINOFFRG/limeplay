@@ -65,7 +65,7 @@ interface AnimatedGradientBackgroundProps {
  * AnimatedGradientBackground
  *
  * This component renders a customizable animated radial gradient background with a subtle breathing effect.
- * It uses `framer-motion` for an entrance animation and raw CSS gradients for the dynamic background.
+ * It uses Motion for an entrance animation and raw CSS gradients for the dynamic background.
  *
  *
  * @param {AnimatedGradientBackgroundProps} props - Props for configuring the gradient animation.
