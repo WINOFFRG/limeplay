@@ -143,7 +143,6 @@ export const blocks: Registry["items"] = [
     dependencies: [
       "@phosphor-icons/react",
       "@radix-ui/react-slot",
-      "motion",
       "zustand",
       "shaka-player@^4",
     ],
