@@ -54,7 +54,7 @@ export const ui: Registry["items"] = [
         "lp-primary-foreground": "oklch(0.985 0 0)",
       },
     },
-    dependencies: ["zustand"],
+    dependencies: ["zustand", "immer"],
     files: [
       {
         path: "ui/media-provider.tsx",
