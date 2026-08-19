@@ -1,5 +1,7 @@
 "use client"
 
+import type { MotionStyle } from "motion/react"
+
 import { motion, useScroll, useTransform } from "motion/react"
 import { useEffect, useMemo, useRef, useState } from "react"
 
@@ -37,15 +39,10 @@ export function ImmersiveScrollPlayer({
     [initialWidthPx, finalWidthPx, finalWidthPx, finalWidthPx]
   )
 
-  const backgroundColor = useTransform(
+  const backgroundOpacity = useTransform(
     scrollYProgress,
     [0.5, 0.7, 0.95, 1],
-    [
-      "rgba(255, 255, 255, 0)",
-      "rgba(0, 0, 0, 1)",
-      "rgba(0, 0, 0, 1)",
-      "rgba(0, 0, 0, 1)",
-    ]
+    [0, 1, 1, 1]
   )
 
   const borderRadius = useTransform(
@@ -87,8 +84,8 @@ export function ImmersiveScrollPlayer({
     >
       <div className="sticky top-0 grid h-svh w-full snap-proximity snap-normal place-items-center overflow-hidden">
         <motion.div
-          className="absolute inset-0 z-0"
-          style={{ backgroundColor }}
+          className="absolute inset-0 z-0 bg-black opacity-(--background-opacity)"
+          style={{ "--background-opacity": backgroundOpacity } as MotionStyle}
         />
         <motion.div
           className="relative z-10 aspect-auto origin-center overflow-hidden will-change-transform"
