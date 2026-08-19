@@ -248,7 +248,7 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
     const duration = useTimelineStore((state) => state.duration)
     const currentTime = useTimelineStore((state) => state.currentTime)
 
-    let finalPosition = 0
+    let finalPosition: number
 
     if (!duration) {
       return null
