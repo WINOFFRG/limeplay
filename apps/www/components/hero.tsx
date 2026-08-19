@@ -3,6 +3,7 @@ import Link from "next/link"
 import AnimatedButtons from "@/components/hero-buttons"
 import { Icons } from "@/components/icons"
 import { AnimatedGroup } from "@/components/ui/animated-group"
+import { TextEffect } from "@/components/ui/text-effect"
 
 export function Hero() {
   return (
@@ -25,7 +26,9 @@ export function Hero() {
               2xl:text-7xl
             `}
           >
-            Building video players was never meant to be hard.
+            <TextEffect preset="blur">
+              Building video players was never meant to be hard.
+            </TextEffect>
           </h1>
           <div className={`mx-auto mt-8 max-w-2xl`}>
             <h2

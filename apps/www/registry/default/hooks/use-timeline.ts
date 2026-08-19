@@ -136,8 +136,8 @@ export function timelineFeature(): MediaFeature<
 
           const fromTime = media.currentTime
 
-          let actualSeekTime = time
-          let storeCurrentTime = time
+          let actualSeekTime: number
+          let storeCurrentTime: number
 
           if (timeline.isLive && player) {
             const seekRange = player.seekRange()
