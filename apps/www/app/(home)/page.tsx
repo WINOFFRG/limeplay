@@ -1,3 +1,5 @@
+import type { Metadata } from "next"
+
 import { FeatureTrailSection } from "@/components/feature-trail-section"
 import { FeatureGrid } from "@/components/features"
 import { Hero } from "@/components/hero"
@@ -5,6 +7,12 @@ import { ImmersiveScrollPlayer } from "@/components/immersive-scroll-player"
 import { AudioPlayerHover } from "@/components/players/audio-player/hover-player"
 import { VideoPlayerContainer } from "@/components/players/video-player/player-container"
 import { ScrollIndicator } from "@/components/scroll-indicator"
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+}
 
 export default function Home() {
   return (

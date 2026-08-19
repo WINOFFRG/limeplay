@@ -1,5 +1,7 @@
 import type { source } from "@/lib/source"
 
+import { AGENT_INSTALLATION_POLICY } from "@/lib/llms"
+
 type Page = NonNullable<ReturnType<typeof source.getPage>>
 
 export async function getLLMText(page: Page) {
@@ -14,15 +16,40 @@ export async function getLLMText(page: Page) {
       "what-is-limeplay": "Limeplay Introduction",
     }[page.slugs[0] ?? ""] ?? page.slugs[0]
 
-  const processed = await (
-    page.data as { getText: (format: string) => Promise<string> }
-  ).getText("processed")
+  const processed = keepInstallationCommands(
+    await (
+      page.data as { getText: (format: string) => Promise<string> }
+    ).getText("processed")
+  )
 
   return `# ${category}: ${page.data.title}
 URL: ${page.url}
-Source: https://raw.githubusercontent.com/winoffrg/limeplay/refs/heads/main/apps/www/content/docs/${page.path}
 
 ${page.data.description ?? ""}
-        
+
+## Agent installation policy
+
+${AGENT_INSTALLATION_POLICY}
+
+## Reference
+
 ${processed}`
+}
+
+function keepInstallationCommands(markdown: string) {
+  return markdown.replace(
+    /```[^\n]*\n([\s\S]*?)```/g,
+    (_codeBlock, code: string) => {
+      const installationCommands = code
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line.startsWith("npx shadcn"))
+
+      if (installationCommands.length === 0) {
+        return "_Implementation example omitted. Install the block with the shadcn CLI._"
+      }
+
+      return `\`\`\`bash\n${installationCommands.join("\n")}\n\`\`\``
+    }
+  )
 }
