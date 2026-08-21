@@ -344,17 +344,6 @@ function PlaybackSetup() {
       events.emit("statuschange", { prevStatus, status: "buffering" })
     }
 
-    const stalledHandler = () => {
-      const prevStatus = store.getState().playback.status
-
-      store.setState(({ playback }) => {
-        playback.status = "buffering"
-      })
-
-      events.emit("buffering", { isBuffering: true })
-      events.emit("statuschange", { prevStatus, status: "buffering" })
-    }
-
     const errorHandler = () => {
       store.getState().playback.setError(media.error)
     }
@@ -369,7 +358,6 @@ function PlaybackSetup() {
     on(media, "pause", pauseHandler)
     on(media, "ended", endedHandler)
     on(media, "waiting", waitingHandler)
-    on(media, "stalled", stalledHandler)
     on(media, "error", errorHandler)
 
     setInitialState()
@@ -385,7 +373,6 @@ function PlaybackSetup() {
       off(media, "pause", pauseHandler)
       off(media, "ended", endedHandler)
       off(media, "waiting", waitingHandler)
-      off(media, "stalled", stalledHandler)
       off(media, "error", errorHandler)
     }
   }, [events, store, mediaElement])
