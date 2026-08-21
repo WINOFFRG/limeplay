@@ -3,18 +3,19 @@
 import * as React from "react"
 
 import type { AudioPlayerAsset } from "@/registry/default/blocks/audio-player/player"
-import type { PlaylistStore } from "@/registry/default/hooks/use-playlist"
 
 import { getAudioAssetMetadata } from "@/registry/default/blocks/audio-player/components/audio-source"
 import { useMediaApi } from "@/registry/default/blocks/audio-player/lib/media-kit"
+import { useAsset, useAssetStore } from "@/registry/default/hooks/use-asset"
 import {
-  AssetSourceType,
-  useAsset,
-  useAssetStore,
-} from "@/registry/default/hooks/use-asset"
-import {
+  canMoveToNextMediaSessionTrack,
+  canMoveToPreviousMediaSessionTrack,
+  canStartMediaSessionPlayback,
+  getMediaSessionCurrentTime,
+  getMediaSessionMetadataValue,
   getMediaSessionPlaybackState,
   getMediaSessionPositionState,
+  isMediaSessionPlaylistSource,
   useMediaSessionActionHandlers,
   useMediaSessionSync,
 } from "@/registry/default/hooks/use-media-session"
@@ -23,14 +24,14 @@ import { useTimelineStore } from "@/registry/default/hooks/use-timeline"
 
 export function AudioMediaSessionController() {
   const mediaApi = useMediaApi()
-  const { currentItem, hasNext, hasPrevious } = useAsset<AudioPlayerAsset>()
+  const { currentItem } = useAsset<AudioPlayerAsset>()
   const currentTime = useTimelineStore((state) => state.currentTime)
   const duration = useTimelineStore((state) => state.duration)
   const sourceType = useAssetStore((state) => state.sourceType)
   const status = usePlaybackStore((state) => state.status)
   const asset = currentItem?.properties ?? null
   const active = asset !== null
-  const playlistSource = isPlaylistSource(sourceType)
+  const playlistSource = isMediaSessionPlaylistSource(sourceType)
 
   const metadata = React.useMemo(
     () => (asset ? getAudioMediaSessionMetadata(asset) : null),
@@ -46,12 +47,12 @@ export function AudioMediaSessionController() {
     [active, currentTime, duration]
   )
   const actions = useMediaSessionActionHandlers({
-    canGoNext: playlistSource && hasNext,
-    canGoPrevious: playlistSource && hasPrevious,
+    canGoNext: playlistSource,
+    canGoPrevious: playlistSource,
     getCurrentTime: () => {
       const state = mediaApi.getState()
 
-      return getCurrentTimelineTime({
+      return getMediaSessionCurrentTime({
         currentTime: state.timeline.currentTime,
         isLive: state.timeline.isLive,
         mediaElement: state.media.mediaElement,
@@ -64,17 +65,29 @@ export function AudioMediaSessionController() {
     },
     onNextTrack: () => {
       const state = mediaApi.getState()
-      if (canMoveToNextTrack(state.asset.sourceType, state.playlist)) {
+      if (
+        canMoveToNextMediaSessionTrack(state.asset.sourceType, state.playlist)
+      ) {
         state.playlist.next()
       }
     },
     onPause: () => {
       mediaApi.getState().playback.pause()
     },
-    onPlay: () => mediaApi.getState().playback.play(),
+    onPlay: () => {
+      const state = mediaApi.getState()
+      if (!canStartMediaSessionPlayback(state.playback.status)) return
+
+      return state.playback.play()
+    },
     onPreviousTrack: () => {
       const state = mediaApi.getState()
-      if (canMoveToPreviousTrack(state.asset.sourceType, state.playlist)) {
+      if (
+        canMoveToPreviousMediaSessionTrack(
+          state.asset.sourceType,
+          state.playlist
+        )
+      ) {
         state.playlist.previous()
       }
     },
@@ -94,75 +107,16 @@ export function AudioMediaSessionController() {
   return null
 }
 
-function canMoveToNextTrack(
-  sourceType: AssetSourceType | null,
-  playlist: PlaylistStore["playlist"]
-): boolean {
-  return isPlaylistSource(sourceType) && hasNextPlaylistItem(playlist)
-}
-
-function canMoveToPreviousTrack(
-  sourceType: AssetSourceType | null,
-  playlist: PlaylistStore["playlist"]
-): boolean {
-  return isPlaylistSource(sourceType) && hasPreviousPlaylistItem(playlist)
-}
-
-function firstNonEmpty(
-  ...values: (null | number | string | undefined)[]
-): string | undefined {
-  for (const value of values) {
-    if (typeof value === "number" && Number.isFinite(value)) {
-      return String(value)
-    }
-
-    if (typeof value !== "string") continue
-
-    const trimmed = value.trim()
-    if (trimmed) return trimmed
-  }
-
-  return undefined
-}
-
 function getAudioMediaSessionMetadata(
   asset: AudioPlayerAsset
 ): MediaMetadataInit {
   const metadata = getAudioAssetMetadata(asset)
-  const poster = firstNonEmpty(metadata.poster, asset.poster)
+  const poster = getMediaSessionMetadataValue(metadata.poster, asset.poster)
 
   return {
-    album: firstNonEmpty(asset.albumName),
-    artist: firstNonEmpty(asset.artistName, metadata.subtitle),
+    album: getMediaSessionMetadataValue(asset.albumName),
+    artist: getMediaSessionMetadataValue(asset.artistName),
     artwork: poster ? [{ sizes: "512x512", src: poster }] : [],
     title: metadata.title,
   }
-}
-
-function getCurrentTimelineTime({
-  currentTime,
-  isLive,
-  mediaElement,
-}: {
-  currentTime: number
-  isLive: boolean
-  mediaElement: HTMLMediaElement | null
-}): number {
-  return isLive && mediaElement ? mediaElement.currentTime : currentTime
-}
-
-function hasNextPlaylistItem(playlist: PlaylistStore["playlist"]): boolean {
-  if (playlist.repeatMode === "all" && playlist.queue.length > 0) return true
-
-  return playlist.getNextIndex() !== -1
-}
-
-function hasPreviousPlaylistItem(playlist: PlaylistStore["playlist"]): boolean {
-  if (playlist.repeatMode === "all" && playlist.queue.length > 0) return true
-
-  return playlist.getPreviousIndex() !== -1
-}
-
-function isPlaylistSource(sourceType: AssetSourceType | null): boolean {
-  return sourceType === AssetSourceType.Playlist
 }

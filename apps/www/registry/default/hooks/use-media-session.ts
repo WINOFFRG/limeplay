@@ -30,6 +30,15 @@ export interface MediaSessionPictureInPictureActionDetails extends MediaSessionA
   enterPictureInPictureReason?: "contentoccluded" | "other" | "useraction"
 }
 
+export interface MediaSessionPlaylistNavigation {
+  getNextIndex: () => number
+  getPreviousIndex: () => number
+  queue: readonly unknown[]
+  repeatMode: "all" | "off" | "one"
+}
+
+export type MediaSessionSourceType = "asset" | "playlist" | null
+
 export interface UseMediaSessionActionHandlersOptions {
   canEnterPictureInPicture?: boolean
   canGoNext?: boolean
@@ -74,6 +83,59 @@ type MaybePromise<T> = Promise<T> | T
 
 const DEFAULT_MEDIA_SESSION_SEEK_OFFSET_SECONDS = 10
 
+export function canMoveToNextMediaSessionTrack(
+  sourceType: MediaSessionSourceType,
+  playlist: MediaSessionPlaylistNavigation
+): boolean {
+  return (
+    isMediaSessionPlaylistSource(sourceType) &&
+    hasNextMediaSessionPlaylistItem(playlist)
+  )
+}
+
+export function canMoveToPreviousMediaSessionTrack(
+  sourceType: MediaSessionSourceType,
+  playlist: MediaSessionPlaylistNavigation
+): boolean {
+  return (
+    isMediaSessionPlaylistSource(sourceType) &&
+    hasPreviousMediaSessionPlaylistItem(playlist)
+  )
+}
+
+export function canStartMediaSessionPlayback(status: string): boolean {
+  return !["error", "init"].includes(status)
+}
+
+export function getMediaSessionCurrentTime({
+  currentTime,
+  isLive,
+  mediaElement,
+}: {
+  currentTime: number
+  isLive: boolean
+  mediaElement: HTMLMediaElement | null
+}): number {
+  return isLive && mediaElement ? mediaElement.currentTime : currentTime
+}
+
+export function getMediaSessionMetadataValue(
+  ...values: (null | number | string | undefined)[]
+): string | undefined {
+  for (const value of values) {
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return String(value)
+    }
+
+    if (typeof value !== "string") continue
+
+    const trimmed = value.trim()
+    if (trimmed) return trimmed
+  }
+
+  return undefined
+}
+
 export function getMediaSessionPlaybackState({
   active,
   status,
@@ -107,6 +169,12 @@ export function getMediaSessionPositionState({
     playbackRate,
     position: getSafePosition(currentTime, duration),
   }
+}
+
+export function isMediaSessionPlaylistSource(
+  sourceType: MediaSessionSourceType
+): boolean {
+  return sourceType === "playlist"
 }
 
 export function useMediaSession(): UseMediaSessionReturn {
@@ -309,13 +377,26 @@ export function useMediaSessionSync({
   const mediaSession = useMediaSession()
 
   React.useEffect(() => {
+    const cleanupHandlers = getActionEntries(actions).map(([action, handler]) =>
+      mediaSession.setActionHandler(action, active ? (handler ?? null) : null)
+    )
+
+    return () => {
+      cleanupHandlers.forEach((cleanup) => cleanup())
+    }
+  }, [actions, active, mediaSession])
+
+  // Publish metadata after the current action set so platform UIs choose the
+  // correct track-navigation or seek-control layout for this source. Republish
+  // when actions change even if the metadata values stay the same.
+  React.useEffect(() => {
     if (!active || !metadata) {
       mediaSession.clearMetadata()
       return
     }
 
     mediaSession.setMetadata(metadata)
-  }, [active, mediaSession, metadata])
+  }, [actions, active, mediaSession, metadata])
 
   React.useEffect(() => {
     mediaSession.setPlaybackState(active ? (playbackState ?? "none") : "none")
@@ -329,16 +410,6 @@ export function useMediaSessionSync({
 
     mediaSession.setPositionState(position)
   }, [active, mediaSession, position])
-
-  React.useEffect(() => {
-    const cleanupHandlers = getActionEntries(actions).map(([action, handler]) =>
-      mediaSession.setActionHandler(action, active ? (handler ?? null) : null)
-    )
-
-    return () => {
-      cleanupHandlers.forEach((cleanup) => cleanup())
-    }
-  }, [actions, active, mediaSession])
 
   React.useEffect(() => {
     return () => {
@@ -376,6 +447,22 @@ function getSeekOffset({
   seekOffset,
 }: UseMediaSessionActionHandlersOptions): number {
   return seekOffset ?? DEFAULT_MEDIA_SESSION_SEEK_OFFSET_SECONDS
+}
+
+function hasNextMediaSessionPlaylistItem(
+  playlist: MediaSessionPlaylistNavigation
+): boolean {
+  if (playlist.repeatMode === "all" && playlist.queue.length > 0) return true
+
+  return playlist.getNextIndex() !== -1
+}
+
+function hasPreviousMediaSessionPlaylistItem(
+  playlist: MediaSessionPlaylistNavigation
+): boolean {
+  if (playlist.repeatMode === "all" && playlist.queue.length > 0) return true
+
+  return playlist.getPreviousIndex() !== -1
 }
 
 function isMediaSessionSupported(): boolean {
