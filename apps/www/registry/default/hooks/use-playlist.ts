@@ -388,8 +388,9 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
           }
 
           const previousItem = playlist.queue[previousIndex] as PlaylistItem
+          const lastHistoryItem = playlist.history.at(-1)
           const previousHistory =
-            playlist.history.length > 0
+            lastHistoryItem?.id === previousItem.id
               ? playlist.history.slice(0, -1)
               : playlist.history
 

@@ -89,6 +89,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           <Script
             crossOrigin="anonymous"
             src="//unpkg.com/react-scan/dist/auto.global.js"
+            strategy="beforeInteractive"
           />
         )}
       </head>
