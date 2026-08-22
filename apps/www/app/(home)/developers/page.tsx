@@ -5,7 +5,7 @@ import Link from "next/link"
 export const metadata: Metadata = {
   alternates: { canonical: "/developers" },
   description:
-    "Limeplay developer resources, including OpenAPI, agent documentation, API status, installation guidance, and source links.",
+    "Limeplay developer resources, including OpenAPI, agent documentation, the static deployment marker, installation guidance, and source links.",
   openGraph: {
     title: "Limeplay developer resources and API",
     url: "/developers",
@@ -40,9 +40,9 @@ export default function DevelopersPage() {
   return (
     <div
       className="
-      relative z-10 mx-auto w-full max-w-5xl border-x border-border px-page py-20
-      md:py-28
-    "
+        relative z-10 mx-auto w-full max-w-5xl border-x border-border px-page py-20
+        md:py-28
+      "
     >
       <div className="mx-auto max-w-3xl">
         <p className="mb-3 text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase">
@@ -50,15 +50,15 @@ export default function DevelopersPage() {
         </p>
         <h1
           className="
-          text-4xl font-semibold tracking-tight text-balance text-foreground
-          md:text-5xl
-        "
+            text-4xl font-semibold tracking-tight text-balance text-foreground
+            md:text-5xl
+          "
         >
           Limeplay developer resources and API
         </h1>
         <p className="mt-5 max-w-2xl text-base/7 text-muted-foreground">
           Find machine-readable specifications, installation guides, service
-          status, and source links from one canonical page.
+          metadata, and source links from one canonical page.
         </p>
 
         <section aria-labelledby="machine-readable-heading" className="mt-12">
@@ -70,12 +70,12 @@ export default function DevelopersPage() {
           </h2>
           <div
             className="
-            mt-5 grid gap-3
-            sm:grid-cols-2
-          "
+              mt-5 grid gap-3
+              sm:grid-cols-2
+            "
           >
             {resources.map((resource) => (
-              <Link
+              <a
                 className="
                   rounded-xl border border-border bg-background/60 p-5 focus-ring transition-colors
                   hover:bg-background
@@ -89,7 +89,7 @@ export default function DevelopersPage() {
                 <p className="mt-2 text-sm/6 text-muted-foreground">
                   {resource.description}
                 </p>
-              </Link>
+              </a>
             ))}
           </div>
         </section>
@@ -103,16 +103,18 @@ export default function DevelopersPage() {
           </h2>
           <p className="mt-3 text-sm/7 text-muted-foreground">
             The public API currently exposes an unauthenticated{" "}
-            <Link
+            <a
               className="
                 underline underline-offset-4
                 hover:text-foreground
               "
               href="/api/health"
             >
-              health endpoint
-            </Link>
-            . Limeplay does not currently publish webhooks or an MCP server.
+              static deployment marker
+            </a>
+            . It confirms that the exported API file is reachable; it does not
+            probe runtime dependencies. Limeplay does not currently publish
+            webhooks or an MCP server.
           </p>
         </section>
 

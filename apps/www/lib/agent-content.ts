@@ -7,6 +7,21 @@ export const AGENT_RECOVERY_LINKS = [
   { href: "/docs/quick-start", label: "Quick start" },
 ] as const
 
+const HOMEPAGE_AGENT_LINKS = [
+  ...AGENT_RECOVERY_LINKS,
+  { href: "/openapi.json", label: "OpenAPI specification" },
+] as const
+
+function buildMarkdownLinks(
+  links: ReadonlyArray<{ href: string; label: string }>
+) {
+  return links
+    .map(
+      (link) => `- [${link.label}](${new URL(link.href, SITE_URL).toString()})`
+    )
+    .join("\n")
+}
+
 export const HOME_AGENT_SECTIONS = [
   {
     body: "Start with the video player or audio player block for a production-ready composition. Each block includes the media runtime, controls, responsive layout, keyboard behavior, captions, error states, and styling. Limeplay distributes source through the shadcn CLI, so the generated files live in your repository and can follow your design tokens, import aliases, and component conventions.",
@@ -68,11 +83,7 @@ export function buildHomepageMarkdown() {
     ...sections,
     "## Developer resources",
     "",
-    `- [Quick start](${SITE_URL}/docs/quick-start)`,
-    `- [Agent index](${SITE_URL}/llms.txt)`,
-    `- [OpenAPI specification](${SITE_URL}/openapi.json)`,
-    `- [Developer resources](${SITE_URL}/developers)`,
-    `- [Sitemap](${SITE_URL}/sitemap.xml)`,
+    buildMarkdownLinks(HOMEPAGE_AGENT_LINKS),
     "",
   ].join("\n")
 }
@@ -84,9 +95,6 @@ The requested Limeplay resource does not exist or has moved.
 
 ## Where to look next
 
-- [Sitemap](${SITE_URL}/sitemap.xml)
-- [Agent index](${SITE_URL}/llms.txt)
-- [Developer resources](${SITE_URL}/developers)
-- [Quick start](${SITE_URL}/docs/quick-start)
+${buildMarkdownLinks(AGENT_RECOVERY_LINKS)}
 `
 }

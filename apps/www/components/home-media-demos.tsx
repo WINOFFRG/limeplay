@@ -8,7 +8,7 @@ const AudioPlayerHover = dynamic(
       (module) => module.AudioPlayerHover
     ),
   {
-    loading: () => <div aria-hidden="true" className="h-64" />,
+    loading: () => <div aria-hidden="true" className="h-32" />,
     ssr: false,
   }
 )

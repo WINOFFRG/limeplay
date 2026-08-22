@@ -1,16 +1,11 @@
+import { API_DEPLOYMENT_MARKER_DOCUMENT } from "@/lib/api-spec"
+
 export const dynamic = "force-static"
 
 export function GET() {
-  return Response.json(
-    {
-      service: "Limeplay Agent API",
-      status: "ok",
-      version: "1.0.0",
+  return Response.json(API_DEPLOYMENT_MARKER_DOCUMENT, {
+    headers: {
+      "Cache-Control": "public, max-age=0, must-revalidate",
     },
-    {
-      headers: {
-        "Cache-Control": "public, max-age=0, must-revalidate",
-      },
-    }
-  )
+  })
 }
