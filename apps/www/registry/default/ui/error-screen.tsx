@@ -3,7 +3,6 @@
 import type { ComponentPropsWithoutRef } from "react"
 
 import * as React from "react"
-import shaka from "shaka-player"
 
 import {
   Item,
@@ -189,11 +188,10 @@ export function isShakaError(error: unknown): error is ShakaErrorLike {
   }
 
   return (
-    error instanceof shaka.util.Error ||
-    (hasNumberProperty(error, "category") &&
-      hasNumberProperty(error, "code") &&
-      hasNumberProperty(error, "severity") &&
-      hasStringProperty(error, "message"))
+    hasNumberProperty(error, "category") &&
+    hasNumberProperty(error, "code") &&
+    hasNumberProperty(error, "severity") &&
+    hasStringProperty(error, "message")
   )
 }
 

@@ -39,7 +39,7 @@ Flag PRs where:
 * Dependencies are incorrect
 * Public APIs are undocumented
 * Block files in `lib/`, `ui/`, `hooks/` folders have filenames matching any registry item in the dependency tree — the shadcn CLI rewrites those imports to the registry item's target path instead of the block's file. Use `components/` folder (always block-scoped) or a non-colliding filename.
-* Dependencies with breaking major versions are unpinned (e.g. `"shaka-player"` instead of `"shaka-player@^4"`)
+* Dependencies with breaking major versions are unpinned (e.g. `"shaka-player"` instead of `"shaka-player@^5.2.7"`)
 * Control primitives support `asChild` but not `render?: React.ReactElement` — the b0 shadcn preset transforms `asChild` to `render` at install time, so primitives must accept both
 
 ---

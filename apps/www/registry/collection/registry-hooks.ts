@@ -63,7 +63,7 @@ export const hooks: Registry["items"] = [
     type: "registry:hook",
   },
   {
-    dependencies: ["lodash.clamp", "shaka-player@^4", "zustand"],
+    dependencies: ["lodash.clamp", "shaka-player@^5.2.7", "zustand"],
     devDependencies: ["@types/lodash.clamp"],
     files: [
       {
@@ -84,7 +84,7 @@ export const hooks: Registry["items"] = [
     type: "registry:hook",
   },
   {
-    dependencies: ["shaka-player@^4", "zustand"],
+    dependencies: ["shaka-player@^5.2.7", "zustand"],
     files: [
       {
         path: "hooks/use-player.ts",
@@ -102,7 +102,7 @@ export const hooks: Registry["items"] = [
     type: "registry:hook",
   },
   {
-    dependencies: ["shaka-player@^4", "zustand"],
+    dependencies: ["shaka-player@^5.2.7", "zustand"],
     files: [
       {
         path: "hooks/use-asset.ts",
@@ -144,7 +144,7 @@ export const hooks: Registry["items"] = [
     type: "registry:hook",
   },
   {
-    dependencies: ["shaka-player@^4", "zustand"],
+    dependencies: ["shaka-player@^5.2.7", "zustand"],
     files: [
       {
         path: "hooks/use-captions.ts",

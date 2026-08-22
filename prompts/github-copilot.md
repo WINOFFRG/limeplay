@@ -55,7 +55,7 @@ Limeplay is a shadcn/ui-based, headless, composable media player UI library buil
 * ❌ Missing dependencies in registry metadata
 * ❌ CLI install must not break
 * ❌ Block files in `lib/`, `ui/`, `hooks/` whose filename (without extension) matches any registry item in the dependency tree (shadcn CLI hijacks the import) — use `components/` folder or a non-colliding name
-* ❌ Unpinned dependencies with breaking major versions (e.g. `"shaka-player"` instead of `"shaka-player@^4"`)
+* ❌ Unpinned dependencies with breaking major versions (e.g. `"shaka-player"` instead of `"shaka-player@^5.2.7"`)
 
 #### Imports
 

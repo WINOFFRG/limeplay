@@ -12,6 +12,7 @@ import type {
 import { useMediaStore } from "@/registry/default/hooks/use-media"
 import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
 import {
+  PLAYER_FEATURE_KEY,
   type PlayerStore,
   usePlayerStore,
 } from "@/registry/default/hooks/use-player"
@@ -56,22 +57,16 @@ export function captionsFeature(): MediaFeature<
 
           const captions = get().captions
 
-          if (!captions.activeTrack) {
-            const defaultTrack = findDefaultTrack(captions.tracks)
-            if (defaultTrack) {
-              player.selectTextTrack(defaultTrack)
-
-              const activeTrack = player
-                .getTextTracks()
-                .find((track: shaka.extern.TextTrack) => track.active)
-
-              set(({ captions }) => {
-                captions.activeTrack = activeTrack ?? null
-              })
-            }
+          if (captions.visible) {
+            player.selectTextTrack(null)
+            return
           }
 
-          player.setTextTrackVisibility(!captions.visible)
+          const track =
+            captions.activeTrack ?? findDefaultTrack(captions.tracks)
+          if (track) {
+            player.selectTextTrack(track)
+          }
         },
         tracks: undefined,
         visible: false,
@@ -97,42 +92,27 @@ export function useCaptionsStore<TSelected>(
 
 function CaptionsSetup() {
   const store = useMediaFeatureApi<CaptionsStore>(CAPTIONS_FEATURE_KEY)
+  const playerStore = useMediaFeatureApi<PlayerStore>(PLAYER_FEATURE_KEY)
   const player = usePlayerStore((state) => state.instance)
   const containerElement = useCaptionsStore((state) => state.containerElement)
   const mediaElement = useMediaStore((state) => state.mediaElement)
   const canPlay = usePlaybackStore((state) => state.canPlay)
 
-  const onTextTrackChanged = () => {
+  const syncTextTrackState = () => {
+    const player = playerStore.getState().player.instance
     if (!player) {
       return
     }
 
-    const activeTrack = player
-      .getTextTracks()
-      .find((track: shaka.extern.TextTrack) => track.active)
+    const tracks = player.getTextTracks()
+    const activeTrack = tracks.find(
+      (track: shaka.extern.TextTrack) => track.active
+    )
 
     store.setState(({ captions }) => {
       captions.activeTrack = activeTrack ?? null
-    })
-  }
-
-  const onTracksChanged = () => {
-    if (!player) {
-      return
-    }
-
-    store.setState(({ captions }) => {
-      captions.tracks = player.getTextTracks()
-    })
-  }
-
-  const onTextTrackVisibility = () => {
-    if (!player) {
-      return
-    }
-
-    store.setState(({ captions }) => {
-      captions.visible = player.isTextTrackVisible()
+      captions.tracks = tracks
+      captions.visible = Boolean(activeTrack)
     })
   }
 
@@ -148,17 +128,17 @@ function CaptionsSetup() {
     if (!mediaElement || !player) return
 
     if (canPlay) {
-      onTracksChanged()
+      syncTextTrackState()
     }
 
-    on(player, "textchanged", onTextTrackChanged)
-    on(player, ["trackschanged", "loading"], onTracksChanged)
-    on(player, "texttrackvisibility", onTextTrackVisibility)
+    on(player, ["textchanged", "trackschanged", "loading"], syncTextTrackState)
 
     return () => {
-      off(player, "textchanged", onTextTrackChanged)
-      off(player, ["trackschanged", "loading"], onTracksChanged)
-      off(player, "texttrackvisibility", onTextTrackVisibility)
+      off(
+        player,
+        ["textchanged", "trackschanged", "loading"],
+        syncTextTrackState
+      )
     }
   }, [canPlay, mediaElement, player])
 

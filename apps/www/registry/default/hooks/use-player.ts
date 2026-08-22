@@ -1,7 +1,8 @@
 "use client"
 
+import type shaka from "shaka-player"
+
 import React, { useRef } from "react"
-import shaka from "shaka-player"
 
 import type { PlaybackStore } from "@/registry/default/hooks/use-playback"
 import type {
@@ -64,12 +65,16 @@ export interface UsePlayerOptions<TAsset> {
 
 export const RECOMMENDED_PLAYER_BUFFERING_THROTTLE_MS = 250
 
+// Public Shaka error code. Keep this local so importing the hook on the server
+// does not evaluate Shaka's browser-only bundle during prerendering.
+const SHAKA_LOAD_INTERRUPTED_ERROR_CODE = 7000
+
 export function isLoadInterrupted(error: unknown): boolean {
   if (
     error &&
     typeof error === "object" &&
     "code" in error &&
-    (error as { code: number }).code === shaka.util.Error.Code.LOAD_INTERRUPTED
+    (error as { code: number }).code === SHAKA_LOAD_INTERRUPTED_ERROR_CODE
   ) {
     return true
   }
