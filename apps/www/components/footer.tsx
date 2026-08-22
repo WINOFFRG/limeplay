@@ -14,6 +14,9 @@ export function Footer() {
         >
           <div className="flex flex-row items-center gap-2">
             <Button asChild size="xs" variant="ghost">
+              <Link href="/developers">Developer Resources</Link>
+            </Button>
+            <Button asChild size="xs" variant="ghost">
               <Link
                 href="https://limeplay.userjot.com"
                 rel="noopener noreferrer"

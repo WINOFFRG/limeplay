@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronDownIcon, MonitorPlayIcon } from "lucide-react"
+import { ChevronDownIcon, TvIcon } from "lucide-react"
 
 import {
   StreamPanel,
@@ -57,15 +57,15 @@ function HomeVideoStreamSelector() {
         <Button
           asChild
           className={`
-            pointer-events-auto h-8 max-w-[min(18rem,calc(100vw-1.5rem))] rounded-full border border-white/12 bg-black/45 px-2.5 text-xs font-medium
-            text-white shadow-2xl shadow-black/35 backdrop-blur-xl
+            pointer-events-auto h-8 max-w-[min(18rem,calc(100vw-1.5rem))] rounded-xl border border-white/12 bg-background/40 px-2.5 text-xs
+            font-medium text-primary shadow-2xl shadow-black/35 backdrop-blur-xl
             @md/root:h-9 @md/root:max-w-[min(20rem,calc(100vw-2rem))] @md/root:px-3
             @3xl/root:h-10 @3xl/root:max-w-[min(24rem,calc(100vw-2rem))] @3xl/root:px-4 @3xl/root:text-sm
           `}
           variant="ghost"
         >
           <PopoverTrigger aria-label="Open stream selector" handle={handle}>
-            <MonitorPlayIcon
+            <TvIcon
               className="
                 size-3
                 @md/root:size-3.5

@@ -34,6 +34,7 @@ export async function GET(
   return new NextResponse(await getLLMText(page), {
     headers: {
       "Content-Type": "text/markdown; charset=utf-8",
+      Vary: "Accept, Accept-Encoding",
       "X-Robots-Tag": "noindex, follow",
     },
   })

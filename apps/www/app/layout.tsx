@@ -84,6 +84,12 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html className={inter.className} lang="en" suppressHydrationWarning>
       <head>
+        <link
+          href="/index.md"
+          rel="alternate"
+          title="Limeplay markdown homepage"
+          type="text/markdown"
+        />
         <UserJotProvider projectId="cmjs634l4043b15ldylgedgwi" />
         {process.env.NODE_ENV === "development" && (
           <Script
