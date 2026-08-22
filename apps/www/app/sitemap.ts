@@ -9,6 +9,7 @@ export const dynamic = "force-static"
 export default function sitemap(): MetadataRoute.Sitemap {
   const canonicalPaths = new Set<string>([
     "/",
+    "/developers",
     ...source
       .getPages()
       .filter((page) => page.slugs[0] !== "blocks")

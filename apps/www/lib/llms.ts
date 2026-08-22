@@ -51,6 +51,8 @@ export function buildLLMsText({ includeAllDocs = false } = {}) {
     "",
     "## Optional",
     "",
+    `- [Developer resources](${getAbsoluteUrl("/developers")}): OpenAPI, agent documentation, API status, authentication details, and source links.`,
+    `- [OpenAPI specification](${getAbsoluteUrl("/openapi.json")}): OpenAPI 3.1 description of Limeplay's public API.`,
     `- [GitHub repository](https://github.com/winoffrg/limeplay): Project history, issues, and license. Use the CLI rather than copying implementation files from the repository.`,
   ]
 
@@ -68,5 +70,6 @@ function getDescription(title: string, description?: string) {
 export const LLM_RESPONSE_HEADERS = {
   "Cache-Control": "public, max-age=0, must-revalidate",
   "Content-Type": "text/plain; charset=utf-8",
+  Vary: "Accept, Accept-Encoding",
   "X-Robots-Tag": "noindex, follow",
 }
