@@ -3,8 +3,8 @@ import type { Metadata } from "next"
 import { FeatureTrailSection } from "@/components/feature-trail-section"
 import { FeatureGrid } from "@/components/features"
 import { Hero } from "@/components/hero"
+import { DeferredHomeAudioDemo } from "@/components/home-media-demos"
 import { ImmersiveScrollPlayer } from "@/components/immersive-scroll-player"
-import { AudioPlayerHover } from "@/components/players/audio-player/hover-player"
 import { VideoPlayerContainer } from "@/components/players/video-player/player-container"
 import { ScrollIndicator } from "@/components/scroll-indicator"
 
@@ -41,9 +41,7 @@ export default function Home() {
             <div
               className={`mr-2 flex size-[0.8em] items-center justify-center overflow-hidden rounded-full bg-[#FF6100]`}
             ></div>
-            <span className={`mr-1 inline-block`}>
-              Built to make viewers stay
-            </span>
+            <h2 className={`mr-1 inline-block`}>Built to make viewers stay</h2>
           </div>
           <p
             className={`
@@ -68,7 +66,7 @@ export default function Home() {
           </p>
         </div>
       </FeatureTrailSection>
-      <AudioPlayerHover />
+      <DeferredHomeAudioDemo />
       <div
         className={`
           mx-auto w-full
