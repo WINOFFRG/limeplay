@@ -103,8 +103,8 @@
     },
     {
       "src": "/api/health",
-      "methods": ["POST", "PUT", "PATCH", "DELETE"],
-      "dest": "/api/error.json",
+      "methods": ["POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      "dest": "/api/errors/method-not-allowed.json",
       "status": 405,
       "headers": {
         "Allow": "GET, HEAD",
@@ -112,8 +112,8 @@
       }
     },
     {
-      "src": "/api/(?!health(?:\\.json)?/?$|error\\.json$).*",
-      "dest": "/api/error.json",
+      "src": "/api/(?!health(?:\\.json)?/?$|errors/(?:not-found|method-not-allowed)\\.json$).*",
+      "dest": "/api/errors/not-found.json",
       "status": 404,
       "headers": {
         "Content-Type": "application/problem+json; charset=utf-8"

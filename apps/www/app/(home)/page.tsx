@@ -4,6 +4,7 @@ import { FeatureTrailSection } from "@/components/feature-trail-section"
 import { FeatureGrid } from "@/components/features"
 import { Hero } from "@/components/hero"
 import { DeferredHomeAudioDemo } from "@/components/home-media-demos"
+import { HomeNoscriptContent } from "@/components/home-noscript-content"
 import { ImmersiveScrollPlayer } from "@/components/immersive-scroll-player"
 import { VideoPlayerContainer } from "@/components/players/video-player/player-container"
 import { ScrollIndicator } from "@/components/scroll-indicator"
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <HomeNoscriptContent />
       <ImmersiveScrollPlayer>
         <VideoPlayerContainer />
       </ImmersiveScrollPlayer>

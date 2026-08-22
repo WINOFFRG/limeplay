@@ -17,9 +17,9 @@ export function HomeNoscriptContent() {
         </p>
         <div
           className="
-          mt-8 grid gap-7
-          md:grid-cols-2
-        "
+            mt-8 grid gap-7
+            md:grid-cols-2
+          "
         >
           {HOME_AGENT_SECTIONS.map((section) => (
             <article key={section.title}>

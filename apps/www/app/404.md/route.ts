@@ -10,5 +10,6 @@ export function GET() {
       Vary: "Accept, Accept-Encoding",
       "X-Robots-Tag": "noindex, follow",
     },
+    status: 404,
   })
 }
