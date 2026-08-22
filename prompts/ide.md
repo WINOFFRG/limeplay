@@ -195,8 +195,8 @@ The b0 shadcn preset uses Base UI instead of Radix. During `shadcn add`, the CLI
 #### Version Pinning
 
 Always pin dependencies that have breaking changes across majors:
-* ✅ `"shaka-player@^4"` — v5 removed APIs we use
-* ❌ `"shaka-player"` — installs latest (v5), breaks types
+* ✅ `"shaka-player@^5.2.7"` — pins the supported v5 release line
+* ❌ `"shaka-player"` — may install an unreviewed future major version
 
 #### Related upstream issues
 

@@ -1,8 +1,5 @@
 [install]
 minimumReleaseAge = 259200
 minimumReleaseAgeExcludes = [
-  "@types/node",
-  "@types/react",
-  "@types/react-dom",
-  "typescript",
+  "shaka-player",
 ]

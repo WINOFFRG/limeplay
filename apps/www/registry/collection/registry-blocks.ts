@@ -10,7 +10,7 @@ export const blocks: Registry["items"] = [
       "@base-ui/react",
       "@radix-ui/react-toggle",
       "zustand",
-      "shaka-player@^4",
+      "shaka-player@^5.2.7",
       "lodash.clamp",
     ],
     description: "Modern seamless flat video player",
@@ -145,7 +145,7 @@ export const blocks: Registry["items"] = [
       "@radix-ui/react-slot",
       "motion",
       "zustand",
-      "shaka-player@^4",
+      "shaka-player@^5.2.7",
     ],
     description: "Compact audio player with playlist support",
     files: [
