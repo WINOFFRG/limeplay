@@ -7,10 +7,11 @@ import Link from "next/link"
 
 import AnimatedGradientBackground from "@/components/ui/animated-gradient-background"
 import { Button } from "@/components/ui/button"
+import { AGENT_RECOVERY_LINKS } from "@/lib/agent-content"
 
 export default function NotFound() {
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div className="relative min-h-dvh w-full overflow-x-hidden">
       <AnimatedGradientBackground
         Breathing={true}
         gradientColors={[
@@ -23,7 +24,8 @@ export default function NotFound() {
           "#3D5AFE",
         ]}
       />
-      <div className="relative z-10 mt-32 flex h-full flex-col items-center justify-start px-4 text-center">
+      <div className="relative z-10 mt-32 flex min-h-[calc(100dvh-8rem)] flex-col items-center justify-start px-4 pb-12 text-center">
+        <h1 className="text-3xl font-semibold text-white">Page not found</h1>
         <motion.div
           animate={{ opacity: 1, y: 0 }}
           initial={{ opacity: 0, y: 20 }}
@@ -47,6 +49,27 @@ export default function NotFound() {
         >
           The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </motion.p>
+
+        <motion.nav
+          animate={{ opacity: 1 }}
+          aria-label="404 recovery links"
+          className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-gray-300"
+          initial={{ opacity: 0 }}
+          transition={{ delay: 0.9, duration: 0.8 }}
+        >
+          {AGENT_RECOVERY_LINKS.map((link) => (
+            <Link
+              className="
+                underline underline-offset-4
+                hover:text-white
+              "
+              href={link.href}
+              key={link.href}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </motion.nav>
 
         <motion.div
           animate={{ opacity: 1, y: 0 }}

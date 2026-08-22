@@ -26,6 +26,7 @@ export function Hero() {
               2xl:text-7xl
             `}
           >
+            <span className="sr-only">Limeplay: </span>
             <TextEffect preset="blur">
               Building video players was never meant to be hard.
             </TextEffect>
