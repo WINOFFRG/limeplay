@@ -189,29 +189,7 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
         getPreviousIndex: () => {
           const playlist = get().playlist as PlaylistStore["playlist"]
 
-          if (playlist.queue.length === 0) return -1
-
-          if (playlist.repeatMode === "one") return playlist.currentIndex
-
-          if (playlist.history.length > 0) {
-            const lastItem = playlist.history[playlist.history.length - 1]
-            const idx = playlist.queue.findIndex(
-              (entry) => entry.id === lastItem.id
-            )
-            if (idx !== -1) return idx
-          }
-
-          if (playlist.shuffle && playlist.shuffleOrder.length > 0) {
-            const currentPos = playlist.shuffleOrder.indexOf(
-              playlist.currentIndex
-            )
-            if (currentPos > 0) return playlist.shuffleOrder[currentPos - 1]
-            return playlist.currentIndex
-          }
-
-          return playlist.currentIndex > 0
-            ? playlist.currentIndex - 1
-            : playlist.currentIndex
+          return getPreviousPlaylistTarget(playlist).index
         },
         history: [],
         insert: (items, atIndex) => {
@@ -382,17 +360,17 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
         },
         previous: () => {
           const playlist = get().playlist as PlaylistStore["playlist"]
-          const previousIndex = playlist.getPreviousIndex()
+          const previousTarget = getPreviousPlaylistTarget(playlist)
+          const previousIndex = previousTarget.index
           if (previousIndex === -1 || previousIndex >= playlist.queue.length) {
             return false
           }
 
           const previousItem = playlist.queue[previousIndex] as PlaylistItem
-          const lastHistoryItem = playlist.history.at(-1)
           const previousHistory =
-            lastHistoryItem?.id === previousItem.id
-              ? playlist.history.slice(0, -1)
-              : playlist.history
+            previousTarget.historyIndex === -1
+              ? []
+              : playlist.history.slice(0, previousTarget.historyIndex)
 
           set(({ playlist: p }) => {
             p.currentIndex = previousIndex
@@ -417,6 +395,7 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
           if (removeIndex === -1) return
 
           const newQueue = reject(playlist.queue, { id }) as PlaylistItem[]
+          const newHistory = playlist.history.filter((item) => item.id !== id)
           let newCurrentIndex = playlist.currentIndex
           let newCurrentItem = playlist.currentItem
 
@@ -439,6 +418,7 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
             set(({ playlist: p }) => {
               p.currentIndex = newCurrentIndex
               p.currentItem = newCurrentItem
+              p.history = newHistory
               p.queue = newQueue
               p.shuffleOrder = newShuffleOrder
             })
@@ -457,6 +437,7 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
           set(({ playlist: p }) => {
             p.currentIndex = newCurrentIndex
             p.currentItem = newCurrentItem
+            p.history = newHistory
             p.queue = newQueue
             p.shuffleOrder = newShuffleOrder
           })
@@ -741,6 +722,61 @@ function emitPlaylistChange(
 
 function generateSessionId(): string {
   return `lp_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
+}
+
+function getPreviousPlaylistTarget(playlist: PlaylistStore["playlist"]): {
+  historyIndex: number
+  index: number
+} {
+  if (playlist.queue.length === 0) {
+    return { historyIndex: -1, index: -1 }
+  }
+
+  if (playlist.repeatMode === "one") {
+    return { historyIndex: -1, index: playlist.currentIndex }
+  }
+
+  for (
+    let historyIndex = playlist.history.length - 1;
+    historyIndex >= 0;
+    historyIndex--
+  ) {
+    const historyItem = playlist.history[historyIndex]
+    const index = playlist.queue.findIndex(
+      (entry) => entry.id === historyItem.id
+    )
+
+    if (index !== -1) {
+      return { historyIndex, index }
+    }
+  }
+
+  if (playlist.shuffle && playlist.shuffleOrder.length > 0) {
+    const currentPos = playlist.shuffleOrder.indexOf(playlist.currentIndex)
+    if (currentPos > 0) {
+      return {
+        historyIndex: -1,
+        index: playlist.shuffleOrder[currentPos - 1],
+      }
+    }
+    if (playlist.repeatMode === "all") {
+      return {
+        historyIndex: -1,
+        index: playlist.shuffleOrder[playlist.shuffleOrder.length - 1],
+      }
+    }
+    return { historyIndex: -1, index: -1 }
+  }
+
+  if (playlist.currentIndex > 0) {
+    return { historyIndex: -1, index: playlist.currentIndex - 1 }
+  }
+
+  if (playlist.repeatMode === "all") {
+    return { historyIndex: -1, index: playlist.queue.length - 1 }
+  }
+
+  return { historyIndex: -1, index: -1 }
 }
 
 function getRepeatModes(queueLength: number): RepeatMode[] {

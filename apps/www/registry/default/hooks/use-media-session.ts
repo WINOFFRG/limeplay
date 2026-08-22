@@ -47,14 +47,17 @@ export interface UseMediaSessionActionHandlersOptions {
   getSeekRange?: () => null | undefined | { start: number }
   onEnterPictureInPicture?: (
     details: MediaSessionPictureInPictureActionDetails
-  ) => void
-  onNextTrack?: () => void
-  onPause: () => void
+  ) => MaybePromise<void>
+  onNextTrack?: () => MaybePromise<void>
+  onPause: () => MaybePromise<void>
   onPlay: () => MaybePromise<void>
-  onPreviousTrack?: () => void
-  onSeek: (time: number, details: MediaSessionActionDetails) => void
-  onSkipAd?: () => void
-  onStop?: () => void
+  onPreviousTrack?: () => MaybePromise<void>
+  onSeek: (
+    time: number,
+    details: MediaSessionActionDetails
+  ) => MaybePromise<void>
+  onSkipAd?: () => MaybePromise<void>
+  onStop?: () => MaybePromise<void>
   seekOffset?: number
 }
 
@@ -74,6 +77,7 @@ export interface UseMediaSessionReturn {
 export interface UseMediaSessionSyncOptions {
   actions?: MediaSessionActionHandlers
   active?: boolean
+  claim?: boolean
   metadata?: MediaSessionMetadata | null
   playbackState?: MediaSessionPlaybackState
   position?: MediaPositionState | null
@@ -82,6 +86,10 @@ export interface UseMediaSessionSyncOptions {
 type MaybePromise<T> = Promise<T> | T
 
 const DEFAULT_MEDIA_SESSION_SEEK_OFFSET_SECONDS = 10
+const MEDIA_SESSION_OWNER_FALLBACK = Symbol("limeplay-media-session-owner")
+
+let mediaSessionOwner: null | symbol = null
+const mediaSessionOwnerListeners = new Set<() => void>()
 
 export function canMoveToNextMediaSessionTrack(
   sourceType: MediaSessionSourceType,
@@ -160,7 +168,7 @@ export function getMediaSessionPositionState({
   playbackRate?: number
 }): MediaPositionState | null {
   if (!active) return null
-  if (!isValidDuration(duration)) return null
+  if (!isValidFiniteDuration(duration)) return null
   if (!Number.isFinite(currentTime) || currentTime < 0) return null
   if (!isValidPlaybackRate(playbackRate)) return null
 
@@ -302,43 +310,61 @@ export function useMediaSessionActionHandlers(
     () => ({
       enterpictureinpicture: canEnterPictureInPicture
         ? (details) => {
-            optionsRef.current.onEnterPictureInPicture?.(
-              details as MediaSessionPictureInPictureActionDetails
+            runMediaSessionAction(
+              () =>
+                optionsRef.current.onEnterPictureInPicture?.(
+                  details as MediaSessionPictureInPictureActionDetails
+                ),
+              "enterpictureinpicture"
             )
           }
         : null,
       nexttrack: canGoNext
         ? () => {
-            optionsRef.current.onNextTrack?.()
+            runMediaSessionAction(
+              () => optionsRef.current.onNextTrack?.(),
+              "nexttrack"
+            )
           }
         : null,
       pause: () => {
-        optionsRef.current.onPause()
+        runMediaSessionAction(() => optionsRef.current.onPause(), "pause")
       },
       play: () => {
-        void optionsRef.current.onPlay()
+        runMediaSessionAction(() => optionsRef.current.onPlay(), "play")
       },
       previoustrack: canGoPrevious
         ? () => {
-            optionsRef.current.onPreviousTrack?.()
+            runMediaSessionAction(
+              () => optionsRef.current.onPreviousTrack?.(),
+              "previoustrack"
+            )
           }
         : null,
       seekbackward: (details) => {
         const currentOptions = optionsRef.current
-        seekByOffset(
-          currentOptions.getCurrentTime(),
-          -(details.seekOffset ?? getSeekOffset(currentOptions)),
-          currentOptions.onSeek,
-          details
+        runMediaSessionAction(
+          () =>
+            seekByOffset(
+              currentOptions.getCurrentTime(),
+              -(details.seekOffset ?? getSeekOffset(currentOptions)),
+              currentOptions.onSeek,
+              details
+            ),
+          "seekbackward"
         )
       },
       seekforward: (details) => {
         const currentOptions = optionsRef.current
-        seekByOffset(
-          currentOptions.getCurrentTime(),
-          details.seekOffset ?? getSeekOffset(currentOptions),
-          currentOptions.onSeek,
-          details
+        runMediaSessionAction(
+          () =>
+            seekByOffset(
+              currentOptions.getCurrentTime(),
+              details.seekOffset ?? getSeekOffset(currentOptions),
+              currentOptions.onSeek,
+              details
+            ),
+          "seekforward"
         )
       },
       seekto: (details) => {
@@ -350,16 +376,22 @@ export function useMediaSessionActionHandlers(
           ? seekRange.start + details.seekTime
           : details.seekTime
 
-        currentOptions.onSeek(seekTime, details)
+        runMediaSessionAction(
+          () => currentOptions.onSeek(seekTime, details),
+          "seekto"
+        )
       },
       skipad: canSkipAd
         ? () => {
-            optionsRef.current.onSkipAd?.()
+            runMediaSessionAction(
+              () => optionsRef.current.onSkipAd?.(),
+              "skipad"
+            )
           }
         : null,
       stop: canStop
         ? () => {
-            optionsRef.current.onStop?.()
+            runMediaSessionAction(() => optionsRef.current.onStop?.(), "stop")
           }
         : null,
     }),
@@ -370,56 +402,103 @@ export function useMediaSessionActionHandlers(
 export function useMediaSessionSync({
   actions,
   active = true,
+  claim = false,
   metadata,
   playbackState,
   position,
 }: UseMediaSessionSyncOptions): UseMediaSessionReturn {
   const mediaSession = useMediaSession()
+  const owner = React.useRef<symbol>(MEDIA_SESSION_OWNER_FALLBACK)
+  const currentOwner = React.useSyncExternalStore(
+    subscribeMediaSessionOwner,
+    getMediaSessionOwner,
+    getServerMediaSessionOwner
+  )
+  const ownsMediaSession = active && currentOwner === owner.current
+
+  if (owner.current === MEDIA_SESSION_OWNER_FALLBACK) {
+    owner.current = Symbol("limeplay-media-session-owner")
+  }
 
   React.useEffect(() => {
+    if (!active) {
+      if (getMediaSessionOwner() === owner.current) {
+        mediaSession.clearMetadata()
+        mediaSession.clearPositionState()
+        mediaSession.setPlaybackState("none")
+        releaseMediaSessionOwner(owner.current)
+      }
+      return
+    }
+
+    claimMediaSessionOwner(owner.current, claim)
+  }, [active, claim, currentOwner, mediaSession])
+
+  React.useEffect(() => {
+    if (!ownsMediaSession) return
+
     const cleanupHandlers = getActionEntries(actions).map(([action, handler]) =>
-      mediaSession.setActionHandler(action, active ? (handler ?? null) : null)
+      mediaSession.setActionHandler(action, handler ?? null)
     )
 
     return () => {
+      if (getMediaSessionOwner() !== owner.current) return
+
       cleanupHandlers.forEach((cleanup) => cleanup())
     }
-  }, [actions, active, mediaSession])
+  }, [actions, mediaSession, ownsMediaSession])
 
   // Publish metadata after the current action set so platform UIs choose the
   // correct track-navigation or seek-control layout for this source. Republish
   // when actions change even if the metadata values stay the same.
   React.useEffect(() => {
-    if (!active || !metadata) {
+    if (!ownsMediaSession) return
+
+    if (!metadata) {
       mediaSession.clearMetadata()
       return
     }
 
     mediaSession.setMetadata(metadata)
-  }, [actions, active, mediaSession, metadata])
+  }, [actions, mediaSession, metadata, ownsMediaSession])
 
   React.useEffect(() => {
-    mediaSession.setPlaybackState(active ? (playbackState ?? "none") : "none")
-  }, [active, mediaSession, playbackState])
+    if (!ownsMediaSession) return
+
+    mediaSession.setPlaybackState(playbackState ?? "none")
+  }, [mediaSession, ownsMediaSession, playbackState])
 
   React.useEffect(() => {
-    if (!active || !position) {
+    if (!ownsMediaSession) return
+
+    if (!position) {
       mediaSession.clearPositionState()
       return
     }
 
     mediaSession.setPositionState(position)
-  }, [active, mediaSession, position])
+  }, [mediaSession, ownsMediaSession, position])
 
   React.useEffect(() => {
     return () => {
-      mediaSession.clearMetadata()
-      mediaSession.clearPositionState()
-      mediaSession.setPlaybackState("none")
+      if (getMediaSessionOwner() === owner.current) {
+        mediaSession.clearMetadata()
+        mediaSession.clearPositionState()
+        mediaSession.setPlaybackState("none")
+        releaseMediaSessionOwner(owner.current)
+      }
     }
   }, [mediaSession])
 
   return mediaSession
+}
+
+function claimMediaSessionOwner(owner: symbol, force: boolean) {
+  if (mediaSessionOwner === owner) return
+  if (mediaSessionOwner !== null && !force) return
+
+  mediaSessionOwner = owner
+  notifyMediaSessionOwnerListeners()
 }
 
 function getActionEntries(
@@ -439,6 +518,10 @@ function getMediaSession(): MediaSession | null {
   return mediaSession ?? null
 }
 
+function getMediaSessionOwner(): null | symbol {
+  return mediaSessionOwner
+}
+
 function getSafePosition(position: number, duration: number): number {
   return Number.isFinite(duration) ? Math.min(position, duration) : position
 }
@@ -447,6 +530,10 @@ function getSeekOffset({
   seekOffset,
 }: UseMediaSessionActionHandlersOptions): number {
   return seekOffset ?? DEFAULT_MEDIA_SESSION_SEEK_OFFSET_SECONDS
+}
+
+function getServerMediaSessionOwner(): null | symbol {
+  return null
 }
 
 function hasNextMediaSessionPlaylistItem(
@@ -469,8 +556,8 @@ function isMediaSessionSupported(): boolean {
   return typeof navigator !== "undefined" && "mediaSession" in navigator
 }
 
-function isValidDuration(duration: number): boolean {
-  return duration > 0 && (Number.isFinite(duration) || duration === Infinity)
+function isValidFiniteDuration(duration: number): boolean {
+  return Number.isFinite(duration) && duration > 0
 }
 
 function isValidPlaybackRate(playbackRate: number): boolean {
@@ -490,7 +577,10 @@ function normalizePositionState(
 
   if (!hasPositionData) return nextState
 
-  if (typeof state.duration !== "number" || !isValidDuration(state.duration)) {
+  if (
+    typeof state.duration !== "number" ||
+    !isValidFiniteDuration(state.duration)
+  ) {
     return null
   }
 
@@ -511,16 +601,43 @@ function normalizePositionState(
   return nextState
 }
 
+function notifyMediaSessionOwnerListeners() {
+  mediaSessionOwnerListeners.forEach((listener) => listener())
+}
+
+function releaseMediaSessionOwner(owner: symbol) {
+  if (mediaSessionOwner !== owner) return
+
+  mediaSessionOwner = null
+  notifyMediaSessionOwnerListeners()
+}
+
+function runMediaSessionAction(
+  action: () => MaybePromise<void>,
+  name: MediaSessionActionName
+) {
+  try {
+    void Promise.resolve(action()).catch((error) => {
+      console.warn(`[useMediaSession] "${name}" action failed:`, error)
+    })
+  } catch (error) {
+    console.warn(`[useMediaSession] "${name}" action failed:`, error)
+  }
+}
+
 function seekByOffset(
   currentTime: number,
   offset: number,
-  seek: (time: number, details: MediaSessionActionDetails) => void,
+  seek: (
+    time: number,
+    details: MediaSessionActionDetails
+  ) => MaybePromise<void>,
   details: MediaSessionActionDetails
 ) {
   if (!Number.isFinite(offset)) return
   if (!Number.isFinite(currentTime)) return
 
-  seek(currentTime + offset, details)
+  return seek(currentTime + offset, details)
 }
 
 function setSafeActionHandler(
@@ -535,5 +652,13 @@ function setSafeActionHandler(
       `[useMediaSession] Failed to set "${action}" action handler:`,
       error
     )
+  }
+}
+
+function subscribeMediaSessionOwner(listener: () => void): () => void {
+  mediaSessionOwnerListeners.add(listener)
+
+  return () => {
+    mediaSessionOwnerListeners.delete(listener)
   }
 }

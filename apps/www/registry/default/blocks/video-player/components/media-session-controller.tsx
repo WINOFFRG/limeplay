@@ -6,6 +6,7 @@ import type { VideoPlayerAsset } from "@/registry/default/blocks/video-player/pl
 
 import { useMediaApi } from "@/registry/default/blocks/video-player/lib/media-kit"
 import { useAsset, useAssetStore } from "@/registry/default/hooks/use-asset"
+import { useMediaStore } from "@/registry/default/hooks/use-media"
 import {
   canMoveToNextMediaSessionTrack,
   canMoveToPreviousMediaSessionTrack,
@@ -18,25 +19,35 @@ import {
   useMediaSessionActionHandlers,
   useMediaSessionSync,
 } from "@/registry/default/hooks/use-media-session"
-import { usePictureInPictureStore } from "@/registry/default/hooks/use-picture-in-picture"
+import {
+  canUsePictureInPicture,
+  usePictureInPictureStore,
+} from "@/registry/default/hooks/use-picture-in-picture"
 import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
 import { usePlaybackRateStore } from "@/registry/default/hooks/use-playback-rate"
 import { useTimelineStore } from "@/registry/default/hooks/use-timeline"
 
 export function VideoMediaSessionController() {
   const mediaApi = useMediaApi()
-  const { currentItem } = useAsset<VideoPlayerAsset>()
+  const { currentItem, hasNext, hasPrevious } = useAsset<VideoPlayerAsset>()
   const currentTime = useTimelineStore((state) => state.currentTime)
   const duration = useTimelineStore((state) => state.duration)
   const pictureInPictureSupported = usePictureInPictureStore(
     (state) => state.supported
   )
+  const mediaElement = useMediaStore((state) => state.mediaElement)
   const playbackRate = usePlaybackRateStore((state) => state.value)
   const sourceType = useAssetStore((state) => state.sourceType)
   const status = usePlaybackStore((state) => state.status)
   const asset = currentItem?.properties ?? null
   const active = asset !== null
   const playlistSource = isMediaSessionPlaylistSource(sourceType)
+  const canEnterPictureInPicture =
+    active &&
+    canUsePictureInPicture({
+      mediaElement,
+      supported: pictureInPictureSupported,
+    })
 
   const metadata = React.useMemo(
     () => (asset ? getVideoMediaSessionMetadata(asset) : null),
@@ -54,9 +65,9 @@ export function VideoMediaSessionController() {
   )
 
   const actions = useMediaSessionActionHandlers({
-    canEnterPictureInPicture: active && pictureInPictureSupported,
-    canGoNext: playlistSource,
-    canGoPrevious: playlistSource,
+    canEnterPictureInPicture,
+    canGoNext: playlistSource && hasNext,
+    canGoPrevious: playlistSource && hasPrevious,
     getCurrentTime: () => {
       const state = mediaApi.getState()
 
@@ -110,6 +121,7 @@ export function VideoMediaSessionController() {
   useMediaSessionSync({
     actions,
     active,
+    claim: status === "playing",
     metadata,
     playbackState: getMediaSessionPlaybackState({ active, status }),
     position,

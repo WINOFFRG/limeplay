@@ -127,6 +127,7 @@ function CustomMediaSessionController({
   useMediaSessionSync({
     actions,
     active,
+    claim: status === "playing",
     metadata: asset
       ? {
           artist: asset.creator,
@@ -149,6 +150,12 @@ function CustomMediaSessionController({
   return null
 }
 ```
+
+Use `claim` when a player should take ownership of the global
+`navigator.mediaSession`. This matters when a page renders multiple players:
+only the current owner publishes metadata, position state, and action handlers.
+The default blocks claim ownership while they are playing and release ownership
+when their active media is cleared or unmounted.
 
 ## Action Handlers
 

@@ -24,7 +24,7 @@ import { useTimelineStore } from "@/registry/default/hooks/use-timeline"
 
 export function AudioMediaSessionController() {
   const mediaApi = useMediaApi()
-  const { currentItem } = useAsset<AudioPlayerAsset>()
+  const { currentItem, hasNext, hasPrevious } = useAsset<AudioPlayerAsset>()
   const currentTime = useTimelineStore((state) => state.currentTime)
   const duration = useTimelineStore((state) => state.duration)
   const sourceType = useAssetStore((state) => state.sourceType)
@@ -47,8 +47,8 @@ export function AudioMediaSessionController() {
     [active, currentTime, duration]
   )
   const actions = useMediaSessionActionHandlers({
-    canGoNext: playlistSource,
-    canGoPrevious: playlistSource,
+    canGoNext: playlistSource && hasNext,
+    canGoPrevious: playlistSource && hasPrevious,
     getCurrentTime: () => {
       const state = mediaApi.getState()
 
@@ -99,6 +99,7 @@ export function AudioMediaSessionController() {
   useMediaSessionSync({
     actions,
     active,
+    claim: status === "playing",
     metadata,
     playbackState: getMediaSessionPlaybackState({ active, status }),
     position,
@@ -107,16 +108,44 @@ export function AudioMediaSessionController() {
   return null
 }
 
+function getAudioMediaSessionArtwork(
+  asset: AudioPlayerAsset,
+  fallbackPoster: string | undefined
+): MediaImage[] {
+  const templateUrl = getMediaSessionMetadataValue(asset.artwork?.templateUrl)
+  if (templateUrl) {
+    return [
+      {
+        sizes: "512x512",
+        src: templateUrl
+          .replaceAll("{w}", "512")
+          .replaceAll("{h}", "512")
+          .replaceAll("{f}", "jpg"),
+      },
+    ]
+  }
+
+  const poster = getMediaSessionMetadataValue(
+    asset.poster,
+    asset.artwork?.url,
+    asset.images?.poster,
+    asset.images?.backdrop,
+    fallbackPoster
+  )
+
+  return poster ? [{ src: poster }] : []
+}
+
 function getAudioMediaSessionMetadata(
   asset: AudioPlayerAsset
 ): MediaMetadataInit {
   const metadata = getAudioAssetMetadata(asset)
-  const poster = getMediaSessionMetadataValue(metadata.poster, asset.poster)
+  const artwork = getAudioMediaSessionArtwork(asset, metadata.poster)
 
   return {
     album: getMediaSessionMetadataValue(asset.albumName),
     artist: getMediaSessionMetadataValue(asset.artistName),
-    artwork: poster ? [{ sizes: "512x512", src: poster }] : [],
+    artwork,
     title: metadata.title,
   }
 }

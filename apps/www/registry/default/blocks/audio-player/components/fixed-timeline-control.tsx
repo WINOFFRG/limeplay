@@ -49,15 +49,15 @@ export function TimelineControl() {
 
         <TimelineSlider.Thumb
           className={`
-            pointer-events-none top-auto! bottom-2 flex h-auto w-fit rounded-sm bg-background/90! px-2 py-1 text-xs text-foreground opacity-0
-            transition-opacity duration-200
+            pointer-events-none top-auto! bottom-2 flex h-auto w-fit rounded-sm bg-background/90! px-2 py-1 text-xs whitespace-nowrap text-foreground
+            opacity-0 transition-opacity duration-200
             group-hover/timeline:opacity-100
           `}
           showWithHover
           style={
             {
               "--lp-timeline-thumb-left":
-                "clamp(calc((5ch + 1rem) / 2), var(--lp-timeline-thumb-position), calc(100% - calc((5ch + 1rem) / 2)))",
+                "clamp(calc((8ch + 1rem) / 2), var(--lp-timeline-thumb-position), calc(100% - calc((8ch + 1rem) / 2)))",
             } as unknown as React.CSSProperties
           }
         >
