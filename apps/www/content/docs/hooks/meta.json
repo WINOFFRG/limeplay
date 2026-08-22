@@ -11,6 +11,7 @@
     "use-playlist",
     "use-playback-rate",
     "use-picture-in-picture",
+    "use-media-session",
     "use-captions",
     "use-seek",
     "use-controls-visibility",

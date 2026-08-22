@@ -93,6 +93,7 @@ Use `loading.resolveSource` when your app needs signed URLs, token refresh, or s
 - Timeline scrubbing with buffered progress feedback.
 - Volume, mute, captions, playback rate, and picture-in-picture controls.
 - Shaka-backed playback for HLS, DASH, and DRM-capable streams.
+- Browser Media Session metadata, playback state, position, and media-key handlers.
 - Shared `source` and `loading` contract used by all source-driven blocks.
 
 ## Notes
@@ -100,6 +101,7 @@ Use `loading.resolveSource` when your app needs signed URLs, token refresh, or s
 - `VideoPlayer` renders a video element internally. You do not need an `as` prop.
 - Pass `mediaProps` for native video options like `muted`, `playsInline`, or `autoPlay`.
 - Do not pass `mediaProps.src`; pass `source` instead.
+- Media Session metadata is derived from the active asset `title`, `description`, and `poster`.
 - For the full block loading model, see [Usage](/docs/usage).
 
 ## API Reference

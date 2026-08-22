@@ -15,6 +15,11 @@ import {
 
 export const PICTURE_IN_PICTURE_FEATURE_KEY = "pictureInPicture"
 
+export interface PictureInPictureAvailabilityOptions {
+  mediaElement: HTMLMediaElement | null
+  supported: boolean
+}
+
 export interface PictureInPictureEvents {
   enterpictureinpicture: void
   leavepictureinpicture: void
@@ -36,6 +41,17 @@ interface ExtendedHTMLVideoElement extends HTMLVideoElement {
   webkitSupportsPresentationMode?: (mode: string) => boolean
 }
 
+export function canUsePictureInPicture({
+  mediaElement,
+  supported,
+}: PictureInPictureAvailabilityOptions): boolean {
+  return (
+    supported &&
+    isPictureInPictureVideoElement(mediaElement) &&
+    !mediaElement.disablePictureInPicture
+  )
+}
+
 export function pictureInPictureFeature(): MediaFeature<PictureInPictureStore> {
   return {
     createSlice: (_set, get) => ({
@@ -44,7 +60,8 @@ export function pictureInPictureFeature(): MediaFeature<PictureInPictureStore> {
         enter: async () => {
           const media = get().media
             .mediaElement as ExtendedHTMLVideoElement | null
-          if (!media || media.nodeName.toLowerCase() !== "video") return
+          if (!isPictureInPictureVideoElement(media)) return
+          if (media.disablePictureInPicture) return
 
           try {
             if (isWebkitPictureInPictureSupported(media)) {
@@ -100,6 +117,12 @@ function hasVideoTrack(media: HTMLVideoElement): boolean {
   return media.videoWidth > 0 && media.videoHeight > 0
 }
 
+function isPictureInPictureVideoElement(
+  mediaElement: HTMLMediaElement | null
+): mediaElement is ExtendedHTMLVideoElement {
+  return mediaElement?.nodeName.toLowerCase() === "video"
+}
+
 function isWebkitPictureInPictureSupported(
   media: ExtendedHTMLVideoElement
 ): boolean {
@@ -119,7 +142,7 @@ function PictureInPictureSetup() {
 
   React.useEffect(() => {
     const media = mediaElement as ExtendedHTMLVideoElement | null
-    if (!media || media.nodeName.toLowerCase() !== "video") return noop
+    if (!isPictureInPictureVideoElement(media)) return noop
 
     const updatePictureInPictureSupport = () => {
       const browserSupports =
@@ -127,7 +150,10 @@ function PictureInPictureSetup() {
         isWebkitPictureInPictureSupported(media)
 
       store.setState(({ pictureInPicture }) => {
-        pictureInPicture.supported = browserSupports && hasVideoTrack(media)
+        pictureInPicture.supported =
+          browserSupports &&
+          !media.disablePictureInPicture &&
+          hasVideoTrack(media)
       })
     }
 

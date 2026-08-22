@@ -24,3 +24,4 @@ export const media = createMediaKit({
 })
 
 export const MediaProvider = media.MediaProvider
+export const useMediaApi = media.useMediaApi

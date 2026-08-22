@@ -1,5 +1,3 @@
-import Script from "next/script"
-
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
 import { VideoBackground } from "@/components/video-background"
@@ -10,24 +8,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <>
-      {process.env.NODE_ENV === "development" && (
-        <Script
-          crossOrigin="anonymous"
-          src="//unpkg.com/react-scan/dist/auto.global.js"
-        />
-      )}
-      <main
-        className={`
-          light w-dvw scrollbar-gutter-auto overscroll-contain bg-linear-to-br from-white to-neutral-200
-          md:scrollbar-gutter-stable
-        `}
-      >
-        <VideoBackground />
-        <Header />
-        {children}
-        <Footer />
-      </main>
-    </>
+    <main
+      className={`
+        light w-dvw scrollbar-gutter-auto overscroll-contain bg-linear-to-br from-white to-neutral-200
+        md:scrollbar-gutter-stable
+      `}
+    >
+      <VideoBackground />
+      <Header />
+      {children}
+      <Footer />
+    </main>
   )
 }
