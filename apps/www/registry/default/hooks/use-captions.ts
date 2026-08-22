@@ -12,6 +12,7 @@ import type {
 import { useMediaStore } from "@/registry/default/hooks/use-media"
 import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
 import {
+  PLAYER_FEATURE_KEY,
   type PlayerStore,
   usePlayerStore,
 } from "@/registry/default/hooks/use-player"
@@ -91,12 +92,14 @@ export function useCaptionsStore<TSelected>(
 
 function CaptionsSetup() {
   const store = useMediaFeatureApi<CaptionsStore>(CAPTIONS_FEATURE_KEY)
+  const playerStore = useMediaFeatureApi<PlayerStore>(PLAYER_FEATURE_KEY)
   const player = usePlayerStore((state) => state.instance)
   const containerElement = useCaptionsStore((state) => state.containerElement)
   const mediaElement = useMediaStore((state) => state.mediaElement)
   const canPlay = usePlaybackStore((state) => state.canPlay)
 
   const syncTextTrackState = () => {
+    const player = playerStore.getState().player.instance
     if (!player) {
       return
     }
