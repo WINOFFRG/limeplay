@@ -81,11 +81,17 @@ export interface UseMediaSessionSyncOptions {
   metadata?: MediaSessionMetadata | null
   playbackState?: MediaSessionPlaybackState
   position?: MediaPositionState | null
+  positionKey?: null | number | string
 }
 
 type MaybePromise<T> = Promise<T> | T
+type RetainedMediaPositionState = {
+  key: null | number | string
+  position: MediaPositionState
+}
 
 const DEFAULT_MEDIA_SESSION_SEEK_OFFSET_SECONDS = 10
+const FROZEN_MEDIA_SESSION_PLAYBACK_RATE = 0.000001
 const MEDIA_SESSION_OWNER_FALLBACK = Symbol("limeplay-media-session-owner")
 
 let mediaSessionOwner: null | symbol = null
@@ -406,9 +412,11 @@ export function useMediaSessionSync({
   metadata,
   playbackState,
   position,
+  positionKey = null,
 }: UseMediaSessionSyncOptions): UseMediaSessionReturn {
   const mediaSession = useMediaSession()
   const owner = React.useRef<symbol>(MEDIA_SESSION_OWNER_FALLBACK)
+  const retainedPosition = React.useRef<null | RetainedMediaPositionState>(null)
   const currentOwner = React.useSyncExternalStore(
     subscribeMediaSessionOwner,
     getMediaSessionOwner,
@@ -426,6 +434,7 @@ export function useMediaSessionSync({
         mediaSession.clearMetadata()
         mediaSession.clearPositionState()
         mediaSession.setPlaybackState("none")
+        retainedPosition.current = null
         releaseMediaSessionOwner(owner.current)
       }
       return
@@ -456,6 +465,7 @@ export function useMediaSessionSync({
 
     if (!metadata) {
       mediaSession.clearMetadata()
+      retainedPosition.current = null
       return
     }
 
@@ -465,19 +475,32 @@ export function useMediaSessionSync({
   React.useEffect(() => {
     if (!ownsMediaSession) return
 
-    mediaSession.setPlaybackState(playbackState ?? "none")
-  }, [mediaSession, ownsMediaSession, playbackState])
+    const nextPlaybackState = playbackState ?? "none"
+    const nextPosition =
+      position ??
+      (nextPlaybackState === "playing" ||
+      retainedPosition.current?.key !== positionKey
+        ? null
+        : retainedPosition.current.position)
 
-  React.useEffect(() => {
-    if (!ownsMediaSession) return
+    if (position) {
+      retainedPosition.current = {
+        key: positionKey,
+        position,
+      }
+    }
 
-    if (!position) {
+    mediaSession.setPlaybackState(nextPlaybackState)
+
+    if (nextPlaybackState === "none" || !nextPosition) {
       mediaSession.clearPositionState()
       return
     }
 
-    mediaSession.setPositionState(position)
-  }, [mediaSession, ownsMediaSession, position])
+    mediaSession.setPositionState(
+      getPositionStateForPlaybackState(nextPosition, nextPlaybackState)
+    )
+  }, [mediaSession, ownsMediaSession, playbackState, position, positionKey])
 
   React.useEffect(() => {
     return () => {
@@ -485,6 +508,7 @@ export function useMediaSessionSync({
         mediaSession.clearMetadata()
         mediaSession.clearPositionState()
         mediaSession.setPlaybackState("none")
+        retainedPosition.current = null
         releaseMediaSessionOwner(owner.current)
       }
     }
@@ -520,6 +544,18 @@ function getMediaSession(): MediaSession | null {
 
 function getMediaSessionOwner(): null | symbol {
   return mediaSessionOwner
+}
+
+function getPositionStateForPlaybackState(
+  position: MediaPositionState,
+  playbackState: MediaSessionPlaybackState
+): MediaPositionState {
+  if (playbackState === "playing") return position
+
+  return {
+    ...position,
+    playbackRate: FROZEN_MEDIA_SESSION_PLAYBACK_RATE,
+  }
 }
 
 function getSafePosition(position: number, duration: number): number {

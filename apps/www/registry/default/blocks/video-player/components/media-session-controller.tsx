@@ -55,13 +55,15 @@ export function VideoMediaSessionController() {
   )
   const position = React.useMemo(
     () =>
-      getMediaSessionPositionState({
-        active,
-        currentTime,
-        duration,
-        playbackRate,
-      }),
-    [active, currentTime, duration, playbackRate]
+      status === "loading"
+        ? null
+        : getMediaSessionPositionState({
+            active,
+            currentTime,
+            duration,
+            playbackRate,
+          }),
+    [active, currentTime, duration, playbackRate, status]
   )
 
   const actions = useMediaSessionActionHandlers({
@@ -125,6 +127,7 @@ export function VideoMediaSessionController() {
     metadata,
     playbackState: getMediaSessionPlaybackState({ active, status }),
     position,
+    positionKey: currentItem?.id ?? null,
   })
 
   return null
