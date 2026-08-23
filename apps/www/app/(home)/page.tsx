@@ -8,6 +8,7 @@ import { HomeNoscriptContent } from "@/components/home-noscript-content"
 import { ImmersiveScrollPlayer } from "@/components/immersive-scroll-player"
 import { VideoPlayerContainer } from "@/components/players/video-player/player-container"
 import { ScrollIndicator } from "@/components/scroll-indicator"
+import { ExclusivePlaybackProvider } from "@/registry/default/ui/exclusive-playback-provider"
 
 export const metadata: Metadata = {
   alternates: {
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <>
+    <ExclusivePlaybackProvider className="contents">
       <Hero />
       <HomeNoscriptContent />
       <ImmersiveScrollPlayer>
@@ -100,6 +101,6 @@ export default function Home() {
           `}
         />
       </div>
-    </>
+    </ExclusivePlaybackProvider>
   )
 }
