@@ -39,12 +39,14 @@ export function AudioMediaSessionController() {
   )
   const position = React.useMemo(
     () =>
-      getMediaSessionPositionState({
-        active,
-        currentTime,
-        duration,
-      }),
-    [active, currentTime, duration]
+      status === "loading"
+        ? null
+        : getMediaSessionPositionState({
+            active,
+            currentTime,
+            duration,
+          }),
+    [active, currentTime, duration, status]
   )
   const actions = useMediaSessionActionHandlers({
     canGoNext: playlistSource && hasNext,
@@ -103,6 +105,7 @@ export function AudioMediaSessionController() {
     metadata,
     playbackState: getMediaSessionPlaybackState({ active, status }),
     position,
+    positionKey: currentItem?.id ?? null,
   })
 
   return null

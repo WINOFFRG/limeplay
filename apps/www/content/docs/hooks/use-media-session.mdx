@@ -145,6 +145,7 @@ function CustomMediaSessionController({
       duration,
       playbackRate,
     }),
+    positionKey: asset?.title ?? null,
   })
 
   return null
@@ -156,6 +157,13 @@ Use `claim` when a player should take ownership of the global
 only the current owner publishes metadata, position state, and action handlers.
 The default blocks claim ownership while they are playing and release ownership
 when their active media is cleared or unmounted.
+
+Pass a stable `positionKey` for the current media item. During transient
+loading or buffering, the sync hook reuses the last valid position for the same
+key so native media controls do not keep advancing from the previous playing
+position. When Media Session is not playing, the retained position is published
+with a tiny non-zero playback rate because browser Media Session rejects
+`playbackRate: 0`. When the key changes, retained position state is not reused.
 
 ## Action Handlers
 
