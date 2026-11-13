@@ -34,7 +34,7 @@ the commit you just made — that is expected.
 | 010 | (investigate) Timeline and volume sliders respond to the keyboard | P2 | M | 009 | DONE |
 | 011 | Timeline updates after seek, pause and end | P2 | S | — | DONE |
 | 012 | Superseded loads cannot take over; `usePlayer` preload stops throwing | P2 | S | 004 (after 005, 006) | DONE |
-| 013 | Four small correctness fixes (time labels, reshuffle, captions, theme type) | P3 | S | 004 | TODO |
+| 013 | Four small correctness fixes (time labels, reshuffle, captions, theme type) | P3 | S | 004 | DONE |
 | 014 | Stable provider context value and composed refs | P3 | S | — | TODO |
 | 015 | `ExclusivePlaybackProvider` pauses every other playing element | P2 | S | 005 | TODO |
 | 016 | Pro ambient components: sampling timer, `asChild`, reduced motion | P3 | S | — | TODO |
