@@ -14,6 +14,7 @@ export const baseConfig = [
       "**/out/**",
       "**/dist/**",
       "**/__index__.tsx",
+      "**/registry/__pro__.ts",
       "**/.source/**",
       "**/prettier.config.cjs",
       "**/node_modules/**",
