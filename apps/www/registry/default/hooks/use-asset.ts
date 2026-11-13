@@ -444,6 +444,9 @@ export function assetFeature(): MediaFeature<
           get().asset.loadAbortController?.abort()
 
           const abortController = new AbortController()
+          const isCurrentLoad = () =>
+            !abortController.signal.aborted &&
+            get().asset.loadGeneration === generation
 
           set(({ asset }) => {
             asset.loadAbortController = abortController
@@ -518,7 +521,7 @@ export function assetFeature(): MediaFeature<
               })
             }
 
-            if (get().asset.loadGeneration !== generation) {
+            if (!isCurrentLoad()) {
               return false
             }
 
@@ -533,6 +536,10 @@ export function assetFeature(): MediaFeature<
               } catch (playError) {
                 if (!isPlayInterruption(playError)) throw playError
               }
+            }
+
+            if (!isCurrentLoad()) {
+              return false
             }
 
             set(({ asset }) => {

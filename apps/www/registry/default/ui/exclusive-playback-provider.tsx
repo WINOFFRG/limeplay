@@ -26,7 +26,7 @@ export const ExclusivePlaybackProvider = React.forwardRef<
     if (event.defaultPrevented) return
 
     const startedElement = getMediaElement(event)
-    if (!startedElement) return
+    if (!startedElement || startedElement.paused) return
 
     const descendants =
       event.currentTarget.querySelectorAll<HTMLMediaElement>("audio, video")

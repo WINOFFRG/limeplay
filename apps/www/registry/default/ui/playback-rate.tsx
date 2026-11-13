@@ -21,8 +21,10 @@ export function SelectRoot({
       value={value.toString()}
       {...props}
       onValueChange={(...args) => {
-        setPlaybackRate(Number(args[0]))
         onValueChange?.(...args)
+        if (args[1].isCanceled) return
+
+        setPlaybackRate(Number(args[0]))
       }}
     />
   )

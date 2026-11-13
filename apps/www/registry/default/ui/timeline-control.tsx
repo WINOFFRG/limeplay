@@ -150,7 +150,7 @@ export const Root = React.forwardRef<
       }}
       onValueChange={(nextValue, eventDetails) => {
         onValueChangeProp?.(nextValue, eventDetails)
-        if (disabled || !duration || !player) return
+        if (disabled || !duration || !player || eventDetails.isCanceled) return
         const percent = Array.isArray(nextValue) ? nextValue[0] : nextValue
         const nextTime = (percent / 100) * duration
         const seekRange = player.seekRange()

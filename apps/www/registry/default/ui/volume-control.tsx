@@ -111,7 +111,7 @@ export const Root = React.forwardRef<
       }}
       onValueChange={(nextValue, eventDetails) => {
         onValueChangeProp?.(nextValue, eventDetails)
-        if (disabled) return
+        if (disabled || eventDetails.isCanceled) return
         const nextVolume = Array.isArray(nextValue) ? nextValue[0] : nextValue
         setCurrentValue(nextVolume)
         setVolume(nextVolume)

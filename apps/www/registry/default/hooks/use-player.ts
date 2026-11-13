@@ -145,9 +145,11 @@ export function usePlayer<TAsset extends { id: string }>(
             preloadManager,
             startTime
           )
-          const updatedManagers = new Map(preloadManagers)
-          updatedManagers.delete(asset.id)
           store.setState(({ player }) => {
+            if (player.preloadManagers.get(asset.id) !== preloadManager) return
+
+            const updatedManagers = new Map(player.preloadManagers)
+            updatedManagers.delete(asset.id)
             player.preloadManagers = updatedManagers
           })
         } else {

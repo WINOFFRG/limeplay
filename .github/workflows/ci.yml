@@ -48,6 +48,9 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Build registry
+        run: cd apps/www && bun run registry:build
+
       - name: Type check
         run: cd apps/www && bun run typecheck
 
