@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -73,9 +76,6 @@ jobs:
     needs: [registry]
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.WINOFFRG_PAT }}
-          submodules: recursive
 
       - uses: actions/setup-node@v4
         with:
