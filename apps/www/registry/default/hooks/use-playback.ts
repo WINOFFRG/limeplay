@@ -67,6 +67,13 @@ export interface PlaybackStore extends MediaEventSlice<PlaybackEvents> {
   }
 }
 
+export function isPlayInterruption(error: unknown): boolean {
+  return (
+    error instanceof DOMException &&
+    (error.name === "AbortError" || error.name === "NotAllowedError")
+  )
+}
+
 export function playbackFeature(): MediaFeature<PlaybackStore> {
   return {
     createSlice: (set, get, _store, events) => ({
@@ -99,8 +106,10 @@ export function playbackFeature(): MediaFeature<PlaybackStore> {
           try {
             await media.play()
           } catch (error: unknown) {
-            console.error("Error playing media", error)
-            get().playback.setError(error)
+            if (!isPlayInterruption(error)) {
+              console.error("Error playing media", error)
+              get().playback.setError(error)
+            }
             throw error
           }
         },

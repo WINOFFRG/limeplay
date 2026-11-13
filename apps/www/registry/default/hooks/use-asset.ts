@@ -24,6 +24,7 @@ import type {
   MediaStore,
 } from "@/registry/default/ui/media-provider"
 
+import { isPlayInterruption } from "@/registry/default/hooks/use-playback"
 import { isLoadInterrupted } from "@/registry/default/hooks/use-player"
 import { usePlaylist } from "@/registry/default/hooks/use-playlist"
 import {
@@ -514,13 +515,16 @@ export function assetFeature(): MediaFeature<
               return false
             }
 
-            if (media.autoplay && media.paused) {
-              if (get().asset.isFirstLoad) {
-                if (options?.autoplayFirst) {
-                  await get().playback.play()
-                }
-              } else {
+            const shouldAutoplay =
+              media.autoplay &&
+              media.paused &&
+              (!get().asset.isFirstLoad || Boolean(options?.autoplayFirst))
+
+            if (shouldAutoplay) {
+              try {
                 await get().playback.play()
+              } catch (playError) {
+                if (!isPlayInterruption(playError)) throw playError
               }
             }
 
