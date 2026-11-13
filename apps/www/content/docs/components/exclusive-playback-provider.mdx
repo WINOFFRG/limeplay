@@ -38,9 +38,11 @@ export function MediaGallery() {
 }
 ```
 
-When a descendant media element starts playing, the provider pauses the previously active element. Pausing or ending the active element releases it.
+When a descendant media element starts playing, the provider pauses every other descendant that is currently playing.
 
 Use separate providers to create independent playback groups.
+
+The provider only coordinates `<audio>` and `<video>` elements rendered inside it in the same document; media in iframes or shadow roots is not affected.
 
 ### Custom wrapper
 
@@ -59,5 +61,5 @@ The provider renders a `div` by default. Use `asChild` to merge its behavior int
 
 <AutoTypeTable
   path="./registry/default/ui/exclusive-playback-provider.tsx"
-  name="ExclusivePlaybackProviderProps"
+  name="ExclusivePlaybackProviderPropsDocs"
 />

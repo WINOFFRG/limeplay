@@ -36,7 +36,7 @@ the commit you just made — that is expected.
 | 012 | Superseded loads cannot take over; `usePlayer` preload stops throwing | P2 | S | 004 (after 005, 006) | DONE |
 | 013 | Four small correctness fixes (time labels, reshuffle, captions, theme type) | P3 | S | 004 | DONE |
 | 014 | Stable provider context value and composed refs | P3 | S | — | DONE |
-| 015 | `ExclusivePlaybackProvider` pauses every other playing element | P2 | S | 005 | TODO |
+| 015 | `ExclusivePlaybackProvider` pauses every other playing element | P2 | S | 005 | DONE |
 | 016 | Pro ambient components: sampling timer, `asChild`, reduced motion | P3 | S | — | TODO |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale — finding fixed independently or approach abandoned)

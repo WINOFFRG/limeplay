@@ -7,49 +7,40 @@ export interface ExclusivePlaybackProviderProps extends React.ComponentPropsWith
   asChild?: boolean
 }
 
+export type ExclusivePlaybackProviderPropsDocs = Pick<
+  ExclusivePlaybackProviderProps,
+  "asChild"
+>
+
 export const ExclusivePlaybackProvider = React.forwardRef<
   HTMLDivElement,
   ExclusivePlaybackProviderProps
 >(function ExclusivePlaybackProvider(
-  { asChild, onEndedCapture, onPauseCapture, onPlayCapture, ...props },
+  { asChild, onPlayCapture, ...props },
   forwardedRef
 ) {
-  const activeMediaRef = React.useRef<HTMLMediaElement | null>(null)
   const Component = asChild ? Slot : "div"
 
   const handlePlayCapture = (event: React.SyntheticEvent<HTMLDivElement>) => {
     onPlayCapture?.(event)
     if (event.defaultPrevented) return
 
-    const mediaElement = getMediaElement(event)
-    if (!mediaElement || activeMediaRef.current === mediaElement) return
+    const startedElement = getMediaElement(event)
+    if (!startedElement) return
 
-    activeMediaRef.current?.pause()
-    activeMediaRef.current = mediaElement
-  }
+    const descendants =
+      event.currentTarget.querySelectorAll<HTMLMediaElement>("audio, video")
 
-  const releaseMedia = (event: React.SyntheticEvent<HTMLDivElement>) => {
-    const mediaElement = getMediaElement(event)
-    if (activeMediaRef.current === mediaElement) {
-      activeMediaRef.current = null
+    for (const mediaElement of descendants) {
+      if (mediaElement !== startedElement && !mediaElement.paused) {
+        mediaElement.pause()
+      }
     }
-  }
-
-  const handlePauseCapture = (event: React.SyntheticEvent<HTMLDivElement>) => {
-    onPauseCapture?.(event)
-    if (!event.defaultPrevented) releaseMedia(event)
-  }
-
-  const handleEndedCapture = (event: React.SyntheticEvent<HTMLDivElement>) => {
-    onEndedCapture?.(event)
-    if (!event.defaultPrevented) releaseMedia(event)
   }
 
   return (
     <Component
       {...props}
-      onEndedCapture={handleEndedCapture}
-      onPauseCapture={handlePauseCapture}
       onPlayCapture={handlePlayCapture}
       ref={forwardedRef}
     />
