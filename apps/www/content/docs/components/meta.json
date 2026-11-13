@@ -15,7 +15,8 @@
     "picture-in-picture-control",
     "captions",
     "fallback-poster",
-    "error-screen"
+    "error-screen",
+    "exclusive-playback-provider"
   ],
   "defaultOpen": true
 }

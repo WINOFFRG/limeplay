@@ -1,0 +1,63 @@
+---
+title: Exclusive Playback Provider
+description: Ensures that only one descendant audio or video element plays at a time.
+---
+
+<ComponentPreview name="exclusive-playback-provider-demo" />
+
+## Installation
+
+```npm
+npx shadcn add @limeplay/exclusive-playback-provider
+```
+
+<Callout>
+  This component does not require a `createMediaKit` feature. It coordinates
+  descendant native `<audio>` and `<video>` elements.
+</Callout>
+
+## Usage
+
+Wrap the players that should share exclusive playback:
+
+```tsx title="components/media-gallery.tsx"
+import { AudioPlayer } from "@/components/limeplay/audio-player/player"
+import { ExclusivePlaybackProvider } from "@/components/limeplay/exclusive-playback-provider"
+import { VideoPlayer } from "@/components/limeplay/video-player/player"
+
+const videoSource = "/video.m3u8"
+const audioPlaylist = [{ id: "track-1", src: "/audio.mp3", title: "Track 1" }]
+
+export function MediaGallery() {
+  return (
+    <ExclusivePlaybackProvider>
+      <VideoPlayer source={videoSource} />
+      <AudioPlayer source={audioPlaylist} />
+    </ExclusivePlaybackProvider>
+  )
+}
+```
+
+When a descendant media element starts playing, the provider pauses the previously active element. Pausing or ending the active element releases it.
+
+Use separate providers to create independent playback groups.
+
+### Custom wrapper
+
+The provider renders a `div` by default. Use `asChild` to merge its behavior into a single child element:
+
+```tsx
+<ExclusivePlaybackProvider asChild>
+  <main>
+    <VideoPlayer source={videoSource} />
+    <AudioPlayer source={audioPlaylist} />
+  </main>
+</ExclusivePlaybackProvider>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="./registry/default/ui/exclusive-playback-provider.tsx"
+  name="ExclusivePlaybackProviderProps"
+/>

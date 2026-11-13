@@ -2,6 +2,17 @@ import { type Registry } from "shadcn/schema"
 
 export const examples: Registry["items"] = [
   {
+    files: [
+      {
+        path: "examples/exclusive-playback-provider-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+    name: "exclusive-playback-provider-demo",
+    registryDependencies: ["exclusive-playback-provider"],
+    type: "registry:example",
+  },
+  {
     dependencies: ["lucide-react"],
     files: [
       {
