@@ -22,6 +22,7 @@ describe("formatTimestamp", () => {
 
 describe("durationDateTime", () => {
   test("formats finite durations", () => {
+    expect(durationDateTime(59)).toBe("PT59S")
     expect(durationDateTime(600)).toBe("PT10M")
     expect(durationDateTime(3661)).toBe("PT1H1M1S")
   })
