@@ -37,7 +37,7 @@ the commit you just made — that is expected.
 | 013 | Four small correctness fixes (time labels, reshuffle, captions, theme type) | P3 | S | 004 | DONE |
 | 014 | Stable provider context value and composed refs | P3 | S | — | DONE |
 | 015 | `ExclusivePlaybackProvider` pauses every other playing element | P2 | S | 005 | DONE |
-| 016 | Pro ambient components: sampling timer, `asChild`, reduced motion | P3 | S | — | TODO |
+| 016 | Pro ambient components: sampling timer, `asChild`, reduced motion | P3 | S | — | DONE |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale — finding fixed independently or approach abandoned)
 
@@ -58,6 +58,9 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
   prop destructuring.
 - **010 and 016 need a human in a browser** before merging. 010 has an explicit
   gate and will stop without one.
+- **016 visual signoff remains open.** A local browser check rendered and played
+  both pro players, but the crossfade and reduced-motion appearance still need
+  a human review before merge.
 - 003, 007, 008, 011, 014 are independent and can run in parallel with anything.
 
 ## Verification baseline (measured on 2026-11-13)
