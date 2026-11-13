@@ -1,6 +1,6 @@
 "use client"
 
-import * as Primitive from "@radix-ui/react-navigation-menu"
+import { NavigationMenu as Primitive } from "radix-ui"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

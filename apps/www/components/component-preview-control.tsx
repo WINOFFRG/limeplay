@@ -1,7 +1,7 @@
 "use client"
 
-import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { AnimatePresence, motion } from "motion/react"
+import { Tabs as TabsPrimitive } from "radix-ui"
 import * as React from "react"
 
 import { Tabs, TabsList } from "@/components/ui/tabs"
