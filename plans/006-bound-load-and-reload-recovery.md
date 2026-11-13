@@ -319,9 +319,14 @@ event-driven and need a browser; see Maintenance notes for the manual check.
 
 ## Maintenance notes
 
+- **Execution note (2026-11-13):** The implemented default reload cap is three
+  per item and loading session, rather than three per 30-second window. A
+  rolling window could reset during a slower persistent failure and allow
+  unlimited reloads. The count resets when the item or session changes.
 - Behaviour change to mention in release notes: with repeat `"one"`/`"all"`, a
   failing item now stops with an error at the end of the list where it used to
-  retry endlessly; a persistent playback error stops after 3 reloads in 30 s.
+  retry endlessly; a persistent playback error stops after 3 default reloads
+  for the same item in one loading session.
 - The docs for `loading.recover` (`apps/www/content/docs/hooks/use-asset.mdx`,
   if it describes default recovery) should gain one sentence about the cap.
   Left out of scope so this plan stays code-only.

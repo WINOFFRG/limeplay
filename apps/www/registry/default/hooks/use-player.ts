@@ -68,6 +68,7 @@ export const RECOMMENDED_PLAYER_BUFFERING_THROTTLE_MS = 250
 // Public Shaka error code. Keep this local so importing the hook on the server
 // does not evaluate Shaka's browser-only bundle during prerendering.
 const SHAKA_LOAD_INTERRUPTED_ERROR_CODE = 7000
+const SHAKA_ERROR_SEVERITY_RECOVERABLE = 1
 
 export function isLoadInterrupted(error: unknown): boolean {
   if (
@@ -364,6 +365,7 @@ function PlayerSetup() {
     const errorHandler = (event: Event) => {
       const detail = (event as CustomEvent).detail as shaka.util.Error
       if (isLoadInterrupted(detail)) return
+      if (detail.severity === SHAKA_ERROR_SEVERITY_RECOVERABLE) return
       const media = store.getState().media.mediaElement
       const currentTime = media?.currentTime ?? 0
 

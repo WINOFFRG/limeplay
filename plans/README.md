@@ -27,7 +27,7 @@ the commit you just made — that is expected.
 | 003 | README and docs import from the paths blocks install to | P1 | S | — | DONE |
 | 004 | `bun test` suite covering the library's pure logic | P1 | M | 001 | DONE |
 | 005 | Blocked or interrupted `play()` is not a fatal error | P1 | S | 004 | DONE |
-| 006 | Error recovery cannot loop forever | P1 | M | 004, 005 | TODO |
+| 006 | Error recovery cannot loop forever | P1 | M | 004, 005 | DONE |
 | 007 | Two playing players no longer fight over the media session | P1 | S | — | TODO |
 | 008 | Registry items declare what they import; validator fails on gaps | P2 | S | — | TODO |
 | 009 | Slider components compose user handlers and honour `disabled` | P2 | S | — | TODO |
