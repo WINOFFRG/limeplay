@@ -5,9 +5,9 @@ import type { Variants } from "motion/react"
 import { Copy } from "lucide-react"
 import { motion } from "motion/react"
 import React, { useCallback, useRef, useState } from "react"
-import { useCopyToClipboard } from "react-use"
 
 import { Button } from "@/components/ui/button"
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
 import { cn } from "@/lib/utils"
 
 interface CopyButtonProps {
@@ -84,7 +84,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   const [entryDirection, setEntryDirection] = useState({ x: 0, y: 0 })
   const [leaveDirection, setLeaveDirection] = useState({ x: 0, y: 0 })
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const [, copyToClipboard] = useCopyToClipboard()
+  const { copyToClipboard } = useCopyToClipboard()
 
   const handleCopy = async () => {
     if (status !== "idle") return

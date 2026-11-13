@@ -1,0 +1,65 @@
+---
+title: Immersive Player
+description: A pro video player block that uses a live blurred frame glow behind the standard Limeplay video player.
+component: immersive-player
+preview: immersive-player
+registry: pro
+status: pro
+---
+
+## Installation
+
+<ProInstallationNote />
+
+```npm
+npx shadcn@latest add "https://limeplay.winoffrg.dev/r/pro/immersive-player.json?token=<token>"
+```
+
+## Minimal Usage
+
+```tsx
+import { ImmersivePlayer } from "@/components/immersive-player/player"
+
+const src =
+  "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8"
+
+export function Player() {
+  return <ImmersivePlayer source={src} />
+}
+```
+
+Tune the glow layer with `glowConfig`:
+
+```tsx
+<ImmersivePlayer
+  source={src}
+  glowConfig={{
+    blur: 140,
+    saturation: 1.55,
+    scaleX: 1.45,
+    scaleY: 1.45,
+  }}
+/>
+```
+
+## Features
+
+- Builds on the free `VideoPlayer` block.
+- Adds a pro-tuned `MediaGlow` layer behind the video.
+- Captures low-resolution video frames for a responsive blurred backdrop.
+- Preserves the same `source`, `loading`, `mediaProps`, playlist, captions, PiP, and playback controls as `VideoPlayer`.
+
+## Notes
+
+- `ImmersivePlayer` depends on the free `video-player` item and the pro `media-glow` registry item.
+- Use `glowConfig` for visual tuning without changing the base player API.
+- For the full block loading model, see [Usage](/docs/usage).
+
+## API Reference
+
+<AutoTypeTable
+  path="./registry/pro/blocks/immersive-player/player.tsx"
+  name="ImmersivePlayerProps"
+/>
+
+<License />
