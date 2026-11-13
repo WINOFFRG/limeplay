@@ -24,7 +24,15 @@ export const Root = React.forwardRef<
   const internalRef = useRef<HTMLDivElement>(
     null
   ) as React.RefObject<HTMLDivElement>
-  const { className, orientation = "horizontal", ...etc } = props
+  const {
+    className,
+    onPointerDown: onPointerDownProp,
+    onPointerMove: onPointerMoveProp,
+    onPointerOut: onPointerOutProp,
+    onPointerUp: onPointerUpProp,
+    orientation = "horizontal",
+    ...etc
+  } = props
 
   const player = usePlayerStore((state) => state.instance)
   const currentTime = useTimelineStore((state) => state.currentTime)
@@ -55,6 +63,7 @@ export const Root = React.forwardRef<
 
   const trackEvents = useTrackEvents({
     onPointerDown: (progress, event) => {
+      if (disabled) return
       if (player) {
         const newTime = getTimeFromEvent(event)
         const seekRange = player.seekRange()
@@ -70,6 +79,7 @@ export const Root = React.forwardRef<
       }
     },
     onPointerMove: (progress, isPointerDown, event) => {
+      if (disabled) return
       if (duration && player) {
         const newTime = getTimeFromEvent(event)
         const seekRange = player.seekRange()
@@ -93,6 +103,11 @@ export const Root = React.forwardRef<
         }
       }
     },
+    onPointerOut: (event) => {
+      if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
+        setIsHovering(false)
+      }
+    },
     onPointerUp: () => {
       setIsHovering(false)
     },
@@ -112,9 +127,24 @@ export const Root = React.forwardRef<
       orientation={orientation}
       ref={internalRef}
       value={[currentValue]}
-      {...trackEvents}
       {...etc}
       disabled={disabled}
+      onPointerDown={(event) => {
+        onPointerDownProp?.(event)
+        if (!event.defaultPrevented) trackEvents.onPointerDown(event)
+      }}
+      onPointerMove={(event) => {
+        onPointerMoveProp?.(event)
+        if (!event.defaultPrevented) trackEvents.onPointerMove(event)
+      }}
+      onPointerOut={(event) => {
+        onPointerOutProp?.(event)
+        if (!event.defaultPrevented) trackEvents.onPointerOut(event)
+      }}
+      onPointerUp={(event) => {
+        onPointerUpProp?.(event)
+        if (!event.defaultPrevented) trackEvents.onPointerUp(event)
+      }}
     />
   )
 })
@@ -254,7 +284,7 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
       return null
     }
 
-    if (position && Number.isFinite(position)) {
+    if (position !== undefined && Number.isFinite(position)) {
       finalPosition = position
     } else if (showWithHover) {
       finalPosition = (hoveringTime / duration) * 100
