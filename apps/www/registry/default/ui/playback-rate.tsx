@@ -22,7 +22,16 @@ export function SelectRoot({
       {...props}
       onValueChange={(...args) => {
         onValueChange?.(...args)
-        if (args[1].isCanceled) return
+
+        const eventDetails = (args as unknown[])[1]
+        if (
+          typeof eventDetails === "object" &&
+          eventDetails !== null &&
+          "isCanceled" in eventDetails &&
+          eventDetails.isCanceled
+        ) {
+          return
+        }
 
         setPlaybackRate(Number(args[0]))
       }}

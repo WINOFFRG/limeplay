@@ -160,7 +160,8 @@ async function buildApp(app: PreparedApp): Promise<TestResult> {
   const result = await runAsync(app.framework.buildCommand, app.appDir)
   if (!result.ok) {
     console.log(`  [${cellName}] ✗ Build failed`)
-    if (result.stderr) console.log(`    ${result.stderr.slice(0, 500)}`)
+    const output = [result.stdout, result.stderr].filter(Boolean).join("\n")
+    if (output) console.log(`    ${output.slice(-3000)}`)
     return {
       base: app.base.name,
       error: "build failed",
