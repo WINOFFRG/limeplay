@@ -296,3 +296,12 @@ the manual check below.
   that ends up playing must match the highlighted track.
 - A user-supplied `loader.load` that catches all errors will swallow the new
   `AbortError`; the Step 2 guard covers that case.
+
+## Execution note (2026-11-13)
+
+- The file already had two `abortController.signal.aborted` checks in its
+  preload path. The plan's unscoped grep therefore returns four after adding
+  the two `loadAsset` checks; both new checks are present in `loadAsset`.
+- The 34 Bun tests, typecheck, lint (0 errors), formatting, registry validation,
+  and production build passed. The custom-loader race still needs the manual
+  playlist check above because the shipped blocks do not supply `loader.load`.

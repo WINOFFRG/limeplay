@@ -145,9 +145,10 @@ export function usePlayer<TAsset extends { id: string }>(
             preloadManager,
             startTime
           )
-          preloadManagers.delete(asset.id)
+          const updatedManagers = new Map(preloadManagers)
+          updatedManagers.delete(asset.id)
           store.setState(({ player }) => {
-            player.preloadManagers = new Map(preloadManagers)
+            player.preloadManagers = updatedManagers
           })
         } else {
           await options.onLoad(
@@ -183,10 +184,12 @@ export function usePlayer<TAsset extends { id: string }>(
       try {
         const manager = await options.onPreload(asset, currentPlayer)
         if (manager) {
-          const preloadManagers = store.getState().player.preloadManagers
-          preloadManagers.set(asset.id, manager)
+          const updatedManagers = new Map(
+            store.getState().player.preloadManagers
+          )
+          updatedManagers.set(asset.id, manager)
           store.setState(({ player }) => {
-            player.preloadManagers = new Map(preloadManagers)
+            player.preloadManagers = updatedManagers
           })
         }
       } catch (error) {
@@ -204,9 +207,10 @@ export function usePlayer<TAsset extends { id: string }>(
       const manager = preloadManagers.get(assetId)
       if (manager) {
         manager.destroy()
-        preloadManagers.delete(assetId)
+        const updatedManagers = new Map(preloadManagers)
+        updatedManagers.delete(assetId)
         store.setState(({ player }) => {
-          player.preloadManagers = new Map(preloadManagers)
+          player.preloadManagers = updatedManagers
         })
       }
     },

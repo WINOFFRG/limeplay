@@ -474,6 +474,7 @@ export function assetFeature(): MediaFeature<
               assetId,
               player,
               preloadManager,
+              signal: abortController.signal,
               startTime,
             })
 
@@ -489,6 +490,10 @@ export function assetFeature(): MediaFeature<
                 signal: abortController.signal,
                 startTime,
               })
+
+              if (abortController.signal.aborted) {
+                return false
+              }
             } else {
               const resolved = await resolveSourceValue(options, {
                 asset,
@@ -1056,15 +1061,21 @@ function createDefaultLoad({
   assetId,
   player,
   preloadManager,
+  signal,
   startTime,
 }: {
   asset: TAsset
   assetId: string
   player: shaka.Player
   preloadManager?: shaka.media.PreloadManager
+  signal: AbortSignal
   startTime?: number
 }): AssetLoadContext["loadDefault"] {
   return async (source, loadOptions) => {
+    if (signal.aborted) {
+      throw new DOMException("Asset load superseded", "AbortError")
+    }
+
     const normalizedSource = normalizePlaybackSource(source)
     player.resetConfiguration()
 
