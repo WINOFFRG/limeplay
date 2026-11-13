@@ -223,7 +223,7 @@ async function validateDependencyResolution(
           if (!dep.includes("limeplay")) {
             continue
           }
-          warn(
+          error(
             `"${item.name}" depends on "${depName}" (${dep}) which is not in the registry`
           )
           missingCount++
@@ -239,7 +239,7 @@ async function validateDependencyResolution(
           continue
         }
 
-        warn(`"${item.name}" depends on "${dep}" which is not in the registry`)
+        error(`"${item.name}" depends on "${dep}" which is not in the registry`)
         missingCount++
       }
     }

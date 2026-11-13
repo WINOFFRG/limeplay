@@ -29,7 +29,7 @@ the commit you just made — that is expected.
 | 005 | Blocked or interrupted `play()` is not a fatal error | P1 | S | 004 | DONE |
 | 006 | Error recovery cannot loop forever | P1 | M | 004, 005 | DONE |
 | 007 | Two playing players no longer fight over the media session | P1 | S | — | DONE |
-| 008 | Registry items declare what they import; validator fails on gaps | P2 | S | — | TODO |
+| 008 | Registry items declare what they import; validator fails on gaps | P2 | S | — | DONE |
 | 009 | Slider components compose user handlers and honour `disabled` | P2 | S | — | TODO |
 | 010 | (investigate) Timeline and volume sliders respond to the keyboard | P2 | M | 009 | TODO |
 | 011 | Timeline updates after seek, pause and end | P2 | S | — | TODO |

@@ -206,6 +206,7 @@ export const hooks: Registry["items"] = [
   },
   {
     dependencies: ["lodash", "zustand"],
+    devDependencies: ["@types/lodash"],
     files: [
       {
         path: "hooks/use-playlist.ts",
