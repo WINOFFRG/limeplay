@@ -36,13 +36,11 @@ export function TimelineControl() {
             className="absolute h-full bg-[#4C4C4C]"
             variant="combined"
           />
-          {/* eslint-disable-next-line shadcn/no-raw-colors -- brand accent shipped to registry users; no matching theme token */}
           <TimelineSlider.Progress className="absolute h-full bg-linear-to-r from-rose-600 from-80% to-pink-500" />
         </TimelineSlider.Track>
 
         <TimelineSlider.Thumb
           className={cn(
-            // eslint-disable-next-line shadcn/no-raw-colors -- brand accent shipped to registry users; no matching theme token
             "absolute top-1/2 size-0 -translate-y-1/2 rounded-full bg-rose-600!",
             "transition-[height,width] duration-150 ease-in-out",
             "group-hover/timeline:size-4"
