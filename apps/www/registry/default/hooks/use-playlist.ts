@@ -828,3 +828,10 @@ function PlaylistSetup() {
 
   return null
 }
+
+export {
+  createShuffleOrder,
+  getPreviousPlaylistTarget,
+  getRepeatModes,
+  normalizeRepeatMode,
+}
