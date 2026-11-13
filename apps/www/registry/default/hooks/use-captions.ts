@@ -28,6 +28,7 @@ export interface CaptionsStore {
   [CAPTIONS_FEATURE_KEY]: {
     activeTrack: null | shaka.extern.TextTrack
     containerElement: HTMLDivElement | null
+    lastSelectedTrack: null | shaka.extern.TextTrack
     setContainerElement: (ref: HTMLDivElement | null) => void
     toggleVisibility: () => void
     tracks?: shaka.extern.TextTrack[]
@@ -44,6 +45,7 @@ export function captionsFeature(): MediaFeature<
       [CAPTIONS_FEATURE_KEY]: {
         activeTrack: null,
         containerElement: null,
+        lastSelectedTrack: null,
         setContainerElement: (element) => {
           set(({ captions }) => {
             captions.containerElement = element
@@ -63,7 +65,9 @@ export function captionsFeature(): MediaFeature<
           }
 
           const track =
-            captions.activeTrack ?? findDefaultTrack(captions.tracks)
+            captions.activeTrack ??
+            captions.lastSelectedTrack ??
+            findDefaultTrack(captions.tracks)
           if (track) {
             player.selectTextTrack(track)
           }
@@ -113,6 +117,14 @@ function CaptionsSetup() {
       captions.activeTrack = activeTrack ?? null
       captions.tracks = tracks
       captions.visible = Boolean(activeTrack)
+      if (activeTrack) {
+        captions.lastSelectedTrack = activeTrack
+      } else if (
+        captions.lastSelectedTrack &&
+        !tracks.some((track) => track.id === captions.lastSelectedTrack?.id)
+      ) {
+        captions.lastSelectedTrack = null
+      }
     })
   }
 

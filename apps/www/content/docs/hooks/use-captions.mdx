@@ -35,12 +35,13 @@ const activeTrack = useCaptionsStore((s) => s.activeTrack)
 
 ### State
 
-| Field              | Type                             | Description                  |
-| ------------------ | -------------------------------- | ---------------------------- |
-| `visible`          | `boolean`                        | Whether captions are visible |
-| `activeTrack`      | `shaka.extern.TextTrack \| null` | Currently active text track  |
-| `tracks`           | `shaka.extern.TextTrack[]`       | Available text tracks        |
-| `containerElement` | `HTMLDivElement \| null`         | Captions render container    |
+| Field               | Type                             | Description                              |
+| ------------------- | -------------------------------- | ---------------------------------------- |
+| `visible`           | `boolean`                        | Whether captions are visible             |
+| `activeTrack`       | `shaka.extern.TextTrack \| null` | Currently active text track              |
+| `lastSelectedTrack` | `shaka.extern.TextTrack \| null` | Track active before captions were hidden |
+| `tracks`            | `shaka.extern.TextTrack[]`       | Available text tracks                    |
+| `containerElement`  | `HTMLDivElement \| null`         | Captions render container                |
 
 ### Actions
 
