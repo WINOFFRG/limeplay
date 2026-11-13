@@ -3,11 +3,11 @@ import { z } from "zod"
 import type { CatalogBaseAsset } from "@/lib/catalogs/types"
 
 import { createTimeoutSignal, throwIfAborted } from "@/lib/catalogs/utils"
+import { LIMEPLAY_API_BASE_URL } from "@/lib/constants"
 
 export const APPLE_MUSIC_CHARTS_PLAYLIST_ID = "apple-music-charts"
 
-const APPLE_MUSIC_API_BASE_URL =
-  "https://limeplay.winoffrg.workers.dev/api/catalog/am"
+const APPLE_MUSIC_API_BASE_URL = `${LIMEPLAY_API_BASE_URL}/api/catalog/am`
 const APPLE_MUSIC_CHARTS_TIMEOUT_MS = 10_000
 const DEFAULT_APPLE_MUSIC_LOCALE = "en-US"
 const DEFAULT_APPLE_MUSIC_STOREFRONT = "us"

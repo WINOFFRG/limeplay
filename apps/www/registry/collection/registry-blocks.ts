@@ -142,6 +142,52 @@ export const blocks: Registry["items"] = [
   },
   {
     author: "Rohan Gupta (@winoffrg)",
+    categories: ["pro"],
+    description: "Video player with YouTube-style ambient lighting",
+    files: [
+      {
+        path: "blocks/ambient-player/player.tsx",
+        target: "components/ambient-player/player.tsx",
+        type: "registry:component",
+      },
+    ],
+    meta: {
+      iframeHeight: "750px",
+      props: {
+        source:
+          "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8",
+      },
+    },
+    name: "ambient-player",
+    registryDependencies: ["video-player", "media-ambient"],
+    title: "Ambient Player",
+    type: "registry:block",
+  },
+  {
+    author: "Rohan Gupta (@winoffrg)",
+    categories: ["pro"],
+    description: "Video player with a live blurred frame glow",
+    files: [
+      {
+        path: "blocks/immersive-player/player.tsx",
+        target: "components/immersive-player/player.tsx",
+        type: "registry:component",
+      },
+    ],
+    meta: {
+      iframeHeight: "750px",
+      props: {
+        source:
+          "https://ad391cc0d55b44c6a86d232548adc225.mediatailor.us-east-1.amazonaws.com/v1/master/d02fedbbc5a68596164208dd24e9b48aa60dadc7/singssai/master.m3u8",
+      },
+    },
+    name: "immersive-player",
+    registryDependencies: ["video-player", "media-glow"],
+    title: "Immersive Player",
+    type: "registry:block",
+  },
+  {
+    author: "Rohan Gupta (@winoffrg)",
     dependencies: [
       "@phosphor-icons/react",
       "lucide-react",

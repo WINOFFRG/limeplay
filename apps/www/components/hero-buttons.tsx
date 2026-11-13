@@ -3,13 +3,14 @@
 import { Check, Copy } from "lucide-react"
 import { motion } from "motion/react"
 import Link from "next/link"
-import { useCopyToClipboard } from "react-use"
+
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
 
 const command = "npx shadcn add @limeplay/video-player"
 const MotionLink = motion.create(Link)
 
 export default function HeroButtons() {
-  const [isCopied, copyToClipboard] = useCopyToClipboard()
+  const { copyToClipboard, isCopied } = useCopyToClipboard()
 
   return (
     <div
@@ -26,7 +27,7 @@ export default function HeroButtons() {
         `}
         initial={{ padding: "0px 20px" }}
         onClick={() => {
-          copyToClipboard(command)
+          void copyToClipboard(command)
         }}
         transition={{
           bounce: 0.6,
@@ -62,14 +63,14 @@ export default function HeroButtons() {
               `}
               exit={{ opacity: 0, scale: 1.2 }}
               initial={{ opacity: 0, scale: 0 }}
-              key={isCopied.value ? "check" : "copy"}
+              key={isCopied ? "check" : "copy"}
               transition={{
                 bounce: 0.3,
                 duration: 0.5,
                 type: "spring",
               }}
             >
-              {isCopied.value ? (
+              {isCopied ? (
                 <Check className="size-4" />
               ) : (
                 <Copy className="size-4" />

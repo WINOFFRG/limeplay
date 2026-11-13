@@ -6,12 +6,26 @@ import { VideoPlayer } from "@/registry/default/blocks/video-player/player"
 import { BlockStreamSync } from "./block-stream-sync"
 import { BlockPreviewPane } from "./preview-background"
 import { BlockPreviewWithToolbar } from "./preview-pane"
+import { ProBlockPreview } from "./pro-block-preview"
 
 type BlockShowcaseDefinition = {
   component: () => ReactNode
 }
 
 const blockShowcaseRegistry = {
+  "ambient-player": {
+    component: () => (
+      <BlockPreviewWithToolbar>
+        <div className="flex size-full">
+          <BlockPreviewPane>
+            <ProBlockPreview name="ambient-player">
+              <BlockStreamSync playerType="video" />
+            </ProBlockPreview>
+          </BlockPreviewPane>
+        </div>
+      </BlockPreviewWithToolbar>
+    ),
+  },
   "audio-player": {
     component: () => (
       <BlockPreviewWithToolbar>
@@ -20,6 +34,19 @@ const blockShowcaseRegistry = {
             <AudioPlayerDemo>
               <BlockStreamSync playerType="audio" />
             </AudioPlayerDemo>
+          </BlockPreviewPane>
+        </div>
+      </BlockPreviewWithToolbar>
+    ),
+  },
+  "immersive-player": {
+    component: () => (
+      <BlockPreviewWithToolbar>
+        <div className="flex size-full">
+          <BlockPreviewPane>
+            <ProBlockPreview name="immersive-player">
+              <BlockStreamSync playerType="video" />
+            </ProBlockPreview>
           </BlockPreviewPane>
         </div>
       </BlockPreviewWithToolbar>

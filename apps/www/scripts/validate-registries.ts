@@ -23,7 +23,15 @@ import { registryItemSchema, registrySchema } from "shadcn/schema"
 import { registry as registryCollection } from "@/registry/collection/index"
 
 const REGISTRY_OUTPUT_DIR = path.join(process.cwd(), "public/r")
+const PRO_REGISTRY_OUTPUT_DIR = path.join(
+  process.cwd(),
+  "registry/.generated/pro"
+)
 const TIERS = ["free", "pro"] as const
+const TIER_OUTPUT_DIRS = {
+  free: path.join(REGISTRY_OUTPUT_DIR, "free"),
+  pro: PRO_REGISTRY_OUTPUT_DIR,
+} satisfies Record<(typeof TIERS)[number], string>
 
 let hasErrors = false
 let warningCount = 0
@@ -98,6 +106,7 @@ async function main() {
   await validateDependencyResolution(registryData)
   await validateImportCompleteness()
   await validateTierRegistries()
+  await validateNoPublicProRegistry()
 
   // Summary
   console.log("\n" + "=".repeat(50))
@@ -417,6 +426,21 @@ async function validateIndividualJsonFiles() {
 }
 
 /**
+ * 7. Validate tier-specific registries (free/pro).
+ */
+async function validateNoPublicProRegistry() {
+  const publicProDir = path.join(REGISTRY_OUTPUT_DIR, "pro")
+  if (await fileExists(publicProDir)) {
+    error(
+      "public/r/pro exists. Pro registry output must stay behind the authenticated route."
+    )
+    return
+  }
+
+  pass("No public pro registry artifacts found")
+}
+
+/**
  * 1. Validate the registry collection (source of truth).
  */
 async function validateRegistryCollection() {
@@ -435,12 +459,9 @@ async function validateRegistryCollection() {
   }
 }
 
-/**
- * 7. Validate tier-specific registries (free/pro).
- */
 async function validateTierRegistries() {
   for (const tier of TIERS) {
-    const tierDir = path.join(REGISTRY_OUTPUT_DIR, tier)
+    const tierDir = TIER_OUTPUT_DIRS[tier]
     if (!(await fileExists(tierDir))) continue
 
     console.log(`\n📂 Validating ${tier}/ registry...`)

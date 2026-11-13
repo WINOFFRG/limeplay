@@ -15,6 +15,7 @@ import defaultComponents from "fumadocs-ui/mdx"
 
 import { ComponentPreview } from "@/components/component-preview"
 import { Mermaid } from "@/components/mdx/mermaid"
+import { ProInstallationNote } from "@/components/mdx/pro-installation-note"
 
 const generator = createGenerator()
 const fumadocsComponents = defaultComponents as MDXComponents
@@ -34,6 +35,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
         <Pre>{props.children}</Pre>
       </CodeBlock>
     ),
+    ProInstallationNote,
     Tab,
     Tabs,
     TabsContent,

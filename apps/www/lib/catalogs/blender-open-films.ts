@@ -5,10 +5,11 @@ import { z } from "zod"
 import type { CatalogBaseAsset } from "@/lib/catalogs/types"
 
 import { createTimeoutSignal } from "@/lib/catalogs/utils"
+import { LIMEPLAY_API_BASE_URL } from "@/lib/constants"
 
 export const BLENDER_OPEN_FILMS_PLAYLIST_ID = "blender-open-films"
 
-const BLENDER_API_BASE_URL = "https://limeplay.winoffrg.workers.dev/api/blender"
+const BLENDER_API_BASE_URL = `${LIMEPLAY_API_BASE_URL}/api/blender`
 const BLENDER_STREAM_TIMEOUT_MS = 10_000
 
 export interface BlenderOpenFilmAsset extends CatalogBaseAsset {
