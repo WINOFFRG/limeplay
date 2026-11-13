@@ -318,12 +318,14 @@ function TimelineSetup() {
 
     on(media, ["durationchange", "loading"], onDurationChange)
     on(media, "progress", onBuffer)
+    on(media, ["seeked", "pause", "ended"], onTimeUpdate)
     on(player, ["trackschanged", "loading"], onBuffer)
     on(player, "loading", onLoading)
 
     return () => {
       off(media, ["durationchange", "loading"], onDurationChange)
       off(media, "progress", onBuffer)
+      off(media, ["seeked", "pause", "ended"], onTimeUpdate)
       off(player, ["trackschanged", "loading"], onBuffer)
       off(player, "loading", onLoading)
     }

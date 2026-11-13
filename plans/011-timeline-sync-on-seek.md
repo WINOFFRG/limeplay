@@ -154,11 +154,20 @@ Manual check in Maintenance notes.
 
 ## Maintenance notes
 
-- Manual check for the reviewer on `/docs/components/seek-control`: pause, press
-  the forward-seek button — the elapsed label and progress bar must move
-  immediately. Play to the end — the bar reaches 100%.
+- Manual check for the reviewer on `/docs/components/seek-controls`: pause,
+  press the forward-seek button. The demo has native video controls but no
+  separate elapsed label or progress bar. Use `/blocks/video-player` to inspect
+  the elapsed label and timeline at media end.
 - `onTimeUpdate` also emits the `timeupdate` event, so subscribers now get one
   extra event per seek/pause/end. That is intended.
 - While dragging the timeline, every pointer move seeks, so `seeked` fires
   often and each one writes the store once. If scrubbing becomes janky, the fix
   is to throttle seeks in `ui/timeline-control.tsx`, not to remove these listeners.
+
+## Execution note (2026-11-13)
+
+- In the browser, Forward 10 seconds moved the paused demo video's current time
+  from 0.084 to 10.084 seconds. The demo has no separate store-backed time label,
+  so its timeline-store update was not observed directly there.
+- In `/blocks/video-player`, playback from near the end reached `ended: true`,
+  the elapsed label showed 10:30, and the timeline slider reached 100%.
