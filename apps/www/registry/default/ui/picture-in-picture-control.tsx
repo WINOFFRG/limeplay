@@ -1,6 +1,5 @@
 "use client"
 
-import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
@@ -9,6 +8,7 @@ import {
   MediaReadyState,
   usePlaybackStore,
 } from "@/registry/default/hooks/use-playback"
+import { Slot } from "@/registry/default/lib/slot"
 
 export interface PictureInPictureControlProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**

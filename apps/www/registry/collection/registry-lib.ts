@@ -13,6 +13,17 @@ export const lib: Registry["items"] = [
     type: "registry:lib",
   },
   {
+    dependencies: ["@base-ui/react"],
+    files: [
+      {
+        path: "lib/slot.tsx",
+        type: "registry:lib",
+      },
+    ],
+    name: "slot",
+    type: "registry:lib",
+  },
+  {
     dependencies: ["date-fns"],
     files: [
       {

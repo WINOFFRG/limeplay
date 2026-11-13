@@ -1,7 +1,8 @@
 "use client"
 
-import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
+
+import { Slot } from "@/registry/default/lib/slot"
 
 export interface ExclusivePlaybackProviderProps extends React.ComponentPropsWithoutRef<"div"> {
   asChild?: boolean

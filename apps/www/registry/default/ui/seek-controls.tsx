@@ -1,6 +1,5 @@
 "use client"
 
-import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
@@ -9,6 +8,7 @@ import {
   usePlaybackStore,
 } from "@/registry/default/hooks/use-playback"
 import { useSeek } from "@/registry/default/hooks/use-seek"
+import { Slot } from "@/registry/default/lib/slot"
 
 export interface SeekControlProps extends React.ComponentProps<typeof Button> {
   asChild?: boolean

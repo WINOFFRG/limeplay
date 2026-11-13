@@ -4,7 +4,6 @@ const TARGET_BASE_PATH = "components/limeplay"
 
 export const ui: Registry["items"] = [
   {
-    dependencies: ["@radix-ui/react-slot"],
     files: [
       {
         path: "ui/exclusive-playback-provider.tsx",
@@ -13,7 +12,7 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "exclusive-playback-provider",
-    registryDependencies: [],
+    registryDependencies: ["slot"],
     type: "registry:ui",
   },
   {
@@ -42,7 +41,6 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
   },
   {
-    dependencies: ["@radix-ui/react-slot"],
     files: [
       {
         path: "ui/mute-control.tsx",
@@ -51,7 +49,12 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "mute-control",
-    registryDependencies: ["media-provider", "use-volume", "use-playback"],
+    registryDependencies: [
+      "slot",
+      "media-provider",
+      "use-volume",
+      "use-playback",
+    ],
     type: "registry:ui",
   },
   {
@@ -80,7 +83,6 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
   },
   {
-    dependencies: ["@radix-ui/react-compose-refs", "@radix-ui/react-slot"],
     files: [
       {
         path: "ui/player-layout.tsx",
@@ -93,7 +95,6 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
   },
   {
-    dependencies: ["@radix-ui/react-compose-refs", "@radix-ui/react-slot"],
     files: [
       {
         path: "ui/media.tsx",
@@ -102,7 +103,12 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "media",
-    registryDependencies: ["media-provider", "use-media", "use-playback"],
+    registryDependencies: [
+      "slot",
+      "media-provider",
+      "use-media",
+      "use-playback",
+    ],
     type: "registry:ui",
   },
   {
@@ -125,7 +131,6 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
   },
   {
-    dependencies: ["@radix-ui/react-slot"],
     files: [
       {
         path: "ui/playback-control.tsx",
@@ -134,11 +139,10 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "playback-control",
-    registryDependencies: ["media-provider", "use-playback"],
+    registryDependencies: ["slot", "media-provider", "use-playback"],
     type: "registry:ui",
   },
   {
-    dependencies: ["@radix-ui/react-slot"],
     files: [
       {
         path: "ui/picture-in-picture-control.tsx",
@@ -148,6 +152,7 @@ export const ui: Registry["items"] = [
     ],
     name: "picture-in-picture-control",
     registryDependencies: [
+      "slot",
       "media-provider",
       "use-picture-in-picture",
       "use-playback",
@@ -155,7 +160,6 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
   },
   {
-    dependencies: ["@radix-ui/react-slot"],
     files: [
       {
         path: "ui/playback-rate.tsx",
@@ -222,7 +226,6 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
   },
   {
-    dependencies: ["@radix-ui/react-compose-refs", "@radix-ui/react-slot"],
     files: [
       {
         path: "ui/root-container.tsx",
@@ -232,6 +235,7 @@ export const ui: Registry["items"] = [
     ],
     name: "root-container",
     registryDependencies: [
+      "slot",
       "media-provider",
       "use-media",
       "use-playback",
@@ -240,7 +244,6 @@ export const ui: Registry["items"] = [
     type: "registry:ui",
   },
   {
-    dependencies: ["@radix-ui/react-compose-refs", "@radix-ui/react-slot"],
     files: [
       {
         path: "ui/captions.tsx",
@@ -249,11 +252,10 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "captions",
-    registryDependencies: ["media-provider", "use-captions"],
+    registryDependencies: ["slot", "media-provider", "use-captions"],
     type: "registry:ui",
   },
   {
-    dependencies: ["@radix-ui/react-slot"],
     files: [
       {
         path: "ui/seek-controls.tsx",
@@ -262,7 +264,12 @@ export const ui: Registry["items"] = [
       },
     ],
     name: "seek-controls",
-    registryDependencies: ["media-provider", "use-seek", "use-playback"],
+    registryDependencies: [
+      "slot",
+      "media-provider",
+      "use-seek",
+      "use-playback",
+    ],
     type: "registry:ui",
   },
 ]

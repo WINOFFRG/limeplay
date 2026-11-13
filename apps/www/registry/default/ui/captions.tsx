@@ -1,7 +1,5 @@
 "use client"
 
-import { useComposedRefs } from "@radix-ui/react-compose-refs"
-import { Slot } from "@radix-ui/react-slot"
 import React, { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -11,6 +9,7 @@ import {
   useCaptionsStore,
 } from "@/registry/default/hooks/use-captions"
 import { usePlayerStore } from "@/registry/default/hooks/use-player"
+import { Slot, useComposedRefs } from "@/registry/default/lib/slot"
 
 export interface CaptionsControlProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /**

@@ -1,13 +1,12 @@
 "use client"
 
-import { useComposedRefs } from "@radix-ui/react-compose-refs"
-import { Slot } from "@radix-ui/react-slot"
 import React from "react"
 
 import { cn } from "@/lib/utils"
 import { useMediaStore } from "@/registry/default/hooks/use-media"
 import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
 import { usePlayerStore } from "@/registry/default/hooks/use-player"
+import { Slot, useComposedRefs } from "@/registry/default/lib/slot"
 
 export interface RootContainerProps extends React.ComponentPropsWithoutRef<"div"> {
   asChild?: boolean
