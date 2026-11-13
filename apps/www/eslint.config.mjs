@@ -2,12 +2,16 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 
 import nextPlugin from "@next/eslint-plugin-next"
+import { plugin as shadcn } from "@shadcn/lint"
 import pluginBetterTailwindcss from "eslint-plugin-better-tailwindcss"
 import tseslint from "typescript-eslint"
 
 import { baseConfig } from "../../eslint.config.mjs"
 
 const appDir = path.dirname(fileURLToPath(import.meta.url))
+
+// Non-Tailwind marker classes used for styling hooks and prose opt-outs.
+const markerClasses = ["limeplay", "dark", "shiki", "not-prose", "light"]
 
 const eslintConfig = [
   {
@@ -31,7 +35,7 @@ const eslintConfig = [
       ],
       "better-tailwindcss/no-unknown-classes": [
         "error",
-        { ignore: ["limeplay", "dark", "shiki", "not-prose", "light"] },
+        { ignore: markerClasses },
       ],
     },
     settings: {
@@ -46,16 +50,35 @@ const eslintConfig = [
     files: ["**/*.{js,jsx,ts,tsx}"],
     plugins: {
       "@next/next": nextPlugin,
+      shadcn,
     },
     rules: {
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs["core-web-vitals"].rules,
+      // Fumadocs tokens and classes live in app/docs/docs.css, which is not
+      // part of the components.json theme (app/global.css) that @shadcn/lint reads.
+      "shadcn/no-raw-colors": ["error", { allow: ["*-fd-*"] }],
+      "shadcn/no-unknown-classes": [
+        "error",
+        {
+          allow: [...markerClasses, "animate-fd-*", "fd-scroll-container"],
+        },
+      ],
     },
     settings: {
       next: {
         rootDir: ".",
       },
     },
+  },
+  {
+    // Brand-logo fills, SVG clip paths, and the light/dark toggle glyph use literal colors on purpose.
+    files: [
+      "components/icons.tsx",
+      "components/theme-toggle.tsx",
+      "components/copy-button.tsx",
+    ],
+    rules: { "shadcn/no-raw-colors": "off" },
   },
   ...baseConfig,
 ]

@@ -54,13 +54,13 @@ export function ScrollIndicator() {
           initial={{ opacity: 0, scale: 0.8 }}
           transition={{ delay: 2.3, duration: 0.8 }}
         >
-          <div className="relative h-10 w-6 rounded-full border-2 border-slate-400/60">
+          <div className="relative h-10 w-6 rounded-full border-2 border-ring/60">
             <motion.div
               animate={{
                 opacity: [0.4, 1, 0.4],
                 y: [0, 12, 0],
               }}
-              className="absolute top-2 left-1/2 h-3 w-1 -translate-x-1/2 transform rounded-full bg-slate-500/80"
+              className="absolute top-2 left-1/2 h-3 w-1 -translate-x-1/2 transform rounded-full bg-muted-foreground/80"
               transition={{
                 delay: 3,
                 duration: 1.5,

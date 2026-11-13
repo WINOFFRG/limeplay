@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "bun run registry:build && next build",
+    "build": "bun run lint:build && bun run registry:build && next build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:build": "if [ -n \"$CI\" ]; then bun run lint; else bun run lint:fix; fi",
     "dev": "next dev --turbopack",
     "start": "next start",
     "registry:build": "REGISTRY_HOST=https://limeplay.winoffrg.dev bun run ./scripts/registry-dev.mts",
@@ -69,6 +72,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@next/eslint-plugin-next": "^16.3.1",
+    "@shadcn/lint": "^0.2.5",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/bun": "^1.4.4",
     "@types/lodash.clamp": "^4.0.9",

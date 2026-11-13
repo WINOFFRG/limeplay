@@ -41,7 +41,7 @@ export default function NotFound() {
         <motion.p
           animate={{ opacity: 1 }}
           className={`
-            mt-4 max-w-lg text-lg text-gray-300
+            mt-4 max-w-lg text-lg text-white/80
             md:text-xl
           `}
           initial={{ opacity: 0 }}
@@ -53,7 +53,7 @@ export default function NotFound() {
         <motion.nav
           animate={{ opacity: 1 }}
           aria-label="404 recovery links"
-          className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-gray-300"
+          className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-white/80"
           initial={{ opacity: 0 }}
           transition={{ delay: 0.9, duration: 0.8 }}
         >
