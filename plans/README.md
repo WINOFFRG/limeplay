@@ -31,7 +31,7 @@ the commit you just made — that is expected.
 | 007 | Two playing players no longer fight over the media session | P1 | S | — | DONE |
 | 008 | Registry items declare what they import; validator fails on gaps | P2 | S | — | DONE |
 | 009 | Slider components compose user handlers and honour `disabled` | P2 | S | — | DONE |
-| 010 | (investigate) Timeline and volume sliders respond to the keyboard | P2 | M | 009 | TODO |
+| 010 | (investigate) Timeline and volume sliders respond to the keyboard | P2 | M | 009 | DONE |
 | 011 | Timeline updates after seek, pause and end | P2 | S | — | TODO |
 | 012 | Superseded loads cannot take over; `usePlayer` preload stops throwing | P2 | S | 004 (after 005, 006) | TODO |
 | 013 | Four small correctness fixes (time labels, reshuffle, captions, theme type) | P3 | S | 004 | TODO |

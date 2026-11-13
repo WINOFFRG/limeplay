@@ -26,6 +26,7 @@ export const Root = React.forwardRef<
     onPointerMove: onPointerMoveProp,
     onPointerOut: onPointerOutProp,
     onPointerUp: onPointerUpProp,
+    onValueChange: onValueChangeProp,
     orientation = "horizontal",
     ...etc
   } = props
@@ -107,6 +108,13 @@ export const Root = React.forwardRef<
       onPointerUp={(event) => {
         onPointerUpProp?.(event)
         if (!event.defaultPrevented) trackEvents.onPointerUp(event)
+      }}
+      onValueChange={(nextValue, eventDetails) => {
+        onValueChangeProp?.(nextValue, eventDetails)
+        if (disabled) return
+        const nextVolume = Array.isArray(nextValue) ? nextValue[0] : nextValue
+        setCurrentValue(nextVolume)
+        setVolume(nextVolume)
       }}
     />
   )
