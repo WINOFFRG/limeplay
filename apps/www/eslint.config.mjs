@@ -80,6 +80,29 @@ const eslintConfig = [
     ],
     rules: { "shadcn/no-raw-colors": "off" },
   },
+  {
+    // Registry block accent colors with no matching theme token. They are
+    // exempted here rather than with eslint-disable comments, because those
+    // comments ship to registry users who may not have @shadcn/lint installed.
+    files: [
+      "registry/default/blocks/audio-player/components/fixed-timeline-control.tsx",
+      "registry/default/blocks/video-player/components/timeline-slider-control.tsx",
+    ],
+    rules: {
+      "shadcn/no-raw-colors": [
+        "error",
+        {
+          allow: [
+            "*-fd-*",
+            "bg-red-600",
+            "bg-rose-600",
+            "from-rose-600",
+            "to-pink-500",
+          ],
+        },
+      ],
+    },
+  },
   ...baseConfig,
 ]
 

@@ -116,7 +116,6 @@ export function TimelineSliderControl() {
             </>
           )}
           {showLiveBadge && (
-            // eslint-disable-next-line shadcn/no-raw-colors -- LIVE badge red shipped to registry users; no matching theme token
             <div className="flex items-center rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold tracking-wide">
               <span className="tracking-widest">LIVE</span>
             </div>
