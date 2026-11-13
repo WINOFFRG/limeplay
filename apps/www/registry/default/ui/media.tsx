@@ -1,10 +1,10 @@
 "use client"
 
-import { useComposedRefs } from "@radix-ui/react-compose-refs"
 import * as React from "react"
 
 import { useMediaStore } from "@/registry/default/hooks/use-media"
 import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
+import { useComposedRefs } from "@/registry/default/lib/slot"
 
 export type MediaProps =
   | (React.AudioHTMLAttributes<HTMLAudioElement> & { as: "audio" })

@@ -104,6 +104,7 @@ export const blocks: Registry["items"] = [
     },
     name: "video-player",
     registryDependencies: [
+      "slot",
       "https://bazza.dev/r/hit-area",
       "dropdown-menu",
       "player-layout",
@@ -143,7 +144,6 @@ export const blocks: Registry["items"] = [
     author: "Rohan Gupta (@winoffrg)",
     dependencies: [
       "@phosphor-icons/react",
-      "@radix-ui/react-slot",
       "lucide-react",
       "motion",
       "zustand",
@@ -223,6 +223,7 @@ export const blocks: Registry["items"] = [
     },
     name: "audio-player",
     registryDependencies: [
+      "slot",
       "https://bazza.dev/r/hit-area",
       "media-provider",
       "media",

@@ -1,4 +1,4 @@
-import { Slot } from "@radix-ui/react-slot"
+import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
 import * as React from "react"
 
@@ -65,27 +65,27 @@ const buttonVariants = cva(
   }
 )
 
-export interface ButtonProps
-  extends
-    React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean
-}
-
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ asChild = false, className, size, variant, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
-    return (
-      <Comp
-        className={cn(buttonVariants({ className, size, variant }))}
-        data-slot="button"
-        ref={ref}
-        {...props}
-      />
-    )
+export type ButtonProps = Omit<
+  React.ComponentProps<typeof ButtonPrimitive>,
+  "className"
+> &
+  VariantProps<typeof buttonVariants> & {
+    className?: string
   }
-)
 
-Button.displayName = "Button"
+/**
+ * Renders a native `<button>` by default. Use `render` to swap the element
+ * (add `nativeButton={false}` for non-button elements). For links, style the
+ * link itself with `buttonVariants` instead, so it keeps link semantics.
+ */
+function Button({ className, size, variant, ...props }: ButtonProps) {
+  return (
+    <ButtonPrimitive
+      className={cn(buttonVariants({ className, size, variant }))}
+      data-slot="button"
+      {...props}
+    />
+  )
+}
 
 export { Button, buttonVariants }

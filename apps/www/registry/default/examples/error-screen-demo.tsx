@@ -2,7 +2,7 @@
 
 import { ExternalLinkIcon, RotateCwIcon } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   ErrorScreen,
   getErrorDetails,
@@ -31,16 +31,15 @@ export default function ErrorScreenDemo() {
             Retry
           </Button>
           {details.shakaDocsUrl && (
-            <Button asChild size="sm" variant="secondary">
-              <a
-                href={details.shakaDocsUrl}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <ExternalLinkIcon />
-                Shaka Error
-              </a>
-            </Button>
+            <a
+              className={buttonVariants({ size: "sm", variant: "secondary" })}
+              href={details.shakaDocsUrl}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <ExternalLinkIcon />
+              Shaka Error
+            </a>
           )}
         </div>
       </ErrorScreen>

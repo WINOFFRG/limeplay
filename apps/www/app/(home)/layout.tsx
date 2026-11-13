@@ -10,7 +10,7 @@ export default function RootLayout({
   return (
     <main
       className={`
-        light w-dvw scrollbar-gutter-auto overscroll-contain bg-linear-to-br from-white to-neutral-200
+        light w-dvw scrollbar-gutter-auto overscroll-contain bg-linear-to-br from-white to-border
         md:scrollbar-gutter-stable
       `}
     >

@@ -1,6 +1,5 @@
 "use client"
 
-import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
@@ -9,6 +8,7 @@ import {
   usePlaybackStore,
 } from "@/registry/default/hooks/use-playback"
 import { useVolumeStore } from "@/registry/default/hooks/use-volume"
+import { Slot } from "@/registry/default/lib/slot"
 
 export interface MuteControlProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean

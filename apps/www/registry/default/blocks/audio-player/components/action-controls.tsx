@@ -36,6 +36,7 @@ export function ActionControls() {
           className={`
             cursor-pointer rounded-full p-1.5
             hover:bg-muted
+            aria-pressed:bg-transparent
             data-[state=on]:bg-transparent
           `}
           value="dislike"
@@ -64,6 +65,7 @@ export function ActionControls() {
           className={`
             cursor-pointer rounded-full p-1.5
             hover:bg-muted
+            aria-pressed:bg-transparent
             data-[state=on]:bg-transparent
           `}
           value="like"

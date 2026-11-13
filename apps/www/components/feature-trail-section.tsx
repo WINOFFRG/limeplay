@@ -123,7 +123,7 @@ function BouncingCircle({ icon: Icon, index, time }: BouncingCircleProps) {
     >
       <div
         className={`
-          relative flex aspect-square size-[70px] items-center justify-center rounded-full border border-zinc-900/10 bg-gray-50 text-[26px] font-light
+          relative flex aspect-square size-[70px] items-center justify-center rounded-full border border-primary/10 bg-muted text-[26px] font-light
           text-foreground will-change-transform backface-hidden
           lg:size-[98px] lg:text-[36px]
         `}

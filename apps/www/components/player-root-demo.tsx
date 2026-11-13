@@ -1,6 +1,6 @@
 "use client"
 
-import * as TabsPrimitive from "@radix-ui/react-tabs"
+import { Tabs as TabsPrimitive } from "@base-ui/react/tabs"
 import {
   CogIcon,
   ExternalLinkIcon,
@@ -16,7 +16,7 @@ import {
   useStreamPanel,
 } from "@/components/stream-panel"
 import { useStreamPanelSync } from "@/components/stream-panel/use-stream-panel-sync"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { PopoverTrigger } from "@/components/ui/popover"
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
@@ -73,7 +73,7 @@ export function PlayerLayoutDemo({
               )}
             >
               {["preview", "code"].map((tab) => (
-                <TabsPrimitive.Trigger
+                <TabsPrimitive.Tab
                   className={cn(
                     `
                       relative inline-flex h-7 cursor-pointer items-center justify-center rounded-md px-3 text-sm transition-colors
@@ -102,7 +102,7 @@ export function PlayerLayoutDemo({
                     />
                   )}
                   <span className="relative z-10 capitalize">{tab}</span>
-                </TabsPrimitive.Trigger>
+                </TabsPrimitive.Tab>
               ))}
             </TabsList>
             {activeTab === "preview" && (
@@ -146,9 +146,9 @@ export function PlayerLayoutDemo({
               <TabsContent
                 className={`
                   relative mt-0 hidden pb-4
-                  data-[state=active]:block
+                  not-data-hidden:block
                 `}
-                forceMount
+                keepMounted
                 value="preview"
               >
                 <MediaProvider key={reloadKey}>
@@ -262,16 +262,18 @@ function PanelTriggerButton() {
   const { handle } = useStreamPanel()
 
   return (
-    <Button
-      asChild
-      className="size-7 rounded-lg border"
-      size="icon"
-      variant="ghost"
+    <PopoverTrigger
+      handle={handle}
+      render={
+        <Button
+          className="size-7 rounded-lg border"
+          size="icon"
+          variant="ghost"
+        />
+      }
     >
-      <PopoverTrigger handle={handle}>
-        <CogIcon className="size-3.5" />
-      </PopoverTrigger>
-    </Button>
+      <CogIcon className="size-3.5" />
+    </PopoverTrigger>
   )
 }
 
@@ -297,16 +299,15 @@ function PlayerErrorScreen() {
           Retry
         </Button>
         {debug && details.shakaDocsUrl && (
-          <Button asChild variant="secondary">
-            <a
-              href={details.shakaDocsUrl}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <ExternalLinkIcon />
-              Shaka Error
-            </a>
-          </Button>
+          <a
+            className={buttonVariants({ variant: "secondary" })}
+            href={details.shakaDocsUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <ExternalLinkIcon />
+            Shaka Error
+          </a>
         )}
       </div>
     </ErrorScreen>

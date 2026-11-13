@@ -6,7 +6,7 @@ import { motion } from "motion/react"
 import Link from "next/link"
 
 import AnimatedGradientBackground from "@/components/ui/animated-gradient-background"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import { AGENT_RECOVERY_LINKS } from "@/lib/agent-content"
 
 export default function NotFound() {
@@ -41,7 +41,7 @@ export default function NotFound() {
         <motion.p
           animate={{ opacity: 1 }}
           className={`
-            mt-4 max-w-lg text-lg text-gray-300
+            mt-4 max-w-lg text-lg text-white/80
             md:text-xl
           `}
           initial={{ opacity: 0 }}
@@ -53,7 +53,7 @@ export default function NotFound() {
         <motion.nav
           animate={{ opacity: 1 }}
           aria-label="404 recovery links"
-          className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-gray-300"
+          className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-white/80"
           initial={{ opacity: 0 }}
           transition={{ delay: 0.9, duration: 0.8 }}
         >
@@ -76,12 +76,16 @@ export default function NotFound() {
           initial={{ opacity: 0, y: 20 }}
           transition={{ delay: 1, duration: 0.8 }}
         >
-          <Button asChild className="mt-8" variant="outline">
-            <Link href="/">
-              <ArrowLeft className="size-4" />
-              Go Home
-            </Link>
-          </Button>
+          <Link
+            className={buttonVariants({
+              className: "mt-8",
+              variant: "outline",
+            })}
+            href="/"
+          >
+            <ArrowLeft className="size-4" />
+            Go Home
+          </Link>
         </motion.div>
       </div>
     </div>

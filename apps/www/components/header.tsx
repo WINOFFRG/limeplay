@@ -52,17 +52,19 @@ export function Header() {
           </div>
           <div className="flex flex-1 items-center justify-end gap-2 px-0">
             <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  className={`
-                    size-8
-                    md:hidden
-                  `}
-                  size="icon"
-                  variant="ghost"
-                >
-                  <Menu className="size-4" />
-                </Button>
+              <SheetTrigger
+                render={
+                  <Button
+                    className={`
+                      size-8
+                      md:hidden
+                    `}
+                    size="icon"
+                    variant="ghost"
+                  />
+                }
+              >
+                <Menu className="size-4" />
               </SheetTrigger>
               <SheetContent>
                 <SheetHeader>

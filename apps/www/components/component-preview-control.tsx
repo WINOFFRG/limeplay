@@ -1,6 +1,6 @@
 "use client"
 
-import * as TabsPrimitive from "@radix-ui/react-tabs"
+import { Tabs as TabsPrimitive } from "@base-ui/react/tabs"
 import { AnimatePresence, motion } from "motion/react"
 import * as React from "react"
 
@@ -39,7 +39,7 @@ export function ComponentPreviewControl({
             )}
           >
             {["preview", "code"].map((tab) => (
-              <TabsPrimitive.Trigger
+              <TabsPrimitive.Tab
                 className={cn(
                   `
                     relative inline-flex h-8 min-w-24 cursor-pointer items-center justify-center rounded-full px-4 text-sm font-medium
@@ -69,7 +69,7 @@ export function ComponentPreviewControl({
                   />
                 )}
                 <span className="relative z-10 capitalize">{tab}</span>
-              </TabsPrimitive.Trigger>
+              </TabsPrimitive.Tab>
             ))}
           </TabsList>
         )}

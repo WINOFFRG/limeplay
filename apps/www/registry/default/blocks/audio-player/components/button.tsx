@@ -1,7 +1,7 @@
-import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { Slot } from "@/registry/default/lib/slot"
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean
