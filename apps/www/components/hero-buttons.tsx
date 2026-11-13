@@ -27,7 +27,7 @@ export default function HeroButtons() {
         `}
         initial={{ padding: "0px 20px" }}
         onClick={() => {
-          copyToClipboard(command)
+          void copyToClipboard(command)
         }}
         transition={{
           bounce: 0.6,

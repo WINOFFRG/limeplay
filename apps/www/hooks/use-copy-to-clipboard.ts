@@ -10,28 +10,50 @@ export function useCopyToClipboard({
   timeout?: number
 } = {}) {
   const [isCopied, setIsCopied] = React.useState(false)
+  const resetTimeoutRef = React.useRef<null | ReturnType<typeof setTimeout>>(
+    null
+  )
 
-  const copyToClipboard = (value: string) => {
-    if (typeof window === "undefined") {
-      return
+  React.useEffect(
+    () => () => {
+      if (resetTimeoutRef.current) {
+        clearTimeout(resetTimeoutRef.current)
+      }
+    },
+    []
+  )
+
+  /**
+   * Writes `value` to the clipboard. Resolves to `true` on success and
+   * `false` when the clipboard is unavailable or the write fails.
+   */
+  const copyToClipboard = async (value: string): Promise<boolean> => {
+    if (typeof window === "undefined" || !value) {
+      return false
     }
 
     const clipboard = "clipboard" in navigator ? navigator.clipboard : null
-    if (!clipboard) return
+    if (!clipboard) return false
 
-    if (!value) return
+    try {
+      await clipboard.writeText(value)
+    } catch (error) {
+      console.error(error)
+      return false
+    }
 
-    clipboard.writeText(value).then(() => {
-      setIsCopied(true)
+    setIsCopied(true)
+    onCopy?.()
 
-      if (onCopy) {
-        onCopy()
-      }
+    if (resetTimeoutRef.current) {
+      clearTimeout(resetTimeoutRef.current)
+    }
+    resetTimeoutRef.current = setTimeout(() => {
+      setIsCopied(false)
+      resetTimeoutRef.current = null
+    }, timeout)
 
-      setTimeout(() => {
-        setIsCopied(false)
-      }, timeout)
-    }, console.error)
+    return true
   }
 
   return { copyToClipboard, isCopied }

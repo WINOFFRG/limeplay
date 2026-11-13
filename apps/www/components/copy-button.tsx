@@ -96,7 +96,10 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
       } else if (containerRef?.current) {
         const textContent =
           containerRef.current.textContent || "No text content"
-        copyToClipboard(textContent)
+        const copied = await copyToClipboard(textContent)
+        if (!copied) {
+          throw new Error("Clipboard write failed")
+        }
       }
       setTimeout(() => {
         setStatus("copied")

@@ -432,7 +432,7 @@ async function writeProRuntimeModule(outputDir?: string) {
   if (outputDir) {
     const entries = await fs.readdir(outputDir)
     for (const entry of entries) {
-      if (!entry.endsWith(".json")) continue
+      if (!entry.endsWith(".json") || entry === "registry.json") continue
 
       const filePath = path.join(outputDir, entry)
       const stat = await fs.stat(filePath)

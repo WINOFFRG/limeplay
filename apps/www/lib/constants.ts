@@ -9,4 +9,6 @@ export const PROD_BASE_HOST =
   process.env.VERCEL_ENV === "preview"
     ? `https://${process.env.VERCEL_URL ?? "limeplay.winoffrg.dev"}`
     : SITE_URL
-export const LIMEPLAY_API_BASE_URL = "https://limeplay.winoffrg.workers.dev"
+export const LIMEPLAY_API_BASE_URL =
+  process.env.NEXT_PUBLIC_LIMEPLAY_API_BASE_URL ??
+  "https://limeplay.winoffrg.workers.dev"
