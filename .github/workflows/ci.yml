@@ -35,12 +35,8 @@ jobs:
   typecheck:
     name: Type Check
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.WINOFFRG_PAT }}
-          submodules: recursive
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -50,7 +46,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Type check
-        run: cd apps/www && bunx tsc --noEmit
+        run: cd apps/www && bun run typecheck
 
   registry:
     name: Registry Build & Validate

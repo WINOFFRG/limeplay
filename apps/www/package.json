@@ -12,6 +12,7 @@
     "validate:registries": "bun run ./scripts/validate-registries.ts",
     "test:registry-install": "bun run scripts/test-registry-install.ts",
     "docs:generate": "fumadocs-mdx",
+    "typecheck": "fumadocs-mdx && next typegen && tsc --noEmit",
     "install:vercel": "bash ./scripts/vercel-install.sh",
     "indexnow:submit": "bun run ./scripts/submit-indexnow.ts",
     "postinstall": "true"
