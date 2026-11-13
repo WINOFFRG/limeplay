@@ -21,9 +21,9 @@ npx shadcn add @limeplay/exclusive-playback-provider
 Wrap the players that should share exclusive playback:
 
 ```tsx title="components/media-gallery.tsx"
-import { AudioPlayer } from "@/components/limeplay/audio-player/player"
+import { AudioPlayer } from "@/components/audio-player/player"
 import { ExclusivePlaybackProvider } from "@/components/limeplay/exclusive-playback-provider"
-import { VideoPlayer } from "@/components/limeplay/video-player/player"
+import { VideoPlayer } from "@/components/video-player/player"
 
 const videoSource = "/video.m3u8"
 const audioPlaylist = [{ id: "track-1", src: "/audio.mp3", title: "Track 1" }]

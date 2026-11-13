@@ -24,7 +24,7 @@ the commit you just made — that is expected.
 |------|-------|----------|--------|------------|--------|
 | 001 | Typecheck runs and passes on every PR and push | P1 | S | — | DONE |
 | 002 | Clone tokens not exposed to third-party code; test server local-only | P1 | S | — (apply after 001) | DONE |
-| 003 | README and docs import from the paths blocks install to | P1 | S | — | TODO |
+| 003 | README and docs import from the paths blocks install to | P1 | S | — | DONE |
 | 004 | `bun test` suite covering the library's pure logic | P1 | M | 001 | TODO |
 | 005 | Blocked or interrupted `play()` is not a fatal error | P1 | S | 004 | TODO |
 | 006 | Error recovery cannot loop forever | P1 | M | 004, 005 | TODO |
