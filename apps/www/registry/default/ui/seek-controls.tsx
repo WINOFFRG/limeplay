@@ -43,7 +43,8 @@ export const SeekControl = React.forwardRef<
 
   const Comp = render ? Slot : asChild ? Slot : Button
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  // Typed from the Button's own onClick, so this works with Radix and Base UI buttons.
+  const handleClick: NonNullable<SeekControlProps["onClick"]> = (event) => {
     onClick?.(event)
     if (!event.defaultPrevented) {
       seek(offset)

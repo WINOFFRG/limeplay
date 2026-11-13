@@ -6,7 +6,7 @@ import { motion } from "motion/react"
 import Link from "next/link"
 
 import AnimatedGradientBackground from "@/components/ui/animated-gradient-background"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import { AGENT_RECOVERY_LINKS } from "@/lib/agent-content"
 
 export default function NotFound() {
@@ -76,12 +76,16 @@ export default function NotFound() {
           initial={{ opacity: 0, y: 20 }}
           transition={{ delay: 1, duration: 0.8 }}
         >
-          <Button asChild className="mt-8" variant="outline">
-            <Link href="/">
-              <ArrowLeft className="size-4" />
-              Go Home
-            </Link>
-          </Button>
+          <Link
+            className={buttonVariants({
+              className: "mt-8",
+              variant: "outline",
+            })}
+            href="/"
+          >
+            <ArrowLeft className="size-4" />
+            Go Home
+          </Link>
         </motion.div>
       </div>
     </div>

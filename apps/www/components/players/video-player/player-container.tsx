@@ -54,34 +54,37 @@ function HomeVideoStreamSelector() {
           @3xl/root:top-6
         `}
       >
-        <Button
-          asChild
-          className={`
-            pointer-events-auto h-8 max-w-[min(18rem,calc(100vw-1.5rem))] rounded-xl border border-white/12 bg-background/40 px-2.5 text-xs
-            font-medium text-primary shadow-2xl shadow-black/35 backdrop-blur-xl
-            @md/root:h-9 @md/root:max-w-[min(20rem,calc(100vw-2rem))] @md/root:px-3
-            @3xl/root:h-10 @3xl/root:max-w-[min(24rem,calc(100vw-2rem))] @3xl/root:px-4 @3xl/root:text-sm
-          `}
-          variant="ghost"
+        <PopoverTrigger
+          aria-label="Open stream selector"
+          handle={handle}
+          render={
+            <Button
+              className={`
+                pointer-events-auto h-8 max-w-[min(18rem,calc(100vw-1.5rem))] rounded-xl border border-white/12 bg-background/40 px-2.5 text-xs
+                font-medium text-primary shadow-2xl shadow-black/35 backdrop-blur-xl
+                @md/root:h-9 @md/root:max-w-[min(20rem,calc(100vw-2rem))] @md/root:px-3
+                @3xl/root:h-10 @3xl/root:max-w-[min(24rem,calc(100vw-2rem))] @3xl/root:px-4 @3xl/root:text-sm
+              `}
+              variant="ghost"
+            />
+          }
         >
-          <PopoverTrigger aria-label="Open stream selector" handle={handle}>
-            <TvIcon
-              className="
-                size-3
-                @md/root:size-3.5
-                @3xl/root:size-4
-              "
-            />
-            <span className="truncate">{selectedStreamName}</span>
-            <ChevronDownIcon
-              className="
-                size-3 opacity-70
-                @md/root:size-3.5
-                @3xl/root:size-4
-              "
-            />
-          </PopoverTrigger>
-        </Button>
+          <TvIcon
+            className="
+              size-3
+              @md/root:size-3.5
+              @3xl/root:size-4
+            "
+          />
+          <span className="truncate">{selectedStreamName}</span>
+          <ChevronDownIcon
+            className="
+              size-3 opacity-70
+              @md/root:size-3.5
+              @3xl/root:size-4
+            "
+          />
+        </PopoverTrigger>
       </div>
 
       <StreamPanel

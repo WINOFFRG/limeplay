@@ -84,15 +84,15 @@ describe("Slot", () => {
 describe("composeRefs", () => {
   test("forwards the node to object and callback refs", () => {
     const objectRef = React.createRef<HTMLDivElement>()
-    let callbackValue: HTMLDivElement | null = null
+    const seen: { value: HTMLDivElement | null } = { value: null }
     const node = {} as HTMLDivElement
 
     composeRefs<HTMLDivElement>(objectRef, (value) => {
-      callbackValue = value
+      seen.value = value
     })(node)
 
     expect(objectRef.current).toBe(node)
-    expect(callbackValue).toBe(node)
+    expect(seen.value).toBe(node)
   })
 
   test("returns a cleanup that runs callback cleanups and clears object refs", () => {

@@ -11,7 +11,7 @@ import {
   useStreamPanel,
 } from "@/components/stream-panel"
 import { useStreamPanelSync } from "@/components/stream-panel/use-stream-panel-sync"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { type AgentState, Orb } from "@/components/ui/orb"
 import { PopoverTrigger } from "@/components/ui/popover"
 import { usePlaybackStore } from "@/registry/default/hooks/use-playback"
@@ -71,12 +71,14 @@ function AudioHoverStreamTrigger() {
   const { handle } = useStreamPanel()
 
   return (
-    <Button asChild size="xs" variant="secondary">
-      <PopoverTrigger aria-label="Open audio library" handle={handle}>
-        <ListMusicIcon className="size-3.5" />
-        Library
-      </PopoverTrigger>
-    </Button>
+    <PopoverTrigger
+      aria-label="Open audio library"
+      handle={handle}
+      render={<Button size="xs" variant="secondary" />}
+    >
+      <ListMusicIcon className="size-3.5" />
+      Library
+    </PopoverTrigger>
   )
 }
 
@@ -130,15 +132,16 @@ function AudioPlayerHoverContent() {
           </div>
           <div className="my-auto h-8 w-0.5 rounded-md bg-muted-foreground"></div>
           <AudioHoverStreamTrigger />
-          <Button asChild size="xs">
-            <Link
-              className="text-sm font-semibold tracking-tight"
-              href="/blocks/audio-player"
-            >
-              Install Now
-              <SquareArrowOutUpRightIcon className="ml-1" />
-            </Link>
-          </Button>
+          <Link
+            className={buttonVariants({
+              className: "text-sm font-semibold tracking-tight",
+              size: "xs",
+            })}
+            href="/blocks/audio-player"
+          >
+            Install Now
+            <SquareArrowOutUpRightIcon className="ml-1" />
+          </Link>
         </div>
       </motion.div>
       <AudioPlayerDemo>

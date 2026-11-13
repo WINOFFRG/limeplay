@@ -82,9 +82,9 @@ export async function ComponentPreview({
           <TabsContent
             className={`
               relative hidden
-              data-[state=active]:block
+              not-data-hidden:block
             `}
-            forceMount
+            keepMounted
             value="preview"
           >
             <div className={className}>

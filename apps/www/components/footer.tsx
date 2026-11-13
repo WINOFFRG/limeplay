@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 
 export function Footer() {
   return (
@@ -13,27 +13,28 @@ export function Footer() {
           `}
         >
           <div className="flex flex-row items-center gap-2">
-            <Button asChild size="xs" variant="ghost">
-              <Link href="/developers">Developer Resources</Link>
-            </Button>
-            <Button asChild size="xs" variant="ghost">
-              <Link
-                href="https://limeplay.userjot.com"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Give Feedback
-              </Link>
-            </Button>
-            <Button asChild size="xs" variant="ghost">
-              <Link
-                href="https://x.com/winoffrg"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Reach out on X
-              </Link>
-            </Button>
+            <Link
+              className={buttonVariants({ size: "xs", variant: "ghost" })}
+              href="/developers"
+            >
+              Developer Resources
+            </Link>
+            <Link
+              className={buttonVariants({ size: "xs", variant: "ghost" })}
+              href="https://limeplay.userjot.com"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Give Feedback
+            </Link>
+            <Link
+              className={buttonVariants({ size: "xs", variant: "ghost" })}
+              href="https://x.com/winoffrg"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Reach out on X
+            </Link>
           </div>
           <div className="flex flex-row items-center gap-2">
             <p className="text-xs font-medium text-muted-foreground">
