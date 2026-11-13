@@ -1,6 +1,6 @@
 "use client"
 
-import { composeRefs } from "@radix-ui/react-compose-refs"
+import { useComposedRefs } from "@radix-ui/react-compose-refs"
 import { Slot } from "@radix-ui/react-slot"
 import React, { useEffect } from "react"
 
@@ -104,6 +104,7 @@ export const CaptionsContainer = React.forwardRef<
   const setContainerElement = useCaptionsStore(
     (state) => state.setContainerElement
   )
+  const composedRef = useComposedRefs(ref, setContainerElement)
 
   useEffect(() => {
     if (player && fontScale) {
@@ -121,7 +122,7 @@ export const CaptionsContainer = React.forwardRef<
         "relative flex w-full grow flex-col justify-end text-lg",
         className
       )}
-      ref={composeRefs(ref, setContainerElement)}
+      ref={composedRef}
       {...etc}
     />
   )

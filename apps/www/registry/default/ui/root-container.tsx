@@ -1,6 +1,6 @@
 "use client"
 
-import { composeRefs } from "@radix-ui/react-compose-refs"
+import { useComposedRefs } from "@radix-ui/react-compose-refs"
 import { Slot } from "@radix-ui/react-slot"
 import React from "react"
 
@@ -59,6 +59,7 @@ export const RootContainer = React.forwardRef<
     () => resolveAspectRatio(aspectRatioProp, width, height),
     [aspectRatioProp, height, width]
   )
+  const composedRef = useComposedRefs(forwardedRef, setPlayerContainerRef)
   const Component = render ? Slot : asChild ? Slot : "div"
 
   return (
@@ -75,7 +76,7 @@ export const RootContainer = React.forwardRef<
       data-idle={debug || forceIdle ? "false" : idle}
       data-layout-type="root-container"
       data-status={status}
-      ref={composeRefs(forwardedRef, setPlayerContainerRef)}
+      ref={composedRef}
       role="region"
       style={{
         ...style,
