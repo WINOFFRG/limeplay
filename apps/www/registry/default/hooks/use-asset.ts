@@ -24,6 +24,7 @@ import type {
   MediaStore,
 } from "@/registry/default/ui/media-provider"
 
+import { isPlayInterruption } from "@/registry/default/hooks/use-playback"
 import { isLoadInterrupted } from "@/registry/default/hooks/use-player"
 import { usePlaylist } from "@/registry/default/hooks/use-playlist"
 import {
@@ -402,6 +403,8 @@ type NormalizedSource = {
   source?: null | shaka.media.PreloadManager | string
 }
 
+const MAX_DEFAULT_PLAYBACK_RELOADS = 3
+
 /**
  * Adds source loading, playlist-backed playback, preloading, and recovery
  * orchestration to a media kit.
@@ -441,6 +444,9 @@ export function assetFeature(): MediaFeature<
           get().asset.loadAbortController?.abort()
 
           const abortController = new AbortController()
+          const isCurrentLoad = () =>
+            !abortController.signal.aborted &&
+            get().asset.loadGeneration === generation
 
           set(({ asset }) => {
             asset.loadAbortController = abortController
@@ -471,6 +477,7 @@ export function assetFeature(): MediaFeature<
               assetId,
               player,
               preloadManager,
+              signal: abortController.signal,
               startTime,
             })
 
@@ -486,6 +493,10 @@ export function assetFeature(): MediaFeature<
                 signal: abortController.signal,
                 startTime,
               })
+
+              if (abortController.signal.aborted) {
+                return false
+              }
             } else {
               const resolved = await resolveSourceValue(options, {
                 asset,
@@ -510,18 +521,25 @@ export function assetFeature(): MediaFeature<
               })
             }
 
-            if (get().asset.loadGeneration !== generation) {
+            if (!isCurrentLoad()) {
               return false
             }
 
-            if (media.autoplay && media.paused) {
-              if (get().asset.isFirstLoad) {
-                if (options?.autoplayFirst) {
-                  await get().playback.play()
-                }
-              } else {
+            const shouldAutoplay =
+              media.autoplay &&
+              media.paused &&
+              (!get().asset.isFirstLoad || Boolean(options?.autoplayFirst))
+
+            if (shouldAutoplay) {
+              try {
                 await get().playback.play()
+              } catch (playError) {
+                if (!isPlayInterruption(playError)) throw playError
               }
+            }
+
+            if (!isCurrentLoad()) {
+              return false
             }
 
             set(({ asset }) => {
@@ -546,7 +564,7 @@ export function assetFeature(): MediaFeature<
             const playlist = get().playlist
             const maxRetries = options?.maxRetries ?? 0
             const currentRetryCount = get().asset.retryCount
-            const hasNext = playlist.getNextIndex() !== -1
+            const hasNext = canSkipAfterLoadError(playlist)
 
             set(({ asset }) => {
               asset.previousError = error
@@ -918,6 +936,10 @@ function AssetSetup() {
         )
     })
 
+    let reloadedSessionId: string | undefined
+    let reloadedItemId: null | string = null
+    let reloadCount = 0
+
     const offPlaybackError = events.on("playbackerror", (payload) => {
       void (async () => {
         const state = api.getState()
@@ -927,6 +949,20 @@ function AssetSetup() {
           undefined | UseAssetOptions<TAsset>
         if (!currentItem) return
         const currentItemId = currentItem.id
+
+        if (!options?.recover?.playbackError) {
+          if (
+            reloadedSessionId !== sessionId ||
+            reloadedItemId !== currentItemId
+          ) {
+            reloadedSessionId = sessionId
+            reloadedItemId = currentItemId
+            reloadCount = 0
+          }
+
+          if (reloadCount >= MAX_DEFAULT_PLAYBACK_RELOADS) return
+          reloadCount += 1
+        }
 
         const getFreshCurrentItem = () => {
           const freshState = api.getState()
@@ -997,6 +1033,24 @@ function AssetSetup() {
 
   return null
 }
+function canSkipAfterLoadError(playlist: {
+  currentIndex: number
+  queue: readonly unknown[]
+  repeatMode: string
+  shuffle: boolean
+  shuffleOrder: readonly number[]
+}): boolean {
+  if (playlist.queue.length === 0) return false
+  if (playlist.repeatMode === "one") return false
+
+  if (playlist.shuffle && playlist.shuffleOrder.length > 0) {
+    const currentPosition = playlist.shuffleOrder.indexOf(playlist.currentIndex)
+    return currentPosition + 1 < playlist.shuffleOrder.length
+  }
+
+  return playlist.currentIndex + 1 < playlist.queue.length
+}
+
 function createAssetSession(
   sourceType: AssetSourceType,
   options?: Omit<AssetLoadSourceOptions<TAsset>, "initialIndex" | "sourceType">
@@ -1014,15 +1068,21 @@ function createDefaultLoad({
   assetId,
   player,
   preloadManager,
+  signal,
   startTime,
 }: {
   asset: TAsset
   assetId: string
   player: shaka.Player
   preloadManager?: shaka.media.PreloadManager
+  signal: AbortSignal
   startTime?: number
 }): AssetLoadContext["loadDefault"] {
   return async (source, loadOptions) => {
+    if (signal.aborted) {
+      throw new DOMException("Asset load superseded", "AbortError")
+    }
+
     const normalizedSource = normalizePlaybackSource(source)
     player.resetConfiguration()
 
@@ -1192,3 +1252,5 @@ function toError(error: unknown): Error {
 
   return new Error(String(error))
 }
+
+export { canSkipAfterLoadError }

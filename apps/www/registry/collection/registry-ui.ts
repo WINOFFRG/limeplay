@@ -4,6 +4,19 @@ const TARGET_BASE_PATH = "components/limeplay"
 
 export const ui: Registry["items"] = [
   {
+    dependencies: ["@radix-ui/react-slot"],
+    files: [
+      {
+        path: "ui/exclusive-playback-provider.tsx",
+        target: `${TARGET_BASE_PATH}/exclusive-playback-provider.tsx`,
+        type: "registry:ui",
+      },
+    ],
+    name: "exclusive-playback-provider",
+    registryDependencies: [],
+    type: "registry:ui",
+  },
+  {
     dependencies: ["shaka-player@^5.2.7"],
     files: [
       {

@@ -11,6 +11,7 @@ import {
 import { usePlayerStore } from "@/registry/default/hooks/use-player"
 import { useTimelineStore } from "@/registry/default/hooks/use-timeline"
 import { useTrackEvents } from "@/registry/default/hooks/use-track-events"
+import { formatTimestamp } from "@/registry/default/lib/time"
 
 export type TimelineRootPropsDocs = Pick<
   React.ComponentProps<typeof SliderPrimitive.Root>,
@@ -24,7 +25,16 @@ export const Root = React.forwardRef<
   const internalRef = useRef<HTMLDivElement>(
     null
   ) as React.RefObject<HTMLDivElement>
-  const { className, orientation = "horizontal", ...etc } = props
+  const {
+    className,
+    onPointerDown: onPointerDownProp,
+    onPointerMove: onPointerMoveProp,
+    onPointerOut: onPointerOutProp,
+    onPointerUp: onPointerUpProp,
+    onValueChange: onValueChangeProp,
+    orientation = "horizontal",
+    ...etc
+  } = props
 
   const player = usePlayerStore((state) => state.instance)
   const currentTime = useTimelineStore((state) => state.currentTime)
@@ -55,6 +65,7 @@ export const Root = React.forwardRef<
 
   const trackEvents = useTrackEvents({
     onPointerDown: (progress, event) => {
+      if (disabled) return
       if (player) {
         const newTime = getTimeFromEvent(event)
         const seekRange = player.seekRange()
@@ -70,6 +81,7 @@ export const Root = React.forwardRef<
       }
     },
     onPointerMove: (progress, isPointerDown, event) => {
+      if (disabled) return
       if (duration && player) {
         const newTime = getTimeFromEvent(event)
         const seekRange = player.seekRange()
@@ -93,6 +105,11 @@ export const Root = React.forwardRef<
         }
       }
     },
+    onPointerOut: (event) => {
+      if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
+        setIsHovering(false)
+      }
+    },
     onPointerUp: () => {
       setIsHovering(false)
     },
@@ -111,10 +128,39 @@ export const Root = React.forwardRef<
       )}
       orientation={orientation}
       ref={internalRef}
+      step={duration ? Math.min(100, (5 / duration) * 100) : 1}
       value={[currentValue]}
-      {...trackEvents}
       {...etc}
       disabled={disabled}
+      onPointerDown={(event) => {
+        onPointerDownProp?.(event)
+        if (!event.defaultPrevented) trackEvents.onPointerDown(event)
+      }}
+      onPointerMove={(event) => {
+        onPointerMoveProp?.(event)
+        if (!event.defaultPrevented) trackEvents.onPointerMove(event)
+      }}
+      onPointerOut={(event) => {
+        onPointerOutProp?.(event)
+        if (!event.defaultPrevented) trackEvents.onPointerOut(event)
+      }}
+      onPointerUp={(event) => {
+        onPointerUpProp?.(event)
+        if (!event.defaultPrevented) trackEvents.onPointerUp(event)
+      }}
+      onValueChange={(nextValue, eventDetails) => {
+        onValueChangeProp?.(nextValue, eventDetails)
+        if (disabled || !duration || !player || eventDetails.isCanceled) return
+        const percent = Array.isArray(nextValue) ? nextValue[0] : nextValue
+        const nextTime = (percent / 100) * duration
+        const seekRange = player.seekRange()
+        seek(
+          isLive
+            ? seekRange.start +
+                (nextTime / duration) * (seekRange.end - seekRange.start)
+            : nextTime
+        )
+      }}
     />
   )
 })
@@ -137,7 +183,6 @@ export const Track = React.forwardRef<
         className
       )}
       ref={ref}
-      tabIndex={0}
       {...etc}
     />
   )
@@ -254,7 +299,7 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
       return null
     }
 
-    if (position && Number.isFinite(position)) {
+    if (position !== undefined && Number.isFinite(position)) {
       finalPosition = position
     } else if (showWithHover) {
       finalPosition = (hoveringTime / duration) * 100
@@ -264,6 +309,7 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
 
     return (
       <SliderPrimitive.Thumb
+        aria-valuetext={formatTimestamp(currentTime, duration >= 3600)}
         className={cn(
           `
             left-(--lp-timeline-thumb-left,var(--lp-timeline-thumb-position))! bg-primary
@@ -271,8 +317,8 @@ export const Thumb = React.forwardRef<HTMLDivElement, ThumbProps>(
           `,
           className
         )}
-        ref={ref}
         {...etc}
+        ref={ref}
         style={
           {
             "--lp-timeline-thumb-position": `${finalPosition}%`,

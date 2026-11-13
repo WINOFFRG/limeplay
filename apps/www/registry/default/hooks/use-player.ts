@@ -68,6 +68,7 @@ export const RECOMMENDED_PLAYER_BUFFERING_THROTTLE_MS = 250
 // Public Shaka error code. Keep this local so importing the hook on the server
 // does not evaluate Shaka's browser-only bundle during prerendering.
 const SHAKA_LOAD_INTERRUPTED_ERROR_CODE = 7000
+const SHAKA_ERROR_SEVERITY_RECOVERABLE = 1
 
 export function isLoadInterrupted(error: unknown): boolean {
   if (
@@ -144,9 +145,12 @@ export function usePlayer<TAsset extends { id: string }>(
             preloadManager,
             startTime
           )
-          preloadManagers.delete(asset.id)
           store.setState(({ player }) => {
-            player.preloadManagers = new Map(preloadManagers)
+            if (player.preloadManagers.get(asset.id) !== preloadManager) return
+
+            const updatedManagers = new Map(player.preloadManagers)
+            updatedManagers.delete(asset.id)
+            player.preloadManagers = updatedManagers
           })
         } else {
           await options.onLoad(
@@ -182,10 +186,12 @@ export function usePlayer<TAsset extends { id: string }>(
       try {
         const manager = await options.onPreload(asset, currentPlayer)
         if (manager) {
-          const preloadManagers = store.getState().player.preloadManagers
-          preloadManagers.set(asset.id, manager)
+          const updatedManagers = new Map(
+            store.getState().player.preloadManagers
+          )
+          updatedManagers.set(asset.id, manager)
           store.setState(({ player }) => {
-            player.preloadManagers = new Map(preloadManagers)
+            player.preloadManagers = updatedManagers
           })
         }
       } catch (error) {
@@ -203,9 +209,10 @@ export function usePlayer<TAsset extends { id: string }>(
       const manager = preloadManagers.get(assetId)
       if (manager) {
         manager.destroy()
-        preloadManagers.delete(assetId)
+        const updatedManagers = new Map(preloadManagers)
+        updatedManagers.delete(assetId)
         store.setState(({ player }) => {
-          player.preloadManagers = new Map(preloadManagers)
+          player.preloadManagers = updatedManagers
         })
       }
     },
@@ -364,6 +371,7 @@ function PlayerSetup() {
     const errorHandler = (event: Event) => {
       const detail = (event as CustomEvent).detail as shaka.util.Error
       if (isLoadInterrupted(detail)) return
+      if (detail.severity === SHAKA_ERROR_SEVERITY_RECOVERABLE) return
       const media = store.getState().media.mediaElement
       const currentTime = media?.currentTime ?? 0
 

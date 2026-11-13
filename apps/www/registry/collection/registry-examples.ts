@@ -2,6 +2,17 @@ import { type Registry } from "shadcn/schema"
 
 export const examples: Registry["items"] = [
   {
+    files: [
+      {
+        path: "examples/exclusive-playback-provider-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+    name: "exclusive-playback-provider-demo",
+    registryDependencies: ["exclusive-playback-provider"],
+    type: "registry:example",
+  },
+  {
     dependencies: ["lucide-react"],
     files: [
       {
@@ -25,6 +36,7 @@ export const examples: Registry["items"] = [
     type: "registry:example",
   },
   {
+    dependencies: ["@phosphor-icons/react"],
     files: [
       {
         path: "examples/playback-state-control-demo.tsx",
@@ -36,6 +48,7 @@ export const examples: Registry["items"] = [
     type: "registry:example",
   },
   {
+    dependencies: ["@phosphor-icons/react"],
     files: [
       {
         path: "examples/picture-in-picture-control-demo.tsx",
@@ -77,6 +90,7 @@ export const examples: Registry["items"] = [
     type: "registry:example",
   },
   {
+    dependencies: ["@phosphor-icons/react"],
     files: [
       {
         path: "examples/volume-state-control-demo.tsx",
@@ -121,6 +135,7 @@ export const examples: Registry["items"] = [
     type: "registry:example",
   },
   {
+    dependencies: ["@phosphor-icons/react"],
     files: [
       {
         path: "examples/captions-state-control-demo.tsx",
@@ -147,6 +162,7 @@ export const examples: Registry["items"] = [
     type: "registry:example",
   },
   {
+    dependencies: ["@phosphor-icons/react"],
     files: [
       {
         path: "examples/seek-control-demo.tsx",

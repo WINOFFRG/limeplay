@@ -26,6 +26,8 @@ Registry and site checks:
 
 ```bash
 cd apps/www
+bun run typecheck
+bun test
 bun run registry:build
 bun run validate:registries
 bun run build

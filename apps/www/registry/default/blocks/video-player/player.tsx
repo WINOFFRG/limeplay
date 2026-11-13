@@ -49,9 +49,10 @@ export interface VideoPlayerProps extends PlaybackSourceControllerProps<VideoPla
    */
   mediaProps?: Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "as" | "src">
   /**
-   * @default dark
+   * `"auto"` inherits the surrounding theme.
+   * @default "auto"
    */
-  theme?: "dark" | "light"
+  theme?: "auto" | "dark" | "light"
 }
 
 export const VideoPlayer = React.forwardRef<HTMLDivElement, VideoPlayerProps>(

@@ -300,6 +300,14 @@ export function createMediaKit<
     }
 
     const runtime = runtimeRef.current
+    const contextValue = React.useMemo(
+      () => ({
+        events: runtime.events as unknown as MediaEvents<AnyEvents>,
+        featureKeys: featureKeysRef.current,
+        store: runtime.store as ImmerStoreApi<AnyMediaStore>,
+      }),
+      [runtime]
+    )
 
     React.useLayoutEffect(() => {
       if (typeof debug !== "boolean") return
@@ -308,13 +316,7 @@ export function createMediaKit<
     }, [debug, runtime.store])
 
     return (
-      <MediaRuntimeContext.Provider
-        value={{
-          events: runtime.events as unknown as MediaEvents<AnyEvents>,
-          featureKeys: featureKeysRef.current,
-          store: runtime.store as ImmerStoreApi<AnyMediaStore>,
-        }}
-      >
+      <MediaRuntimeContext.Provider value={contextValue}>
         {children}
         {features.map((feature) => {
           if (!feature.Setup) {

@@ -20,7 +20,16 @@ export const Root = React.forwardRef<
   const internalRef = useRef<HTMLDivElement>(
     null
   ) as React.RefObject<HTMLDivElement>
-  const { className, orientation = "horizontal", ...etc } = props
+  const {
+    className,
+    onPointerDown: onPointerDownProp,
+    onPointerMove: onPointerMoveProp,
+    onPointerOut: onPointerOutProp,
+    onPointerUp: onPointerUpProp,
+    onValueChange: onValueChangeProp,
+    orientation = "horizontal",
+    ...etc
+  } = props
   const volume = useVolumeStore((state) => state.level)
   const hasAudio = useVolumeStore((state) => state.hasAudio)
   const muted = useVolumeStore((state) => state.muted)
@@ -82,9 +91,31 @@ export const Root = React.forwardRef<
       ref={internalRef}
       step={0.01}
       value={[currentVolumeValue]}
-      {...trackEvents}
       {...etc}
       disabled={disabled}
+      onPointerDown={(event) => {
+        onPointerDownProp?.(event)
+        if (!event.defaultPrevented) trackEvents.onPointerDown(event)
+      }}
+      onPointerMove={(event) => {
+        onPointerMoveProp?.(event)
+        if (!event.defaultPrevented) trackEvents.onPointerMove(event)
+      }}
+      onPointerOut={(event) => {
+        onPointerOutProp?.(event)
+        if (!event.defaultPrevented) trackEvents.onPointerOut(event)
+      }}
+      onPointerUp={(event) => {
+        onPointerUpProp?.(event)
+        if (!event.defaultPrevented) trackEvents.onPointerUp(event)
+      }}
+      onValueChange={(nextValue, eventDetails) => {
+        onValueChangeProp?.(nextValue, eventDetails)
+        if (disabled || eventDetails.isCanceled) return
+        const nextVolume = Array.isArray(nextValue) ? nextValue[0] : nextValue
+        setCurrentValue(nextVolume)
+        setVolume(nextVolume)
+      }}
     />
   )
 })

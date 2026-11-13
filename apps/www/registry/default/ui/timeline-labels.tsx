@@ -1,7 +1,6 @@
 import React from "react"
 
 import { cn } from "@/lib/utils"
-import { usePlayerStore } from "@/registry/default/hooks/use-player"
 import { useTimelineStore } from "@/registry/default/hooks/use-timeline"
 import { durationDateTime, formatTimestamp } from "@/registry/default/lib/time"
 
@@ -18,11 +17,10 @@ export const Elapsed = React.forwardRef<
   const { className, ...etc } = props
   const currentTime = useTimelineStore((state) => state.currentTime)
   const duration = useTimelineStore((state) => state.duration)
-  const player = usePlayerStore((state) => state.instance)
 
   return (
     <time
-      dateTime={durationDateTime(currentTime, player?.seekRange())}
+      dateTime={durationDateTime(currentTime)}
       role="timer"
       {...etc}
       className={cn("tabular-nums", className)}
@@ -47,12 +45,11 @@ export const Remaining = React.forwardRef<
   const { className, ...etc } = props
   const duration = useTimelineStore((state) => state.duration)
   const currentTime = useTimelineStore((state) => state.currentTime)
-  const player = usePlayerStore((state) => state.instance)
 
   return (
     <time
       className={cn("tabular-nums", className)}
-      dateTime={durationDateTime(duration - currentTime, player?.seekRange())}
+      dateTime={durationDateTime(duration - currentTime)}
       role="timer"
       {...etc}
       ref={forwardedRef}
@@ -77,12 +74,11 @@ export const Duration = React.forwardRef<
 >((props, forwardedRef) => {
   const { className, ...etc } = props
   const duration = useTimelineStore((state) => state.duration)
-  const player = usePlayerStore((state) => state.instance)
 
   return (
     <time
       className={cn("tabular-nums", className)}
-      dateTime={durationDateTime(duration, player?.seekRange())}
+      dateTime={durationDateTime(duration)}
       ref={forwardedRef}
       {...etc}
     >
@@ -100,7 +96,6 @@ export const HoverTime = React.forwardRef<
 >((props, forwardedRef) => {
   const { className, ...etc } = props
   const hoveringTime = useTimelineStore((state) => state.hoveringTime)
-  const player = usePlayerStore((state) => state.instance)
   const duration = useTimelineStore((state) => state.duration)
   const isLive = useTimelineStore((state) => state.isLive)
 
@@ -109,7 +104,7 @@ export const HoverTime = React.forwardRef<
   return (
     <time
       className={cn("tabular-nums", className)}
-      dateTime={durationDateTime(hoveringTime, player?.seekRange())}
+      dateTime={durationDateTime(hoveringTime)}
       ref={forwardedRef}
       {...etc}
     >

@@ -9,17 +9,32 @@ import {
 } from "@/components/ui/select"
 import { usePlaybackRateStore } from "@/registry/default/hooks/use-playback-rate"
 
-export function SelectRoot(
-  props: React.ComponentProps<typeof SelectPrimitive>
-) {
+export function SelectRoot({
+  onValueChange,
+  ...props
+}: React.ComponentProps<typeof SelectPrimitive>) {
   const setPlaybackRate = usePlaybackRateStore((state) => state.setPlaybackRate)
   const value = usePlaybackRateStore((state) => state.value)
 
   return (
     <SelectPrimitive
-      onValueChange={(value) => setPlaybackRate(Number(value))}
       value={value.toString()}
       {...props}
+      onValueChange={(...args) => {
+        onValueChange?.(...args)
+
+        const eventDetails = (args as unknown[])[1]
+        if (
+          typeof eventDetails === "object" &&
+          eventDetails !== null &&
+          "isCanceled" in eventDetails &&
+          eventDetails.isCanceled
+        ) {
+          return
+        }
+
+        setPlaybackRate(Number(args[0]))
+      }}
     />
   )
 }

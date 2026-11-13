@@ -8,7 +8,8 @@ export const blocks: Registry["items"] = [
     dependencies: [
       "@phosphor-icons/react",
       "@base-ui/react",
-      "@radix-ui/react-toggle",
+      "class-variance-authority",
+      "lucide-react",
       "zustand",
       "shaka-player@^5.2.7",
       "lodash.clamp",
@@ -86,11 +87,6 @@ export const blocks: Registry["items"] = [
         type: "registry:component",
       },
       {
-        path: `${VIDEO_PLAYER_SRC_URL}/ui/toggle.tsx`,
-        target: "components/ui/toggle.tsx",
-        type: "registry:ui",
-      },
-      {
         path: `${VIDEO_PLAYER_SRC_URL}/components/volume-group-control.tsx`,
         type: "registry:component",
       },
@@ -148,6 +144,7 @@ export const blocks: Registry["items"] = [
     dependencies: [
       "@phosphor-icons/react",
       "@radix-ui/react-slot",
+      "lucide-react",
       "motion",
       "zustand",
       "shaka-player@^5.2.7",

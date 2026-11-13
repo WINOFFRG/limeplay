@@ -1,24 +1,13 @@
-import type shaka from "shaka-player"
-
 import { intervalToDuration } from "date-fns/intervalToDuration"
 
 const MAX_SAFE_SECONDS = 8.64e12
 
-export function durationDateTime(
-  durationSeconds: number,
-  seekRange?: shaka.extern.BufferedRange
-) {
+export function durationDateTime(durationSeconds: number) {
   if (!Number.isFinite(durationSeconds) || durationSeconds < 0) {
     return "PT0S"
   }
 
-  // TODO: There is a possible bug here as seekRange returns in seconds
-  const duration = intervalToDuration(
-    seekRange ?? {
-      end: durationSeconds * 1000,
-      start: 0,
-    }
-  )
+  const duration = intervalToDuration({ end: durationSeconds * 1000, start: 0 })
 
   const weeks = Math.floor((duration.days ?? 0) / 7)
   const days = (duration.days ?? 0) % 7

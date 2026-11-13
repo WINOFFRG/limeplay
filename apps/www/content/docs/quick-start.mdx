@@ -113,8 +113,9 @@ export function MediaPlayer({ src }: { src: string }) {
           <PlaybackControl />
           <Volume.Root>
             <Volume.Track>
-              <Volume.Input />
+              <Volume.Progress />
             </Volume.Track>
+            <Volume.Thumb />
           </Volume.Root>
         </Layout.ControlsContainer>
       </Layout.PlayerContainer>

@@ -417,6 +417,7 @@ export function useMediaSessionSync({
   const mediaSession = useMediaSession()
   const owner = React.useRef<symbol>(MEDIA_SESSION_OWNER_FALLBACK)
   const retainedPosition = React.useRef<null | RetainedMediaPositionState>(null)
+  const previousClaim = React.useRef(false)
   const currentOwner = React.useSyncExternalStore(
     subscribeMediaSessionOwner,
     getMediaSessionOwner,
@@ -430,6 +431,8 @@ export function useMediaSessionSync({
 
   React.useEffect(() => {
     if (!active) {
+      previousClaim.current = false
+
       if (getMediaSessionOwner() === owner.current) {
         mediaSession.clearMetadata()
         mediaSession.clearPositionState()
@@ -440,7 +443,10 @@ export function useMediaSessionSync({
       return
     }
 
-    claimMediaSessionOwner(owner.current, claim)
+    const shouldForceClaim = claim && !previousClaim.current
+    previousClaim.current = claim
+
+    claimMediaSessionOwner(owner.current, shouldForceClaim)
   }, [active, claim, currentOwner, mediaSession])
 
   React.useEffect(() => {

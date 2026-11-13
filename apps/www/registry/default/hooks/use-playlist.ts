@@ -277,7 +277,7 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
         },
         next: () => {
           const playlist = get().playlist as PlaylistStore["playlist"]
-          const nextIndex = playlist.getNextIndex()
+          let nextIndex = playlist.getNextIndex()
           if (nextIndex === -1 || nextIndex >= playlist.queue.length)
             return false
 
@@ -293,9 +293,21 @@ export function playlistFeature(): MediaFeature<PlaylistStore> {
             )
             if (currentPos === playlist.shuffleOrder.length - 1) {
               const newShuffleOrder = createShuffleOrder(playlist.queue.length)
+              const lastPosition = newShuffleOrder.length - 1
+
+              // Avoid replaying the track that just finished.
+              if (
+                lastPosition > 0 &&
+                newShuffleOrder[0] === playlist.currentIndex
+              ) {
+                newShuffleOrder[0] = newShuffleOrder[lastPosition]
+                newShuffleOrder[lastPosition] = playlist.currentIndex
+              }
+
               set(({ playlist: p }) => {
                 p.shuffleOrder = newShuffleOrder
               })
+              nextIndex = newShuffleOrder[0]
             }
           }
 
@@ -827,4 +839,11 @@ function PlaylistSetup() {
   }, [api, repeatMode])
 
   return null
+}
+
+export {
+  createShuffleOrder,
+  getPreviousPlaylistTarget,
+  getRepeatModes,
+  normalizeRepeatMode,
 }

@@ -23,13 +23,14 @@ import {
 } from "fs"
 import http from "http"
 import { tmpdir } from "os"
-import { dirname, extname, join, resolve } from "path"
+import { dirname, extname, join, resolve, sep } from "path"
 
 const SCRIPT_DIR = resolve(dirname(new URL(import.meta.url).pathname))
 const WWW_DIR = resolve(SCRIPT_DIR, "..")
 const PUBLIC_DIR = join(WWW_DIR, "public")
 const EXEC_TIMEOUT = 180_000
 const SERVER_PORT = 5178
+const SERVER_HOST = "127.0.0.1"
 
 const MIME_TYPES: Record<string, string> = {
   ".css": "text/css",
@@ -159,7 +160,8 @@ async function buildApp(app: PreparedApp): Promise<TestResult> {
   const result = await runAsync(app.framework.buildCommand, app.appDir)
   if (!result.ok) {
     console.log(`  [${cellName}] ✗ Build failed`)
-    if (result.stderr) console.log(`    ${result.stderr.slice(0, 500)}`)
+    const output = [result.stdout, result.stderr].filter(Boolean).join("\n")
+    if (output) console.log(`    ${output.slice(-3000)}`)
     return {
       base: app.base.name,
       error: "build failed",
@@ -179,7 +181,7 @@ async function buildApp(app: PreparedApp): Promise<TestResult> {
 function buildRegistry() {
   console.log("\n📦 Building registry...")
   const result = runSync(
-    `REGISTRY_HOST=http://localhost:${SERVER_PORT} bun run ./scripts/registry-dev.mts`,
+    `REGISTRY_HOST=http://${SERVER_HOST}:${SERVER_PORT} bun run ./scripts/registry-dev.mts`,
     WWW_DIR,
     "registry:build"
   )
@@ -386,7 +388,13 @@ function startStaticServer(): Promise<string> {
   return new Promise((resolvePromise, reject) => {
     server = http.createServer((req, res) => {
       const urlPath = req.url?.split("?")[0] ?? "/"
-      const filePath = join(PUBLIC_DIR, urlPath)
+      const filePath = resolve(PUBLIC_DIR, `.${urlPath}`)
+
+      if (filePath !== PUBLIC_DIR && !filePath.startsWith(PUBLIC_DIR + sep)) {
+        res.writeHead(403)
+        res.end("Forbidden")
+        return
+      }
 
       if (!existsSync(filePath) || !statSync(filePath).isFile()) {
         res.writeHead(404)
@@ -410,8 +418,8 @@ function startStaticServer(): Promise<string> {
       }
     })
 
-    server.listen(SERVER_PORT, () => {
-      resolvePromise(`http://localhost:${SERVER_PORT}`)
+    server.listen(SERVER_PORT, SERVER_HOST, () => {
+      resolvePromise(`http://${SERVER_HOST}:${SERVER_PORT}`)
     })
   })
 }
